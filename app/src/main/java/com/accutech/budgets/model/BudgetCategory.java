@@ -2,11 +2,18 @@ package com.accutech.budgets.model;
 
 public enum BudgetCategory {
 
-    HOUSING,
-    AUTOMOTIVE,
-    GROCERIES,
+    BILLS,
+    EDUCATION,
+    ENTERTAINMENT,
+    FEES,
+    FINANCIAL,
+    FOOD,
+    GIFTS,
+    HEALTH,
+    HOME,
+    KIDS,
     MISCELLANEOUS,
-    ELECTRONICS,
-    ENTERTAINMENT;
+    PETS,
+    TRANSPORTATION;
 
 }
