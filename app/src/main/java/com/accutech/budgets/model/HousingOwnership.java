@@ -5,6 +5,6 @@ public enum HousingOwnership {
     RENT,
     OWN_PAID,
     OWN_MORTGAGE,
-    OWN_MORTGAGE_2;
+    OWN_MORTGAGE_2
 
 }

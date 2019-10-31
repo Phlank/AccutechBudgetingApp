@@ -4,12 +4,12 @@ public class Budget {
 
     public class BudgetFactory {
 
-        int age;
-        int monthlyIncome;
-        HousingOwnership housingOwnership;
-        int housingPayment;
-        int debt;
-        int savings;
+        private int age;
+        private int monthlyIncome;
+        private HousingOwnership housingOwnership;
+        private int housingPayment;
+        private int debt;
+        private int savings;
 
         public BudgetFactory() {
         }

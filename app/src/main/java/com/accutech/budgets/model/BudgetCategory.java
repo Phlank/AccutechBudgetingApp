@@ -14,6 +14,6 @@ public enum BudgetCategory {
     KIDS,
     MISCELLANEOUS,
     PETS,
-    TRANSPORTATION;
+    TRANSPORTATION
 
 }
