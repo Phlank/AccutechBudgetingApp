@@ -8,7 +8,7 @@
     android:background="#95F1F3DB"
     android:clickable="false"
     android:overScrollMode="always"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

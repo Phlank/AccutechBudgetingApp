@@ -1,7 +1,5 @@
 package com.accutech.budgets.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +9,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.accutech.budgets.MainActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.accutech.budgets.R;
 
 public class UserInfo extends AppCompatActivity {
-
-
 
     private EditText pin, location, name, email, income, age, dependents, housingPayment;
     private RadioButton own, rent;
@@ -45,21 +42,21 @@ public class UserInfo extends AppCompatActivity {
             }
         });
 
-
     }
 
     @SuppressLint("SetTextI18n")
     private void submitData() {
-        if(pin.getText().toString().isEmpty()||location.getText().toString().isEmpty()||
-                name.getText().toString().isEmpty()||email.getText().toString().isEmpty()||
-                income.getText().toString().isEmpty()||age.getText().toString().isEmpty()||
-                dependents.getText().toString().isEmpty()||housingPayment.getText().toString().isEmpty()){
+        if (pin.getText().toString().isEmpty() || location.getText().toString().isEmpty() ||
+                name.getText().toString().isEmpty() || email.getText().toString().isEmpty() ||
+                income.getText().toString().isEmpty() || age.getText().toString().isEmpty() ||
+                dependents.getText().toString().isEmpty() || housingPayment.getText().toString().isEmpty()) {
             TextView error = findViewById(R.id.dataErrorText);
             error.setText("Please, fill out all of the Fields");
-        }else{
+        } else {
             Intent changescene = new Intent(UserInfo.this, MainActivity.class);
             startActivity(changescene);
         }
 
     }
+
 }

@@ -1,6 +1,8 @@
 package com.accutech.budgets.model;
 
-import static com.accutech.budgets.model.Priority.*;
+import static com.accutech.budgets.model.Priority.HIGH;
+import static com.accutech.budgets.model.Priority.LOW;
+import static com.accutech.budgets.model.Priority.NON_NEGOTIABLE;
 
 public enum BudgetCategory {
 

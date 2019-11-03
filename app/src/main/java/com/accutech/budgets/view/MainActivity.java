@@ -1,9 +1,14 @@
-package com.accutech.budgets;
+package com.accutech.budgets.view;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.accutech.budgets.R;
+
 import java.util.ArrayList;
+
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -29,4 +34,5 @@ public class MainActivity extends AppCompatActivity {
         PieChartData pieChartData = new PieChartData(pieData);
         pieChartView.setPieChartData(pieChartData);
     }
+
 }

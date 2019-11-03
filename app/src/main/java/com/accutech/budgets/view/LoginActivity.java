@@ -1,7 +1,5 @@
 package com.accutech.budgets.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,7 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.accutech.budgets.MainActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.accutech.budgets.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -22,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        pin = (EditText)findViewById(R.id.pinEntry);
+        pin = (EditText) findViewById(R.id.pinEntry);
         error = (TextView) findViewById(R.id.errorText);
         Button submit = (Button) findViewById(R.id.button);
         Button newUser = (Button) findViewById(R.id.newUser);
@@ -32,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
                 onLogin();
             }
         });
-        newUser.setOnClickListener(new View.OnClickListener(){
+        newUser.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -43,15 +42,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void onLogin(){
+    private void onLogin() {
         System.out.print("clicked");
         if (pin.getText().toString().equals("1234")) {
             Intent success = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(success);
-        }else{
+        } else {
             error.setText("Wrong PIN, try again");
             error.setTextSize(25);
             error.setTextColor(Color.RED);
         }
     }
+
 }
