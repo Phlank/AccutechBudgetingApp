@@ -1,19 +1,48 @@
 package com.accutech.budgets.model;
 
+import static com.accutech.budgets.model.Priority.*;
+
 public enum BudgetCategory {
 
-    BILLS,
+    HOUSING,
+    UTILITIES,
+    GROCERIES,
+    SAVINGS,
+    HEALTH,
+    TRANSPORTATION,
     EDUCATION,
     ENTERTAINMENT,
-    FEES,
-    FINANCIAL,
-    FOOD,
-    GIFTS,
-    HEALTH,
-    HOME,
     KIDS,
-    MISCELLANEOUS,
     PETS,
-    TRANSPORTATION
+    MISCELLANEOUS;
+
+    public Priority getPriority() {
+        switch (this) {
+            case HOUSING:
+                return NON_NEGOTIABLE;
+            case UTILITIES:
+                return NON_NEGOTIABLE;
+            case GROCERIES:
+                return NON_NEGOTIABLE;
+            case SAVINGS:
+                return HIGH;
+            case HEALTH:
+                return HIGH;
+            case TRANSPORTATION:
+                return HIGH;
+            case EDUCATION:
+                return LOW;
+            case ENTERTAINMENT:
+                return LOW;
+            case KIDS:
+                return HIGH;
+            case PETS:
+                return LOW;
+            case MISCELLANEOUS:
+                return LOW;
+            default:
+                return LOW;
+        }
+    }
 
 }
