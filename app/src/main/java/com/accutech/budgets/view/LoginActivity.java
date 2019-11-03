@@ -1,4 +1,4 @@
-package com.accutech.budgets;
+package com.accutech.budgets.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.accutech.budgets.MainActivity;
+import com.accutech.budgets.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.print("clicked");
-                Intent user = new Intent(LoginActivity.this,UserInfo.class);
+                Intent user = new Intent(LoginActivity.this, UserInfo.class);
                 startActivity(user);
             }
         });
