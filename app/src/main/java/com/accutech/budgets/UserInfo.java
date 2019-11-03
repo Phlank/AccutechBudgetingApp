@@ -21,7 +21,7 @@ public class UserInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_user_info);
         pin = findViewById(R.id.pin);
         location = findViewById(R.id.location);
         name = findViewById(R.id.name);
@@ -42,7 +42,7 @@ public class UserInfo extends AppCompatActivity {
             }
         });
 
-        setContentView(R.layout.activity_user_info);
+
     }
 
     @SuppressLint("SetTextI18n")

@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         PieChartView pieChartView = findViewById(R.id.BudgetOverviewChart);
         ArrayList<SliceValue> pieData = new ArrayList<>();
         /*
@@ -27,6 +28,5 @@ public class MainActivity extends AppCompatActivity {
         pieData.add(new SliceValue(60, Color.MAGENTA));
         PieChartData pieChartData = new PieChartData(pieData);
         pieChartView.setPieChartData(pieChartData);
-        setContentView(R.layout.activity_main);
     }
 }

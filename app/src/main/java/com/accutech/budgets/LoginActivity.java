@@ -19,10 +19,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        this.pin = findViewById(R.id.pinEntry);
-        error = findViewById(R.id.errorText);
-        Button submit = findViewById(R.id.button);
-        Button newUser = findViewById(R.id.newUser);
+        pin = (EditText)findViewById(R.id.pinEntry);
+        error = (TextView) findViewById(R.id.errorText);
+        Button submit = (Button) findViewById(R.id.button);
+        Button newUser = (Button) findViewById(R.id.newUser);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                System.out.print("clicked");
                 Intent user = new Intent(LoginActivity.this,UserInfo.class);
                 startActivity(user);
             }
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onLogin(){
+        System.out.print("clicked");
         if (pin.getText().toString().equals("1234")) {
             Intent success = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(success);
