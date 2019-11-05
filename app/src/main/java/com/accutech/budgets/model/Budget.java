@@ -20,7 +20,7 @@ public class Budget {
     private Map<BudgetCategory, Double> recommendedSpending;
     private Map<BudgetCategory, Double> actualSpending;
 
-    private Budget() {
+    public Budget() {
         populateRecommendedSpending();
         populateActualSpending();
     }
@@ -53,12 +53,16 @@ public class Budget {
         actualSpending.put(MISCELLANEOUS, 0.0);
     }
 
-    /**
-     *
-     * @param category
-     * @param amount
-     * @return
-     */
+    public void setMonthlyIncome(double income) {
+        this.monthlyIncome = income;
+    }
+
+    public Double setRecommendation(BudgetCategory category, Double amount) {
+        final Double remove = recommendedSpending.remove(category);
+        recommendedSpending.put(category, amount);
+        return remove;
+    }
+
     public Double addSpending(BudgetCategory category, Double amount) {
         Double currentSpending = actualSpending.get(category);
         currentSpending += amount;

@@ -1,13 +1,17 @@
 package com.accutech.budgets.model;
 
+import static com.accutech.budgets.model.BudgetCategory.HOUSING;
+
 public class BudgetCreator {
 
+    private static Budget budget;
     private static int age;
     private static int monthlyIncome;
     private static HousingOwnership housingOwnership;
     private static int housingPayment;
     private static int debt;
     private static int savings;
+    private static double remainingMoney;
 
     public static void setAge(int age) {
         BudgetCreator.age = age;
@@ -34,8 +38,28 @@ public class BudgetCreator {
     }
 
     public Budget createBudget() {
-        // TODO this
-        return null;
+        settleNonNegotiableCategories();
+        // TODO finish this
+        return budget;
+    }
+
+    private void settleNonNegotiableCategories() {
+        settleHousing();
+        settleUtilities();
+        settleGroceries();
+    }
+
+    private void settleHousing() {
+        budget.setRecommendation(HOUSING, (double) housingPayment);
+        remainingMoney -= housingPayment;
+    }
+
+    private void settleUtilities() {
+        // TODO average utilites based on housing cost in location?
+    }
+
+    private void settleGroceries() {
+        // TODO average groceries based on housing cost in location?
     }
 
     private void setMonthlyIncome(Budget budget) {
