@@ -68,12 +68,20 @@ public class BudgetCreator {
                 checkNotNull(housingOwnershipInput),
                 checkNotNull(housingPaymentInput),
                 checkNotNull(debtInput),
-                checkNotNull(savingsInput));
+                checkNotNull(savingsInput),
+                checkNotNull(locationInput));
     }
 
-    private Budget createBudgetFromInputs(String age, String income, String housingOwnership, String housingPayment, String debt, String savings) {
+    private Budget createBudgetFromInputs(String age, String income, String housingOwnership, String housingPayment, String debt, String savings, String location) {
+        convertInputsToTypes();
         budget = new Budget();
         return budget;
+    }
+
+    private void convertInputsToTypes() {
+        age = Integer.parseInt(ageInput);
+        income = Double.parseDouble(incomeInput);
+
     }
 
     private void allocateHousing() {
