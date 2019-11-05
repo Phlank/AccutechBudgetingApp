@@ -4,43 +4,58 @@ import static com.accutech.budgets.model.BudgetCategory.HOUSING;
 
 public class BudgetCreator {
 
-    private static Budget budget;
+    private Budget budget;
     private static int age;
     private static int monthlyIncome;
-    private static HousingOwnership housingOwnership;
-    private static int housingPayment;
-    private static int debt;
-    private static int savings;
-    private static double remainingMoney;
-
-    public static void setAge(int age) {
-        BudgetCreator.age = age;
+    private HousingOwnership ownership;
+    private int housingPayment;
+    private int debt;
+    private int savings;
+    private double remainingMoney;
+    
+    public BudgetCreator() {
     }
 
-    public static void setMonthlyIncome(int income) {
-        monthlyIncome = income;
+    public BudgetCreator setAge(int age) {
+        this.age = age;
+        return this;
     }
 
-    public static void setHousingOwnership(HousingOwnership ownership) {
-        housingOwnership = ownership;
+    public BudgetCreator setMonthlyIncome(int amount) {
+        this.monthlyIncome = amount;
+        return this;
     }
 
-    public static void setHousingPayment(int payment) {
-        housingPayment = payment;
+    public BudgetCreator setHousingOwnership(HousingOwnership ownership) {
+        this.ownership = ownership;
+        return this;
     }
 
-    public static void setDebt(int debt) {
-        BudgetCreator.debt = debt;
+    public BudgetCreator setHousingPayment(int amount) {
+        this.housingPayment = amount;
+        return this;
     }
 
-    public static void setSavings(int savings) {
-        BudgetCreator.savings = savings;
+    public BudgetCreator setDebt(int amount) {
+        this.debt = amount;
+        return this;
     }
 
+    public BudgetCreator setSavings(int amount) {
+        this.savings = amount;
+        return this;
+    }
+    
     public Budget createBudget() {
+        checkPrerequisitesNonNull();
         settleNonNegotiableCategories();
         // TODO finish this
         return budget;
+    }
+
+    private void checkPrerequisitesNonNull() {
+        // TODO add guava and use prerequisites
+        // TODO see https://github.com/Phlank/MusicPlayer/blob/master/src/com/github/phlank/musicplayer/model/Song.java
     }
 
     private void settleNonNegotiableCategories() {
@@ -60,14 +75,6 @@ public class BudgetCreator {
 
     private void settleGroceries() {
         // TODO average groceries based on housing cost in location?
-    }
-
-    private void setMonthlyIncome(Budget budget) {
-
-    }
-
-    private void setSpendingLimits(Budget budget) {
-
     }
 
 }
