@@ -1,5 +1,6 @@
 package com.accutech.budgets.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.accutech.budgets.model.BudgetCategory.EDUCATION;
@@ -17,26 +18,26 @@ import static com.accutech.budgets.model.BudgetCategory.UTILITIES;
 public class Budget {
 
     private Double monthlyIncome = 0.0;
-    private Map<BudgetCategory, Double> allotedSpending;
-    private Map<BudgetCategory, Double> actualSpending;
+    private Map<BudgetCategory, Double> allottedSpending = new HashMap<>();
+    private Map<BudgetCategory, Double> actualSpending =  new HashMap<>();
 
     public Budget() {
-        populateRecommendedSpending();
+        populateAllottedSpending();
         populateActualSpending();
     }
 
-    private void populateRecommendedSpending() {
-        allotedSpending.put(HOUSING, 0.0);
-        allotedSpending.put(UTILITIES, 0.0);
-        allotedSpending.put(GROCERIES, 0.0);
-        allotedSpending.put(SAVINGS, 0.0);
-        allotedSpending.put(HEALTH, 0.0);
-        allotedSpending.put(TRANSPORTATION, 0.0);
-        allotedSpending.put(EDUCATION, 0.0);
-        allotedSpending.put(ENTERTAINMENT, 0.0);
-        allotedSpending.put(KIDS, 0.0);
-        allotedSpending.put(PETS, 0.0);
-        allotedSpending.put(MISCELLANEOUS, 0.0);
+    private void populateAllottedSpending() {
+        allottedSpending.put(HOUSING, 0.0);
+        allottedSpending.put(UTILITIES, 0.0);
+        allottedSpending.put(GROCERIES, 0.0);
+        allottedSpending.put(SAVINGS, 0.0);
+        allottedSpending.put(HEALTH, 0.0);
+        allottedSpending.put(TRANSPORTATION, 0.0);
+        allottedSpending.put(EDUCATION, 0.0);
+        allottedSpending.put(ENTERTAINMENT, 0.0);
+        allottedSpending.put(KIDS, 0.0);
+        allottedSpending.put(PETS, 0.0);
+        allottedSpending.put(MISCELLANEOUS, 0.0);
     }
 
     private void populateActualSpending() {
@@ -58,8 +59,8 @@ public class Budget {
     }
 
     public Double setAllotment(BudgetCategory category, Double amount) {
-        final Double remove = allotedSpending.remove(category);
-        allotedSpending.put(category, amount);
+        final Double remove = allottedSpending.remove(category);
+        allottedSpending.put(category, amount);
         return remove;
     }
 
@@ -69,6 +70,18 @@ public class Budget {
         actualSpending.remove(category);
         actualSpending.put(category, currentSpending);
         return currentSpending;
+    }
+
+    public Double getAllotment(BudgetCategory category) {
+        return allottedSpending.get(category);
+    }
+
+    public Double getSpending(BudgetCategory category) {
+        return actualSpending.get(category);
+    }
+
+    public Double getMonthlyIncome() {
+        return monthlyIncome;
     }
 
 }

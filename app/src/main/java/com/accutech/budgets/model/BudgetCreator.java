@@ -81,7 +81,10 @@ public class BudgetCreator {
     private void convertInputsToTypes() {
         age = Integer.parseInt(ageInput);
         income = Double.parseDouble(incomeInput);
-
+        housingOwnership = HousingOwnership.parseHousingOwnership(housingOwnershipInput);
+        housingPayment = Double.parseDouble(housingPaymentInput);
+        debt = Double.parseDouble(debtInput);
+        savings = Double.parseDouble(savingsInput);
     }
 
     private void allocateHousing() {
