@@ -1,71 +1,83 @@
 package com.accutech.budgets.model;
 
 import static com.accutech.budgets.model.BudgetCategory.HOUSING;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BudgetCreator {
 
+    private static String ageInput;
+    private static String incomeInput;
+    private static String housingOwnershipInput;
+    private static String housingPaymentInput;
+    private static String debtInput;
+    private static String savingsInput;
+    private static String locationInput;
+
+    private int age;
+    private double income;
+    private HousingOwnership housingOwnership;
+    private double housingPayment;
+    private double debt;
+    private double savings;
+
     private Budget budget;
-    private static int age;
-    private static int monthlyIncome;
-    private HousingOwnership ownership;
-    private int housingPayment;
-    private int debt;
-    private int savings;
-    private double remainingMoney;
-    
+    private static Double remainingMoney;
+
     public BudgetCreator() {
     }
 
-    public BudgetCreator setAge(int age) {
-        this.age = age;
+    public BudgetCreator setAge(String age) {
+        ageInput = age;
         return this;
     }
 
-    public BudgetCreator setMonthlyIncome(int amount) {
-        this.monthlyIncome = amount;
+    public BudgetCreator setMonthlyIncome(String amount) {
+        incomeInput = amount;
         return this;
     }
 
-    public BudgetCreator setHousingOwnership(HousingOwnership ownership) {
-        this.ownership = ownership;
+    public BudgetCreator setHousingOwnership(String ownership) {
+        housingOwnershipInput = ownership;
         return this;
     }
 
-    public BudgetCreator setHousingPayment(int amount) {
-        this.housingPayment = amount;
+    public BudgetCreator setHousingPayment(String amount) {
+        housingPaymentInput = amount;
         return this;
     }
 
-    public BudgetCreator setDebt(int amount) {
-        this.debt = amount;
+    public BudgetCreator setDebt(String amount) {
+        debtInput = amount;
         return this;
     }
 
-    public BudgetCreator setSavings(int amount) {
-        this.savings = amount;
+    public BudgetCreator setSavings(String amount) {
+        savingsInput = amount;
+        return this;
+    }
+
+    public BudgetCreator setLocation(String location) {
+        locationInput = location;
         return this;
     }
     
     public Budget createBudget() {
-        checkPrerequisitesNonNull();
-        settleNonNegotiableCategories();
-        // TODO finish this
+        return createBudgetFromInputs(
+                checkNotNull(ageInput),
+                checkNotNull(incomeInput),
+                checkNotNull(housingOwnershipInput),
+                checkNotNull(housingPaymentInput),
+                checkNotNull(debtInput),
+                checkNotNull(savingsInput));
+    }
+
+    private Budget createBudgetFromInputs(String age, String income, String housingOwnership, String housingPayment, String debt, String savings) {
+        budget = new Budget();
         return budget;
     }
 
-    private void checkPrerequisitesNonNull() {
-        // TODO add guava and use prerequisites
-        // TODO see https://github.com/Phlank/MusicPlayer/blob/master/src/com/github/phlank/musicplayer/model/Song.java
-    }
-
-    private void settleNonNegotiableCategories() {
-        settleHousing();
-        settleUtilities();
-        settleGroceries();
-    }
-
-    private void settleHousing() {
-        budget.setRecommendation(HOUSING, (double) housingPayment);
+    private void allocateHousing() {
+        budget.setAllotment(HOUSING, housingPayment);
         remainingMoney -= housingPayment;
     }
 

@@ -17,7 +17,7 @@ import static com.accutech.budgets.model.BudgetCategory.UTILITIES;
 public class Budget {
 
     private Double monthlyIncome = 0.0;
-    private Map<BudgetCategory, Double> recommendedSpending;
+    private Map<BudgetCategory, Double> allotedSpending;
     private Map<BudgetCategory, Double> actualSpending;
 
     public Budget() {
@@ -26,17 +26,17 @@ public class Budget {
     }
 
     private void populateRecommendedSpending() {
-        recommendedSpending.put(HOUSING, 0.0);
-        recommendedSpending.put(UTILITIES, 0.0);
-        recommendedSpending.put(GROCERIES, 0.0);
-        recommendedSpending.put(SAVINGS, 0.0);
-        recommendedSpending.put(HEALTH, 0.0);
-        recommendedSpending.put(TRANSPORTATION, 0.0);
-        recommendedSpending.put(EDUCATION, 0.0);
-        recommendedSpending.put(ENTERTAINMENT, 0.0);
-        recommendedSpending.put(KIDS, 0.0);
-        recommendedSpending.put(PETS, 0.0);
-        recommendedSpending.put(MISCELLANEOUS, 0.0);
+        allotedSpending.put(HOUSING, 0.0);
+        allotedSpending.put(UTILITIES, 0.0);
+        allotedSpending.put(GROCERIES, 0.0);
+        allotedSpending.put(SAVINGS, 0.0);
+        allotedSpending.put(HEALTH, 0.0);
+        allotedSpending.put(TRANSPORTATION, 0.0);
+        allotedSpending.put(EDUCATION, 0.0);
+        allotedSpending.put(ENTERTAINMENT, 0.0);
+        allotedSpending.put(KIDS, 0.0);
+        allotedSpending.put(PETS, 0.0);
+        allotedSpending.put(MISCELLANEOUS, 0.0);
     }
 
     private void populateActualSpending() {
@@ -57,9 +57,9 @@ public class Budget {
         this.monthlyIncome = income;
     }
 
-    public Double setRecommendation(BudgetCategory category, Double amount) {
-        final Double remove = recommendedSpending.remove(category);
-        recommendedSpending.put(category, amount);
+    public Double setAllotment(BudgetCategory category, Double amount) {
+        final Double remove = allotedSpending.remove(category);
+        allotedSpending.put(category, amount);
         return remove;
     }
 
