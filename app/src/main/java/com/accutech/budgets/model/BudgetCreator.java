@@ -100,7 +100,6 @@ public class BudgetCreator {
 
     private void allocateMoney() {
         allocateMoneyForHousing();
-        Double remainingFifty = fifty - (income - remainingMoney);
         allocateMoneyForUtilities();
         allocateMoneyForGroceries();
         allocateMoneyForSavings();
@@ -120,7 +119,7 @@ public class BudgetCreator {
 
     private void allocateMoneyForUtilities() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(UTILITIES, remainingFifty * 0.5);
+        budget.setAllotment(UTILITIES, remainingFifty * 0.5); // Split remaining fifty between here and groceries
     }
 
     private void allocateMoneyForGroceries() {
@@ -129,15 +128,19 @@ public class BudgetCreator {
     }
 
     private void allocateMoneyForSavings() {
+
     }
 
     private void allocateMoneyForHealth() {
+
     }
 
     private void allocateMoneyForTransportation() {
+
     }
 
     private void allocateMoneyForEducation() {
+
     }
 
     private void allocateMoneyForEntertainment() {
