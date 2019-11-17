@@ -1,7 +1,15 @@
 package com.accutech.budgets.model;
 
+import static com.accutech.budgets.model.BudgetCategory.EDUCATION;
+import static com.accutech.budgets.model.BudgetCategory.ENTERTAINMENT;
 import static com.accutech.budgets.model.BudgetCategory.GROCERIES;
+import static com.accutech.budgets.model.BudgetCategory.HEALTH;
 import static com.accutech.budgets.model.BudgetCategory.HOUSING;
+import static com.accutech.budgets.model.BudgetCategory.KIDS;
+import static com.accutech.budgets.model.BudgetCategory.MISCELLANEOUS;
+import static com.accutech.budgets.model.BudgetCategory.PETS;
+import static com.accutech.budgets.model.BudgetCategory.SAVINGS;
+import static com.accutech.budgets.model.BudgetCategory.TRANSPORTATION;
 import static com.accutech.budgets.model.BudgetCategory.UTILITIES;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -112,6 +120,8 @@ public class BudgetCreator {
         allocateMoneyForMiscellaneous();
     }
 
+    //50%
+
     private void allocateMoneyForHousing() {
         budget.setAllotment(HOUSING, housingPayment);
         remainingMoney -= housingPayment;
@@ -119,40 +129,54 @@ public class BudgetCreator {
 
     private void allocateMoneyForUtilities() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(UTILITIES, remainingFifty * 0.5); // Split remaining fifty between here and groceries
+        budget.setAllotment(UTILITIES, remainingFifty *.25); // Split remaining fifty between here and groceries
     }
 
     private void allocateMoneyForGroceries() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(GROCERIES, remainingFifty * 0.5);
-    }
-
-    private void allocateMoneyForSavings() {
-
-    }
-
-    private void allocateMoneyForHealth() {
-
-    }
-
-    private void allocateMoneyForTransportation() {
-
+        budget.setAllotment(GROCERIES, remainingFifty *.25);
     }
 
     private void allocateMoneyForEducation() {
-
+        Double remainingFifty = fifty - (income - remainingMoney);
+        budget.setAllotment(EDUCATION, remainingFifty*.25);
     }
 
+    private void allocateMoneyForHealth() {
+        Double remainingFifty = fifty - (income - remainingMoney);
+        budget.setAllotment(HEALTH, remainingFifty*.125);
+    }
+
+    private void allocateMoneyForTransportation() {
+        Double remainingFifty = fifty - (income - remainingMoney);
+        budget.setAllotment(TRANSPORTATION, remainingFifty*.125);
+    }
+
+
+    //30%
     private void allocateMoneyForEntertainment() {
+        Double remainingThirty = thirty - (income - remainingMoney);
+        budget.setAllotment(ENTERTAINMENT, remainingThirty*.25);
     }
 
     private void allocateMoneyForKids() {
+        Double remainingThirty = thirty - (income - remainingMoney);
+        budget.setAllotment(KIDS, remainingThirty*.25);
     }
 
-    private void allocateMoneyForPets() {
+    private void allocateMoneyForPets(){
+        Double remainingThirty = thirty - (income - remainingMoney);
+        budget.setAllotment(PETS, remainingThirty*.25);
     }
 
     private void allocateMoneyForMiscellaneous() {
+        Double remainingThirty = thirty - (income - remainingMoney);
+        budget.setAllotment(MISCELLANEOUS, remainingThirty*.25);
+    }
+
+    //20%
+    private void allocateMoneyForSavings() {
+        budget.setAllotment(SAVINGS, twenty);
     }
 
 }
