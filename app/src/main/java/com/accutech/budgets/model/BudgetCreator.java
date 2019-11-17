@@ -107,20 +107,21 @@ public class BudgetCreator {
     }
 
     private void allocateMoney() {
+        // 50% of income distributed here
         allocateMoneyForHousing();
         allocateMoneyForUtilities();
         allocateMoneyForGroceries();
-        allocateMoneyForSavings();
         allocateMoneyForHealth();
         allocateMoneyForTransportation();
         allocateMoneyForEducation();
+        // 20% of income distributed here
+        allocateMoneyForSavings();
+        // 30% of income distributed here
         allocateMoneyForEntertainment();
         allocateMoneyForKids();
         allocateMoneyForPets();
         allocateMoneyForMiscellaneous();
     }
-
-    //50%
 
     private void allocateMoneyForHousing() {
         budget.setAllotment(HOUSING, housingPayment);
@@ -129,7 +130,7 @@ public class BudgetCreator {
 
     private void allocateMoneyForUtilities() {
         Double remainingFifty = fifty - housingPayment;
-        budget.setAllotment(UTILITIES, remainingFifty * .25); // Split remaining fifty between here and groceries
+        budget.setAllotment(UTILITIES, remainingFifty * .25);
     }
 
     private void allocateMoneyForGroceries() {
@@ -152,7 +153,6 @@ public class BudgetCreator {
         budget.setAllotment(TRANSPORTATION, remainingFifty * .125);
     }
 
-    //30%
     private void allocateMoneyForEntertainment() {
         Double remainingThirty = thirty;
         budget.setAllotment(ENTERTAINMENT, remainingThirty * .25);
@@ -173,7 +173,6 @@ public class BudgetCreator {
         budget.setAllotment(MISCELLANEOUS, remainingThirty * .25);
     }
 
-    //20%
     private void allocateMoneyForSavings() {
         budget.setAllotment(SAVINGS, twenty);
     }
