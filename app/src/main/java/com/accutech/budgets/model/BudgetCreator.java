@@ -128,48 +128,48 @@ public class BudgetCreator {
     }
 
     private void allocateMoneyForUtilities() {
-        Double remainingFifty = fifty - (income - remainingMoney);
+        Double remainingFifty = fifty - housingPayment;
         budget.setAllotment(UTILITIES, remainingFifty * .25); // Split remaining fifty between here and groceries
     }
 
     private void allocateMoneyForGroceries() {
-        Double remainingFifty = fifty - (income - remainingMoney);
+        Double remainingFifty = fifty - housingPayment;
         budget.setAllotment(GROCERIES, remainingFifty * .25);
     }
 
     private void allocateMoneyForEducation() {
-        Double remainingFifty = fifty - (income - remainingMoney);
+        Double remainingFifty = fifty - housingPayment;
         budget.setAllotment(EDUCATION, remainingFifty * .25);
     }
 
     private void allocateMoneyForHealth() {
-        Double remainingFifty = fifty - (income - remainingMoney);
+        Double remainingFifty = fifty - housingPayment;
         budget.setAllotment(HEALTH, remainingFifty * .125);
     }
 
     private void allocateMoneyForTransportation() {
-        Double remainingFifty = fifty - (income - remainingMoney);
+        Double remainingFifty = fifty - housingPayment;
         budget.setAllotment(TRANSPORTATION, remainingFifty * .125);
     }
 
     //30%
     private void allocateMoneyForEntertainment() {
-        Double remainingThirty = thirty - (income - remainingMoney);
+        Double remainingThirty = thirty;
         budget.setAllotment(ENTERTAINMENT, remainingThirty * .25);
     }
 
     private void allocateMoneyForKids() {
-        Double remainingThirty = thirty - (income - remainingMoney);
+        Double remainingThirty = thirty;
         budget.setAllotment(KIDS, remainingThirty * .25);
     }
 
     private void allocateMoneyForPets() {
-        Double remainingThirty = thirty - (income - remainingMoney);
+        Double remainingThirty = thirty;
         budget.setAllotment(PETS, remainingThirty * .25);
     }
 
     private void allocateMoneyForMiscellaneous() {
-        Double remainingThirty = thirty - (income - remainingMoney);
+        Double remainingThirty = thirty;
         budget.setAllotment(MISCELLANEOUS, remainingThirty * .25);
     }
 
