@@ -129,49 +129,48 @@ public class BudgetCreator {
 
     private void allocateMoneyForUtilities() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(UTILITIES, remainingFifty *.25); // Split remaining fifty between here and groceries
+        budget.setAllotment(UTILITIES, remainingFifty * .25); // Split remaining fifty between here and groceries
     }
 
     private void allocateMoneyForGroceries() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(GROCERIES, remainingFifty *.25);
+        budget.setAllotment(GROCERIES, remainingFifty * .25);
     }
 
     private void allocateMoneyForEducation() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(EDUCATION, remainingFifty*.25);
+        budget.setAllotment(EDUCATION, remainingFifty * .25);
     }
 
     private void allocateMoneyForHealth() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(HEALTH, remainingFifty*.125);
+        budget.setAllotment(HEALTH, remainingFifty * .125);
     }
 
     private void allocateMoneyForTransportation() {
         Double remainingFifty = fifty - (income - remainingMoney);
-        budget.setAllotment(TRANSPORTATION, remainingFifty*.125);
+        budget.setAllotment(TRANSPORTATION, remainingFifty * .125);
     }
-
 
     //30%
     private void allocateMoneyForEntertainment() {
         Double remainingThirty = thirty - (income - remainingMoney);
-        budget.setAllotment(ENTERTAINMENT, remainingThirty*.25);
+        budget.setAllotment(ENTERTAINMENT, remainingThirty * .25);
     }
 
     private void allocateMoneyForKids() {
         Double remainingThirty = thirty - (income - remainingMoney);
-        budget.setAllotment(KIDS, remainingThirty*.25);
+        budget.setAllotment(KIDS, remainingThirty * .25);
     }
 
-    private void allocateMoneyForPets(){
+    private void allocateMoneyForPets() {
         Double remainingThirty = thirty - (income - remainingMoney);
-        budget.setAllotment(PETS, remainingThirty*.25);
+        budget.setAllotment(PETS, remainingThirty * .25);
     }
 
     private void allocateMoneyForMiscellaneous() {
         Double remainingThirty = thirty - (income - remainingMoney);
-        budget.setAllotment(MISCELLANEOUS, remainingThirty*.25);
+        budget.setAllotment(MISCELLANEOUS, remainingThirty * .25);
     }
 
     //20%
