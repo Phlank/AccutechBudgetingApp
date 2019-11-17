@@ -1,9 +1,5 @@
 package com.accutech.budgets.model;
 
-import static com.accutech.budgets.model.Priority.HIGH;
-import static com.accutech.budgets.model.Priority.LOW;
-import static com.accutech.budgets.model.Priority.NON_NEGOTIABLE;
-
 public enum BudgetCategory {
 
     HOUSING,
@@ -18,32 +14,44 @@ public enum BudgetCategory {
     PETS,
     MISCELLANEOUS;
 
-    public Priority getPriority() {
+    private static final Double HOUSING_MINIMUM = 0.0;
+    private static final Double UTILITIES_MINIMUM = 0.0;
+    private static final Double GROCERIES_MINIMUM = 0.0;
+    private static final Double SAVINGS_MINIMUM = 0.0;
+    private static final Double HEALTH_MINIMUM = 0.0;
+    private static final Double TRANSPORTATION_MINIMUM = 0.0;
+    private static final Double EDUCATION_MINIMUM = 0.0;
+    private static final Double ENTERTAINMENT_MINIMUM = 0.0;
+    private static final Double KIDS_MINIMUM = 0.0;
+    private static final Double PETS_MINIMUM = 0.0;
+    private static final Double MISCELLANEOUS_MINIMUM = 0.0;
+
+    public Double getMinimum() {
         switch (this) {
             case HOUSING:
-                return NON_NEGOTIABLE;
+                return HOUSING_MINIMUM;
             case UTILITIES:
-                return NON_NEGOTIABLE;
+                return UTILITIES_MINIMUM;
             case GROCERIES:
-                return NON_NEGOTIABLE;
+                return GROCERIES_MINIMUM;
             case SAVINGS:
-                return HIGH;
+                return SAVINGS_MINIMUM;
             case HEALTH:
-                return HIGH;
+                return HEALTH_MINIMUM;
             case TRANSPORTATION:
-                return HIGH;
+                return TRANSPORTATION_MINIMUM;
             case EDUCATION:
-                return LOW;
+                return EDUCATION_MINIMUM;
             case ENTERTAINMENT:
-                return LOW;
+                return ENTERTAINMENT_MINIMUM;
             case KIDS:
-                return HIGH;
+                return KIDS_MINIMUM;
             case PETS:
-                return LOW;
+                return PETS_MINIMUM;
             case MISCELLANEOUS:
-                return LOW;
+                return MISCELLANEOUS_MINIMUM;
             default:
-                return LOW;
+                return null;
         }
     }
 

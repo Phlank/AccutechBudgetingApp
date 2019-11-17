@@ -6,7 +6,7 @@ public enum HousingOwnership {
     OWN_PAID,
     OWN_MORTGAGE;
 
-    private static final String RENT_PARSE = "I rent my housing";
+    private static final String RENT_PARSE = "Renting";
     private static final String OWN_MORTGAGE_PARSE = "I own my housing with a mortgage";
     private static final String OWN_PAID_PARSE = "I own my housing";
 
