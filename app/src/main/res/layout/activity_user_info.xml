@@ -6,30 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".view.UserInfo">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar3"
-        android:layout_width="599dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
     <ScrollView
+        android:id="@+id/infoLayoutParent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="0dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar3"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/infoLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -94,132 +87,12 @@
                 android:singleLine="true"
                 tools:ignore="LabelFor" />
 
-            <TextView
-                android:id="@+id/incomeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Income:"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/income"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="numberDecimal"
-                android:singleLine="true"
-                android:textSize="20sp"
-                tools:ignore="LabelFor" />
-
-            <TextView
-                android:id="@+id/locationLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="What State do Live in?"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="text|textAutoComplete"
-                android:singleLine="true"
-                android:text="location"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText,LabelFor" />
-
-            <TextView
-                android:id="@+id/pinLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Desired Pin:"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/pin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="numberPassword"
-                android:singleLine="true"
-                android:textSize="18sp"
-                tools:ignore="LabelFor" />
-
-            <TextView
-                android:id="@+id/dependentLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Number of Dependents:"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/dependents"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                tools:ignore="LabelFor"
-                android:importantForAutofill="no" />
-
-            <TextView
-                android:id="@+id/housingLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Housing"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText" />
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <RadioButton
-                    android:id="@+id/rent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rent"
-                    tools:ignore="HardcodedText" />
-
-                <RadioButton
-                    android:id="@+id/Own"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Own"
-                    tools:ignore="HardcodedText" />
-
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/PaymentLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Housing Payment"
-                tools:ignore="HardcodedText" />
-
-            <EditText
-                android:id="@+id/payment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:singleLine="true"
-                android:importantForAutofill="no"
-                tools:ignore="LabelFor" />
-
             <Button
-                android:id="@+id/submitData"
-                android:layout_width="wrap_content"
+                android:id="@+id/next"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit"
-                tools:ignore="HardcodedText" />
+                android:text="Next"
+                />
 
             <TextView
                 android:id="@+id/dataErrorText"
