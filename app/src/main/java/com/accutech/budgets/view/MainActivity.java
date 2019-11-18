@@ -2,8 +2,6 @@ package com.accutech.budgets.view;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import com.accutech.budgets.R;
 import com.accutech.budgets.model.Budget;
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         pieData.add(new SliceValue((float) pets, Color.rgb(0,128,255)));
         pieData.add(new SliceValue((float) misc, Color.YELLOW));
         PieChartData pieChartData = new PieChartData(pieData);
+        pieChartData.setHasLabels(true);
         pieChartView.setPieChartData(pieChartData);
         pieChartView.setChartRotationEnabled(true);
 

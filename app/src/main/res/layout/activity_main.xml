@@ -41,14 +41,36 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/total"
+                android:id="@+id/redLabel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Red Shades - high priority"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/used"
+                android:id="@+id/greenLabel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Green Shades - medium priority"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/blueLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Blue - Savings"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/yellowLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Yellow - Miscellaneous/free spending"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
