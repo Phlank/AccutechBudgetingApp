@@ -1,5 +1,4 @@
 enum BudgetCategory {
-
   housing,
   utilities,
   groceries,
@@ -11,5 +10,4 @@ enum BudgetCategory {
   kids,
   pets,
   miscellaneous
-
 }
