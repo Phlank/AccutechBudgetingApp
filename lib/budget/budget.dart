@@ -1,7 +1,7 @@
-import 'budget_category.dart';
+import 'package:budgetflow/budget/budget_category.dart';
+import 'package:budgetflow/budget/budget_month.dart';
 
 class Budget {
-
 	Map<BudgetCategory, double> allottedSpending, actualSpending;
 	double monthlyIncome;
 
@@ -20,9 +20,12 @@ class Budget {
 	}
 
 	double setAllotment(BudgetCategory category, double amount) {
-	    double remove = allottedSpending.remove(category);
-	    allottedSpending[category] = amount;
-	    return remove;
-    }
+		double remove = allottedSpending.remove(category);
+		allottedSpending[category] = amount;
+		return remove;
+	}
 
+	BudgetMonth toBudgetMonth() {
+		return null;
+	}
 }
