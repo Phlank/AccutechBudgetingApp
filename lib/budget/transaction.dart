@@ -4,6 +4,7 @@ class Transaction {
 
     DateTime datetime;
     String vendorName;
+    String method;
     double delta;
     BudgetCategory category;
 
