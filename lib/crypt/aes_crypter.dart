@@ -11,7 +11,7 @@ class AESCrypter implements Crypter {
 
   AESCrypter(String secret) {
     _secret = secret;
-    _secretKey = DartEncrypt.Key.fromUtf8(secret);
+    _secretKey = DartEncrypt.Key.fromUtf8(_secret);
     _encrypter = DartEncrypt.Encrypter(DartEncrypt.AES(_secretKey));
   }
 
