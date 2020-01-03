@@ -1,4 +1,6 @@
 import 'package:budgetflow/crypt/crypter.dart';
+import 'package:budgetflow/crypt/encrypted.dart';
+import 'package:budgetflow/crypt/password.dart';
 import 'package:encrypt/encrypt.dart' as DartEncrypt;
 
 class AESCrypter implements Crypter {
@@ -9,8 +11,8 @@ class AESCrypter implements Crypter {
   static DartEncrypt.Encrypter _encrypter;
   static DartEncrypt.IV _iv;
 
-  AESCrypter(String secret) {
-    _secret = secret;
+  AESCrypter(Password password) {
+    _secret = password.getSecret();
     _secretKey = DartEncrypt.Key.fromUtf8(_secret);
     _encrypter = DartEncrypt.Encrypter(DartEncrypt.AES(_secretKey));
   }
