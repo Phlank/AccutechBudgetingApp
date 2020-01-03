@@ -1,11 +1,14 @@
 class Password {
+
+  bool verify(String secret, String salt) {}
+
   Password hashOnlyPassword(String hash) {}
 
-  bool verify(String input) {}
-
-  String hash() {}
+  String getHash() {}
 
   String getSecret() {}
+
+  String getSalt() {}
 
   String padTo(int n, String input) {
   	while (input.length < n) {
