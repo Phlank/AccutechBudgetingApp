@@ -4,6 +4,7 @@ import 'package:steel_crypt/steel_crypt.dart';
 class SteelPassword extends Password {
   static const String ALGORITHM = "scrypt";
   static const int SALT_LENGTH = 16;
+  static const int KEY_LENGTH = 32;
 
   String _secret;
   String _hash;
@@ -12,8 +13,10 @@ class SteelPassword extends Password {
 
   SteelPassword(String secret) {
     _passCrypt = new PassCrypt(ALGORITHM);
-    _salt = CryptKey().genDart(16);
+    int diffTo32 = KEY_LENGTH - secret.length;
+    _salt = CryptKey().genDart(diffTo32);
     _hash = _passCrypt.hashPass(_salt, secret);
+    _secret = secret;
   }
 
   Password hashOnlyPassword(String hash) {

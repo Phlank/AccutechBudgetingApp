@@ -13,7 +13,10 @@ class SteelCrypter implements Crypter {
 
   SteelCrypter(Password password) {
     _password = password;
-    _aes = new AesCrypt(_password.getSecret(), MODE, PADDING);
+    // Key must be of length 32, but the entered password doesn't need to be.
+    // We just use the salt to get to a length of 32.
+    String key = _password.getSecret() + _password.getSalt();
+    _aes = new AesCrypt(key, MODE, PADDING);
   }
 
   Encrypted encrypt(String plaintext) {
