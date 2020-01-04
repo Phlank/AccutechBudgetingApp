@@ -11,18 +11,4 @@ class Password {
   String getSecret() {}
 
   String getSalt() {}
-
-  // A helper function for some implementations of passwords which may need
-  // padding to certain integers.
-  String padTo(int n, String input) {
-    while (input.length < n) {
-      // Pad once then double
-      input = input + " " + input;
-    }
-    while (input.length > n) {
-      // Take characters off of front until n
-      input = input.replaceFirst(input.substring(0, 1), '');
-    }
-    return input;
-  }
 }
