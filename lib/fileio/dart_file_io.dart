@@ -15,7 +15,7 @@ class DartFileIO implements FileIO {
     return appDocDir.path;
   }
 
-  Future<bool> writeFile(String pathSuffix, String content) async {
+  Future writeFile(String pathSuffix, String content) async {
     String homePath = await _path;
     String path = homePath + pathSuffix;
     File target = await _getTargetFile(path);
