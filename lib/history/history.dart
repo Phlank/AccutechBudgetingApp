@@ -1,9 +1,8 @@
-import 'dart:collection';
-
-import 'package:budgetflow/history/month.dart';
+import 'package:budgetflow/fileio/dart_file_io.dart';
+import 'package:budgetflow/fileio/file_io.dart';
 
 class History {
-  LinkedHashMap<Month, Map> lineOfHistory;
+  static FileIO fileIO = new DartFileIO();
 
   History() {}
 }

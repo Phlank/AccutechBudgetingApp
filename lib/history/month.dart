@@ -2,27 +2,35 @@ import 'dart:html';
 
 import 'package:budgetflow/budget/budget_category.dart';
 import 'package:budgetflow/budget/transaction.dart';
+import 'package:budgetflow/history/history.dart';
 
 class Month {
-  String allottedFilePath, actualFilePath, transactionFilePath;
+  String _allottedFilepath, _actualFilepath, _transactionFilepath;
   String allottedContent, actualContent, transactionContent;
   Map<BudgetCategory, double> allottedSpendingData;
   Map<BudgetCategory, double> actualSpendingData;
   List<Transaction> transactionData;
   int year, month;
+  History _history;
 
-  Month(String directory, int year, int month) {
+  Month(History history, int year, int month) {
+    _history = history;
     this.year = year;
     this.month = month;
-    _createFilePaths(directory);
+    _createFilePaths();
   }
 
-  void _createFilePaths(String directory) {
-    Future<File> get _localFile async {
-      final path = await _localPath;
-      return File('$path/counter.txt');
-    }
+  void _createFilePaths() {
+    _allottedFilepath = "$year" + "_" + "$month" + "_allotted";
+    _actualFilepath = "$year" + "_" + "$month" + "_actual";
+    _transactionFilepath = "$year" + "_" + "$month" + "_transactions";
+  }
 
+  Future<Map<BudgetCategory, double>> getAllottedSpendingData() async {
+    if (allottedSpendingData == null) { // If the data has not been loaded
+      String cipher = await History.fileIO.readFile(_allottedFilepath);
+
+    }
   }
 
   bool writeMonth() {
