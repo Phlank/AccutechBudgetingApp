@@ -8,8 +8,8 @@ class SteelCrypter implements Crypter {
   static const String MODE = "gcm";
   static const String PADDING = "pkcs7";
 
-  Password _password;
-  AesCrypt _aes;
+  static Password _password;
+  static AesCrypt _aes;
 
   SteelCrypter(Password password) {
     _password = password;

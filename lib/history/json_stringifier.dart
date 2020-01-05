@@ -1,7 +1,8 @@
 import 'package:budgetflow/budget/budget_category.dart';
+import 'package:budgetflow/budget/transaction.dart';
+import 'package:budgetflow/history/strinfigier.dart';
 
-class JSONStringifier {
-
+class JSONStringifier implements Stringifier {
   static const String _HOUSING = "Housing";
   static const String _UTILITIES = "Utilities";
   static const String _GROCERIES = "Groceries";
@@ -17,10 +18,10 @@ class JSONStringifier {
   static Map<BudgetCategory, String> _budgetCategoryStrings;
 
   JSONStringifier() {
-    _populateMaps();
+    _populateBudgetMap();
   }
 
-  void _populateMaps() {
+  void _populateBudgetMap() {
     _budgetCategoryStrings[BudgetCategory.housing] = _HOUSING;
     _budgetCategoryStrings[BudgetCategory.utilities] = _UTILITIES;
     _budgetCategoryStrings[BudgetCategory.groceries] = _GROCERIES;
@@ -34,5 +35,27 @@ class JSONStringifier {
     _budgetCategoryStrings[BudgetCategory.miscellaneous] = _MISCELLANEOUS;
   }
 
-  String getJSONString(BudgetCategory c) {}
+  String stringifyBudgetMap(Map<BudgetCategory, double> map) {
+    // TODO implement this
+    return null;
+  }
+
+  Map<BudgetCategory, double> unstringifyBudgetMap(String jsonMap) {
+    // TODO implement this
+    return null;
+  }
+
+  String stringifyTransactionList(List<Transaction> list) {
+    // TODO implement this
+    return null;
+  }
+
+  List<Transaction> unstringifyTransactionList(String jsonList) {
+    // TODO implement this
+    return null;
+  }
+
+  String _getJSONString(BudgetCategory c) {
+    return _budgetCategoryStrings[c];
+  }
 }
