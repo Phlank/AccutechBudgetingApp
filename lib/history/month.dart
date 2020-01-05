@@ -29,7 +29,7 @@ class Month {
   Future<Map<BudgetCategory, double>> getAllottedSpendingData() async {
     if (allottedSpendingData == null) { // If the data has not been loaded
       String cipher = await History.fileIO.readFile(_allottedFilepath);
-
+      String plaintext = History.crypter.decrypt(encrypted)
     }
   }
 
