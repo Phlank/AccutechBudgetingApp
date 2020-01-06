@@ -1,5 +1,7 @@
 import 'package:budgetflow/budget/budget_category.dart';
 import 'package:budgetflow/budget/transaction.dart';
+import 'package:budgetflow/crypt/password.dart';
+import 'package:budgetflow/history/history.dart';
 import 'package:budgetflow/history/strinfigier.dart';
 
 class JSONStringifier implements Stringifier {
@@ -51,6 +53,21 @@ class JSONStringifier implements Stringifier {
   }
 
   List<Transaction> unstringifyTransactionList(String jsonList) {
+    // TODO implement this
+    return null;
+  }
+
+  String stringifyHistory(History history) {
+    // TODO implement this
+    return null;
+  }
+
+  History unstringifyHistory(String jsonHistory) {
+    // TODO implement this
+    return null;
+  }
+
+  Password unstringifyPassword(String jsonHistory) {
     // TODO implement this
     return null;
   }
