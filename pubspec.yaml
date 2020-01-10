@@ -30,6 +30,9 @@ dependencies:
   # Used for encryption
   steel_crypt: ^1.5.3
 
+  # File IO
+  path_provider: ^1.5.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -6,7 +6,7 @@ import 'sidebarOptions/userInformation_dispalys.dart' as sideBar;
 RegExp allNumbers = new RegExp(r"[0-9]{4}");
 RegExp allLetters = new RegExp(r"[A-Za-z]+");
 RegExp emailVerification =
-    new RegExp(r"([A-Za-z0-9]+@[A-Za-z0-9]+(.com|.org|.net|.gov|.de|.fr|.ru))");
+    new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;

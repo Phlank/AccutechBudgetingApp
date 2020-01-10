@@ -19,7 +19,7 @@ class SteelPassword extends Password {
     _secret = secret;
   }
 
-  Password hashOnlyPassword(String hash) {
+  static Password hashOnlyPassword(String hash) {
     SteelPassword pw = new SteelPassword("");
     pw._hash = hash;
     pw._salt = "";
