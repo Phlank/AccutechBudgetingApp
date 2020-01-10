@@ -8,10 +8,11 @@ import 'package:budgetflow/budget/budget_type.dart';
 abstract class budgetIncomeAndSavingsFactory implements budgetCreator, budgetIncomeandSavingsAllocation {
   Map<BudgetCategory, double> _allotedSpending, _actualSpending;
   double _expenditurePercentage;
+  var BudgetPlan;
 
   void startFactory(){
     if (budgetchoice ==  BudgetType.savingDepletion){
-      setBudgetDepletionRatio(double);
+      setBudgetDepletionRatio();
     }
     else{
       budgetchoice = BudgetType.savingGrowth;
@@ -23,7 +24,7 @@ abstract class budgetIncomeAndSavingsFactory implements budgetCreator, budgetInc
   }
 
 
-  void setBudgetDepletionRatio(Type double) {
+  void setBudgetDepletionRatio() {
     categorizeBudget();
 
     if (_expenditurePercentage < 0 && _expenditurePercentage > .3) {
