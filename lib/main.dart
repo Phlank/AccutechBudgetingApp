@@ -1,7 +1,11 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pie_chart/pie_chart.dart';
 import 'sidebarOptions/user_catagory_displays.dart' as sideBar;
+import 'sidebarOptions/user_info_displayandedit.dart'as edit;
+import 'sidebarOptions/hsitory_display.dart'as history;
+import 'sidebarOptions/acount_dispaly.dart' as account;
 
 //user input validators
 RegExp allNumbers = new RegExp(r"[0-9]{4}");
@@ -24,21 +28,33 @@ class BudgetingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: LoginPage(title: 'Login'),
+      home: LoginPage(),
       initialRoute: '/', //InitialRoute
       routes: {
         '/knownUser': (context) => sideBar.UserPage(),
         '/newUser': (context) => UserInformation(),
         '/housing':(context)=> sideBar.HousingView(),
+        '/edit':(context)=> edit.EditInformationDirectory(),
+        '/houseEdit':(context)=> edit.HousingInformationEdit(),
+        '/budgetEdit':(context)=> edit.CategoryInformationEdit(),
+        '/userEdit':(context)=> edit.UserInformationEdit(),
+        '/historyVeiw':(context)=> history.HistoryDisplay(),
+        '/accountVeiw':(context)=> account.AccountDisplay(),
+        '/utilities':(context)=> sideBar.UtilitiesView(),
+        '/groceries':(context)=> sideBar.GroceriesView(),
+        '/savings':(context)=> sideBar.SavingsView(),
+         '/health':(context)=> sideBar.HealthView(),
+        '/transport':(context)=> sideBar.TransportationView(),
+        '/education':(context)=> sideBar.EducationView(),
+        '/kids':(context)=> sideBar.KidsView(),
+        '/pets':(context)=> sideBar.PetsView(),
+        '/misc':(context)=> sideBar.MiscView(),
       }, //Routes
     );
   } // build
 } // BudgetingApp
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
   _LoginPage createState() => _LoginPage();
 } // LoginPage
@@ -55,7 +71,7 @@ class _LoginPage extends State<LoginPage> {
     String user = 'nouser';
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Login'),
       ),
       body: Center(
         child: Column(

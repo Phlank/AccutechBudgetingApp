@@ -3,6 +3,15 @@ import 'package:flutter/widgets.dart';
 
 //todo add to sidemenu
 
+class EditInformationDirectory extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return null;
+  }
+
+}
+
 class UserInformationEdit extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {

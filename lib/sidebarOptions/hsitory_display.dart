@@ -18,7 +18,8 @@ class HistoryDisplay extends StatefulWidget{
 class  _HistoryDisplay extends State<HistoryDisplay>{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
+    return Scaffold(
+
+    );
   }
 }
