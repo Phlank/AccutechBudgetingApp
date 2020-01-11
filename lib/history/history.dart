@@ -10,7 +10,6 @@ import 'package:budgetflow/history/stringifier.dart';
 import 'package:budgetflow/history/month.dart';
 
 class History {
-
   static const String HISTORY_PATH = "history";
 
   static FileIO fileIO = new DartFileIO();

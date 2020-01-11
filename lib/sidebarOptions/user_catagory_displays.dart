@@ -74,6 +74,7 @@ class _UserPage extends State<UserPage> {
       ),
       drawer: new GeneralCategory().sideMenu(),
       body:ListView(
+        padding: EdgeInsets.all(4.0),
         children: <Widget>[
           Card(
             /*pie chart display*/
@@ -90,15 +91,15 @@ class _UserPage extends State<UserPage> {
             /*user cash flow*/
               child: RichText(
                   textAlign: TextAlign.left,
-                  text: TextSpan(text: 'Cash Flow', children: <TextSpan>[
+                  text: TextSpan(children: <TextSpan>[
                     TextSpan(
-                        text: 'Income', //todo implement income here
+                        text: 'Income:\n', //todo implement income here
                         style: TextStyle(
                           color: Colors.green,
                         )),
                     TextSpan(
                         text:
-                        'Expences: -', //todo implement expenses total right here
+                        'Expences: -\n', //todo implement expenses total right here
                         style: TextStyle(
                           color: Colors.red,
                         )),
@@ -114,6 +115,8 @@ class _UserPage extends State<UserPage> {
           Card(
             /*expense tracker*/
               child: new ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
                 itemCount: expenses.length,
                 itemBuilder: (BuildContext context, int index) {
                   return new Text(expenses[index]);
