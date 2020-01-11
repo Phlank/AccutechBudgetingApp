@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'sidebarOptions/userInformation_dispalys.dart' as sideBar;
+import 'sidebarOptions/user_catagory_displays.dart' as sideBar;
 
 RegExp allNumbers = new RegExp(r"[0-9]{4}");
 RegExp allLetters = new RegExp(r"[A-Za-z]+");
