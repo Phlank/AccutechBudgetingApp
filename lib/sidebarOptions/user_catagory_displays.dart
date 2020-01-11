@@ -6,7 +6,7 @@ import 'package:pie_chart/pie_chart.dart';
 class UserPage extends StatefulWidget {
   @override
   _UserPage createState() => _UserPage();
-} // UserPage
+}
 
 class HousingView extends StatefulWidget{
   @override
@@ -62,8 +62,6 @@ class MiscView extends StatefulWidget{
   @override
   _MiscView createState() => _MiscView();
 }
-
-//---------------ui visuals--------------------------------//
 
 class _UserPage extends State<UserPage> {
   @override

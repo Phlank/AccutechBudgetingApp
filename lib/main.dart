@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'sidebarOptions/user_catagory_displays.dart' as sideBar;
 
+//user input validators
 RegExp allNumbers = new RegExp(r"[0-9]{4}");
 RegExp allLetters = new RegExp(r"[A-Za-z]+");
 RegExp emailVerification =

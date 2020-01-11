@@ -3,7 +3,12 @@ import 'package:flutter/widgets.dart';
 
 //todo add to sidemenu
 
-class UserInformationEdit{
+class UserInformationEdit extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return null;
+  }
   /*
   * -this will be the way they record changes to personal information
   * password, name, email and what not
@@ -15,14 +20,24 @@ class UserInformationEdit{
 
 }
 
-class HousingInformationEdit{
+class HousingInformationEdit extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return null;
+  }
   /*
   * the changes here will be housing type
   * payment information
   */
 }
 
-class CategoryInformationEdit{
+class CategoryInformationEdit extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return null;
+  }
   /*
   * -this will be the manual edit of budget
   * get information for the category
