@@ -10,7 +10,7 @@ abstract class budgetIncomeAndSavingsFactory implements budgetCreator, budgetInc
 
   void startFactory(){
     if (budgetchoice ==  BudgetType.savingDepletion){
-      setBudgetDepletionRatio(double);
+      setBudgetDepletionRatio();
     }
     else{
       budgetchoice = BudgetType.savingGrowth;
@@ -21,24 +21,27 @@ abstract class budgetIncomeAndSavingsFactory implements budgetCreator, budgetInc
     _expenditurePercentage = (_actualSpending[BudgetCategory.housing]) / income;
   }
 
-
-  void setBudgetDepletionRatio(Type double) {
+  void setBudgetDepletionRatio() {
     categorizeBudget();
 
     if (_expenditurePercentage < 0 && _expenditurePercentage > .3) {
-      StageOneBudgetAllocation();
+      BudgetPlan = "Stage 1";
+      AllocateBudget();
     }
 
     else if (_expenditurePercentage < .3 && _expenditurePercentage > .5) {
-      StageTwoBudgetAllocation();
+      BudgetPlan = "Stage 2";
+      AllocateBudget();
     }
 
     else if (_expenditurePercentage < .5 && _expenditurePercentage > .8) {
-      StageThreeBudgetAllocation();
+      BudgetPlan = "Stage 3";
+      AllocateBudget();
     }
 
     else if (_expenditurePercentage < .8) {
-      StageFourBudgetAllocation();
+      BudgetPlan = "Stage 4";
+      AllocateBudget();
     }
 
     return;

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'sidebarOptions/userInformation_dispalys.dart' as sideBar;
+import 'sidebarOptions/user_catagory_displays.dart' as sideBar;
+import 'sidebarOptions/user_info_displayandedit.dart'as edit;
+import 'sidebarOptions/hsitory_display.dart'as history;
+import 'sidebarOptions/acount_dispaly.dart' as account;
 
+//user input validators
 RegExp allNumbers = new RegExp(r"[0-9]{4}");
 RegExp allLetters = new RegExp(r"[A-Za-z]+");
 RegExp emailVerification =
@@ -23,21 +27,39 @@ class BudgetingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: LoginPage(title: 'Login'),
+      home: LoginPage(),
       initialRoute: '/', //InitialRoute
       routes: {
-        '/knownUser': (context) => sideBar.UserPage(),
+        '/knownUser': (context) => UserPage(),
         '/newUser': (context) => UserInformation(),
         '/housing':(context)=> sideBar.HousingView(),
+        '/edit':(context)=> edit.EditInformationDirectory(),
+        '/houseEdit':(context)=> edit.HousingInformationEdit(),
+        '/budgetEdit':(context)=> edit.CategoryInformationEdit(),
+        '/userEdit':(context)=> edit.UserInformationEdit(),
+        '/historyVeiw':(context)=> history.HistoryDisplay(),
+        '/accountVeiw':(context)=> account.AccountDisplay(),
+        '/utilities':(context)=> sideBar.UtilitiesView(),
+        '/groceries':(context)=> sideBar.GroceriesView(),
+        '/savings':(context)=> sideBar.SavingsView(),
+         '/health':(context)=> sideBar.HealthView(),
+        '/transport':(context)=> sideBar.TransportationView(),
+        '/education':(context)=> sideBar.EducationView(),
+        '/kids':(context)=> sideBar.KidsView(),
+        '/pets':(context)=> sideBar.PetsView(),
+        '/misc':(context)=> sideBar.MiscView(),
+        '/entertainment':(context)=> sideBar.EntertainmentView(),
       }, //Routes
     );
   } // build
 } // BudgetingApp
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
-  final String title;
+class UserPage extends StatefulWidget {
+  @override
+  _UserPage createState() => _UserPage();
+}
 
+class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => _LoginPage();
 } // LoginPage
@@ -47,6 +69,88 @@ class UserInformation extends StatefulWidget {
   _UserInformation createState() => _UserInformation();
 }//userInformation
 
+class _UserPage extends State<UserPage> {
+  @override
+  Widget build(BuildContext context) {
+    Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
+    List expenses = []; //todo get expenses list from where ever that might be
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(/*users enterd name when available*/ 'User Page'),
+      ),
+      drawer: new sideBar.GeneralCategory().sideMenu(),
+      body:ListView(
+        padding: EdgeInsets.all(4.0),
+        children: <Widget>[
+          Card(
+            /*pie chart display*/
+              child: PieChart(
+                dataMap: budgetCatagoryAMNTS,
+                showChartValues: true,
+                showLegends: true,
+                colorList: Colors.primaries,
+                showChartValuesOutside: true,
+                showChartValueLabel: true,
+                chartType: ChartType.ring,
+              )),
+          Card(
+            /*user cash flow*/
+              child: RichText(
+                  textAlign: TextAlign.left,
+                  text: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: 'Income:\n', //todo implement income here
+                        style: TextStyle(
+                          color: Colors.green,
+                        )),
+                    TextSpan(
+                        text:
+                        'Expences: -\n', //todo implement expenses total right here
+                        style: TextStyle(
+                          color: Colors.red,
+                        )),
+                    TextSpan(
+                        text:
+                        'Cash Flow', //todo implement function to calculate cashFlow
+                        style: TextStyle(
+                          color: Colors
+                              .black, //todo implement a function to return red or green based on cashFlow
+                        ))
+                  ]))),
+          Card(/*user warnings*/),
+          Card(
+            /*expense tracker*/
+              child: new ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: expenses.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return new Text(expenses[index]);
+                },
+              )),
+        ],
+      ),
+    );
+  } //build
+
+  Map<String, double> buildBudgetMap() {
+    //todo use global objet to get real data from user in to map
+    Map<String, double> map = new Map();
+    map.putIfAbsent('housing', () => 5);
+    map.putIfAbsent('utilities', () => 3);
+    map.putIfAbsent('groceries', () => 2);
+    map.putIfAbsent('savings', () => 2);
+    map.putIfAbsent('helath', () => 4);
+    map.putIfAbsent('transportation', () => 2);
+    map.putIfAbsent('education', () => 3);
+    map.putIfAbsent('entertainment', () => 1);
+    map.putIfAbsent('kids', () => 2);
+    map.putIfAbsent('pets', () => 10);
+    map.putIfAbsent('miscellaneous', () => 5);
+    return map;
+  }
+} // _UserPage
+
 class _LoginPage extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   @override
@@ -54,11 +158,12 @@ class _LoginPage extends State<LoginPage> {
     String user = 'nouser';
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Login'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text('Please Login'),
             Spacer(

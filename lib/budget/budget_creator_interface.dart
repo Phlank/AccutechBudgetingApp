@@ -12,7 +12,11 @@ class budgetCreator {
   double targetNeeds;
   double targetWants;
   double targetSavings;
+  double remainingNeeds;
+  double remainingWants;
+  double remainingBudget;
   int age;
+  var BudgetPlan;
   BudgetType budgetchoice;
 
   void setIncome(income){
@@ -45,6 +49,18 @@ class budgetCreator {
 
   void setTargetSavings(targetsavings){
     this.targetSavings = targetsavings;
+  }
+
+  void setRemainingWants(remainingwants){
+    this.remainingWants = remainingwants;
+  }
+
+  void setRemainingNeeds(remainingneeds){
+    this.remainingNeeds = remainingneeds;
+  }
+
+  void setRemainingBudget(){
+    this.remainingBudget = remainingNeeds + remainingWants;
   }
 
   void setBudgetType(budgetchoice){
