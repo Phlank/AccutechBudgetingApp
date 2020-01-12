@@ -1,4 +1,4 @@
-import 'package:budgetflow/budget/budget_category.dart';
+import 'package:budgetflow/budget/budget_map.dart';
 import 'package:budgetflow/budget/transaction.dart';
 import 'package:budgetflow/crypt/encrypted.dart';
 import 'package:budgetflow/history/history.dart';
@@ -7,15 +7,13 @@ import 'package:budgetflow/history/stringifier.dart';
 
 class Month {
   String _allottedFilepath, _actualFilepath, _transactionFilepath;
-  Map<BudgetCategory, double> allottedData;
-  Map<BudgetCategory, double> actualData;
+  BudgetMap allottedData;
+  BudgetMap actualData;
   List<Transaction> transactionData;
   int year, month;
-  History _history;
   Stringifier stringifier = new JSONStringifier();
 
-  Month(History history, int year, int month) {
-    _history = history;
+  Month(int year, int month) {
     this.year = year;
     this.month = month;
     _createFilePaths();
@@ -27,28 +25,29 @@ class Month {
     _transactionFilepath = "$year" + "_" + "$month" + "_transactions";
   }
 
-  Future<Map<BudgetCategory, double>> getAllottedSpendingData() async {
+  BudgetMap getAllottedSpendingData() {
     if (allottedData == null) {
       _loadBudgetData();
     }
     return allottedData;
   }
 
-  Future<Map<BudgetCategory, double>> getActualSpendingData() async {
+  BudgetMap getActualSpendingData() {
     if (actualData == null) {
       _loadBudgetData();
     }
     return actualData;
   }
 
-  Future _loadBudgetData() async {
-    String cipher, plaintext;
-    cipher = await History.fileIO.readFile(_allottedFilepath);
-    plaintext = History.crypter.decrypt(Encrypted.fromFileContent(cipher));
-    allottedData = stringifier.unstringifyBudgetMap(plaintext);
-    cipher = await History.fileIO.readFile(_actualFilepath);
-    plaintext = History.crypter.decrypt(Encrypted.fromFileContent(cipher));
-    actualData = stringifier.unstringifyBudgetMap(plaintext);
+  void _loadBudgetData() {
+    History.fileIO.readFile(_allottedFilepath).then((String cipher) {
+      String plaintext = History.crypter.decrypt(Encrypted.fromFileContent(cipher));
+      allottedData = BudgetMap.fromSerialized(plaintext);
+    });
+    History.fileIO.readFile(_actualFilepath).then((String cipher) {
+      String plaintext = History.crypter.decrypt(Encrypted.fromFileContent(cipher));
+      actualData = BudgetMap.fromSerialized(plaintext);
+    });
   }
 
   Future<List<Transaction>> getTransactionData() async {
@@ -62,8 +61,7 @@ class Month {
     return transactionData;
   }
 
-  void updateMonthData(Map<BudgetCategory, double> allotted,
-      Map<BudgetCategory, double> actual, List<Transaction> transactions) {
+  void updateMonthData(BudgetMap allotted, BudgetMap actual, List<Transaction> transactions) {
     allottedData = allotted;
     actualData = actual;
     transactionData = transactions;

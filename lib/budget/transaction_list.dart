@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:budgetflow/budget/transaction.dart';
 
 class TransactionList {
@@ -5,5 +7,9 @@ class TransactionList {
 
 	TransactionList() {
 		_transactions = new List();
+	}
+
+	void foreach(f(Transaction t)) {
+		
 	}
 }
