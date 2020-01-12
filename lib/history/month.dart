@@ -5,6 +5,8 @@ import 'package:budgetflow/history/history.dart';
 import 'package:budgetflow/history/json_stringifier.dart';
 import 'package:budgetflow/history/stringifier.dart';
 
+import 'package:json_annotation/json_annotation.dart';
+
 class Month {
   String _allottedFilepath, _actualFilepath, _transactionFilepath;
   Map<BudgetCategory, double> allottedData;

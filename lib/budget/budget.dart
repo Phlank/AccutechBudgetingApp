@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 import 'package:budgetflow/budget/budget_category.dart';
-import 'package:budgetflow/budget/budget_month.dart';
 import 'package:budgetflow/budget/transaction.dart';
+import 'package:budgetflow/history/month.dart';
 
 class Budget {
     Map<BudgetCategory, double> _allottedSpending, _actualSpending;
@@ -15,8 +15,8 @@ class Budget {
     }
 
     void _populateBlankMaps() {
-        _allottedSpending = new Map();
-        _actualSpending = new Map();
+        _allottedSpending = new HashMap();
+        _actualSpending = new HashMap();
         for (BudgetCategory category in BudgetCategory.values) {
             _allottedSpending[category] = 0.0;
             _actualSpending[category] = 0.0;
@@ -47,7 +47,7 @@ class Budget {
         return _allottedSpending[category];
     }
 
-    BudgetMonth toBudgetMonth() {
+    Month toMonth() {
         // TODO implement
         return null;
     }
