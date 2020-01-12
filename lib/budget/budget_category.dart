@@ -12,7 +12,7 @@ enum BudgetCategory {
   miscellaneous
 }
 
-const Map<BudgetCategory, String> categoryJsonStrings = {
+const Map<BudgetCategory, String> categoryJson = {
   BudgetCategory.housing: "Housing",
   BudgetCategory.utilities: "Utilities",
   BudgetCategory.groceries: "Groceries",
@@ -24,4 +24,18 @@ const Map<BudgetCategory, String> categoryJsonStrings = {
   BudgetCategory.kids: "Kids",
   BudgetCategory.pets: "Pets",
   BudgetCategory.miscellaneous: "Miscellaneous",
+};
+
+const Map<String, BudgetCategory> jsonCategory = {
+  "Housing": BudgetCategory.housing,
+  "Utilities": BudgetCategory.utilities,
+  "Groceries": BudgetCategory.groceries,
+  "Savings": BudgetCategory.savings,
+  "Health": BudgetCategory.health,
+  "Transportation": BudgetCategory.transportation,
+  "Education": BudgetCategory.education,
+  "Entertainment": BudgetCategory.entertainment,
+  "Kids": BudgetCategory.kids,
+  "Pets": BudgetCategory.pets,
+  "Miscellaneous": BudgetCategory.miscellaneous,
 };
