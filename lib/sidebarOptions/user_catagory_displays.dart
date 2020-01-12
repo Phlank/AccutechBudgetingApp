@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:budgetflow/budget/budget_category.dart';
-import 'package:pie_chart/pie_chart.dart';
 
-class UserPage extends StatefulWidget {
-  @override
-  _UserPage createState() => _UserPage();
-}
 
 class HousingView extends StatefulWidget{
   @override
@@ -63,88 +58,6 @@ class MiscView extends StatefulWidget{
   _MiscView createState() => _MiscView();
 }
 
-class _UserPage extends State<UserPage> {
-  @override
-  Widget build(BuildContext context) {
-    Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
-    List expenses = []; //todo get expenses list from where ever that might be
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(/*users enterd name when available*/ 'User Page'),
-      ),
-      drawer: new GeneralCategory().sideMenu(),
-      body:ListView(
-        padding: EdgeInsets.all(4.0),
-        children: <Widget>[
-          Card(
-            /*pie chart display*/
-              child: PieChart(
-                dataMap: budgetCatagoryAMNTS,
-                showChartValues: true,
-                showLegends: true,
-                colorList: Colors.primaries,
-                showChartValuesOutside: true,
-                showChartValueLabel: true,
-                chartType: ChartType.ring,
-              )),
-          Card(
-            /*user cash flow*/
-              child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                        text: 'Income:\n', //todo implement income here
-                        style: TextStyle(
-                          color: Colors.green,
-                        )),
-                    TextSpan(
-                        text:
-                        'Expences: -\n', //todo implement expenses total right here
-                        style: TextStyle(
-                          color: Colors.red,
-                        )),
-                    TextSpan(
-                        text:
-                        'Cash Flow', //todo implement function to calculate cashFlow
-                        style: TextStyle(
-                          color: Colors
-                              .black, //todo implement a function to return red or green based on cashFlow
-                        ))
-                  ]))),
-          Card(/*user warnings*/),
-          Card(
-            /*expense tracker*/
-              child: new ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: expenses.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return new Text(expenses[index]);
-                },
-              )),
-        ],
-      ),
-    );
-  } //build
-
-  Map<String, double> buildBudgetMap() {
-    //todo use global objet to get real data from user in to map
-    Map<String, double> map = new Map();
-    map.putIfAbsent('housing', () => 5);
-    map.putIfAbsent('utilities', () => 3);
-    map.putIfAbsent('groceries', () => 2);
-    map.putIfAbsent('savings', () => 2);
-    map.putIfAbsent('helath', () => 4);
-    map.putIfAbsent('transportation', () => 2);
-    map.putIfAbsent('education', () => 3);
-    map.putIfAbsent('entertainment', () => 1);
-    map.putIfAbsent('kids', () => 2);
-    map.putIfAbsent('pets', () => 10);
-    map.putIfAbsent('miscellaneous', () => 5);
-    return map;
-  }
-} // _UserPage
-
 class _HousingView extends State<HousingView>{
   @override
   Widget build(BuildContext context) => new GeneralCategory().generalDisplay('housing');
@@ -154,7 +67,7 @@ class _UtilitiesView extends State<UtilitiesView>{
   @override
   Widget build(BuildContext context) => new GeneralCategory().generalDisplay('utilities');
 }
-
+//todo onload() initialize *new* History thing to  pull all of the recently written data out to read
 class _GroceriesView extends State<GroceriesView>{
   @override
   Widget build(BuildContext context) => new GeneralCategory().generalDisplay('groceries');
@@ -215,6 +128,21 @@ class GeneralCategory{
     'pets':BudgetCategory.pets,
     'miscellaneous':BudgetCategory.miscellaneous
   };
+
+  final Map<String,String> routeMap ={
+    'housing':'/housing',
+    'utilities':'/utilities',
+    'groceries':'/groceries',
+    'savings':'/savings',
+    'health':'/health',
+    'transportation':'/transport',
+    'education':'/education',
+    'entertainment':'/entertainment',
+    'kids':'/kids',
+    'pets':'/pets',
+    'miscellaneous':'/misc',
+  };
+
   String categoryView;
 
   Scaffold generalDisplay(String category){
@@ -238,21 +166,23 @@ class GeneralCategory{
 
   Drawer sideMenu(){
     return Drawer(
-      child: ListView(
-        children: <Widget>[
-          FlatButton(
-            child: Text('My Budgets'),
-            textColor: Colors.black,
-            splashColor: Colors.white,
-            onPressed: () {
-              //todo route towards user page
-              //todo splach color purple or some varient of that
-              //todo text color white
-            },
-          )
-          //todo add budget catagory widgets, add user information, add userhistory
-        ],
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: routeMap.keys.length,
+        itemBuilder: (BuildContext context, int item) {
+          return sideBarFlatButton(routeMap.keys.toList()[item],routeMap[routeMap.keys.toList()[item]],context);
+        },
       ),
+    );
+  }
+
+  FlatButton sideBarFlatButton(String name, String route, BuildContext context){
+    return new FlatButton(
+      child: Text(name),
+      onPressed: (){
+        Navigator.pushNamed(context, route);
+      },
     );
   }
 

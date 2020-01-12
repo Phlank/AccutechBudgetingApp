@@ -6,7 +6,6 @@ import 'package:budgetflow/fileio/file_io.dart';
 import 'package:budgetflow/crypt/crypter.dart';
 import 'package:budgetflow/history/json_stringifier.dart';
 import 'package:budgetflow/history/stringifier.dart';
-
 import 'package:budgetflow/history/month.dart';
 
 class History {

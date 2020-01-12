@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'sidebarOptions/user_catagory_displays.dart' as sideBar;
 import 'sidebarOptions/user_info_displayandedit.dart'as edit;
 import 'sidebarOptions/hsitory_display.dart'as history;
@@ -29,7 +30,7 @@ class BudgetingApp extends StatelessWidget {
       home: LoginPage(),
       initialRoute: '/', //InitialRoute
       routes: {
-        '/knownUser': (context) => sideBar.UserPage(),
+        '/knownUser': (context) => UserPage(),
         '/newUser': (context) => UserInformation(),
         '/housing':(context)=> sideBar.HousingView(),
         '/edit':(context)=> edit.EditInformationDirectory(),
@@ -47,10 +48,16 @@ class BudgetingApp extends StatelessWidget {
         '/kids':(context)=> sideBar.KidsView(),
         '/pets':(context)=> sideBar.PetsView(),
         '/misc':(context)=> sideBar.MiscView(),
+        '/entertainment':(context)=> sideBar.EntertainmentView(),
       }, //Routes
     );
   } // build
 } // BudgetingApp
+
+class UserPage extends StatefulWidget {
+  @override
+  _UserPage createState() => _UserPage();
+}
 
 class LoginPage extends StatefulWidget {
   @override
@@ -61,6 +68,88 @@ class UserInformation extends StatefulWidget {
   @override
   _UserInformation createState() => _UserInformation();
 }//userInformation
+
+class _UserPage extends State<UserPage> {
+  @override
+  Widget build(BuildContext context) {
+    Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
+    List expenses = []; //todo get expenses list from where ever that might be
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(/*users enterd name when available*/ 'User Page'),
+      ),
+      drawer: new sideBar.GeneralCategory().sideMenu(),
+      body:ListView(
+        padding: EdgeInsets.all(4.0),
+        children: <Widget>[
+          Card(
+            /*pie chart display*/
+              child: PieChart(
+                dataMap: budgetCatagoryAMNTS,
+                showChartValues: true,
+                showLegends: true,
+                colorList: Colors.primaries,
+                showChartValuesOutside: true,
+                showChartValueLabel: true,
+                chartType: ChartType.ring,
+              )),
+          Card(
+            /*user cash flow*/
+              child: RichText(
+                  textAlign: TextAlign.left,
+                  text: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: 'Income:\n', //todo implement income here
+                        style: TextStyle(
+                          color: Colors.green,
+                        )),
+                    TextSpan(
+                        text:
+                        'Expences: -\n', //todo implement expenses total right here
+                        style: TextStyle(
+                          color: Colors.red,
+                        )),
+                    TextSpan(
+                        text:
+                        'Cash Flow', //todo implement function to calculate cashFlow
+                        style: TextStyle(
+                          color: Colors
+                              .black, //todo implement a function to return red or green based on cashFlow
+                        ))
+                  ]))),
+          Card(/*user warnings*/),
+          Card(
+            /*expense tracker*/
+              child: new ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: expenses.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return new Text(expenses[index]);
+                },
+              )),
+        ],
+      ),
+    );
+  } //build
+
+  Map<String, double> buildBudgetMap() {
+    //todo use global objet to get real data from user in to map
+    Map<String, double> map = new Map();
+    map.putIfAbsent('housing', () => 5);
+    map.putIfAbsent('utilities', () => 3);
+    map.putIfAbsent('groceries', () => 2);
+    map.putIfAbsent('savings', () => 2);
+    map.putIfAbsent('helath', () => 4);
+    map.putIfAbsent('transportation', () => 2);
+    map.putIfAbsent('education', () => 3);
+    map.putIfAbsent('entertainment', () => 1);
+    map.putIfAbsent('kids', () => 2);
+    map.putIfAbsent('pets', () => 10);
+    map.putIfAbsent('miscellaneous', () => 5);
+    return map;
+  }
+} // _UserPage
 
 class _LoginPage extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
@@ -74,6 +163,7 @@ class _LoginPage extends State<LoginPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text('Please Login'),
             Spacer(
