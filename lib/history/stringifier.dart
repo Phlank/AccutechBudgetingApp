@@ -17,5 +17,5 @@ class Stringifier {
 
   List<Month> unstringifyHistory(String jsonHistory) {}
 
-  Password unstringifyPassword (String jsonHistory) {}
+  Password unstringifyPassword(String jsonHistory) {}
 }

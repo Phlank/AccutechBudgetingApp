@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:budgetflow/fileio/file_io.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 
 class DartFileIO implements FileIO {
   static Future<String> _path;
@@ -11,8 +11,9 @@ class DartFileIO implements FileIO {
   }
 
   static Future<String> _getPath() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    return appDocDir.path;
+    //Directory appDocDir = await getApplicationDocumentsDirectory();
+    //return appDocDir.path;
+    return null;
   }
 
   Future writeFile(String pathSuffix, String content) async {

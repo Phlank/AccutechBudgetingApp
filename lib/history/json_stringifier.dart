@@ -5,7 +5,6 @@ import 'package:budgetflow/crypt/password.dart';
 import 'package:budgetflow/history/history.dart';
 import 'package:budgetflow/history/month.dart';
 import 'package:budgetflow/history/stringifier.dart';
-import 'package:json_serializable/json_serializable.dart';
 
 class JSONStringifier implements Stringifier {
   static const String _HOUSING = "Housing";
@@ -40,11 +39,7 @@ class JSONStringifier implements Stringifier {
     _budgetCategoryStrings[BudgetCategory.miscellaneous] = _MISCELLANEOUS;
   }
 
-  String stringifyBudgetMap(Map<BudgetCategory, double> map) {
-
-  }
-
-
+  String stringifyBudgetMap(Map<BudgetCategory, double> map) {}
 
   Map<BudgetCategory, double> unstringifyBudgetMap(String jsonMap) {
     // TODO implement this
