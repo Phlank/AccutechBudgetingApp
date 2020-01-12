@@ -31,4 +31,10 @@ class DartFileIO implements FileIO {
     File target = await _getTargetFile(path + pathSuffix);
     return target.readAsString();
   }
+
+  Future<bool> fileExists(String pathSuffix) async {
+    String path = await _path;
+    File target = await _getTargetFile(path + pathSuffix);
+    return target.exists();
+  }
 }

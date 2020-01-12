@@ -12,4 +12,6 @@ class Password {
   String getSecret() {}
 
   String getSalt() {}
+
+  static Password unserialize(String serialized) {}
 }

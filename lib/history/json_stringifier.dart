@@ -1,3 +1,4 @@
+import 'package:budgetflow/budget/budget.dart';
 import 'package:budgetflow/budget/budget_category.dart';
 import 'package:budgetflow/budget/transaction.dart';
 import 'package:budgetflow/crypt/password.dart';
@@ -38,10 +39,7 @@ class JSONStringifier implements Stringifier {
     _budgetCategoryStrings[BudgetCategory.miscellaneous] = _MISCELLANEOUS;
   }
 
-  String stringifyBudgetMap(Map<BudgetCategory, double> map) {
-    // TODO implement this
-    return null;
-  }
+  String stringifyBudgetMap(Map<BudgetCategory, double> map) {}
 
   Map<BudgetCategory, double> unstringifyBudgetMap(String jsonMap) {
     // TODO implement this

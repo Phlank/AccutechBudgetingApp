@@ -1,5 +1,4 @@
 import 'package:budgetflow/budget/budget_category.dart';
-import 'package:budgetflow/budget/budget_income_and_savings_creator_factory.dart';
 import 'package:budgetflow/budget/budget_type.dart';
 
 import 'budget.dart';

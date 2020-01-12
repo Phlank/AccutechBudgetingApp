@@ -1,6 +1,3 @@
-
-import 'dart:io';
-
 class Encrypted {
   String iv;
   String cipher;

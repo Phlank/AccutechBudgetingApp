@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:budgetflow/crypt/password.dart';
+import 'package:budgetflow/fileio/serializable.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
-class SteelPassword extends Password {
+class SteelPassword extends Password implements Serializable {
+  static const String SERIALIZED_SALT = "salt";
+  static const String SERIALIZED_HASH = "hash";
   static const String ALGORITHM = "scrypt";
-  static const int SALT_LENGTH = 16;
   static const int KEY_LENGTH = 32;
 
   String _secret;
@@ -47,5 +51,18 @@ class SteelPassword extends Password {
 
   String getSalt() {
     return _salt;
+  }
+
+  static Password unserialize(String serialized) {
+    Map map = jsonDecode(serialized);
+    SteelPassword password = new SteelPassword("");
+    password._salt = map[SERIALIZED_SALT];
+    password._hash = map[SERIALIZED_HASH];
+    return password;
+  }
+
+  String serialize() {
+    String output = "{\"salt\":\"" + _salt + "\",\"hash\":\"" + _hash + "\"}";
+    return null;
   }
 }
