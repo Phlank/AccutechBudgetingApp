@@ -2,7 +2,7 @@ import 'package:budgetflow/budget/budget_creator_interface.dart';
 import 'package:budgetflow/budget/budget_income_and_savings_allocation.dart';
 import 'package:budgetflow/budget/budget_income_and_savings_creator_factory.dart';
 
-abstract class budgetIncomeAndSavingsUpdate implements budgetIncomeandSavingsAllocation, budgetIncomeAndSavingsFactory, budgetCreator{
+abstract class budgetIncomeAndSavingsUpdate implements budgetIncomeandSavingsAllocation, budgetIncomeAndSavingsFactory, budgetCreator {
 
   String fr;
   double UsedBudget;
@@ -14,40 +14,40 @@ abstract class budgetIncomeAndSavingsUpdate implements budgetIncomeandSavingsAll
   double RemainingPercentage;
   double RemainingMoney;
 
-  void checkProgress(){
+  void checkProgress() {
     getRemainingExpenditure();
     checkForSwitch();
     getNewBudgetSplits();
   }
 
-  void getRemainingExpenditure(){
+  void getRemainingExpenditure() {
     setRemainingBudget();
-    if (remainingBudget >=0 ){
+    if (remainingBudget >= 0) {
       UsedBudget = income - remainingBudget;
       UsedNeeds = UsedBudget * needs;
       UsedWants = UsedBudget * wants;
-
     }
-    else{
+    else {
       print(fr);
     }
     return;
   }
 
-  void getNewBudgetSplits(){
-    NewNeeds = UsedNeeds/income;
-    NewWants = UsedWants/income;
-    NewBudgetSplit = NewWants + NewNeeds + savings;
+  void getNewBudgetSplits() {
+    NewNeeds = UsedNeeds / income;
+    NewWants = UsedWants / income;
+    NewBudgetSplit = NewWants + NewNeeds;
     RemainingPercentage = 1 - NewBudgetSplit;
     RemainingMoney = income * RemainingPercentage;
   }
 
-  void checkForSwitch(){
-    //TODO implement method to reset Budget Allocation after a certain threshold.
-  }
+  void checkForSwitch() {
+    AllocateBudget();
 
-  void bruh(){
-
+      //TODO implement method to reset Budget Allocation after a certain threshold.
   }
+    void bruh() {
+
+    }
 
 }

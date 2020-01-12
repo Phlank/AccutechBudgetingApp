@@ -17,6 +17,7 @@ class budgetCreator {
   double remainingWants;
   double remainingBudget;
   int age;
+  var BudgetPlan;
   BudgetType budgetchoice;
 
   void setIncome(income){
