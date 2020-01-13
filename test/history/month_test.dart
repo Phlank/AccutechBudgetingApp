@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 Month m = new Month(2019, 12);
 
 void main() {
-	group("TransactionList tests", () {
+	group("Month tests", () {
 		setUp(() {});
 		test("Serialization of new Month", () {
 			print(m.serialize());

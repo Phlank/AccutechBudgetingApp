@@ -100,6 +100,10 @@ class Month implements Serializable {
 
   static unserialize(String serialization) {
     Map map = jsonDecode(serialization);
+    return unserializeMap(map);
+  }
+
+  static unserializeMap(Map map) {
     Month m = new Month(int.parse(map["year"]), int.parse(map["month"]));
     return m;
   }
