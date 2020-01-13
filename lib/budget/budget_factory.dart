@@ -40,11 +40,11 @@ class BudgetFactory {
 
 	static Budget newFromInfo(double income, double housing, BudgetType type) {
 		BudgetFactory bf = new BudgetFactory();
+		bf._housingRatio = housing / income;
 		bf.startFactory(type);
 		Budget newBudget = new Budget(income);
 		newBudget.setType(type);
 		newBudget.setAllotment(BudgetCategory.housing, housing);
-		bf._housingRatio = housing / income;
 		bf.startFactory(type);
 		bf.updateWantsAndNeeds();
 		bf.checkForSwitch();
