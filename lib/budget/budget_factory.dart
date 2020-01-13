@@ -48,7 +48,6 @@ class BudgetFactory {
 		newBudget.setAllotment(BudgetCategory.housing, housing);
 		bf.startFactory(type);
 		bf.updateWantsAndNeeds();
-		bf.checkForSwitch();
 		newBudget = bf.updateAllottments(newBudget);
 		return newBudget;
 	}
@@ -128,6 +127,7 @@ class BudgetFactory {
 		switch (s) {
 			case ("Stage 1-2"):
 				setDepletingBudget(0.6, 0.4);
+				setDepletingTargetBudget(0.6, 0.4);
 				break;
 			case ("Stage 2-2"):
 				setDepletingBudget(0.75, 0.25);
@@ -143,6 +143,7 @@ class BudgetFactory {
 				break;
 			case ("Stage 1-1"):
 				setGrowthBudget(0.5, 0.2, 0.3);
+				setTargetBudget(0.5, 0.2, 0.3);
 				break;
 			case ("Stage 2-1"):
 				setGrowthBudget(0.65, 0.2, 0.15);
