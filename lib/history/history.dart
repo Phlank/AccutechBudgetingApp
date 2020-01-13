@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:budgetflow/crypt/crypter.dart';
+import 'package:budgetflow/crypt/encrypted.dart';
 import 'package:budgetflow/crypt/password.dart';
 import 'package:budgetflow/crypt/steel_crypter.dart';
 import 'package:budgetflow/fileio/dart_file_io.dart';
@@ -16,20 +17,22 @@ class History {
   static Crypter crypter;
   List<Month> months;
 
+  bool newUser;
+
   History() {
     months = new List<Month>();
   }
 
   bool isNewUser() {
     fileIO.fileExists(HISTORY_PATH).then((value) {
-      return value;
+	    newUser = !value;
+	    return !value;
     });
   }
 
   bool passwordIsValid(String secret) {
     fileIO.readFile(PASSWORD_PATH).then((String passwordJson) {
       password = Password.unserialize(passwordJson);
-      bool passwordMatch = password.verify(secret, password.getSalt());
       if (passwordMatch) {
         initialize();
         return true;
@@ -39,9 +42,17 @@ class History {
     });
   }
 
-  void initialize() {}
+  void initialize() {
+	  if (!newUser) {
+		  fileIO.readFile(HISTORY_PATH).then((String cipher) {
+			  String plaintext = crypter.decrypt(
+				  Encrypted.fromFileContent(cipher));
+			  months = unserialize(plaintext);
+		  });
+	  }
+  }
 
-  static void setPassword(Password pw) {
+  void setPassword(Password pw) {
     password = pw;
     crypter = new SteelCrypter(password);
   }
@@ -61,7 +72,7 @@ class History {
     return output;
   }
 
-  static History unserialize(String serialized) {
+  static List<Month> unserialize(String serialized) {
     Map map = jsonDecode(serialized);
     History returnable = new History();
     returnable.months = new List();

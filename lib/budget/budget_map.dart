@@ -20,6 +20,10 @@ class BudgetMap implements Serializable {
 		return _map[category];
 	}
 
+	double set(BudgetCategory category, double amt) {
+		_map[category] = amt;
+	}
+
 	double addTo(BudgetCategory category, double amt) {
 		_map[category] += amt;
 		return _map[category];

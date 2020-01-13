@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'sidebarOptions/user_catagory_displays.dart' as sideBar;
-import 'sidebarOptions/user_info_displayandedit.dart'as edit;
-import 'sidebarOptions/hsitory_display.dart'as history;
-import 'sidebarOptions/acount_dispaly.dart' as account;
+
+import 'sidebar/account_display.dart' as account;
+import 'sidebar/history_display.dart' as history;
+import 'sidebar/user_catagory_displays.dart' as sideBar;
+import 'sidebar/user_info_display.dart' as edit;
 
 //user input validators
 RegExp allNumbers = new RegExp(r"[0-9]{4}");
