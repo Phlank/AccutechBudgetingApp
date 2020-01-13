@@ -32,27 +32,27 @@ abstract class BudgetAllocation implements BudgetCreator {
 
       case ("Stage 1-1"):
         {
-          setBudget(0.5, 0.2, 0.3);
+          setGrowthBudget(0.5, 0.2, 0.3);
         }
         break;
 
       case ("Stage 2-1"):
         {
-          setBudget(0.65, 0.2, 0.15);
+          setGrowthBudget(0.65, 0.2, 0.15);
           setTargetBudget(0.5, 0.2, 0.3);
         }
         break;
 
       case ("Stage 3-1"):
         {
-          setBudget(0.75, 0.1, 0.15);
+          setGrowthBudget(0.75, 0.1, 0.15);
           setTargetBudget(0.65, 0.2, 0.15);
         }
         break;
 
       case ("Stage 4-1"):
         {
-          setBudget(0.9, 0.05, 0.05);
+          setGrowthBudget(0.9, 0.05, 0.05);
           setTargetBudget(0.75, 0.1, 0.15);
         }
         break;
