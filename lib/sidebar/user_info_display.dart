@@ -1,4 +1,4 @@
-import 'package:budgetflow/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

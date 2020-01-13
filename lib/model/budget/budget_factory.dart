@@ -1,6 +1,6 @@
-import 'package:budgetflow/budget/budget.dart';
-import 'package:budgetflow/budget/budget_category.dart';
-import 'package:budgetflow/budget/budget_type.dart';
+import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/budget_type.dart';
 
 class BudgetFactory {
 	Map<BudgetCategory, double> _allottedSpending;

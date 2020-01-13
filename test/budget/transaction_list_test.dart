@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:budgetflow/budget/budget_category.dart';
-import 'package:budgetflow/budget/transaction.dart';
-import 'package:budgetflow/budget/transaction_list.dart';
+import 'package:budgetflow/budget/transaction/transaction.dart';
+import 'package:budgetflow/budget/transaction/transaction_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 TransactionList tl1 = new TransactionList();

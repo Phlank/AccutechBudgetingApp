@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:budgetflow/crypt/password.dart';
-import 'package:budgetflow/fileio/serializable.dart';
+import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/fileio/serializable.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
 class SteelPassword extends Password implements Serializable {

@@ -1,13 +1,14 @@
-import 'package:budgetflow/budget/budget_category.dart';
-import 'package:budgetflow/budget/budget_factory.dart';
-import 'package:budgetflow/budget/budget_type.dart';
-import 'package:budgetflow/history/history.dart';
+import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/budget_factory.dart';
+import 'package:budgetflow/model/budget/budget_type.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/history/history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:budgetflow/budget/budget.dart';
-import 'budget/transaction.dart';
-import 'budget/transaction_list.dart';
+
 import 'sidebar/account_display.dart' as account;
 import 'sidebar/history_display.dart' as history;
 import 'sidebar/user_catagory_displays.dart' as sideBar;

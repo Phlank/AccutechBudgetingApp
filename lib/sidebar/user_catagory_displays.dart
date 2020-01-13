@@ -1,12 +1,11 @@
-import 'package:budgetflow/budget/budget.dart';
-import 'package:budgetflow/budget/transaction.dart';
-import 'package:budgetflow/budget/transaction_list.dart';
 import 'package:budgetflow/main.dart';
+import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:budgetflow/budget/budget_category.dart';
 
 class HousingView extends StatefulWidget {
   HousingView(Budget userBudget);

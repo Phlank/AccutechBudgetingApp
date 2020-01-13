@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:budgetflow/budget/budget.dart';
-import 'package:budgetflow/budget/budget_map.dart';
-import 'package:budgetflow/budget/budget_type.dart';
-import 'package:budgetflow/budget/transaction_list.dart';
-import 'package:budgetflow/crypt/encrypted.dart';
-import 'package:budgetflow/fileio/serializable.dart';
-import 'package:budgetflow/history/history.dart';
+import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_map.dart';
+import 'package:budgetflow/model/budget/budget_type.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/crypt/encrypted.dart';
+import 'package:budgetflow/model/fileio/serializable.dart';
+import 'package:budgetflow/model/history/history.dart';
 
 class Month implements Serializable {
   String _allottedFilepath, _actualFilepath, _transactionFilepath;

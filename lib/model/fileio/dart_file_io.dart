@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:budgetflow/fileio/file_io.dart';
+import 'package:budgetflow/model/fileio/file_io.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DartFileIO implements FileIO {

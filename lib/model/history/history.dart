@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-import 'package:budgetflow/budget/budget.dart';
-import 'package:budgetflow/budget/budget_factory.dart';
-import 'package:budgetflow/crypt/crypter.dart';
-import 'package:budgetflow/crypt/encrypted.dart';
-import 'package:budgetflow/crypt/password.dart';
-import 'package:budgetflow/crypt/steel_crypter.dart';
-import 'package:budgetflow/crypt/steel_password.dart';
-import 'package:budgetflow/fileio/dart_file_io.dart';
-import 'package:budgetflow/fileio/file_io.dart';
-import 'package:budgetflow/history/month.dart';
+import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_factory.dart';
+import 'package:budgetflow/model/crypt/crypter.dart';
+import 'package:budgetflow/model/crypt/encrypted.dart';
+import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/crypt/steel_crypter.dart';
+import 'package:budgetflow/model/crypt/steel_password.dart';
+import 'package:budgetflow/model/fileio/dart_file_io.dart';
+import 'package:budgetflow/model/fileio/file_io.dart';
+import 'package:budgetflow/model/history/month.dart';
 
 class History {
   static const String HISTORY_PATH = "history";
