@@ -10,14 +10,9 @@ void main() {
   group("Budget Functions", () {
     setUp(() {});
     test("Recieve monthly budget into the Budget Creator", () {
-      double inputbudget = budget.getMonthlyIncome();
-      double sa = budgetcreator.setIncome();
-      expect(inputbudget, equals(sa));
     });
 
     test("Inital Budget recieved", () {
-      Type sa = budgetcreator.budget.getMonthlyIncome() as Type;
-      expect(sa, equals(1500));
     });
   });
 }

@@ -33,6 +33,7 @@ class History {
   bool passwordIsValid(String secret) {
     fileIO.readFile(PASSWORD_PATH).then((String passwordJson) {
       password = Password.unserialize(passwordJson);
+      bool passwordMatch = password.verify(secret, password.getSalt());
       if (passwordMatch) {
         initialize();
         return true;
@@ -74,10 +75,9 @@ class History {
 
   static List<Month> unserialize(String serialized) {
     Map map = jsonDecode(serialized);
-    History returnable = new History();
-    returnable.months = new List();
+    List<Month> returnable = new List();
     map.forEach((dynamic s, dynamic d) {
-      returnable.months.add(Month.unserializeMap(d));
+      returnable.add(Month.unserializeMap(d));
     });
     return returnable;
   }
