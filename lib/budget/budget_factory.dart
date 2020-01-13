@@ -56,6 +56,7 @@ class BudgetFactory {
 		BudgetFactory bf = new BudgetFactory();
 		bf.income = old.getMonthlyIncome();
 		double remaining = bf.calculateRemainingAllottment(old);
+		bf._housingRatio = old.getAllotment(BudgetCategory.housing) / bf.income;
 		double spent = bf.income - remaining;
 		bf.usedWants = spent * old.wantsRatio;
 		bf.usedNeeds = spent * old.needsRatio;
