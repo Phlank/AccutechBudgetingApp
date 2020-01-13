@@ -189,7 +189,7 @@ class _LoginPage extends State<LoginPage> {
                 RaisedButton(
                   onPressed: () {
                     if (user!='nouser') {
-                      Navigator.pushNamed(context, 'KnownUser');
+                      Navigator.pushNamed(context, '');
                     }else{
                       Text('please try again');
                     }
@@ -205,7 +205,7 @@ class _LoginPage extends State<LoginPage> {
               child: Text('New User'),
             )
           ],
-        ),
+        ),if(true) user='nouser';
       ),
     );
   } // build
