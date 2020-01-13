@@ -1,11 +1,14 @@
-import 'package:budgetflow/budget/budget_creator_interface.dart';
 import 'package:budgetflow/budget/budget_allocation.dart';
+import 'package:budgetflow/budget/budget_creator_interface.dart';
 import 'package:budgetflow/budget/budget_factory.dart';
 
 import 'budget_type.dart';
 
-abstract class budgetIncomeAndSavingsUpdate implements budgetIncomeandSavingsAllocation, budgetIncomeAndSavingsFactory, budgetCreator {
-
+abstract class BudgetUpdate
+    implements
+        BudgetAllocation,
+        BudgetFactory,
+        BudgetCreator {
   String fr;
   double UsedBudget;
   double UsedNeeds;
@@ -20,12 +23,9 @@ abstract class budgetIncomeAndSavingsUpdate implements budgetIncomeandSavingsAll
 
   void ProfileBudget() {
     if (budgetchoice == BudgetType.savingDepletion) {
-    checkProgress();
-    }
-
-    else {
+      checkProgress();
+    } else {
       budgetchoice = BudgetType.savingGrowth;
-
     }
   }
 
@@ -41,8 +41,7 @@ abstract class budgetIncomeAndSavingsUpdate implements budgetIncomeandSavingsAll
       UsedBudget = income - remainingBudget;
       UsedNeeds = UsedBudget * needs;
       UsedWants = UsedBudget * wants;
-    }
-    else {
+    } else {
       print(fr);
     }
     return;
@@ -57,70 +56,69 @@ abstract class budgetIncomeAndSavingsUpdate implements budgetIncomeandSavingsAll
   }
 
   void checkForSwitch() {
-    if (NewWants < wants && NewNeeds < needs){
-      switch (BudgetPlan){
+    if (NewWants < wants && NewNeeds < needs) {
+      switch (BudgetPlan) {
+        case ("Stage 1-2"):
+          {
+            BudgetPlan = "Stage 1-2";
+            AllocateBudget();
+          }
+          break;
 
-        case ("Stage 1-2"):{
-          BudgetPlan = "Stage 1-2";
-          AllocateBudget();
-        }
-        break;
+        case ("Stage 2-2"):
+          {
+            BudgetPlan = "Stage 1-2";
+            AllocateBudget();
+          }
+          break;
 
-        case ("Stage 2-2"):{
-          BudgetPlan = "Stage 1-2";
-          AllocateBudget();
-        }
-        break;
+        case ("Stage 3-2"):
+          {
+            BudgetPlan = "Stage 2-2";
+            AllocateBudget();
+          }
+          break;
 
-        case ("Stage 3-2"):{
-          BudgetPlan = "Stage 2-2";
-          AllocateBudget();
-        }
-        break;
+        case ("Stage 4-2"):
+          {
+            BudgetPlan = "Stage 3-2";
+            AllocateBudget();
+          }
+          break;
 
-        case ("Stage 4-2"):{
-          BudgetPlan = "Stage 3-2";
-          AllocateBudget();
-        }
-        break;
+        case ("Stage 1-1"):
+          {
+            BudgetPlan = "Stage 1-1";
+            AllocateBudget();
+          }
+          break;
 
-        case("Stage 1-1"):{
-          BudgetPlan = "Stage 1-1";
-          AllocateBudget();
-        }
-        break;
+        case ("Stage 2-1"):
+          {
+            BudgetPlan = "Stage 1-1";
+            AllocateBudget();
+          }
+          break;
 
-        case("Stage 2-1"):{
-          BudgetPlan = "Stage 1-1";
-          AllocateBudget();
-        }
-        break;
+        case ("Stage 3-1"):
+          {
+            BudgetPlan = "Stage 2-1";
+            AllocateBudget();
+          }
+          break;
 
-        case("Stage 3-1"):{
-          BudgetPlan = "Stage 2-1";
-          AllocateBudget();
-        }
-        break;
+        case ("Stage 4-1"):
+          {
+            BudgetPlan = "Stage 3-1";
+            AllocateBudget();
+          }
+          break;
 
-        case ("Stage 4-1"):{
-          BudgetPlan = "Stage 3-1";
-          AllocateBudget();
-        }
-        break;
-
-        default:{
-
-        }
+        default:
+          {}
       }
-
-
     }
-
-      //TODO implement method to reset Budget Allocation after a certain threshold.
   }
 
-    void bruh() {
-
-    }
-
+  void bruh() {}
 }

@@ -1,25 +1,31 @@
-
 import 'package:budgetflow/budget/budget.dart';
 import 'package:budgetflow/budget/budget_category.dart';
 import 'package:budgetflow/budget/budget_creator_interface.dart';
 import 'package:budgetflow/budget/budget_allocation.dart';
 import 'package:budgetflow/budget/budget_type.dart';
 
-abstract class budgetIncomeAndSavingsFactory implements budgetCreator, budgetIncomeandSavingsAllocation, Budget{
+abstract class BudgetFactory
+    implements BudgetCreator, BudgetAllocation {
   Map<BudgetCategory, double> _allotedSpending, _actualSpending;
   double _expenditurePercentage;
+  double _housing;
 
-  void startFactory(){
-    if (budgetchoice ==  BudgetType.savingDepletion){
+  Budget getBudget(){
+    startFactory();
+  }
+
+  void startFactory() {
+    if (budgetchoice == BudgetType.savingDepletion) {
       setBudgetDepletionRatio();
-    }
-    else{
+    } else {
       budgetchoice = BudgetType.savingGrowth;
       setBudgetGrowthRatio();
     }
   }
 
   void categorizeBudget() {
+    setIncome();
+    setHousing();
     _expenditurePercentage = (_actualSpending[BudgetCategory.housing]) / income;
   }
 
@@ -29,19 +35,13 @@ abstract class budgetIncomeAndSavingsFactory implements budgetCreator, budgetInc
     if (_expenditurePercentage < 0 && _expenditurePercentage > .3) {
       BudgetPlan = "Stage 1-2";
       AllocateBudget();
-    }
-
-    else if (_expenditurePercentage < .3 && _expenditurePercentage > .5) {
+    } else if (_expenditurePercentage < .3 && _expenditurePercentage > .5) {
       BudgetPlan = "Stage 2-2";
       AllocateBudget();
-    }
-
-    else if (_expenditurePercentage < .5 && _expenditurePercentage > .8) {
+    } else if (_expenditurePercentage < .5 && _expenditurePercentage > .8) {
       BudgetPlan = "Stage 3-2";
       AllocateBudget();
-    }
-
-    else if (_expenditurePercentage < .8) {
+    } else if (_expenditurePercentage < .8) {
       BudgetPlan = "Stage 4-2";
       AllocateBudget();
     }
@@ -54,29 +54,29 @@ abstract class budgetIncomeAndSavingsFactory implements budgetCreator, budgetInc
 
     if (_expenditurePercentage < 0 && _expenditurePercentage > .3) {
       BudgetPlan = "Stage 1-1";
-    }
-
-    else if (_expenditurePercentage < .3 && _expenditurePercentage > .5) {
+      AllocateBudget();
+    } else if (_expenditurePercentage < .3 && _expenditurePercentage > .5) {
       BudgetPlan = "Stage 2-1";
-    }
-
-    else if (_expenditurePercentage < .5 && _expenditurePercentage > .8) {
+      AllocateBudget();
+    } else if (_expenditurePercentage < .5 && _expenditurePercentage > .8) {
       BudgetPlan = "Stage 3-1";
-    }
-
-    else if (_expenditurePercentage < .8) {
+      AllocateBudget();
+    } else if (_expenditurePercentage < .8) {
       BudgetPlan = "Stage 4-1";
+      AllocateBudget();
     }
 
     return;
   }
 
-  BudgetCategory setHousing(){
-
+  double setHousing() {
+    this._housing = (_actualSpending[BudgetCategory.housing]).toDouble();
+    return _housing;
   }
 
-  double setIncome(){
+  double setIncome() {
     this.income = budget.getMonthlyIncome();
+    return income;
   }
 
 }

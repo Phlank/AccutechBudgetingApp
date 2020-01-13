@@ -2,12 +2,15 @@ import 'package:budgetflow/budget/budget_category.dart';
 import 'package:budgetflow/budget/budget_type.dart';
 import 'package:budgetflow/budget/budget.dart';
 
-class budgetCreator {
+class BudgetCreator {
   //Map<BudgetCategory, double> _allotedSpending, _actualSpending;
   double income;
   double wants;
   double needs;
   double savings;
+  double wantsAmount;
+  double needsAmount;
+  double savingsAmount;
   double targetNeeds;
   double targetWants;
   double targetSavings;
@@ -19,89 +22,88 @@ class budgetCreator {
   BudgetType budgetchoice;
   Budget budget;
 
-  double setIncome(){
+  double setIncome() {
     //setIncomingBudget();
     this.income = budget.getMonthlyIncome();
     return income;
   }
 
-  void setAge(age){
+  int setAge(age) {
     this.age = age;
   }
 
-  void setNeeds(needs){
-    this.needs = income * needs;
+  double setNeeds(needs) {
+    this.needs = needs;
+    this.needsAmount = income * needs;
   }
 
-  void setWants(wants) {
-    this.wants = income * wants;
+  double setWants(wants) {
+    this.wants = wants;
+    this.wantsAmount = income * wants;
   }
 
-  void setSavings(savings){
+  double setSavings(savings) {
+    this.savings = savings;
     this.savings = income * savings;
   }
 
-  void setTargetNeeds(targetneeds){
+  double setTargetNeeds(targetneeds) {
     this.targetNeeds = targetneeds;
   }
 
-  void setTargetWants(targetwants){
+  double setTargetWants(targetwants) {
     this.targetWants = targetwants;
   }
 
-  void setTargetSavings(targetsavings){
+  double setTargetSavings(targetsavings) {
     this.targetSavings = targetsavings;
   }
 
-  void setRemainingWants(remainingwants){
+  double setRemainingWants(remainingwants) {
     this.remainingWants = remainingwants;
   }
 
-  void setRemainingNeeds(remainingneeds){
+  double setRemainingNeeds(remainingneeds) {
     this.remainingNeeds = remainingneeds;
   }
 
-  void setRemainingBudget(){
+  double setRemainingBudget() {
     this.remainingBudget = remainingNeeds + remainingWants;
   }
 
-  void setBudgetType(budgetchoice){
+  BudgetType setBudgetType(budgetchoice) {
     this.budgetchoice = budgetchoice;
   }
 
-  void setDepletingBudget(double n, double w){
+  double setDepletingBudget(double n, double w) {
     setNeeds(n);
     setWants(w);
   }
 
-  void setDepletingTargetBudget(double n, double w){
+  double setDepletingTargetBudget(double n, double w) {
     setTargetNeeds(n);
     setTargetWants(w);
   }
-  void setBudget(double n, double s, double w){
+
+  double setBudget(double n, double s, double w) {
     setNeeds(n);
     setSavings(s);
     setWants(w);
   }
 
-  void setTargetBudget(double n, double s, double w){
+  double setTargetBudget(double n, double s, double w) {
     setTargetNeeds(n);
     setTargetSavings(s);
     setTargetSavings(w);
   }
 
-  void getBudgetPlan(){
+  void getBudgetPlan() {
     return BudgetPlan;
   }
 
-    Budget setIncomingBudget(budget){
+  Budget setIncomingBudget(budget) {
     this.budget = budget;
   }
 
-    Budget createBudget() {
-
-  }
-
-
-
+  Budget createBudget() {}
 }
