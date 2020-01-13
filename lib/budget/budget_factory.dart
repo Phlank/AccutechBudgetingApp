@@ -85,6 +85,7 @@ class BudgetFactory {
 	}
 
 	void updateWantsAndNeeds() {
+
 		wantsAmount = income * wantsRatio;
 		needsAmount = income * needsRatio;
 		targetWantsAmount = income * targetWantsRatio;
@@ -92,32 +93,32 @@ class BudgetFactory {
 	}
 
 	void setBudgetDepletionRatio() {
-		if (_housingRatio < 0 && _housingRatio > .3) {
+		if (_housingRatio > 0 && _housingRatio <= .3) {
 			budgetPlan = "Stage 1-2";
 			allocateBudget(budgetPlan);
-		} else if (_housingRatio < .3 && _housingRatio > .5) {
+		} else if (_housingRatio > .3 && _housingRatio <= .5) {
 			budgetPlan = "Stage 2-2";
 			allocateBudget(budgetPlan);
-		} else if (_housingRatio < .5 && _housingRatio > .8) {
+		} else if (_housingRatio > .5 && _housingRatio <= .8) {
 			budgetPlan = "Stage 3-2";
 			allocateBudget(budgetPlan);
-		} else if (_housingRatio < .8) {
+		} else if (_housingRatio > .8) {
 			budgetPlan = "Stage 4-2";
 			allocateBudget(budgetPlan);
 		}
 	}
 
 	void setBudgetGrowthRatio() {
-		if (_housingRatio < 0 && _housingRatio > .3) {
+		if (_housingRatio > 0 && _housingRatio <= .3) {
 			budgetPlan = "Stage 1-1";
 			allocateBudget(budgetPlan);
-		} else if (_housingRatio < .3 && _housingRatio > .5) {
+		} else if (_housingRatio > .3 && _housingRatio <= .5) {
 			budgetPlan = "Stage 2-1";
 			allocateBudget(budgetPlan);
-		} else if (_housingRatio < .5 && _housingRatio > .8) {
+		} else if (_housingRatio > .5 && _housingRatio <= .8) {
 			budgetPlan = "Stage 3-1";
 			allocateBudget(budgetPlan);
-		} else if (_housingRatio < .8) {
+		} else if (_housingRatio > .8) {
 			budgetPlan = "Stage 4-1";
 			allocateBudget(budgetPlan);
 		}
