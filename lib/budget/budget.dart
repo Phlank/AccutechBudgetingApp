@@ -29,6 +29,10 @@ class Budget {
         return remove;
     }
 
+    double getMonthlyIncome(){
+        return _monthlyIncome;
+    }
+
     double addTransaction(Transaction transaction) {
         if (transaction.category != null) {
             _transactions.add(transaction);
