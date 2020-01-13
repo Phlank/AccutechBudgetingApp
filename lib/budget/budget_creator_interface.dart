@@ -1,10 +1,9 @@
 import 'package:budgetflow/budget/budget_category.dart';
 import 'package:budgetflow/budget/budget_type.dart';
-
-import 'budget.dart';
+import 'package:budgetflow/budget/budget.dart';
 
 class budgetCreator {
-  Map<BudgetCategory, double> _allotedSpending, _actualSpending;
+  //Map<BudgetCategory, double> _allotedSpending, _actualSpending;
   double income;
   double wants;
   double needs;
@@ -18,9 +17,12 @@ class budgetCreator {
   int age;
   var BudgetPlan;
   BudgetType budgetchoice;
+  Budget budget;
 
-  void setIncome(income){
-    this.income = income;
+  double setIncome(){
+    //setIncomingBudget();
+    this.income = budget.getMonthlyIncome();
+    return income;
   }
 
   void setAge(age){
@@ -86,6 +88,14 @@ class budgetCreator {
     setTargetNeeds(n);
     setTargetSavings(s);
     setTargetSavings(w);
+  }
+
+  void getBudgetPlan(){
+    return BudgetPlan;
+  }
+
+    Budget setIncomingBudget(budget){
+    this.budget = budget;
   }
 
     Budget createBudget() {
