@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 const String _SECRET_1 = "password1";
 const String _SECRET_2 = "password2";
 
-Password _pw1 = new SteelPassword(_SECRET_1);
-Password _pw2 = new SteelPassword(_SECRET_2);
+SteelPassword _pw1 = new SteelPassword(_SECRET_1);
+SteelPassword _pw2 = new SteelPassword(_SECRET_2);
 
 void main() {
   group("SteelPassword tests", () {

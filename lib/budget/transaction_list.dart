@@ -9,7 +9,28 @@ class TransactionList {
 		_transactions = new List();
 	}
 
-	void foreach(f(Transaction t)) {
-		
+	void add(Transaction t) {
+		_transactions.add(t);
+	}
+
+	int length() {
+		return _transactions.length;
+	}
+
+	void removeAt(int index) {
+		_transactions.removeAt(index);
+	}
+
+	String serialize() {
+		String output = "{";
+		for(int i = 0; i < _transactions.length; i++) {
+			output += "\"" + i.toString() + "\":\"[";
+			output += "\"";
+		}
+		return output;
+	}
+
+	static TransactionList fromSerialized(String serialized) {
+
 	}
 }
