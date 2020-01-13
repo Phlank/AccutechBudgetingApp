@@ -304,6 +304,7 @@ class GeneralCategory {
 		'kids': '/kids',
 		'pets': '/pets',
 		'miscellaneous': '/misc',
+		'home':'/knownUser'
 	};
 
 	String categoryView;
@@ -375,6 +376,8 @@ class GeneralCategory {
 		List categoryExpenses = getSpecificTransactions(categoryMap[categoryView]); //todo get specific types of transations
 		return Card(
 				child: new ListView.builder(
+					shrinkWrap: true,
+					scrollDirection: Axis.vertical,
 					itemCount: categoryExpenses.length,
 					itemBuilder: (BuildContext context, int index) {
 						return new Text(categoryExpenses[index]);
