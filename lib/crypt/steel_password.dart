@@ -63,6 +63,6 @@ class SteelPassword extends Password implements Serializable {
 
   String serialize() {
     String output = "{\"salt\":\"" + _salt + "\",\"hash\":\"" + _hash + "\"}";
-    return null;
+    return output;
   }
 }

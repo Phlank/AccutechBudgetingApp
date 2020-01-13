@@ -1,51 +1,73 @@
+import 'dart:convert';
+
 import 'package:budgetflow/crypt/crypter.dart';
 import 'package:budgetflow/crypt/password.dart';
-import 'package:budgetflow/crypt/steel_password.dart';
+import 'package:budgetflow/crypt/steel_crypter.dart';
 import 'package:budgetflow/fileio/dart_file_io.dart';
 import 'package:budgetflow/fileio/file_io.dart';
-import 'package:budgetflow/history/json_stringifier.dart';
 import 'package:budgetflow/history/month.dart';
-import 'package:budgetflow/history/stringifier.dart';
 
 class History {
   static const String HISTORY_PATH = "history";
   static const String PASSWORD_PATH = "password";
 
   static FileIO fileIO = new DartFileIO();
-  static Stringifier stringifier = new JSONStringifier();
-  static Future<String> json;
   static Password password;
   static Crypter crypter;
-  static List<Month> months;
+  List<Month> months;
 
-  static bool isNewUser() {
+  History() {
+    months = new List<Month>();
+  }
+
+  bool isNewUser() {
     fileIO.fileExists(HISTORY_PATH).then((value) {
       return value;
     });
   }
 
-  static bool passwordIsValid(String secret) {
+  bool passwordIsValid(String secret) {
     fileIO.readFile(PASSWORD_PATH).then((String passwordJson) {
-      Password stored = Password.unserialize(passwordJson);
-      bool passwordMatch = stored.verify(secret, stored.getSalt());
+      password = Password.unserialize(passwordJson);
+      bool passwordMatch = password.verify(secret, password.getSalt());
       if (passwordMatch) {
         initialize();
         return true;
+      } else {
+        return false;
       }
-      return false;
     });
   }
 
-  static void initialize() {
+  void initialize() {}
 
+  static void setPassword(Password pw) {
+    password = pw;
+    crypter = new SteelCrypter(password);
   }
 
-
-
-  static Future _loadMonths() async {
-    String awaitedJSON = await json;
-    months = stringifier.unstringifyHistory(awaitedJSON);
+  void addMonth(Month m) {
+    months.add(m);
   }
 
-// TODO change password
+  String serialize() {
+    String output = "{";
+    int i = 0;
+    months.forEach((Month m) {
+      output += "\"" + i.toString() + "\":" + m.serialize();
+      i++;
+    });
+    output += "}";
+    return output;
+  }
+
+  static History unserialize(String serialized) {
+    Map map = jsonDecode(serialized);
+    History returnable = new History();
+    returnable.months = new List();
+    map.forEach((dynamic s, dynamic d) {
+      returnable.months.add(Month.unserializeMap(d));
+    });
+    return returnable;
+  }
 }

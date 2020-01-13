@@ -1,17 +1,20 @@
+import 'dart:convert';
+
 import 'package:budgetflow/budget/budget_map.dart';
 import 'package:budgetflow/budget/transaction.dart';
+import 'package:budgetflow/budget/transaction_list.dart';
 import 'package:budgetflow/crypt/encrypted.dart';
+import 'package:budgetflow/fileio/serializable.dart';
 import 'package:budgetflow/history/history.dart';
 import 'package:budgetflow/history/json_stringifier.dart';
 import 'package:budgetflow/history/stringifier.dart';
 
-class Month {
+class Month implements Serializable {
   String _allottedFilepath, _actualFilepath, _transactionFilepath;
   BudgetMap allottedData;
   BudgetMap actualData;
   List<Transaction> transactionData;
   int year, month;
-  Stringifier stringifier = new JSONStringifier();
 
   Month(int year, int month) {
     this.year = year;
@@ -42,23 +45,25 @@ class Month {
   void _loadBudgetData() {
     History.fileIO.readFile(_allottedFilepath).then((String cipher) {
       String plaintext = History.crypter.decrypt(Encrypted.fromFileContent(cipher));
-      allottedData = BudgetMap.fromSerialized(plaintext);
+      allottedData = BudgetMap.unserialize(plaintext);
     });
     History.fileIO.readFile(_actualFilepath).then((String cipher) {
       String plaintext = History.crypter.decrypt(Encrypted.fromFileContent(cipher));
-      actualData = BudgetMap.fromSerialized(plaintext);
+      actualData = BudgetMap.unserialize(plaintext);
     });
   }
 
-  Future<List<Transaction>> getTransactionData() async {
+  TransactionList getTransactionData()  {
+    // TODO finish this
     if (transactionData == null) {
       // If the data has not been loaded, load it
-      String cipher = await History.fileIO.readFile(_transactionFilepath);
-      String plaintext =
-          History.crypter.decrypt(Encrypted.fromFileContent(cipher));
-      transactionData = stringifier.unstringifyTransactionList(plaintext);
+      History.fileIO.readFile(_transactionFilepath).then((String cipher) {
+        String plaintext = History.crypter.decrypt(Encrypted.fromFileContent(cipher));
+        TransactionList t = TransactionList.unserialize(plaintext);
+        return t;
+      });
     }
-    return transactionData;
+    return null;
   }
 
   void updateMonthData(BudgetMap allotted, BudgetMap actual, List<Transaction> transactions) {
@@ -83,5 +88,23 @@ class Month {
 
   void writeTransactions() {
     // TODO implement this
+  }
+
+  String serialize() {
+    String output = "{";
+    output += "\"year\":\"" + year.toString() + "\",";
+    output += "\"month\":\"" + month.toString() + "\"";
+    output += "}";
+    return output;
+  }
+
+  static unserialize(String serialization) {
+    Map map = jsonDecode(serialization);
+    return unserializeMap(map);
+  }
+
+  static unserializeMap(Map map) {
+    Month m = new Month(int.parse(map["year"]), int.parse(map["month"]));
+    return m;
   }
 }

@@ -1,0 +1,19 @@
+import 'package:budgetflow/budget/budget_category.dart';
+import 'package:budgetflow/budget/transaction.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+Transaction t1 = new Transaction(null, null, 0.0, null);
+Transaction t2 =
+    new Transaction("Walmart", "Credit Card", 0.0, BudgetCategory.groceries);
+String t2s =
+    "{\"datetime\":\"1578881628138\",\"vendor\":\"Walmart\",\"method\":\"Credit Card\",\"delta\":\"0.0\",\"category\":\"Groceries\"}";
+
+void main() {
+  test("Serialization of new transaction", () {
+    expect(t2.serialize(), isNot(null));
+  });
+  test("Serialization is reversible", () {
+    String t2s = t2.serialize();
+    expect(t2s, equals(Transaction.unserialize(t2s).serialize()));
+  });
+}
