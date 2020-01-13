@@ -20,6 +20,7 @@ class Budget {
     void _populateBlankMaps() {
 	    allottedSpending = new BudgetMap();
 	    actualSpending = new BudgetMap();
+	    transactions = new TransactionList();
     }
 
     double setAllotment(BudgetCategory category, double amount) {
