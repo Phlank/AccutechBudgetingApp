@@ -8,7 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 const String _SECRET_1 = "password1";
 const String _SECRET_2 = "password2";
 const String _MESSAGE_1 = "The quick brown fox jumps over the lazy dog.";
-const String _MESSAGE_2 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+const String _MESSAGE_2 =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
 Password _pw1 = new SteelPassword(_SECRET_1);
 Password _pw2 = new SteelPassword(_SECRET_2);

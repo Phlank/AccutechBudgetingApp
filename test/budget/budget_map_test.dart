@@ -13,7 +13,7 @@ void main() {
 		expect(b.serialize(), equals(bm1Serialized));
 	});
 	test("Map from serialized has categories", () {
-		BudgetMap b = BudgetMap.fromSerialized(bm2Serialized);
+		BudgetMap b = BudgetMap.unserialize(bm2Serialized);
 		print(b.serialize());
 	});
 }

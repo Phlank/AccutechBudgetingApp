@@ -40,7 +40,7 @@ class BudgetMap implements Serializable {
 		}
 	}
 
-	static BudgetMap fromSerialized(String serialized) {
+	static BudgetMap unserialize(String serialized) {
 		_deserialized = new BudgetMap();
 		_decoded = jsonDecode(serialized);
 		_decoded.forEach(_convertDecoded);

@@ -47,5 +47,9 @@ class History {
     months = stringifier.unstringifyHistory(awaitedJSON);
   }
 
+  String serialize() {
+
+  }
+
 // TODO change password
 }

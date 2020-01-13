@@ -21,17 +21,21 @@ class Transaction implements Serializable {
 
   static Transaction unserialize(String serialized) {
     Map map = jsonDecode(serialized);
+    return unserializeMap(map);
+  }
+
+  static Transaction _emptyTransaction() {
+    Transaction t = new Transaction("", "", 0.0, BudgetCategory.housing);
+    return t;
+  }
+
+  static Transaction unserializeMap(Map map) {
     Transaction t = _emptyTransaction();
     t.datetime = DateTime.fromMillisecondsSinceEpoch(int.parse(map["datetime"]));
     t.vendor = map["vendor"];
     t.method = map["method"];
     t.delta = double.parse(map["delta"]);
     t.category = jsonCategory[map["category"]];
-    return t;
-  }
-
-  static Transaction _emptyTransaction() {
-    Transaction t = new Transaction("", "", 0.0, BudgetCategory.housing);
     return t;
   }
 
