@@ -5,9 +5,7 @@ import 'package:budgetflow/crypt/password.dart';
 import 'package:budgetflow/crypt/steel_crypter.dart';
 import 'package:budgetflow/fileio/dart_file_io.dart';
 import 'package:budgetflow/fileio/file_io.dart';
-import 'package:budgetflow/history/json_stringifier.dart';
 import 'package:budgetflow/history/month.dart';
-import 'package:budgetflow/history/stringifier.dart';
 
 class History {
   static const String HISTORY_PATH = "history";
@@ -35,8 +33,9 @@ class History {
       if (passwordMatch) {
         initialize();
         return true;
+      } else {
+        return false;
       }
-      return false;
     });
   }
 
@@ -71,6 +70,4 @@ class History {
     });
     return returnable;
   }
-
-// TODO change password
 }
