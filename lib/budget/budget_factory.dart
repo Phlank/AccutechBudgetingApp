@@ -80,7 +80,7 @@ class BudgetFactory {
 		if (type == BudgetType.savingDepletion) {
 			setBudgetDepletionRatio();
 		} else {
-			type = BudgetType.savingGrowth;
+			type == BudgetType.savingGrowth;
 			setBudgetGrowthRatio();
 		}
 	}
