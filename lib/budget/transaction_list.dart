@@ -21,6 +21,10 @@ class TransactionList {
     _transactions.removeAt(index);
   }
 
+  Transaction getAt(int index){
+    return _transactions[index];
+  }
+
   String serialize() {
     String output = "{";
     for (int i = 0; i < _transactions.length; i++) {
@@ -41,5 +45,9 @@ class TransactionList {
       t._transactions.add(Transaction.unserializeMap(d));
     });
     return t;
+  }
+
+  List<Transaction>getIterable() {
+    return _transactions;
   }
 }

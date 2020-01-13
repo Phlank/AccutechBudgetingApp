@@ -1,7 +1,13 @@
+import 'package:budgetflow/budget/budget_category.dart';
+import 'package:budgetflow/budget/budget_factory.dart';
+import 'package:budgetflow/budget/budget_type.dart';
+import 'package:budgetflow/history/history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
-
+import 'package:budgetflow/budget/budget.dart';
+import 'budget/transaction.dart';
+import 'budget/transaction_list.dart';
 import 'sidebar/account_display.dart' as account;
 import 'sidebar/history_display.dart' as history;
 import 'sidebar/user_catagory_displays.dart' as sideBar;
@@ -15,7 +21,8 @@ RegExp emailVerification =
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
-
+History userHistory = new History();
+Budget userBudget;
 //todo implement a global storage object to retain and disperse all of the information
 
 void main() => runApp(BudgetingApp());
@@ -33,25 +40,30 @@ class BudgetingApp extends StatelessWidget {
       routes: {
         '/knownUser': (context) => UserPage(),
         '/newUser': (context) => UserInformation(),
-        '/housing':(context)=> sideBar.HousingView(),
-        '/edit':(context)=> edit.EditInformationDirectory(),
-        '/houseEdit':(context)=> edit.HousingInformationEdit(),
-        '/budgetEdit':(context)=> edit.CategoryInformationEdit(),
-        '/userEdit':(context)=> edit.UserInformationEdit(),
+        '/housing':(context)=> sideBar.HousingView(userBudget),
+        '/edit':(context)=> edit.EditInformationDirectory(userBudget),
+        '/houseEdit':(context)=> edit.HousingInformationEdit(userBudget),
+        '/budgetEdit':(context)=> edit.CategoryInformationEdit(userBudget),
+        '/userEdit':(context)=> edit.UserInformationEdit(userBudget),
         '/historyVeiw':(context)=> history.HistoryDisplay(),
         '/accountVeiw':(context)=> account.AccountDisplay(),
-        '/utilities':(context)=> sideBar.UtilitiesView(),
-        '/groceries':(context)=> sideBar.GroceriesView(),
-        '/savings':(context)=> sideBar.SavingsView(),
-         '/health':(context)=> sideBar.HealthView(),
-        '/transport':(context)=> sideBar.TransportationView(),
-        '/education':(context)=> sideBar.EducationView(),
-        '/kids':(context)=> sideBar.KidsView(),
-        '/pets':(context)=> sideBar.PetsView(),
-        '/misc':(context)=> sideBar.MiscView(),
-        '/entertainment':(context)=> sideBar.EntertainmentView(),
+        '/utilities':(context)=> sideBar.UtilitiesView(userBudget),
+        '/groceries':(context)=> sideBar.GroceriesView(userBudget),
+        '/savings':(context)=> sideBar.SavingsView(userBudget),
+         '/health':(context)=> sideBar.HealthView(userBudget),
+        '/transport':(context)=> sideBar.TransportationView(userBudget),
+        '/education':(context)=> sideBar.EducationView(userBudget),
+        '/kids':(context)=> sideBar.KidsView(userBudget),
+        '/pets':(context)=> sideBar.PetsView(userBudget),
+        '/misc':(context)=> sideBar.MiscView(userBudget),
+        '/entertainment':(context)=> sideBar.EntertainmentView(userBudget),
       }, //Routes
     );
+  }
+
+  checkHistory() {
+    if(userHistory.isNewUser()) return UserInformation();
+    return LoginPage();
   } // build
 } // BudgetingApp
 
@@ -73,11 +85,14 @@ class UserInformation extends StatefulWidget {
 class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
+    if(userBudget == null){
+      userBudget = userHistory.budget;
+    }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
-    List expenses = []; //todo get expenses list from where ever that might be
+    TransactionList expenses = userBudget.transactions; //todo get expenses list from where ever that might be
     return Scaffold(
       appBar: AppBar(
-        title: Text(/*users enterd name when available*/ 'User Page'),
+        title: Text(/*users entered name when available*/ 'User Page'),
       ),
       drawer: new sideBar.GeneralCategory().sideMenu(),
       body:ListView(
@@ -124,9 +139,10 @@ class _UserPage extends State<UserPage> {
               child: new ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: expenses.length,
+                itemCount: expenses.length(),
                 itemBuilder: (BuildContext context, int index) {
-                  return new Text(expenses[index]);
+                  Transaction trans = expenses.getAt(index);
+                  return new Text(trans.vendor+'\n'+trans.delta.toString()+'\n'+trans.datetime.toIso8601String()+'\n'+trans.method);
                 },
               )),
         ],
@@ -135,19 +151,19 @@ class _UserPage extends State<UserPage> {
   } //build
 
   Map<String, double> buildBudgetMap() {
-    //todo use global objet to get real data from user in to map
+
     Map<String, double> map = new Map();
-    map.putIfAbsent('housing', () => 5);
-    map.putIfAbsent('utilities', () => 3);
-    map.putIfAbsent('groceries', () => 2);
-    map.putIfAbsent('savings', () => 2);
-    map.putIfAbsent('helath', () => 4);
-    map.putIfAbsent('transportation', () => 2);
-    map.putIfAbsent('education', () => 3);
-    map.putIfAbsent('entertainment', () => 1);
-    map.putIfAbsent('kids', () => 2);
-    map.putIfAbsent('pets', () => 10);
-    map.putIfAbsent('miscellaneous', () => 5);
+    map.putIfAbsent('housing', () => userBudget.allottedSpending.valueOf(BudgetCategory.housing));
+    map.putIfAbsent('utilities', () => userBudget.allottedSpending.valueOf(BudgetCategory.utilities));
+    map.putIfAbsent('groceries', () => userBudget.allottedSpending.valueOf(BudgetCategory.groceries));
+    map.putIfAbsent('savings', () => userBudget.allottedSpending.valueOf(BudgetCategory.savings));
+    map.putIfAbsent('helath', () => userBudget.allottedSpending.valueOf(BudgetCategory.health));
+    map.putIfAbsent('transportation', () => userBudget.allottedSpending.valueOf(BudgetCategory.transportation));
+    map.putIfAbsent('education', () => userBudget.allottedSpending.valueOf(BudgetCategory.education));
+    map.putIfAbsent('entertainment', () => userBudget.allottedSpending.valueOf(BudgetCategory.entertainment));
+    map.putIfAbsent('kids', () => userBudget.allottedSpending.valueOf(BudgetCategory.kids));
+    map.putIfAbsent('pets', () => userBudget.allottedSpending.valueOf(BudgetCategory.pets));
+    map.putIfAbsent('miscellaneous', () => userBudget.allottedSpending.valueOf(BudgetCategory.miscellaneous));
     return map;
   }
 } // _UserPage
@@ -180,7 +196,7 @@ class _LoginPage extends State<LoginPage> {
                     if (value.isEmpty) return 'Enter your PIN, please';
                     if (!allNumbers.hasMatch(value))
                       return 'your PIN should only be 4 numbers';
-                    if(true) user='nouser';
+                    if(userHistory.passwordIsValid(value)) user='user';
                     //todo make check if user is a real user
                     return null;
                   },
@@ -189,7 +205,7 @@ class _LoginPage extends State<LoginPage> {
                 RaisedButton(
                   onPressed: () {
                     if (user!='nouser') {
-                      Navigator.pushNamed(context, '');
+                      Navigator.pushNamed(context, '/knownUser');
                     }else{
                       Text('please try again');
                     }
@@ -205,7 +221,7 @@ class _LoginPage extends State<LoginPage> {
               child: Text('New User'),
             )
           ],
-        ),if(true) user='nouser';
+        ),
       ),
     );
   } // build
@@ -216,8 +232,11 @@ class _UserInformation extends State<UserInformation>{
     String nameButton = 'next';
     final _formKey = GlobalKey<FormState>();
     String housePaymentType = 'Renting';
-    bool dependencyOnSavings = false;
+    double income = 0.0;
+    double housingPayment = 0.0;
+    BudgetType dependencyOnSavings = BudgetType.savingGrowth;
     double savingsDraw = 0.0;
+    int freq = 0;
     List<Card> inputFields = <Card>[
       Card(
         child:Form(
@@ -305,6 +324,7 @@ class _UserInformation extends State<UserInformation>{
                     if (value.isEmpty) return 'please dont leave blank';
                     if (!dollarAmount.hasMatch(value))
                       return 'numerical values only please';
+                    income = double.parse(value);
                     return null;
                   },
                 ),
@@ -317,6 +337,7 @@ class _UserInformation extends State<UserInformation>{
                     if (value.isEmpty) return 'please do not leave blank';
                     if (!new RegExp(r'[0-9]{0,2}').hasMatch(value))
                       return 'numerical value please';
+                    freq = int.parse(value);
                     return null;
                   },
                 ),
@@ -344,7 +365,7 @@ class _UserInformation extends State<UserInformation>{
               RadioListTile(
                 groupValue: dependencyOnSavings,
                 title: Text('yes'),
-                value: true,
+                value: BudgetType.savingDepletion,
                 onChanged: (value) {
                   setState(() {
                     dependencyOnSavings = value;
@@ -354,13 +375,12 @@ class _UserInformation extends State<UserInformation>{
               RadioListTile(
                 groupValue: dependencyOnSavings,
                 title: Text('no'),
-                value: false,
+                value: BudgetType.savingGrowth,
                 onChanged: (value) {
                   setState(() {
                     dependencyOnSavings = value;
                   });
                 },
-                selected: true,
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -370,7 +390,7 @@ class _UserInformation extends State<UserInformation>{
                 validator: (value) {
                   return null;
                 },
-                enabled: dependencyOnSavings,
+                enabled: false,
                 onChanged:  (value) {
                   if (value.isNotEmpty)
                     savingsDraw =
@@ -456,6 +476,7 @@ class _UserInformation extends State<UserInformation>{
                   if (value.isEmpty) return 'please dont leave Blank';
                   if (!dollarAmount.hasMatch(value))
                     return 'Numeric format please';
+                  housingPayment = double.parse(value);
                   return null;
                 },
               ),
@@ -516,7 +537,8 @@ class _UserInformation extends State<UserInformation>{
                   cardOrder++;
                   Navigator.pushNamed(context, '/newUser');
                 }else {
-                Navigator.pushNamed(context, '/knownUser');
+                  userBudget = BudgetFactory.newFromInfo(income*freq, housingPayment, dependencyOnSavings);
+                  Navigator.pushNamed(context, '/knownUser');
               }}},
           )
         ],

@@ -1,9 +1,12 @@
+import 'package:budgetflow/budget/budget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 //todo add to sidemenu
 
 class EditInformationDirectory extends StatefulWidget{
+  EditInformationDirectory(Budget userBudget);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -13,6 +16,8 @@ class EditInformationDirectory extends StatefulWidget{
 }
 
 class UserInformationEdit extends StatefulWidget{
+  UserInformationEdit(Budget userBudget);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -30,6 +35,8 @@ class UserInformationEdit extends StatefulWidget{
 }
 
 class HousingInformationEdit extends StatefulWidget{
+  HousingInformationEdit(Budget userBudget);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -42,6 +49,8 @@ class HousingInformationEdit extends StatefulWidget{
 }
 
 class CategoryInformationEdit extends StatefulWidget{
+  CategoryInformationEdit(Budget userBudget);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
