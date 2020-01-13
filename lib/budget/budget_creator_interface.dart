@@ -3,7 +3,6 @@ import 'package:budgetflow/budget/budget_type.dart';
 import 'package:budgetflow/budget/budget.dart';
 
 class BudgetCreator {
-  //Map<BudgetCategory, double> _allotedSpending, _actualSpending;
   double income;
   double wants;
   double needs;
@@ -134,8 +133,9 @@ class BudgetCreator {
     setWants(w);
   }
 
-  double getDepletingBudget(double n, double w) {
-    return setDepletingBudget(n, w);
+  double getDepletingBudget() {
+    getWants();
+    getNeeds();
   }
 
   double setDepletingTargetBudget(double n, double w) {
@@ -143,8 +143,9 @@ class BudgetCreator {
     setTargetWants(w);
   }
 
-  double getDepletingTargetBudget(double n, double w) {
-    return setDepletingTargetBudget(n, w);
+  double getDepletingTargetBudget() {
+    getTargetWants();
+    getTargetNeeds();
   }
 
   double setGrowthBudget(double n, double s, double w) {
@@ -153,8 +154,10 @@ class BudgetCreator {
     setWants(w);
   }
 
-  double getGrowthBudget(double n, double s, double w) {
-    return setGrowthBudget(n, s, w);
+  double getGrowthBudget() {
+    getNeedsAmount();
+    getSavingsAmount();
+    getWantsAmount();
   }
 
   double setTargetBudget(double n, double s, double w) {
@@ -163,8 +166,10 @@ class BudgetCreator {
     setTargetSavings(w);
   }
 
-  double getTargetBudget(double n, double s, double w) {
-    return setTargetBudget(n, s, w);
+  double getTargetBudget() {
+    getTargetNeeds();
+    getTargetSavings();
+    getTargetWants();
   }
 
   void getBudgetPlan() {

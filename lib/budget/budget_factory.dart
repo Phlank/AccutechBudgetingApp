@@ -71,12 +71,19 @@ abstract class BudgetFactory
 
   double setHousing() {
     this._housing = (_actualSpending[BudgetCategory.housing]).toDouble();
+  }
+
+  double getHousing() {
     return _housing;
   }
 
   double setIncome() {
     this.income = budget.getMonthlyIncome();
+  }
+
+  double getIncome() {
     return income;
   }
+
 
 }
