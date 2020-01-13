@@ -13,5 +13,7 @@ class Password {
 
   String getSalt() {}
 
+  String serialize() {}
+
   static Password unserialize(String serialized) {}
 }

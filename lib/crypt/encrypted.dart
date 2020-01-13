@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Encrypted {
   String iv;
   String cipher;
@@ -7,17 +9,15 @@ class Encrypted {
     this.cipher = cipher;
   }
 
-  static Encrypted fromFileContent(String content) {
-    // TODO implement this
-    // should be able to parse file content into data structure
-    // see toFileContent() for format, make sure it can't be messed up
-    return null;
+  static Encrypted unserialize(String serialized) {
+    Map map = jsonDecode(serialized);
+    String iv = map["iv"];
+    String cipher = map["cipher"];
+    return new Encrypted(iv, cipher);
   }
 
-  static String toFileContent() {
-    // TODO implement this
-    // output should be iv:<$iv>cipher:<$cipher>
-    // don't use magic strings
-    return null;
+  String serialize() {
+    String output = "{\"iv\":\"" + iv + "\",\"cipher\":\"" + cipher + "\"}";
+    return output;
   }
 }

@@ -2,12 +2,13 @@ import 'package:budgetflow/budget/budget_category.dart';
 import 'package:budgetflow/budget/budget_map.dart';
 import 'package:budgetflow/budget/budget_type.dart';
 import 'package:budgetflow/budget/transaction.dart';
+import 'package:budgetflow/budget/transaction_list.dart';
 import 'package:budgetflow/history/month.dart';
 
 class Budget {
-	BudgetMap _allottedSpending, _actualSpending;
+	BudgetMap allottedSpending, actualSpending;
     double _monthlyIncome;
-    List<Transaction> _transactions;
+	TransactionList transactions;
 	BudgetType _type;
 	double wantsRatio, needsRatio;
 
@@ -17,12 +18,12 @@ class Budget {
     }
 
     void _populateBlankMaps() {
-	    _allottedSpending = new BudgetMap();
-	    _actualSpending = new BudgetMap();
+	    allottedSpending = new BudgetMap();
+	    actualSpending = new BudgetMap();
     }
 
     double setAllotment(BudgetCategory category, double amount) {
-	    _allottedSpending.set(category, amount);
+	    allottedSpending.set(category, amount);
 	    return amount;
     }
 
@@ -32,25 +33,20 @@ class Budget {
 
     double addTransaction(Transaction transaction) {
         if (transaction.category != null) {
-            _transactions.add(transaction);
-            _actualSpending.addTo(transaction.category, transaction.delta);
-            return _actualSpending.valueOf(transaction.category);
+	        transactions.add(transaction);
+	        actualSpending.addTo(transaction.category, transaction.delta);
+	        return actualSpending.valueOf(transaction.category);
         }
-        _actualSpending.addTo(BudgetCategory.miscellaneous, transaction.delta);
-        return _actualSpending.valueOf(BudgetCategory.miscellaneous);
+        actualSpending.addTo(BudgetCategory.miscellaneous, transaction.delta);
+        return actualSpending.valueOf(BudgetCategory.miscellaneous);
     }
 
     double getSpending(BudgetCategory category) {
-	    return _actualSpending.valueOf(category);
+	    return actualSpending.valueOf(category);
     }
 
     double getAllotment(BudgetCategory category) {
-	    return _allottedSpending.valueOf(category);
-    }
-
-    Month toMonth() {
-        // TODO implement
-        return null;
+	    return allottedSpending.valueOf(category);
     }
 
 	void setType(BudgetType type) {
@@ -63,7 +59,17 @@ class Budget {
 
 	static Budget fromOldAllottments(Budget old) {
 		Budget b = new Budget(old._monthlyIncome);
-		b._allottedSpending = old._allottedSpending;
+		b.allottedSpending = old.allottedSpending;
 		return b;
+	}
+
+	static Budget fromMonth(Month m) {
+		Budget b = new Budget(m.income);
+		m.loadBudgetData();
+		b.allottedSpending = m.allottedData;
+		b.actualSpending = m.actualData;
+		m.loadTransactionData();
+		b.transactions = m.transactionData;
+		b._type = m.type;
 	}
 }

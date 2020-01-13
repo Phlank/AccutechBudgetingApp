@@ -10,8 +10,8 @@ void main() {
 	group("h tests", () {
 		setUp(() {
 			Password p = new SteelPassword("Hello there");
-			Month m1 = new Month(2019, 12);
-			Month m2 = new Month(2019, 11);
+			Month m1 = new Month(2019, 12, 1200.0);
+			Month m2 = new Month(2019, 11, 1200.0);
 			h.addMonth(m1);
 			h.addMonth(m2);
 		});

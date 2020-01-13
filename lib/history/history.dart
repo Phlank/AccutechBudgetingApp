@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:budgetflow/budget/budget.dart';
+import 'package:budgetflow/budget/budget_factory.dart';
 import 'package:budgetflow/crypt/crypter.dart';
 import 'package:budgetflow/crypt/encrypted.dart';
 import 'package:budgetflow/crypt/password.dart';
 import 'package:budgetflow/crypt/steel_crypter.dart';
+import 'package:budgetflow/crypt/steel_password.dart';
 import 'package:budgetflow/fileio/dart_file_io.dart';
 import 'package:budgetflow/fileio/file_io.dart';
 import 'package:budgetflow/history/month.dart';
@@ -16,7 +19,9 @@ class History {
   static Password password;
   static Crypter crypter;
   List<Month> months;
-
+  int year, month;
+  Month currentMonth;
+  Budget budget;
   bool newUser;
 
   History() {
@@ -25,8 +30,8 @@ class History {
 
   bool isNewUser() {
     fileIO.fileExists(HISTORY_PATH).then((value) {
-	    newUser = !value;
-	    return !value;
+      newUser = !value;
+      return !value;
     });
   }
 
@@ -44,22 +49,61 @@ class History {
   }
 
   void initialize() {
-	  if (!newUser) {
-		  fileIO.readFile(HISTORY_PATH).then((String cipher) {
-			  String plaintext = crypter.decrypt(
-				  Encrypted.fromFileContent(cipher));
-			  months = unserialize(plaintext);
-		  });
-	  }
+    updateCurrentTime();
+    if (!newUser) {
+      fileIO.readFile(HISTORY_PATH).then((String cipher) {
+        loadData(cipher);
+      });
+    }
   }
 
-  void setPassword(Password pw) {
-    password = pw;
+  void updateCurrentTime() {
+    DateTime now = DateTime.now();
+    year = now.year;
+    month = now.month;
+  }
+
+  void loadData(String cipher) {
+    String plaintext = crypter.decrypt(Encrypted.unserialize(cipher));
+    months = unserialize(plaintext);
+    if (months.contains(new Month(year, month, 0.0))) {
+      currentMonth =
+          months.firstWhere((Month m) => m.year == year && m.month == month);
+      budget = Budget.fromMonth(currentMonth);
+    } else {
+      currentMonth = new Month(year, month, months[months.length - 1].income);
+      months.add(currentMonth);
+      budget = BudgetFactory.newFromBudget(
+          Budget.fromMonth(months[months.length - 2]));
+    }
+  }
+
+  void setPassword(String newSecret) {
+    password = new SteelPassword(newSecret);
     crypter = new SteelCrypter(password);
+  }
+
+  void updateCurrentMonth(Budget budget) {
+    currentMonth = Month.fromBudget(budget);
   }
 
   void addMonth(Month m) {
     months.add(m);
+  }
+
+  void saveData() {
+    updateCurrentMonth(budget);
+    months.forEach((Month m) => m.writeMonth());
+    writePassword();
+    writeHistory();
+  }
+
+  void writePassword() {
+    fileIO.writeFile(PASSWORD_PATH, password.serialize());
+  }
+
+  void writeHistory() {
+    fileIO.writeFile(HISTORY_PATH, this.serialize());
   }
 
   String serialize() {

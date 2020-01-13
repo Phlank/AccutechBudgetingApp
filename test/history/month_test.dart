@@ -1,10 +1,7 @@
-import 'package:budgetflow/budget/budget_category.dart';
-import 'package:budgetflow/budget/transaction.dart';
-import 'package:budgetflow/budget/transaction_list.dart';
 import 'package:budgetflow/history/month.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Month m = new Month(2019, 12);
+Month m = new Month(2019, 12, 1200.0);
 
 void main() {
 	group("Month tests", () {
