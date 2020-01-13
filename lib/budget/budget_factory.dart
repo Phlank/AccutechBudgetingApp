@@ -41,6 +41,7 @@ class BudgetFactory {
 	static Budget newFromInfo(double income, double housing, BudgetType type) {
 		BudgetFactory bf = new BudgetFactory();
 		bf._housingRatio = housing / income;
+		bf.income = income;
 		bf.startFactory(type);
 		Budget newBudget = new Budget(income);
 		newBudget.setType(type);
@@ -85,7 +86,6 @@ class BudgetFactory {
 	}
 
 	void updateWantsAndNeeds() {
-
 		wantsAmount = income * wantsRatio;
 		needsAmount = income * needsRatio;
 		targetWantsAmount = income * targetWantsRatio;
