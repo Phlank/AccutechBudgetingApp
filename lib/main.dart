@@ -59,6 +59,7 @@ class BudgetingApp extends StatelessWidget {
         '/misc':(context)=> sideBar.MiscView(userBudget),
         '/entertainment':(context)=> sideBar.EntertainmentView(userBudget),
       }, //Routes
+
     );
   }
 
@@ -135,7 +136,7 @@ class _UserPage extends State<UserPage> {
                         ))
                   ]))),
           Card(/*user warnings*/),
-          Card(
+         Card(
             /*expense tracker*/
               child: new ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -228,16 +229,25 @@ class _LoginPage extends State<LoginPage> {
   } // build
 } //_LoginPage
 
+final  housingCon = new TextEditingController();
+final incomeCon = new TextEditingController();
+
+InformationHolding hold = new InformationHolding();
+
 class _UserInformation extends State<UserInformation>{
+
+  @override
+  void dispose(){
+    housingCon.dispose();
+    incomeCon.dispose();
+    super.dispose();
+  }
+
   Scaffold informationCollection(){
     String nameButton = 'next';
     final _formKey = GlobalKey<FormState>();
     String housePaymentType = 'Renting';
-    double income = 0.0;
-    double housingPayment = 0.0;
     BudgetType dependencyOnSavings = BudgetType.savingGrowth;
-    double savingsDraw = 0.0;
-    int freq = 0;
     List<Card> inputFields = <Card>[
       Card(
         child:Form(
@@ -317,28 +327,16 @@ class _UserInformation extends State<UserInformation>{
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  controller: incomeCon,
                   decoration: InputDecoration(
-                    hintText: 'regular income',
+                    hintText: 'monthly income',
                     labelText: 'regular income',
                   ),
                   validator: (value) {
                     if (value.isEmpty) return 'please dont leave blank';
                     if (!dollarAmount.hasMatch(value))
                       return 'numerical values only please';
-                    income = double.parse(value);
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'frequency that your paid?',
-                    hintText: 'give number of paychecks per month',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) return 'please do not leave blank';
-                    if (!new RegExp(r'[0-9]{0,2}').hasMatch(value))
-                      return 'numerical value please';
-                    freq = int.parse(value);
+                    hold.setIncome(double.tryParse(value));
                     return null;
                   },
                 ),
@@ -394,8 +392,7 @@ class _UserInformation extends State<UserInformation>{
                 enabled: false,
                 onChanged:  (value) {
                   if (value.isNotEmpty)
-                    savingsDraw =
-                        double.parse(value.replaceAll('\$', ' ').trim());
+
                   return null;
                 },
               )
@@ -469,6 +466,7 @@ class _UserInformation extends State<UserInformation>{
           child: Column(
             children: <Widget>[
               TextFormField(
+                controller: housingCon,
                 decoration: InputDecoration(
                   labelText: housePaymentType + 'Payment',
                   hintText: 'amount in USD',
@@ -477,7 +475,7 @@ class _UserInformation extends State<UserInformation>{
                   if (value.isEmpty) return 'please dont leave Blank';
                   if (!dollarAmount.hasMatch(value))
                     return 'Numeric format please';
-                  housingPayment = double.parse(value);
+                  hold.setHouse(double.tryParse(value));
                   return null;
                 },
               ),
@@ -538,7 +536,7 @@ class _UserInformation extends State<UserInformation>{
                   cardOrder++;
                   Navigator.pushNamed(context, '/newUser');
                 }else {
-                  userBudget = BudgetFactory.newFromInfo(income*freq, housingPayment, dependencyOnSavings);
+                  userBudget = BudgetFactory.newFromInfo(hold.incomeamt,hold.housingamt, dependencyOnSavings);
                   Navigator.pushNamed(context, '/knownUser');
               }}},
           )
@@ -549,5 +547,17 @@ class _UserInformation extends State<UserInformation>{
   @override
   Widget build(BuildContext context) {
     return informationCollection();
+  }
+}
+
+class InformationHolding{
+  double housingamt;
+  double incomeamt;
+  InformationHolding();
+  setHouse(double housingamt){
+    this.housingamt =housingamt;
+  }
+  setIncome(double incomeamt){
+    this.incomeamt = incomeamt;
   }
 }
