@@ -84,7 +84,7 @@ class MiscView extends StatefulWidget {
 }
 
 class NewTransaction extends StatefulWidget {
-
+	NewTransaction(Budget userBudget);
 	@override
 	_NewTransaction createState() => _NewTransaction(userBudget);
 }

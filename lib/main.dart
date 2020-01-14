@@ -58,6 +58,7 @@ class BudgetingApp extends StatelessWidget {
         '/pets':(context)=> sideBar.PetsView(userBudget),
         '/misc':(context)=> sideBar.MiscView(userBudget),
         '/entertainment':(context)=> sideBar.EntertainmentView(userBudget),
+        '/newTransaction':(context)=> sideBar.NewTransaction(userBudget),
       }, //Routes
 
     );
@@ -148,6 +149,12 @@ class _UserPage extends State<UserPage> {
                 },
               )),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: (){
+          Navigator.pushNamed(context, '/newTransaction' );
+        },
       ),
     );
   } //build
