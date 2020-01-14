@@ -8,7 +8,6 @@ import 'package:budgetflow/model/history/history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
-
 import 'sidebar/account_display.dart' as account;
 import 'sidebar/history_display.dart' as history;
 import 'sidebar/user_catagory_displays.dart' as sideBar;
