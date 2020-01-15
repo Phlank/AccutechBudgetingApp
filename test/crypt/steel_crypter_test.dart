@@ -1,8 +1,8 @@
-import 'package:budgetflow/crypt/crypter.dart';
-import 'package:budgetflow/crypt/encrypted.dart';
-import 'package:budgetflow/crypt/password.dart';
-import 'package:budgetflow/crypt/steel_crypter.dart';
-import 'package:budgetflow/crypt/steel_password.dart';
+import 'package:budgetflow/model/crypt/crypter.dart';
+import 'package:budgetflow/model/crypt/encrypted.dart';
+import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/crypt/steel_crypter.dart';
+import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const String _SECRET_1 = "password1";
