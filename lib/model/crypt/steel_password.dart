@@ -34,26 +34,30 @@ class SteelPassword implements Password {
     return pw;
   }
 
+  @override
   bool verify(String secret, String salt) {
-    bool success = _passCrypt.checkPassKey(salt, secret, _hash);
-    if (success) {
-      _secret = secret;
-      _salt = salt;
-      _passCrypt = new PassCrypt(ALGORITHM);
-    }
-    return success;
+	  bool success = _passCrypt.checkPassKey(salt, secret, _hash);
+	  if (success) {
+		  _secret = secret;
+		  _salt = salt;
+		  _passCrypt = new PassCrypt(ALGORITHM);
+	  }
+	  return success;
   }
 
+  @override
   String getHash() {
-    return _hash;
+	  return _hash;
   }
 
+  @override
   String getSecret() {
-    return _secret;
+	  return _secret;
   }
 
+  @override
   String getSalt() {
-    return _salt;
+	  return _salt;
   }
 
   static Password unserialize(String serialized) {
@@ -64,8 +68,9 @@ class SteelPassword implements Password {
     return password;
   }
 
+  @override
   String serialize() {
-    String output = "{\"salt\":\"" + _salt + "\",\"hash\":\"" + _hash + "\"}";
-    return output;
+	  String output = "{\"salt\":\"" + _salt + "\",\"hash\":\"" + _hash + "\"}";
+	  return output;
   }
 }
