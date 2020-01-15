@@ -35,7 +35,7 @@ class BudgetingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: LoginPage(),
+      home: HomePage(),
       initialRoute: '/', //InitialRoute
       routes: {
         '/knownUser': (context) => UserPage(),
@@ -63,10 +63,6 @@ class BudgetingApp extends StatelessWidget {
     );
   }
 
-  checkHistory() {
-    if(userHistory.isNewUser()) return UserInformation();
-    return LoginPage();
-  } // build
 } // BudgetingApp
 
 class UserPage extends StatefulWidget {
@@ -74,10 +70,16 @@ class UserPage extends StatefulWidget {
   _UserPage createState() => _UserPage();
 }
 
-class LoginPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _LoginPage createState() => _LoginPage();
-} // LoginPage
+  State<StatefulWidget> createState() => chooseState();
+
+  State chooseState(){
+    if(userHistory.isNewUser()) return _UserInformation();
+    return _LoginPage();
+  }
+
+}
 
 class UserInformation extends StatefulWidget {
   @override
@@ -176,7 +178,7 @@ class _UserPage extends State<UserPage> {
   }
 } // _UserPage
 
-class _LoginPage extends State<LoginPage> {
+class _LoginPage extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -240,7 +242,7 @@ final incomeCon = new TextEditingController();
 
 InformationHolding hold = new InformationHolding();
 
-class _UserInformation extends State<UserInformation>{
+class _UserInformation extends State<HomePage>{
 
   @override
   void dispose(){
