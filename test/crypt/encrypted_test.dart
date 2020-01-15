@@ -1,4 +1,4 @@
-import 'package:budgetflow/crypt/encrypted.dart';
+import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 main() {

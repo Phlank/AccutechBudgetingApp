@@ -1,7 +1,7 @@
-import 'package:budgetflow/crypt/password.dart';
-import 'package:budgetflow/crypt/steel_password.dart';
-import 'package:budgetflow/history/history.dart';
-import 'package:budgetflow/history/month.dart';
+import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/crypt/steel_password.dart';
+import 'package:budgetflow/model/history/history.dart';
+import 'package:budgetflow/model/history/month.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 History h = new History();

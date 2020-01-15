@@ -37,7 +37,7 @@ class History {
 
   bool passwordIsValid(String secret) {
     fileIO.readFile(PASSWORD_PATH).then((String passwordJson) {
-      password = Password.unserialize(passwordJson);
+      password = SteelPassword.unserialize(passwordJson);
       bool passwordMatch = password.verify(secret, password.getSalt());
       if (passwordMatch) {
         initialize();

@@ -1,4 +1,4 @@
-import 'package:budgetflow/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Budget budget = new Budget(1500);

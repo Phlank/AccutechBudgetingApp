@@ -1,19 +1,11 @@
-class Password {
-  bool verify(String secret, String salt) {}
+import 'package:budgetflow/model/fileio/serializable.dart';
 
-  // This needs to exist so we have something to call verify() on.
-  // Without this function, we have to work with the bare bone libraries, and
-  // that's just nasty. When verify() is called, it should make all other
-  // functions usable because it takes secret and salt as params.
-  static Password hashOnlyPassword(String hash) {}
+abstract class Password implements Serializable {
+  bool verify(String secret, String salt);
 
-  String getHash() {}
+  String getHash();
 
-  String getSecret() {}
+  String getSecret();
 
-  String getSalt() {}
-
-  String serialize() {}
-
-  static Password unserialize(String serialized) {}
+  String getSalt();
 }

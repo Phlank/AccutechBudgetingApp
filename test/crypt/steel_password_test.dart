@@ -1,5 +1,5 @@
-import 'package:budgetflow/crypt/password.dart';
-import 'package:budgetflow/crypt/steel_password.dart';
+import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const String _SECRET_1 = "password1";
@@ -25,6 +25,17 @@ void main() {
     });
     test("Password verifies correctly", () {
       expect(true, _pw1.verify(_SECRET_1, _pw1.getSalt()));
+    });
+    test("Wrong password does not verify", () {
+      expect(false, _pw1.verify(_SECRET_2, _pw1.getSalt()));
+    });
+    test("Salt + secret is 32 chars long", () {
+      String s1 = _pw1.getSalt();
+      expect((_SECRET_1 + s1).length, equals(32));
+    });
+    test("Password made from hash can verify new secret", () {
+      Password p0 = SteelPassword.fromHashAndSalt(
+          _pw1.getHash(), _pw1.getSalt());
     });
   });
 }

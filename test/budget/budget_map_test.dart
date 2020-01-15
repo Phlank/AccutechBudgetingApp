@@ -1,5 +1,4 @@
-import 'package:budgetflow/budget/budget.dart';
-import 'package:budgetflow/budget/budget_map.dart';
+import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 BudgetMap bm1 = new BudgetMap();

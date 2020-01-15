@@ -1,4 +1,4 @@
-import 'package:budgetflow/history/month.dart';
+import 'package:budgetflow/model/history/month.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Month m = new Month(2019, 12, 1200.0);

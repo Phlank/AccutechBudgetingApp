@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:budgetflow/model/crypt/password.dart';
-import 'package:budgetflow/model/fileio/serializable.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
-class SteelPassword extends Password implements Serializable {
+class SteelPassword implements Password {
   static const String SERIALIZED_SALT = "salt";
   static const String SERIALIZED_HASH = "hash";
   static const String ALGORITHM = "scrypt";
@@ -18,15 +17,19 @@ class SteelPassword extends Password implements Serializable {
   SteelPassword(String secret) {
     _passCrypt = new PassCrypt(ALGORITHM);
     int diffTo32 = KEY_LENGTH - secret.length;
-    _salt = CryptKey().genDart(diffTo32);
+    _salt = CryptKey().genDart(diffTo32).substring(0, diffTo32);
     _hash = _passCrypt.hashPass(_salt, secret);
     _secret = secret;
   }
 
-  static Password hashOnlyPassword(String hash) {
+  // This needs to exist so we have something to call verify() on.
+  // Without this function, we have to work with the bare bone libraries, and
+  // that's just nasty. When verify() is called, it should make all other
+  // functions usable because it takes secret and salt as params.
+  static Password fromHashAndSalt(String hash, String salt) {
     SteelPassword pw = new SteelPassword("");
     pw._hash = hash;
-    pw._salt = "";
+    pw._salt = salt;
     pw._secret = "";
     return pw;
   }
