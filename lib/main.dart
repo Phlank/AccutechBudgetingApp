@@ -264,19 +264,8 @@ class _LoginPage extends State<HomePage> {
     );
   } // build
 } //_LoginPage
-
-final housingCon = new TextEditingController();
-final incomeCon = new TextEditingController();
-
 InformationHolding hold = new InformationHolding();
-
 class _UserInformation extends State<HomePage> {
-  @override
-  void dispose() {
-    housingCon.dispose();
-    incomeCon.dispose();
-    super.dispose();
-  }
 
   Scaffold informationCollection() {
     /* todo get rid of non used information fields
@@ -285,8 +274,13 @@ class _UserInformation extends State<HomePage> {
     *   */
     String nameButton = 'next';
     final _formKey = GlobalKey<FormState>();
-    String housePaymentType = 'Renting';
-    BudgetType dependencyOnSavings = BudgetType.savingGrowth;
+    BudgetType dependencyOnSavings = null;//todo figure out radio button
+
+    bool checkBudgetType (BudgetType dependencyOnSavings){
+      if(BudgetType.savingGrowth==dependencyOnSavings) return false;
+      return true;
+    }
+
     List<Card> inputFields = <Card>[
       Card(
         child: Form(
@@ -325,38 +319,6 @@ class _UserInformation extends State<HomePage> {
                   //todo load in to global object
                 },
               ),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email: ',
-                  hintText: 'email',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) return 'please input your email';
-                  if (!emailVerification.hasMatch(value))
-                    return 'please enter a valid email \n (eg. name23436@example.com)';
-                  return null;
-                },
-                onSaved: (value) {
-                  //todo load in to global object
-                },
-              ),
-              TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  labelText: 'UserName: ',
-                  hintText:
-                  'A-z 0-9 !? no spaces and between 8-16 characters'),
-                validator: (value) {
-                  if (value.isEmpty) return 'Please enter a username';
-                  if (!userNameVerification.hasMatch(value))
-                    return 'please only alphanumeric and !?&#@ no spaces';
-                  return null;
-                },
-                onSaved: (value) {
-                  //todo load in to global object
-                },
-              ),
             ],
           )),
       ),
@@ -366,7 +328,6 @@ class _UserInformation extends State<HomePage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  controller: incomeCon,
                   decoration: InputDecoration(
                     hintText: 'monthly income',
                     labelText: 'regular income',
@@ -428,7 +389,7 @@ class _UserInformation extends State<HomePage> {
                 validator: (value) {
                   return null;
                 },
-                enabled: false,
+                enabled:checkBudgetType(dependencyOnSavings),
                 onChanged: (value) {
                   if (value.isNotEmpty) return null;
                 },
@@ -453,59 +414,14 @@ class _UserInformation extends State<HomePage> {
         ),
       ),
       Card(
-        /*Housing Information*/
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              Text('What type of housing situation best describes you?'),
-              RadioListTile(
-                title: const Text('Renting'),
-                value: 'renting',
-                groupValue: housePaymentType,
-                onChanged: (value) {
-                  setState(() {
-                    housePaymentType = value;
-                  });
-                },
-                selected: true,
-              ),
-              RadioListTile(
-                title: const Text('Own with Mortgage'),
-                value: 'own with payment',
-                groupValue: housePaymentType,
-                onChanged: (value) {
-                  setState(() {
-                    housePaymentType = value;
-                  });
-                },
-              ),
-              RadioListTile(
-                title: Text('Own no payments left'),
-                value: 'own',
-                groupValue: housePaymentType,
-                onChanged: (value) {
-                  setState(() {
-                    cardOrder++;
-                    //todo set housing to $0
-                    housePaymentType = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      Card(
         /*Housing information continued*/
         child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
               TextFormField(
-                controller: housingCon,
                 decoration: InputDecoration(
-                  labelText: housePaymentType + 'Payment',
+                  labelText:'Payment',
                   hintText: 'amount in USD',
                 ),
                 validator: (value) {
