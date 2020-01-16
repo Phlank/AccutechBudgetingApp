@@ -4,6 +4,9 @@ import 'package:flutter/widgets.dart';
 
 //todo add to sidemenu
 
+//todo implement with sliders
+
+
 class EditInformationDirectory extends StatefulWidget{
   EditInformationDirectory(Budget userBudget);
 

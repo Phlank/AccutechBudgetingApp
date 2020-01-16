@@ -9,6 +9,9 @@ import 'package:budgetflow/model/history/history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:budgetflow/model/budget_control.dart';
+
+
 
 import 'sidebar/account_display.dart' as account;
 import 'sidebar/history_display.dart' as history;
@@ -22,9 +25,10 @@ RegExp emailVerification = new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
-History userHistory = new History();
+BudgetControl userHistory = new BudgetControl();
 Budget userBudget;
-//todo implement a global storage object to retain and disperse all of the information
+
+//todo move to all string and string dependent data to Strings.dart
 
 void main() => runApp(BudgetingApp());
 
@@ -89,7 +93,7 @@ class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     if (userBudget == null) {
-      userBudget = userHistory.budget;
+      userBudget = userHistory.;
     }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
     TransactionList expenses = userBudget
@@ -275,6 +279,10 @@ class _UserInformation extends State<HomePage> {
   }
 
   Scaffold informationCollection() {
+    /* todo get rid of non used information fields
+    *  todo simplify the cards
+    *  todo
+    *   */
     String nameButton = 'next';
     final _formKey = GlobalKey<FormState>();
     String housePaymentType = 'Renting';
