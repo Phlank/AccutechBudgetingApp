@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_factory.dart';
+import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/crypt/crypter.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/crypt/password.dart';
@@ -73,7 +73,7 @@ class History {
     } else {
       currentMonth = new Month(year, month, months[months.length - 1].income);
       months.add(currentMonth);
-      budget = BudgetFactory.newFromBudget(
+      budget = PriorityBudgetFactory.newFromBudget(
           Budget.fromMonth(months[months.length - 2]));
     }
   }
