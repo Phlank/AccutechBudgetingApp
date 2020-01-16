@@ -5,7 +5,7 @@ abstract class Control {
 
   void initialize();
 
-  void setPassword();
+  void setPassword(String newSecret);
 
   void save();
 }

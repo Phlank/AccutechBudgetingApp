@@ -1,7 +1,7 @@
-import 'package:budgetflow/model/fileio/serializable.dart';
+import 'package:budgetflow/model/file_io/serializable.dart';
 
 abstract class Password implements Serializable {
-  bool verify(String secret, String salt);
+  bool verify(String secret);
 
   String getHash();
 

@@ -1,8 +1,9 @@
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 
-class PriorityBudgetFactory {
+class PriorityBudgetFactory implements BudgetFactory {
   Map<BudgetCategory, double> _allottedSpending;
   double _housingRatio;
   String budgetPlan;
@@ -38,7 +39,8 @@ class PriorityBudgetFactory {
     _allottedSpending = new Map();
   }
 
-  static Budget newFromInfo(double income, double housing, BudgetType type) {
+  @override
+  Budget newFromInfo(double income, double housing, BudgetType type) {
     PriorityBudgetFactory bf = new PriorityBudgetFactory();
     bf._housingRatio = housing / income;
     bf.income = income;
@@ -52,7 +54,8 @@ class PriorityBudgetFactory {
     return newBudget;
   }
 
-  static Budget newFromBudget(Budget old) {
+  @override
+  Budget newFromBudget(Budget old) {
     PriorityBudgetFactory bf = new PriorityBudgetFactory();
     bf.income = old.getMonthlyIncome();
     double remaining = bf.calculateRemainingAllottment(old);

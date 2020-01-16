@@ -4,14 +4,13 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
-import 'package:budgetflow/model/fileio/serializable.dart';
-import 'package:budgetflow/model/history/history.dart';
+import 'package:budgetflow/model/file_io/serializable.dart';
 
 class Month implements Serializable {
   String _allottedFilepath, _actualFilepath, _transactionFilepath;
-  BudgetMap allottedData;
-  BudgetMap actualData;
+  BudgetMap allottedData, actualData;
   TransactionList transactionData;
   int year, month;
   double income;
@@ -32,25 +31,30 @@ class Month implements Serializable {
 
   BudgetMap getAllottedSpendingData() {
     if (allottedData == null) {
-      loadBudgetData();
+      loadAllottedSpendingData();
     }
     return allottedData;
   }
 
+  void loadAllottedSpendingData() {
+    BudgetControl.fileIO.readFile(_allottedFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      allottedData = BudgetMap.unserialize(plaintext);
+    });
+  }
+
   BudgetMap getActualSpendingData() {
     if (actualData == null) {
-      loadBudgetData();
+      loadActualSpendingData();
     }
     return actualData;
   }
 
-  void loadBudgetData() {
-    History.fileIO.readFile(_allottedFilepath).then((String cipher) {
-      String plaintext = History.crypter.decrypt(Encrypted.unserialize(cipher));
-      allottedData = BudgetMap.unserialize(plaintext);
-    });
-    History.fileIO.readFile(_actualFilepath).then((String cipher) {
-      String plaintext = History.crypter.decrypt(Encrypted.unserialize(cipher));
+  void loadActualSpendingData() {
+    BudgetControl.fileIO.readFile(_actualFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
       actualData = BudgetMap.unserialize(plaintext);
     });
   }
@@ -63,47 +67,46 @@ class Month implements Serializable {
   }
 
   void loadTransactionData() {
-    if (transactionData == null) {
-      // If the data has not been loaded, load it
-      History.fileIO.readFile(_transactionFilepath).then((String cipher) {
-        String plaintext =
-        History.crypter.decrypt(Encrypted.unserialize(cipher));
-        transactionData = TransactionList.unserialize(plaintext);
-      });
-    }
+    BudgetControl.fileIO.readFile(_transactionFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      transactionData = TransactionList.unserialize(plaintext);
+    });
   }
 
-  void updateMonthData(BudgetMap allotted, BudgetMap actual,
-      TransactionList transactions) {
-    allottedData = allotted;
-    actualData = actual;
-    transactionData = transactions;
+  void updateMonthData(Budget budget) {
+    allottedData = budget.allottedSpending;
+    actualData = budget.actualSpending;
+    transactionData = budget.transactions;
   }
 
-  void writeMonth() {
-    writeAllotted();
-    writeActual();
-    writeTransactions();
+  void save() {
+    _saveAllottedSpending();
+    _saveActualSpending();
+    _saveTransactions();
   }
 
-  void writeAllotted() {
+  void _saveAllottedSpending() {
     if (allottedData != null) {
-      History.fileIO.writeFile(_allottedFilepath,
-          History.crypter.encrypt(allottedData.serialize()).serialize());
+      String content = allottedData.serialize();
+      Encrypted e = BudgetControl.crypter.encrypt(content);
+      BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize());
     }
   }
 
-  void writeActual() {
+  void _saveActualSpending() {
     if (actualData != null) {
-      History.fileIO.writeFile(_actualFilepath,
-          History.crypter.encrypt(actualData.serialize()).serialize());
+      String content = actualData.serialize();
+      Encrypted e = BudgetControl.crypter.encrypt(content);
+      BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize());
     }
   }
 
-  void writeTransactions() {
+  void _saveTransactions() {
     if (transactionData != null) {
-      History.fileIO.writeFile(_transactionFilepath,
-          History.crypter.encrypt(transactionData.serialize()).serialize());
+      String content = transactionData.serialize();
+      Encrypted e = BudgetControl.crypter.encrypt(content);
+      BudgetControl.fileIO.writeFile(_transactionFilepath, e.serialize());
     }
   }
 
@@ -121,7 +124,7 @@ class Month implements Serializable {
     output += "\"year\":\"" + year.toString() + "\",";
     output += "\"month\":\"" + month.toString() + "\",";
     output += "\"income\":\"" + income.toString() + "\",";
-    output += "\"type\":\"" + typeJson[type] + "\"";
+    output += "\"type\":\"" + budgetTypeJson[type] + "\"";
     output += "}";
     return output;
   }
@@ -134,7 +137,7 @@ class Month implements Serializable {
   static unserializeMap(Map map) {
     Month m = new Month(int.parse(map["year"]), int.parse(map["month"]),
         double.parse(map["income"]));
-    m.type = jsonType[map["type"]];
+    m.type = jsonBudgetType[map["type"]];
     return m;
   }
 

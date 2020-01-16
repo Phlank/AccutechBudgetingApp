@@ -4,10 +4,10 @@ import 'package:budgetflow/model/crypt/password.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
 class SteelPassword implements Password {
-  static const String SERIALIZED_SALT = "salt";
-  static const String SERIALIZED_HASH = "hash";
-  static const String ALGORITHM = "scrypt";
-  static const int KEY_LENGTH = 32;
+  static const String _SERIALIZED_SALT = "salt";
+  static const String _SERIALIZED_HASH = "hash";
+  static const String _ALGORITHM = "scrypt";
+  static const int _KEY_LENGTH = 32;
 
   String _secret;
   String _hash;
@@ -15,8 +15,8 @@ class SteelPassword implements Password {
   PassCrypt _passCrypt;
 
   SteelPassword(String secret) {
-    _passCrypt = new PassCrypt(ALGORITHM);
-    int diffTo32 = KEY_LENGTH - secret.length;
+    _passCrypt = new PassCrypt(_ALGORITHM);
+    int diffTo32 = _KEY_LENGTH - secret.length;
     _salt = CryptKey().genDart(diffTo32).substring(0, diffTo32);
     _hash = _passCrypt.hashPass(_salt, secret);
     _secret = secret;
@@ -35,12 +35,11 @@ class SteelPassword implements Password {
   }
 
   @override
-  bool verify(String secret, String salt) {
-	  bool success = _passCrypt.checkPassKey(salt, secret, _hash);
+  bool verify(String secret) {
+    bool success = _passCrypt.checkPassKey(_salt, secret, _hash);
 	  if (success) {
 		  _secret = secret;
-		  _salt = salt;
-		  _passCrypt = new PassCrypt(ALGORITHM);
+      _passCrypt = new PassCrypt(_ALGORITHM);
 	  }
 	  return success;
   }
@@ -63,8 +62,8 @@ class SteelPassword implements Password {
   static Password unserialize(String serialized) {
     Map map = jsonDecode(serialized);
     SteelPassword password = new SteelPassword("");
-    password._salt = map[SERIALIZED_SALT];
-    password._hash = map[SERIALIZED_HASH];
+    password._salt = map[_SERIALIZED_SALT];
+    password._hash = map[_SERIALIZED_HASH];
     return password;
   }
 

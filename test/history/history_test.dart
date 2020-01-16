@@ -15,11 +15,5 @@ void main() {
 			h.addMonth(m1);
 			h.addMonth(m2);
 		});
-		test("Serialization of h", () {
-			print(h.serialize());
-		});
-		test("Serialization is reversible", () {
-			h.serialize();
-		});
 	});
 }

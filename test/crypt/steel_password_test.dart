@@ -24,10 +24,10 @@ void main() {
       expect (_pw1.getHash(), isNot(_pw2.getHash()));
     });
     test("Password verifies correctly", () {
-      expect(true, _pw1.verify(_SECRET_1, _pw1.getSalt()));
+      expect(true, _pw1.verify(_SECRET_1));
     });
     test("Wrong password does not verify", () {
-      expect(false, _pw1.verify(_SECRET_2, _pw1.getSalt()));
+      expect(false, _pw1.verify(_SECRET_2));
     });
     test("Salt + secret is 32 chars long", () {
       String s1 = _pw1.getSalt();
@@ -36,6 +36,7 @@ void main() {
     test("Password made from hash can verify new secret", () {
       Password p0 = SteelPassword.fromHashAndSalt(
           _pw1.getHash(), _pw1.getSalt());
+      expect(true, equals(_pw1.verify(_SECRET_1)));
     });
   });
 }

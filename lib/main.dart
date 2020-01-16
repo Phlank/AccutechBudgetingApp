@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
@@ -17,8 +18,7 @@ import 'sidebar/user_info_display.dart' as edit;
 //user input validators
 RegExp allNumbers = new RegExp(r"[0-9]{4}");
 RegExp allLetters = new RegExp(r"[A-Za-z]+");
-RegExp emailVerification =
-    new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
+RegExp emailVerification = new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
@@ -37,33 +37,32 @@ class BudgetingApp extends StatelessWidget {
         primarySwatch: Colors.lightGreen,
       ),
       home: HomePage(),
-      initialRoute: '/', //InitialRoute
+      initialRoute: '/',
+      //InitialRoute
       routes: {
         '/knownUser': (context) => UserPage(),
         '/newUser': (context) => UserInformation(),
-        '/housing':(context)=> sideBar.HousingView(userBudget),
-        '/edit':(context)=> edit.EditInformationDirectory(userBudget),
-        '/houseEdit':(context)=> edit.HousingInformationEdit(userBudget),
-        '/budgetEdit':(context)=> edit.CategoryInformationEdit(userBudget),
-        '/userEdit':(context)=> edit.UserInformationEdit(userBudget),
-        '/historyVeiw':(context)=> history.HistoryDisplay(),
-        '/accountVeiw':(context)=> account.AccountDisplay(),
-        '/utilities':(context)=> sideBar.UtilitiesView(userBudget),
-        '/groceries':(context)=> sideBar.GroceriesView(userBudget),
-        '/savings':(context)=> sideBar.SavingsView(userBudget),
-         '/health':(context)=> sideBar.HealthView(userBudget),
-        '/transport':(context)=> sideBar.TransportationView(userBudget),
-        '/education':(context)=> sideBar.EducationView(userBudget),
-        '/kids':(context)=> sideBar.KidsView(userBudget),
-        '/pets':(context)=> sideBar.PetsView(userBudget),
-        '/misc':(context)=> sideBar.MiscView(userBudget),
-        '/entertainment':(context)=> sideBar.EntertainmentView(userBudget),
+        '/housing': (context) => sideBar.HousingView(userBudget),
+        '/edit': (context) => edit.EditInformationDirectory(userBudget),
+        '/houseEdit': (context) => edit.HousingInformationEdit(userBudget),
+        '/budgetEdit': (context) => edit.CategoryInformationEdit(userBudget),
+        '/userEdit': (context) => edit.UserInformationEdit(userBudget),
+        '/historyVeiw': (context) => history.HistoryDisplay(),
+        '/accountVeiw': (context) => account.AccountDisplay(),
+        '/utilities': (context) => sideBar.UtilitiesView(userBudget),
+        '/groceries': (context) => sideBar.GroceriesView(userBudget),
+        '/savings': (context) => sideBar.SavingsView(userBudget),
+        '/health': (context) => sideBar.HealthView(userBudget),
+        '/transport': (context) => sideBar.TransportationView(userBudget),
+        '/education': (context) => sideBar.EducationView(userBudget),
+        '/kids': (context) => sideBar.KidsView(userBudget),
+        '/pets': (context) => sideBar.PetsView(userBudget),
+        '/misc': (context) => sideBar.MiscView(userBudget),
+        '/entertainment': (context) => sideBar.EntertainmentView(userBudget),
         '/newTransaction': (context) => sideBar.NewTransaction(userBudget),
       }, //Routes
-
     );
   }
-
 } // BudgetingApp
 
 class UserPage extends StatefulWidget {
@@ -79,28 +78,28 @@ class HomePage extends StatefulWidget {
     if (userHistory.isNewUser()) return _UserInformation();
     return _LoginPage();
   }
-
 }
 
 class UserInformation extends StatefulWidget {
   @override
   _UserInformation createState() => _UserInformation();
-}//userInformation
+} //userInformation
 
 class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    if(userBudget == null){
+    if (userBudget == null) {
       userBudget = userHistory.budget;
     }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
-    TransactionList expenses = userBudget.transactions; //todo get expenses list from where ever that might be
+    TransactionList expenses = userBudget
+      .transactions; //todo get expenses list from where ever that might be
     return Scaffold(
       appBar: AppBar(
         title: Text(/*users entered name when available*/ 'User Page'),
       ),
       drawer: new sideBar.GeneralCategory().sideMenu(),
-      body:ListView(
+      body: ListView(
         padding: EdgeInsets.all(4.0),
         children: <Widget>[
           Card(
@@ -120,26 +119,27 @@ class _UserPage extends State<UserPage> {
                   textAlign: TextAlign.left,
                   text: TextSpan(children: <TextSpan>[
                     TextSpan(
-                        text: 'Income:\n', //todo implement income here
+                      text: 'Income:\n',
+                      //todo implement income here
                         style: TextStyle(
                           color: Colors.green,
                         )),
                     TextSpan(
-                        text:
-                        'Expences: -\n', //todo implement expenses total right here
+                      text: 'Expences: -\n',
+                      //todo implement expenses total right here
                         style: TextStyle(
                           color: Colors.red,
                         )),
                     TextSpan(
-                        text:
-                        'Cash Flow', //todo implement function to calculate cashFlow
+                      text: 'Cash Flow',
+                      //todo implement function to calculate cashFlow
                         style: TextStyle(
                           color: Colors
                               .black, //todo implement a function to return red or green based on cashFlow
                         ))
                   ]))),
           Card(/*user warnings*/),
-         Card(
+          Card(
             /*expense tracker*/
               child: new ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -147,7 +147,13 @@ class _UserPage extends State<UserPage> {
                 itemCount: expenses.length(),
                 itemBuilder: (BuildContext context, int index) {
                   Transaction trans = expenses.getAt(index);
-                  return new Text(trans.vendor+'\n'+trans.delta.toString()+'\n'+trans.datetime.toIso8601String()+'\n'+trans.method);
+                  return new Text(trans.vendor +
+                    '\n' +
+                    trans.delta.toString() +
+                    '\n' +
+                    trans.datetime.toIso8601String() +
+                    '\n' +
+                    trans.method);
                 },
               )),
         ],
@@ -162,25 +168,42 @@ class _UserPage extends State<UserPage> {
   } //build
 
   Map<String, double> buildBudgetMap() {
-
     Map<String, double> map = new Map();
-    map.putIfAbsent('housing', () => userBudget.allottedSpending.valueOf(BudgetCategory.housing));
-    map.putIfAbsent('utilities', () => userBudget.allottedSpending.valueOf(BudgetCategory.utilities));
-    map.putIfAbsent('groceries', () => userBudget.allottedSpending.valueOf(BudgetCategory.groceries));
-    map.putIfAbsent('savings', () => userBudget.allottedSpending.valueOf(BudgetCategory.savings));
-    map.putIfAbsent('helath', () => userBudget.allottedSpending.valueOf(BudgetCategory.health));
-    map.putIfAbsent('transportation', () => userBudget.allottedSpending.valueOf(BudgetCategory.transportation));
-    map.putIfAbsent('education', () => userBudget.allottedSpending.valueOf(BudgetCategory.education));
-    map.putIfAbsent('entertainment', () => userBudget.allottedSpending.valueOf(BudgetCategory.entertainment));
-    map.putIfAbsent('kids', () => userBudget.allottedSpending.valueOf(BudgetCategory.kids));
-    map.putIfAbsent('pets', () => userBudget.allottedSpending.valueOf(BudgetCategory.pets));
-    map.putIfAbsent('miscellaneous', () => userBudget.allottedSpending.valueOf(BudgetCategory.miscellaneous));
+    map.putIfAbsent('housing',
+        () => userBudget.allottedSpending.valueOf(BudgetCategory.housing));
+    map.putIfAbsent('utilities',
+        () => userBudget.allottedSpending.valueOf(BudgetCategory.utilities));
+    map.putIfAbsent('groceries',
+        () => userBudget.allottedSpending.valueOf(BudgetCategory.groceries));
+    map.putIfAbsent('savings',
+        () => userBudget.allottedSpending.valueOf(BudgetCategory.savings));
+    map.putIfAbsent('helath',
+        () => userBudget.allottedSpending.valueOf(BudgetCategory.health));
+    map.putIfAbsent(
+      'transportation',
+        () =>
+        userBudget.allottedSpending.valueOf(BudgetCategory.transportation));
+    map.putIfAbsent('education',
+        () => userBudget.allottedSpending.valueOf(BudgetCategory.education));
+    map.putIfAbsent(
+      'entertainment',
+        () =>
+        userBudget.allottedSpending.valueOf(BudgetCategory.entertainment));
+    map.putIfAbsent(
+      'kids', () => userBudget.allottedSpending.valueOf(BudgetCategory.kids));
+    map.putIfAbsent(
+      'pets', () => userBudget.allottedSpending.valueOf(BudgetCategory.pets));
+    map.putIfAbsent(
+      'miscellaneous',
+        () =>
+        userBudget.allottedSpending.valueOf(BudgetCategory.miscellaneous));
     return map;
   }
 } // _UserPage
 
 class _LoginPage extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     String user = 'nouser';
@@ -207,7 +230,7 @@ class _LoginPage extends State<HomePage> {
                     if (value.isEmpty) return 'Enter your PIN, please';
                     if (!allNumbers.hasMatch(value))
                       return 'your PIN should only be 4 numbers';
-                    if(userHistory.passwordIsValid(value)) user='user';
+                    if (userHistory.passwordIsValid(value)) user = 'user';
                     //todo make check if user is a real user
                     return null;
                   },
@@ -215,9 +238,9 @@ class _LoginPage extends State<HomePage> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    if (user!='nouser') {
+                    if (user != 'nouser') {
                       Navigator.pushNamed(context, '/knownUser');
-                    }else{
+                    } else {
                       Text('please try again');
                     }
                   },
@@ -238,30 +261,29 @@ class _LoginPage extends State<HomePage> {
   } // build
 } //_LoginPage
 
-final  housingCon = new TextEditingController();
+final housingCon = new TextEditingController();
 final incomeCon = new TextEditingController();
 
 InformationHolding hold = new InformationHolding();
 
 class _UserInformation extends State<HomePage> {
-
   @override
-  void dispose(){
+  void dispose() {
     housingCon.dispose();
     incomeCon.dispose();
     super.dispose();
   }
 
-  Scaffold informationCollection(){
+  Scaffold informationCollection() {
     String nameButton = 'next';
     final _formKey = GlobalKey<FormState>();
     String housePaymentType = 'Renting';
     BudgetType dependencyOnSavings = BudgetType.savingGrowth;
     List<Card> inputFields = <Card>[
       Card(
-        child:Form(
+        child: Form(
           key: _formKey,
-          child:Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('all information is changable after submision'),
@@ -273,24 +295,25 @@ class _UserInformation extends State<HomePage> {
                 ),
                 validator: (value) {
                   if (value.isEmpty) return 'please enter your name';
-                  if (!allLetters.hasMatch(value)) return 'only letters A-Z please';
+                  if (!allLetters.hasMatch(value))
+                    return 'only letters A-Z please';
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   //todo load in to global object
                 },
               ),
               TextFormField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                    labelText: 'How old are you?', hintText: 'age'),
+                  labelText: 'How old are you?', hintText: 'age'),
                 validator: (value) {
                   if (value.isEmpty) return 'please do not leave blank';
                   if (!new RegExp(r"[0-9]{2,3}").hasMatch(value))
                     return 'please enter in numeric format';
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   //todo load in to global object
                 },
               ),
@@ -306,29 +329,28 @@ class _UserInformation extends State<HomePage> {
                     return 'please enter a valid email \n (eg. name23436@example.com)';
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   //todo load in to global object
                 },
               ),
               TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                    labelText: 'UserName: ',
-                    hintText:
-                    'A-z 0-9 !? no spaces and between 8-16 characters'),
+                  labelText: 'UserName: ',
+                  hintText:
+                  'A-z 0-9 !? no spaces and between 8-16 characters'),
                 validator: (value) {
                   if (value.isEmpty) return 'Please enter a username';
                   if (!userNameVerification.hasMatch(value))
                     return 'please only alphanumeric and !?&#@ no spaces';
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   //todo load in to global object
                 },
               ),
             ],
-          )
-        ),
+          )),
       ),
       Card(
           child: Form(
@@ -351,25 +373,25 @@ class _UserInformation extends State<HomePage> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                      hintText: 'savings amount',
-                      labelText: 'How much do you have saved?'),
+                    hintText: 'savings amount',
+                    labelText: 'How much do you have saved?'),
                   validator: (value) {
-                    if (value.isEmpty) return ' Please don\'t leave this empty';
+                    if (value.isEmpty)
+                      return ' Please don\'t leave this empty';
                     if (!dollarAmount.hasMatch(value))
                       return 'please put in numerical form';
                     return null;
                   },
                 ),
               ],
-            )
-          )
-      ),
+            ))),
       Card(
-        child: Form (
+        child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
-              Text('Are you currently pulling out of savings to make ends meat?'),
+              Text(
+                'Are you currently pulling out of savings to make ends meat?'),
               RadioListTile(
                 groupValue: dependencyOnSavings,
                 title: Text('yes'),
@@ -399,10 +421,8 @@ class _UserInformation extends State<HomePage> {
                   return null;
                 },
                 enabled: false,
-                onChanged:  (value) {
-                  if (value.isNotEmpty)
-
-                  return null;
+                onChanged: (value) {
+                  if (value.isNotEmpty) return null;
                 },
               )
             ],
@@ -426,9 +446,9 @@ class _UserInformation extends State<HomePage> {
       ),
       Card(
         /*Housing Information*/
-        child:Form(
+        child: Form(
           key: _formKey,
-          child:Column(
+          child: Column(
             children: <Widget>[
               Text('What type of housing situation best describes you?'),
               RadioListTile(
@@ -470,7 +490,7 @@ class _UserInformation extends State<HomePage> {
       ),
       Card(
         /*Housing information continued*/
-        child:Form(
+        child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
@@ -490,39 +510,34 @@ class _UserInformation extends State<HomePage> {
               ),
             ],
           ),
-        )
-      ),
+        )),
       Card(
         //todo figure out the regexp in these validators and why they don't like the the input
         /*Security Information*/
-          child:Form(
+        child: Form(
               key: _formKey,
-              child: Column(
-                  children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(
-                        hintText: 'any four numbers',
-                        labelText: 'enter your desired pin'),
-                    validator: (value) {
-                      if (value.isEmpty) return 'please do not leave blank';
-                      //if (allNumbers.hasMatch(value)) return 'please use only numbers';
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                        hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
-                    validator: (value) {
-                      if (value.isEmpty) return 'please do not leave blank';
-                      //if (new RegExp(r'[0-9][0-9][0-9][0-9]').hasMatch(value)) return 'please use only numbers';
-                      if (value.length != 4) return 'only four numbers please';
-                      return null;
-                    },
-                  )
-                ]
-              )
-          )
-        )
+          child: Column(children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: 'any four numbers',
+                labelText: 'enter your desired pin'),
+              validator: (value) {
+                if (value.isEmpty) return 'please do not leave blank';
+                //if (allNumbers.hasMatch(value)) return 'please use only numbers';
+                return null;
+              },
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
+              validator: (value) {
+                if (value.isEmpty) return 'please do not leave blank';
+                //if (new RegExp(r'[0-9][0-9][0-9][0-9]').hasMatch(value)) return 'please use only numbers';
+                if (value.length != 4) return 'only four numbers please';
+                return null;
+              },
+            )
+          ])))
     ];
 
     return Scaffold(
@@ -534,40 +549,47 @@ class _UserInformation extends State<HomePage> {
           inputFields[cardOrder],
           RaisedButton(
             child: Text(nameButton),
-            onPressed: (){
-              if(_formKey.currentState.validate()){
-                if(cardOrder<inputFields.length-1){
-                  if(cardOrder==5){
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                if (cardOrder < inputFields.length - 1) {
+                  if (cardOrder == 5) {
                     setState(() {
                       nameButton = 'submit';
                     });
                   }
                   cardOrder++;
                   Navigator.pushNamed(context, '/newUser');
-                }else {
-                  userBudget = PriorityBudgetFactory.newFromInfo(
+                } else {
+                  BudgetFactory budgetFactory = new PriorityBudgetFactory();
+                  userBudget = budgetFactory.newFromInfo(
                       hold.incomeamt, hold.housingamt, dependencyOnSavings);
                   Navigator.pushNamed(context, '/knownUser');
-              }}},
+                }
+              }
+            },
           )
         ],
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return informationCollection();
   }
 }
 
-class InformationHolding{
+class InformationHolding {
   double housingamt;
   double incomeamt;
+
   InformationHolding();
-  setHouse(double housingamt){
-    this.housingamt =housingamt;
+
+  setHouse(double housingamt) {
+    this.housingamt = housingamt;
   }
-  setIncome(double incomeamt){
+
+  setIncome(double incomeamt) {
     this.incomeamt = incomeamt;
   }
 }

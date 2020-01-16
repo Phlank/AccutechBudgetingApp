@@ -3,12 +3,12 @@ enum BudgetType{
   savingDepletion
 }
 
-Map<BudgetType, String> typeJson = {
+Map<BudgetType, String> budgetTypeJson = {
   BudgetType.savingGrowth: "Growth",
   BudgetType.savingDepletion: "Depletion"
 };
 
-Map<String, BudgetType> jsonType = {
+Map<String, BudgetType> jsonBudgetType = {
   "Growth": BudgetType.savingGrowth,
   "Depletion": BudgetType.savingDepletion
 };
