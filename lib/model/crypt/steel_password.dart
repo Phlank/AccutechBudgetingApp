@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/password.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
 class SteelPassword implements Password {
+  static const String PASSWORD_PATH = "password";
   static const String _SERIALIZED_SALT = "salt";
   static const String _SERIALIZED_HASH = "hash";
   static const String _ALGORITHM = "scrypt";
@@ -37,26 +39,26 @@ class SteelPassword implements Password {
   @override
   bool verify(String secret) {
     bool success = _passCrypt.checkPassKey(_salt, secret, _hash);
-	  if (success) {
-		  _secret = secret;
+    if (success) {
+      _secret = secret;
       _passCrypt = new PassCrypt(_ALGORITHM);
-	  }
-	  return success;
+    }
+    return success;
   }
 
   @override
   String getHash() {
-	  return _hash;
+    return _hash;
   }
 
   @override
   String getSecret() {
-	  return _secret;
+    return _secret;
   }
 
   @override
   String getSalt() {
-	  return _salt;
+    return _salt;
   }
 
   static Password unserialize(String serialized) {
@@ -69,7 +71,20 @@ class SteelPassword implements Password {
 
   @override
   String serialize() {
-	  String output = "{\"salt\":\"" + _salt + "\",\"hash\":\"" + _hash + "\"}";
-	  return output;
+    String output = "{\"salt\":\"" + _salt + "\",\"hash\":\"" + _hash + "\"}";
+    return output;
+  }
+
+  static Password load() {
+    Password pw;
+    BudgetControl.fileIO.readFile(PASSWORD_PATH).then((String content) {
+      pw = SteelPassword.unserialize(content);
+    });
+    return pw;
+  }
+
+  @override
+  void save() {
+    BudgetControl.fileIO.writeFile(PASSWORD_PATH, serialize());
   }
 }

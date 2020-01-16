@@ -12,7 +12,7 @@ void main() {
   test("Serialization of new transaction", () {
     expect(t2.serialize(), isNot(null));
   });
-  test("Serialization is reversible", () {
+  test("Serialization sanity", () {
     String t2s = t2.serialize();
     expect(t2s, equals(Transaction.unserialize(t2s).serialize()));
   });
