@@ -5,7 +5,6 @@ import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
-import 'package:budgetflow/model/history/history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
