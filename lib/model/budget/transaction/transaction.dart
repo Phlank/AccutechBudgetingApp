@@ -41,14 +41,14 @@ class Transaction implements Serializable {
   }
 
   String serialize() {
-    String output = "{";
+    String output = '{';
     output +=
-        "\"datetime\":\"" + datetime.millisecondsSinceEpoch.toString() + "\",";
-    output += "\"vendor\":\"" + vendor + "\",";
-    output += "\"method\":\"" + method + "\",";
-    output += "\"delta\":\"" + delta.toString() + "\",";
-    output += "\"category\":\"" + categoryJson[category] + "\"";
-    output += "}";
+      '"datetime":"' + datetime.millisecondsSinceEpoch.toString() + '",';
+    output += '"vendor":"' + vendor + '",';
+    output += '"method":"' + method + '",';
+    output += '"delta":"' + delta.toString() + '",';
+    output += '"category":"' + categoryJson[category] + '"';
+    output += '}';
     return output;
   }
 }

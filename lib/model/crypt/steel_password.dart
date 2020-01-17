@@ -71,7 +71,7 @@ class SteelPassword implements Password {
 
   @override
   String serialize() {
-    String output = "{\"salt\":\"" + _salt + "\",\"hash\":\"" + _hash + "\"}";
+    String output = '{"salt":"' + _salt + '","hash":"' + _hash + '"}';
     return output;
   }
 
