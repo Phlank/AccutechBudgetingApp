@@ -29,6 +29,10 @@ class BudgetMap implements Serializable {
     return _map[category];
   }
 
+  void forEach(void action(BudgetCategory c, double d)) {
+    _map.forEach(action);
+  }
+
   String serialize() {
     _serialization = '{';
     _map.forEach(_makeSerializable);
@@ -61,4 +65,8 @@ class BudgetMap implements Serializable {
     });
     return newBudgetMap;
   }
+
+  operator [](BudgetCategory i) => _map[i];
+
+  operator []=(BudgetCategory i, double value) => _map[i] = value;
 }
