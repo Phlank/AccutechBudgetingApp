@@ -23,7 +23,6 @@ class BudgetControl implements Control {
   History _history;
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
-  int _transactionMonthIndex, _allottedMonthIndex, _actualMonthIndex;
 
   BudgetControl() {
     fileIO = new DartFileIO();
@@ -72,8 +71,8 @@ class BudgetControl implements Control {
 
   void _load() {
     _history = History.load();
-    _loadedTransactions = _history.getTransactionsFromMonth(
-      _currentMonthTime.year, _currentMonthTime.month);
+    _loadedTransactions =
+      _history.getTransactionsFromMonthTime(_currentMonthTime);
   }
 
   void save() {
@@ -100,11 +99,10 @@ class BudgetControl implements Control {
   @override
   void loadPreviousMonthTransactions() {
     _transactionMonthTime = _transactionMonthTime.previous();
-    _history.getTransactionsFromMonth(
-      _transactionMonthTime.year, _transactionMonthTime.month).forEach((
-      Transaction t) {
+    _history
+      .getTransactionsFromMonthTime(_transactionMonthTime)
+      .forEach((Transaction t) {
       _loadedTransactions.add(t);
     });
   }
-
 }

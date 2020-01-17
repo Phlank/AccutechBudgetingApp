@@ -7,26 +7,26 @@ import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
+import 'package:budgetflow/model/history/month_time.dart';
 
 class Month implements Serializable {
   String _allottedFilepath, _actualFilepath, _transactionFilepath;
   BudgetMap allottedData, actualData;
   TransactionList transactionData;
-  int year, month;
+  MonthTime _monthTime;
   double income;
   BudgetType type;
 
   Month(int year, int month, double income) {
-    this.year = year;
-    this.month = month;
+    _monthTime = new MonthTime(year, month);
     this.income = income;
     _createFilePaths();
   }
 
   void _createFilePaths() {
-    _allottedFilepath = "$year" + "_" + "$month" + "_allotted";
-    _actualFilepath = "$year" + "_" + "$month" + "_actual";
-    _transactionFilepath = "$year" + "_" + "$month" + "_transactions";
+    _allottedFilepath = _monthTime.getFilePathString() + "_allotted";
+    _actualFilepath = _monthTime.getFilePathString() + "_actual";
+    _transactionFilepath = _monthTime.getFilePathString() + "_transactions";
   }
 
   BudgetMap getAllottedSpendingData() {
@@ -78,6 +78,7 @@ class Month implements Serializable {
     allottedData = budget.allottedSpending;
     actualData = budget.actualSpending;
     transactionData = budget.transactions;
+    type = budget.getType();
   }
 
   void save() {
@@ -110,19 +111,23 @@ class Month implements Serializable {
     }
   }
 
+  MonthTime getMonthTime() => _monthTime;
+
   static Month fromBudget(Budget b) {
     DateTime now = DateTime.now();
     Month m = new Month(now.year, now.month, b.getMonthlyIncome());
     m.transactionData = b.transactions;
     m.actualData = b.actualSpending;
     m.allottedData = b.allottedSpending;
+    m.type = b.getType();
     m._createFilePaths();
+    return m;
   }
 
   String serialize() {
     String output = "{";
-    output += "\"year\":\"" + year.toString() + "\",";
-    output += "\"month\":\"" + month.toString() + "\",";
+    output += "\"year\":\"" + _monthTime.year.toString() + "\",";
+    output += "\"month\":\"" + _monthTime.month.toString() + "\",";
     output += "\"income\":\"" + income.toString() + "\",";
     output += "\"type\":\"" + budgetTypeJson[type] + "\"";
     output += "}";
@@ -139,9 +144,5 @@ class Month implements Serializable {
         double.parse(map["income"]));
     m.type = jsonBudgetType[map["type"]];
     return m;
-  }
-
-  bool equals(Month m) {
-    return year == m.year && month == m.month;
   }
 }

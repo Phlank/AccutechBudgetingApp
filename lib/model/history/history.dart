@@ -10,6 +10,7 @@ import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/file_io/saveable.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 import 'package:budgetflow/model/history/month.dart';
+import 'package:budgetflow/model/history/month_time.dart';
 
 class History implements Serializable, Saveable {
   static const String HISTORY_PATH = "history";
@@ -37,7 +38,7 @@ class History implements Serializable, Saveable {
   }
 
   Budget getLatestMonthBudget() {
-    currentMonth = _months.firstWhere(_monthHasSameTime, orElse: () => null);
+    currentMonth = _months.firstWhere(_monthHasCurrentTime, orElse: () => null);
     if (currentMonth != null) {
       return Budget.fromMonth(currentMonth);
     } else {
@@ -45,8 +46,8 @@ class History implements Serializable, Saveable {
     }
   }
 
-  bool _monthHasSameTime(Month m) {
-    return m.year == _year && m.month == _month;
+  bool _monthHasCurrentTime(Month m) {
+    return m.getMonthTime() == MonthTime.currentMonthTime();
   }
 
   Budget _createNewMonthBudget() {
@@ -59,25 +60,25 @@ class History implements Serializable, Saveable {
     return currentBudget;
   }
 
-  bool _monthMatchesYearAndMonth(Month m, int year, int month) {
-    return m.year == year && m.month == month;
+  bool _monthMatchesMonthTime(Month m, MonthTime mt) {
+    return m.getMonthTime() == mt;
   }
 
-  BudgetMap getAllottedSpendingFromMonth(int year, int month) {
+  BudgetMap getAllottedSpendingFromMonthTime(MonthTime mt) {
     Month m = _months
-      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
+      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
     return m.getAllottedSpendingData();
   }
 
-  BudgetMap getActualSpendingFromMonth(int year, int month) {
+  BudgetMap getActualSpendingFromMonthTime(MonthTime mt) {
     Month m = _months
-      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
+      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
     return m.getActualSpendingData();
   }
 
-  TransactionList getTransactionsFromMonth(int year, int month) {
+  TransactionList getTransactionsFromMonthTime(MonthTime mt) {
     Month m = _months
-      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
+      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
     return m.getTransactionData();
   }
 
@@ -85,9 +86,9 @@ class History implements Serializable, Saveable {
     return _months.length;
   }
 
-  Month getMonth(int year, int month) {
+  Month getMonth(MonthTime mt) {
     return _months
-      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
+      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
   }
 
   @override
