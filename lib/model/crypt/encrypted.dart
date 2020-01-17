@@ -1,13 +1,9 @@
 import 'dart:convert';
 
 class Encrypted {
-  String iv;
-  String cipher;
+  final String iv, cipher;
 
-  Encrypted(String iv, String cipher) {
-    this.iv = iv;
-    this.cipher = cipher;
-  }
+  Encrypted(this.iv, this.cipher);
 
   static Encrypted unserialize(String serialized) {
     Map map = jsonDecode(serialized);
