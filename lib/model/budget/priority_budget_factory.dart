@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
+import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 
 class _Trio {
@@ -27,14 +28,14 @@ class _Trio {
 }
 
 class PriorityBudgetFactory implements BudgetFactory {
-  static final _STAGE_1_DEPLETION = new _Trio(.6, .0, .4);
-  static final _STAGE_2_DEPLETION = new _Trio(.75, .0, .25);
-  static final _STAGE_3_DEPLETION = new _Trio(.9, .0, .1);
-  static final _STAGE_4_DEPLETION = new _Trio(.95, .0, .05);
-  static final _STAGE_1_GROWTH = new _Trio(.5, .2, .3);
-  static final _STAGE_2_GROWTH = new _Trio(.65, .2, .15);
-  static final _STAGE_3_GROWTH = new _Trio(.85, .05, .1);
-  static final _STAGE_4_GROWTH = new _Trio(.94, .01, .05);
+  static final _stage1Depletion = new _Trio(.6, .0, .4);
+  static final _stage2Depletion = new _Trio(.75, .0, .25);
+  static final _stage3Depletion = new _Trio(.9, .0, .1);
+  static final _stage4Depletion = new _Trio(.95, .0, .05);
+  static final _stage1Growth = new _Trio(.5, .2, .3);
+  static final _stage2Growth = new _Trio(.65, .2, .15);
+  static final _stage3Growth = new _Trio(.85, .05, .1);
+  static final _stage4Growth = new _Trio(.94, .01, .05);
   static const _STAGE_1_BOUND = .3;
   static const _STAGE_2_BOUND = .5;
   static const _STAGE_3_BOUND = .8;
@@ -100,33 +101,33 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   void _setBudgetDepletionRatios() {
     if (_housingRatio <= _STAGE_1_BOUND) {
-      _currentDistribution = _STAGE_1_DEPLETION;
-      _targetDistribution = _STAGE_1_DEPLETION;
+      _currentDistribution = _stage1Depletion;
+      _targetDistribution = _stage1Depletion;
     } else if (_housingRatio <= _STAGE_2_BOUND) {
-      _currentDistribution = _STAGE_2_DEPLETION;
-      _targetDistribution = _STAGE_1_DEPLETION;
+      _currentDistribution = _stage2Depletion;
+      _targetDistribution = _stage1Depletion;
     } else if (_housingRatio <= _STAGE_3_BOUND) {
-      _currentDistribution = _STAGE_3_DEPLETION;
-      _targetDistribution = _STAGE_2_DEPLETION;
+      _currentDistribution = _stage3Depletion;
+      _targetDistribution = _stage2Depletion;
     } else if (_housingRatio <= _STAGE_4_BOUND) {
-      _currentDistribution = _STAGE_4_DEPLETION;
-      _targetDistribution = _STAGE_3_DEPLETION;
+      _currentDistribution = _stage4Depletion;
+      _targetDistribution = _stage3Depletion;
     }
   }
 
   void _setBudgetGrowthRatios() {
     if (_housingRatio <= _STAGE_1_BOUND) {
-      _currentDistribution = _STAGE_1_GROWTH;
-      _targetDistribution = _STAGE_1_GROWTH;
+      _currentDistribution = _stage1Growth;
+      _targetDistribution = _stage1Growth;
     } else if (_housingRatio <= _STAGE_2_BOUND) {
-      _currentDistribution = _STAGE_2_GROWTH;
-      _targetDistribution = _STAGE_1_GROWTH;
+      _currentDistribution = _stage2Growth;
+      _targetDistribution = _stage1Growth;
     } else if (_housingRatio <= _STAGE_3_BOUND) {
-      _currentDistribution = _STAGE_3_GROWTH;
-      _targetDistribution = _STAGE_2_GROWTH;
+      _currentDistribution = _stage3Growth;
+      _targetDistribution = _stage2Growth;
     } else if (_housingRatio <= _STAGE_4_BOUND) {
-      _currentDistribution = _STAGE_4_GROWTH;
-      _targetDistribution = _STAGE_3_GROWTH;
+      _currentDistribution = _stage4Growth;
+      _targetDistribution = _stage3Growth;
     }
   }
 
@@ -183,11 +184,20 @@ class PriorityBudgetFactory implements BudgetFactory {
     this.remainingBudgetRatio = remainingNeedsRatio + remainingWantsRatio;
   }
 
+  _Trio _oldAllotted, _oldActual, _newAllotted, _newActual;
+  BudgetMap _oldAllottmentRatios, _oldActualRatios, _newAllottmentRatios,
+    _newActualRatios;
+
   @override
   Budget newFromBudget(Budget old) {
     _income = old.getMonthlyIncome();
+    _oldAllottmentRatios = old.allottedSpending.divide(_income);
+    _oldActualRatios = old.actualSpending.divide(_income);
+    // TODO
+    // compare the usages of the old budget to the allottment
+    // if the usage is less, change the next
+    _compareSpending();
     double remaining = calculateRemainingAllottment(old);
-    _housingRatio = old.getAllotment(BudgetCategory.housing) / _income;
     double spent = _income - remaining;
     usedWants = spent * old.wantsRatio;
     usedNeeds = spent * old.needsRatio;
@@ -206,39 +216,43 @@ class PriorityBudgetFactory implements BudgetFactory {
     return newBudget;
   }
 
+  void _compareSpending() {
+
+  }
+
   void _allocateBudget(String s) {
     switch (s) {
       case ("Stage 1-2"):
-        setDepletingBudget(0.6, 0.4);
-        setDepletingTargetBudget(0.6, 0.4);
+        _currentDistribution = _stage1Depletion;
+        _targetDistribution = _stage1Depletion;
         break;
       case ("Stage 2-2"):
-        setDepletingBudget(0.75, 0.25);
-        setDepletingTargetBudget(0.6, 0.4);
+        _currentDistribution = _stage2Depletion;
+        _targetDistribution = _stage1Depletion;
         break;
       case ("Stage 3-2"):
-        setDepletingBudget(0.85, 0.15);
-        setDepletingTargetBudget(0.75, 0.25);
+        _currentDistribution = _stage3Depletion;
+        _targetDistribution = _stage2Depletion;
         break;
       case ("Stage 4-2"):
-        setDepletingBudget(0.95, 0.05);
-        setDepletingTargetBudget(0.85, 0.15);
+        _currentDistribution = _stage4Depletion;
+        _targetDistribution = _stage3Depletion;
         break;
       case ("Stage 1-1"):
-        setGrowthBudget(0.5, 0.2, 0.3);
-        setTargetBudget(0.5, 0.2, 0.3);
+        _currentDistribution = _stage1Growth;
+        _targetDistribution = _stage1Growth;
         break;
       case ("Stage 2-1"):
-        setGrowthBudget(0.65, 0.2, 0.15);
-        setTargetBudget(0.5, 0.2, 0.3);
+        _currentDistribution = _stage2Growth;
+        _targetDistribution = _stage1Growth;
         break;
       case ("Stage 3-1"):
-        setGrowthBudget(0.75, 0.1, 0.15);
-        setTargetBudget(0.65, 0.2, 0.15);
+        _currentDistribution = _stage3Growth;
+        _targetDistribution = _stage2Growth;
         break;
       case ("Stage 4-1"):
-        setGrowthBudget(0.9, 0.05, 0.05);
-        setTargetBudget(0.75, 0.1, 0.15);
+        _currentDistribution = _stage4Growth;
+        _targetDistribution = _stage3Growth;
         break;
       default:
         break;

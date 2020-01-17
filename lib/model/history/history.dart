@@ -64,21 +64,30 @@ class History implements Serializable, Saveable {
   }
 
   BudgetMap getAllottedSpendingFromMonth(int year, int month) {
-    Month m = _months.firstWhere((Month m) =>
-      _monthMatchesYearAndMonth(m, year, month));
+    Month m = _months
+      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
     return m.getAllottedSpendingData();
   }
 
   BudgetMap getActualSpendingFromMonth(int year, int month) {
-    Month m = _months.firstWhere((Month m) =>
-      _monthMatchesYearAndMonth(m, year, month));
+    Month m = _months
+      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
     return m.getActualSpendingData();
   }
 
   TransactionList getTransactionsFromMonth(int year, int month) {
-    Month m = _months.firstWhere((Month m) =>
-      _monthMatchesYearAndMonth(m, year, month));
+    Month m = _months
+      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
     return m.getTransactionData();
+  }
+
+  int getNumberOfMonths() {
+    return _months.length;
+  }
+
+  Month getMonth(int year, int month) {
+    return _months
+      .firstWhere((Month m) => _monthMatchesYearAndMonth(m, year, month));
   }
 
   @override

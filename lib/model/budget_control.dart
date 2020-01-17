@@ -1,3 +1,6 @@
+import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
 import 'package:budgetflow/model/crypt/crypter.dart';
 import 'package:budgetflow/model/crypt/steel_crypter.dart';
@@ -5,6 +8,7 @@ import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
+import 'package:budgetflow/model/history/month_time.dart';
 
 import 'crypt/password.dart';
 
@@ -16,11 +20,15 @@ class BudgetControl implements Control {
   static Crypter crypter;
 
   bool _newUser;
-  int _year, _month;
   History _history;
+  TransactionList _loadedTransactions;
+  MonthTime _currentMonthTime, _transactionMonthTime;
+  int _transactionMonthIndex, _allottedMonthIndex, _actualMonthIndex;
 
   BudgetControl() {
     fileIO = new DartFileIO();
+    _updateMonthTimes();
+    _loadedTransactions = new TransactionList();
   }
 
   @override
@@ -49,20 +57,24 @@ class BudgetControl implements Control {
 
   @override
   void initialize() {
-    _updateMonthAndYear();
+    _updateMonthTimes();
     crypter = new SteelCrypter(_password);
     if (!_newUser) {
       _load();
     }
   }
 
-  void _updateMonthAndYear() {
+  void _updateMonthTimes() {
     DateTime now = DateTime.now();
-    _year = now.year;
-    _month = now.month;
+    _currentMonthTime = new MonthTime(now.year, now.month);
+    _transactionMonthTime = new MonthTime(now.year, now.month);
   }
 
-  void _load() {}
+  void _load() {
+    _history = History.load();
+    _loadedTransactions = _history.getTransactionsFromMonth(
+      _currentMonthTime.year, _currentMonthTime.month);
+  }
 
   void save() {
     _history.save();
@@ -74,4 +86,25 @@ class BudgetControl implements Control {
     _password = new SteelPassword(newSecret);
     crypter = new SteelCrypter(_password);
   }
+
+  @override
+  Budget getBudget() {
+    return _history.getLatestMonthBudget();
+  }
+
+  @override
+  TransactionList getLoadedTransactions() {
+    return _loadedTransactions;
+  }
+
+  @override
+  void loadPreviousMonthTransactions() {
+    _transactionMonthTime = _transactionMonthTime.previous();
+    _history.getTransactionsFromMonth(
+      _transactionMonthTime.year, _transactionMonthTime.month).forEach((
+      Transaction t) {
+      _loadedTransactions.add(t);
+    });
+  }
+
 }

@@ -50,4 +50,14 @@ class TransactionList {
   List<Transaction> getIterable() {
     return _transactions;
   }
+
+  void forEach(void action(Transaction t)) {
+    int length = _transactions.length;
+    for (int i = 0; i < length; i++) {
+      action(_transactions[i]);
+      if (length != _transactions.length) {
+        throw ConcurrentModificationError(this);
+      }
+    }
+  }
 }

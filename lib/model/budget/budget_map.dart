@@ -53,4 +53,12 @@ class BudgetMap implements Serializable {
   static _convertDecoded(dynamic s, dynamic d) {
     _deserialized.addTo(jsonCategory[s], double.parse(d));
   }
+
+  BudgetMap divide(double n) {
+    BudgetMap newBudgetMap = new BudgetMap();
+    _map.forEach((BudgetCategory bc, double d) {
+      newBudgetMap.set(bc, d / n);
+    });
+    return newBudgetMap;
+  }
 }
