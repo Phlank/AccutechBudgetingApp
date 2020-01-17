@@ -5,10 +5,12 @@ import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
-import 'package:budgetflow/model/history/history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:budgetflow/model/budget_control.dart';
+
+
 
 import 'sidebar/account_display.dart' as account;
 import 'sidebar/history_display.dart' as history;
@@ -22,9 +24,10 @@ RegExp emailVerification = new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
-History userHistory = new History();
+BudgetControl userHistory = new BudgetControl();
 Budget userBudget;
-//todo implement a global storage object to retain and disperse all of the information
+
+//todo move to all string and string dependent data to Strings.dart
 
 void main() => runApp(BudgetingApp());
 
@@ -89,7 +92,7 @@ class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     if (userBudget == null) {
-      userBudget = userHistory.budget;
+      userBudget = userHistory.getBudget();
     }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
     TransactionList expenses = userBudget
@@ -260,25 +263,23 @@ class _LoginPage extends State<HomePage> {
     );
   } // build
 } //_LoginPage
-
-final housingCon = new TextEditingController();
-final incomeCon = new TextEditingController();
-
 InformationHolding hold = new InformationHolding();
-
 class _UserInformation extends State<HomePage> {
-  @override
-  void dispose() {
-    housingCon.dispose();
-    incomeCon.dispose();
-    super.dispose();
-  }
 
   Scaffold informationCollection() {
+    /* todo get rid of non used information fields
+    *  todo simplify the cards
+    *  todo
+    *   */
     String nameButton = 'next';
     final _formKey = GlobalKey<FormState>();
-    String housePaymentType = 'Renting';
-    BudgetType dependencyOnSavings = BudgetType.savingGrowth;
+    BudgetType dependencyOnSavings = null;//todo figure out radio button
+
+    bool checkBudgetType (BudgetType dependencyOnSavings){
+      if(BudgetType.savingGrowth==dependencyOnSavings) return false;
+      return true;
+    }
+
     List<Card> inputFields = <Card>[
       Card(
         child: Form(
@@ -317,38 +318,6 @@ class _UserInformation extends State<HomePage> {
                   //todo load in to global object
                 },
               ),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email: ',
-                  hintText: 'email',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) return 'please input your email';
-                  if (!emailVerification.hasMatch(value))
-                    return 'please enter a valid email \n (eg. name23436@example.com)';
-                  return null;
-                },
-                onSaved: (value) {
-                  //todo load in to global object
-                },
-              ),
-              TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  labelText: 'UserName: ',
-                  hintText:
-                  'A-z 0-9 !? no spaces and between 8-16 characters'),
-                validator: (value) {
-                  if (value.isEmpty) return 'Please enter a username';
-                  if (!userNameVerification.hasMatch(value))
-                    return 'please only alphanumeric and !?&#@ no spaces';
-                  return null;
-                },
-                onSaved: (value) {
-                  //todo load in to global object
-                },
-              ),
             ],
           )),
       ),
@@ -358,7 +327,6 @@ class _UserInformation extends State<HomePage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  controller: incomeCon,
                   decoration: InputDecoration(
                     hintText: 'monthly income',
                     labelText: 'regular income',
@@ -420,7 +388,7 @@ class _UserInformation extends State<HomePage> {
                 validator: (value) {
                   return null;
                 },
-                enabled: false,
+                enabled:checkBudgetType(dependencyOnSavings),
                 onChanged: (value) {
                   if (value.isNotEmpty) return null;
                 },
@@ -445,59 +413,14 @@ class _UserInformation extends State<HomePage> {
         ),
       ),
       Card(
-        /*Housing Information*/
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              Text('What type of housing situation best describes you?'),
-              RadioListTile(
-                title: const Text('Renting'),
-                value: 'renting',
-                groupValue: housePaymentType,
-                onChanged: (value) {
-                  setState(() {
-                    housePaymentType = value;
-                  });
-                },
-                selected: true,
-              ),
-              RadioListTile(
-                title: const Text('Own with Mortgage'),
-                value: 'own with payment',
-                groupValue: housePaymentType,
-                onChanged: (value) {
-                  setState(() {
-                    housePaymentType = value;
-                  });
-                },
-              ),
-              RadioListTile(
-                title: Text('Own no payments left'),
-                value: 'own',
-                groupValue: housePaymentType,
-                onChanged: (value) {
-                  setState(() {
-                    cardOrder++;
-                    //todo set housing to $0
-                    housePaymentType = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      Card(
         /*Housing information continued*/
         child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
               TextFormField(
-                controller: housingCon,
                 decoration: InputDecoration(
-                  labelText: housePaymentType + 'Payment',
+                  labelText:'Payment',
                   hintText: 'amount in USD',
                 ),
                 validator: (value) {
