@@ -92,7 +92,7 @@ class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     if (userBudget == null) {
-      userBudget = userHistory.;
+      userBudget = userHistory.getBudget();
     }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
     TransactionList expenses = userBudget
