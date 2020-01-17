@@ -1,10 +1,7 @@
 class MonthTime {
-  int year, month;
+  final int year, month;
 
-  MonthTime(int year, int month) {
-    this.year = year;
-    this.month = month;
-  }
+  MonthTime(this.year, this.month);
 
   MonthTime previous() {
     if (month > 1) {
