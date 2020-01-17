@@ -13,7 +13,7 @@ class Encrypted {
   }
 
   String serialize() {
-    String output = "{\"iv\":\"" + iv + "\",\"cipher\":\"" + cipher + "\"}";
+    String output = '{"iv":"' + iv + '","cipher":"' + cipher + '"}';
     return output;
   }
 }

@@ -93,13 +93,13 @@ class History implements Serializable, Saveable {
 
   @override
   String serialize() {
-    String output = "{";
+    String output = '{';
     int i = 0;
     _months.forEach((Month m) {
-      output += "\"" + i.toString() + "\":" + m.serialize();
+      output += '"' + i.toString() + '":' + m.serialize();
       i++;
     });
-    output += "}";
+    output += '}';
     return output;
   }
 

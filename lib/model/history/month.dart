@@ -126,11 +126,11 @@ class Month implements Serializable {
 
   String serialize() {
     String output = "{";
-    output += "\"year\":\"" + _monthTime.year.toString() + "\",";
-    output += "\"month\":\"" + _monthTime.month.toString() + "\",";
-    output += "\"income\":\"" + income.toString() + "\",";
-    output += "\"type\":\"" + budgetTypeJson[type] + "\"";
-    output += "}";
+    output += '"year":"' + _monthTime.year.toString() + "\",";
+    output += '"month":"' + _monthTime.month.toString() + '",';
+    output += '"income":"' + income.toString() + '",';
+    output += '"type":"' + budgetTypeJson[type] + '"';
+    output += '}';
     return output;
   }
 
