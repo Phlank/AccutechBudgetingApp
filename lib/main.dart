@@ -24,7 +24,7 @@ RegExp emailVerification = new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
-BudgetControl userHistory = new BudgetControl();
+BudgetControl userControler = new BudgetControl();
 Budget userBudget;
 
 //todo move to all string and string dependent data to Strings.dart
@@ -39,7 +39,7 @@ class BudgetingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: HomePage(),
+      home: LoginPage(),
       initialRoute: '/',
       //InitialRoute
       routes: {
@@ -73,14 +73,10 @@ class UserPage extends StatefulWidget {
   _UserPage createState() => _UserPage();
 }
 
-class HomePage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => chooseState();
+  _LoginPage createState() => _LoginPage();
 
-  State chooseState() {
-    if (userHistory.isNewUser()) return _UserInformation();
-    return _LoginPage();
-  }
 }
 
 class UserInformation extends StatefulWidget {
@@ -92,7 +88,7 @@ class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     if (userBudget == null) {
-      userBudget = userHistory.getBudget();
+      userBudget = userControler.getBudget();
     }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
     TransactionList expenses = userBudget
@@ -204,7 +200,7 @@ class _UserPage extends State<UserPage> {
   }
 } // _UserPage
 
-class _LoginPage extends State<HomePage> {
+class _LoginPage extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -233,7 +229,7 @@ class _LoginPage extends State<HomePage> {
                     if (value.isEmpty) return 'Enter your PIN, please';
                     if (!allNumbers.hasMatch(value))
                       return 'your PIN should only be 4 numbers';
-                    if (userHistory.passwordIsValid(value)) user = 'user';
+                    if (userControler.passwordIsValid(value)) user = 'user';
                     //todo make check if user is a real user
                     return null;
                   },
@@ -263,8 +259,10 @@ class _LoginPage extends State<HomePage> {
     );
   } // build
 } //_LoginPage
+
 InformationHolding hold = new InformationHolding();
-class _UserInformation extends State<HomePage> {
+
+class _UserInformation extends State<UserInformation> {
 
   Scaffold informationCollection() {
     /* todo get rid of non used information fields
@@ -273,12 +271,6 @@ class _UserInformation extends State<HomePage> {
     *   */
     String nameButton = 'next';
     final _formKey = GlobalKey<FormState>();
-    BudgetType dependencyOnSavings = null;//todo figure out radio button
-
-    bool checkBudgetType (BudgetType dependencyOnSavings){
-      if(BudgetType.savingGrowth==dependencyOnSavings) return false;
-      return true;
-    }
 
     List<Card> inputFields = <Card>[
       Card(
@@ -314,9 +306,6 @@ class _UserInformation extends State<HomePage> {
                     return 'please enter in numeric format';
                   return null;
                 },
-                onSaved: (value) {
-                  //todo load in to global object
-                },
               ),
             ],
           )),
@@ -327,6 +316,7 @@ class _UserInformation extends State<HomePage> {
             child: Column(
               children: <Widget>[
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     hintText: 'monthly income',
                     labelText: 'regular income',
@@ -335,11 +325,12 @@ class _UserInformation extends State<HomePage> {
                     if (value.isEmpty) return 'please dont leave blank';
                     if (!dollarAmount.hasMatch(value))
                       return 'numerical values only please';
-                    hold.setIncome(double.tryParse(value));
+                    hold.setIncomeAmt(double.tryParse(value));
                     return null;
                   },
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     hintText: 'savings amount',
                     labelText: 'How much do you have saved?'),
@@ -351,51 +342,24 @@ class _UserInformation extends State<HomePage> {
                     return null;
                   },
                 ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'If you are dependent on Savings',
+                    hintText: 'enter the amount you take monthly from your savings',
+                  ),
+                  validator: (value) {
+                    return null;
+                  },
+                  onChanged: (value) {
+                    if (value.isNotEmpty){
+                      hold.setBudgetType(BudgetType.savingDepletion);
+                    }
+                  },
+                )
               ],
-            ))),
-      Card(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              Text(
-                'Are you currently pulling out of savings to make ends meat?'),
-              RadioListTile(
-                groupValue: dependencyOnSavings,
-                title: Text('yes'),
-                value: BudgetType.savingDepletion,
-                onChanged: (value) {
-                  setState(() {
-                    dependencyOnSavings = value;
-                  });
-                },
-              ),
-              RadioListTile(
-                groupValue: dependencyOnSavings,
-                title: Text('no'),
-                value: BudgetType.savingGrowth,
-                onChanged: (value) {
-                  setState(() {
-                    dependencyOnSavings = value;
-                  });
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'How Much are you pulling out of savings?',
-                  hintText: 'only fill in oif you selected \'yes\'',
-                ),
-                validator: (value) {
-                  return null;
-                },
-                enabled:checkBudgetType(dependencyOnSavings),
-                onChanged: (value) {
-                  if (value.isNotEmpty) return null;
-                },
-              )
-            ],
-          ),
-        ),
+            )
+          )
       ),
       Card(
         child: Form(
@@ -420,14 +384,14 @@ class _UserInformation extends State<HomePage> {
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(
-                  labelText:'Payment',
-                  hintText: 'amount in USD',
+                  labelText:'Housing Payment',
+                  hintText: 'Rent or Mortgage payment',
                 ),
                 validator: (value) {
                   if (value.isEmpty) return 'please dont leave Blank';
                   if (!dollarAmount.hasMatch(value))
                     return 'Numeric format please';
-                  hold.setHouse(double.tryParse(value));
+                  hold.setHousingAmt(double.tryParse(value));
                   return null;
                 },
               ),
@@ -466,6 +430,16 @@ class _UserInformation extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('New User'),
+        leading: BackButton(
+          onPressed: (){
+            if(cardOrder>0) {
+              cardOrder--;
+              Navigator.pushNamed(context, '/newUser');
+            }else{
+              Navigator.pushNamed(context, '/');
+            }
+          },
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -485,7 +459,7 @@ class _UserInformation extends State<HomePage> {
                 } else {
                   BudgetFactory budgetFactory = new PriorityBudgetFactory();
                   userBudget = budgetFactory.newFromInfo(
-                      hold.incomeamt, hold.housingamt, dependencyOnSavings);
+                      hold.getIncomeAmt(), hold.getHousingAmt(), hold.getBudgetType());
                   Navigator.pushNamed(context, '/knownUser');
                 }
               }
@@ -503,16 +477,26 @@ class _UserInformation extends State<HomePage> {
 }
 
 class InformationHolding {
-  double housingamt;
-  double incomeamt;
+  double _housingAmt;
+  double _incomeAmt;
+  BudgetType _budgetType;
 
-  InformationHolding();
+  double getHousingAmt() => _housingAmt;
 
-  setHouse(double housingamt) {
-    this.housingamt = housingamt;
+  setHousingAmt(double housingAmt) {
+    _housingAmt = housingAmt;
+  }
+  double getIncomeAmt()=> _incomeAmt;
+
+  setIncomeAmt(double incomeAmt) {
+    _incomeAmt = incomeAmt;
+  }
+  BudgetType getBudgetType() {
+    if(_budgetType!=null) return _budgetType;
+    return BudgetType.savingGrowth;
   }
 
-  setIncome(double incomeamt) {
-    this.incomeamt = incomeamt;
+  setBudgetType(BudgetType budgetType) {
+    _budgetType = budgetType;
   }
 }

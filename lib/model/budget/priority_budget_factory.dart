@@ -54,7 +54,7 @@ class PriorityBudgetFactory implements BudgetFactory {
   @override
   Budget newFromInfo(double income, double housing, BudgetType type) {
     _housingRatio = housing / income;
-    income = income;
+    _income = income;
     _decidePlan(type);
     Budget newBudget = new Budget(income);
     newBudget.setType(type);
@@ -113,7 +113,9 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   Budget _createAllotments(Budget budget) {
-    _needsRatio -= _housingRatio;
+    _needsRatio=_currentDistribution.needs-_housingRatio;
+    _wantsRatio=_currentDistribution.wants;
+    _savingsRatio =_currentDistribution.savings;
     double dNeedsRatio = _income * _needsRatio / 4.0;
     double dWantsRatio = _income * _wantsRatio / 5.0;
     budget.setAllotment(BudgetCategory.utilities, dNeedsRatio);
