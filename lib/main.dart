@@ -24,7 +24,7 @@ RegExp emailVerification = new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
-BudgetControl userControler = new BudgetControl();
+BudgetControl userController = new BudgetControl();
 Budget userBudget;
 
 //todo move to all string and string dependent data to Strings.dart
@@ -88,7 +88,7 @@ class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     if (userBudget == null) {
-      userBudget = userControler.getBudget();
+      userBudget = userController.getBudget();
     }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
     TransactionList expenses = userBudget
@@ -229,7 +229,7 @@ class _LoginPage extends State<LoginPage> {
                     if (value.isEmpty) return 'Enter your PIN, please';
                     if (!allNumbers.hasMatch(value))
                       return 'your PIN should only be 4 numbers';
-                    if (userControler.passwordIsValid(value)) user = 'user';
+                    if (userController.passwordIsValid(value)) user = 'user';
                     //todo make check if user is a real user
                     return null;
                   },
