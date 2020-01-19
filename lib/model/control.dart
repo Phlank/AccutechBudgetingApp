@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
 
 abstract class Control {
   bool isNewUser();
@@ -17,4 +18,6 @@ abstract class Control {
   TransactionList getLoadedTransactions();
 
   void loadPreviousMonthTransactions();
+
+  void addTransaction(Transaction t);
 }

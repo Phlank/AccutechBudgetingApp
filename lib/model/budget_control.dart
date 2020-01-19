@@ -9,8 +9,8 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
-
-import 'crypt/password.dart';
+import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/history/month_time.dart';
 
 class BudgetControl implements Control {
   static const String _PASSWORD_PATH = "password";
@@ -23,6 +23,7 @@ class BudgetControl implements Control {
   History _history;
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
+  Budget _budget;
 
   BudgetControl() {
     fileIO = new DartFileIO();
@@ -72,7 +73,8 @@ class BudgetControl implements Control {
   void _load() {
     _history = History.load();
     _loadedTransactions =
-      _history.getTransactionsFromMonthTime(_currentMonthTime);
+        _history.getTransactionsFromMonthTime(_currentMonthTime);
+    _budget = _history.getLatestMonthBudget();
   }
 
   void save() {
@@ -100,9 +102,14 @@ class BudgetControl implements Control {
   void loadPreviousMonthTransactions() {
     _transactionMonthTime = _transactionMonthTime.previous();
     _history
-      .getTransactionsFromMonthTime(_transactionMonthTime)
-      .forEach((Transaction t) {
+        .getTransactionsFromMonthTime(_transactionMonthTime)
+        .forEach((Transaction t) {
       _loadedTransactions.add(t);
     });
+  }
+
+  @override
+  void addTransaction(Transaction t) {
+    _budget.addTransaction(t);
   }
 }
