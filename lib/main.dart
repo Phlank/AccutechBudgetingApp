@@ -276,7 +276,7 @@ class _HomePage extends State<HomePage>{
                       hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
                   validator: (value) {
                     if (value.isEmpty) return 'please do not leave blank';
-                    if (new RegExp(r'\d+').hasMatch(value)) return 'please use only numbers';
+                    //if (new RegExp(r'\d+').hasMatch(value)) return 'please use only numbers';
                     if (value.length != 4) return 'only four numbers please';
                     userController.setPassword(value);
                     return null;
@@ -318,6 +318,7 @@ class _HomePage extends State<HomePage>{
                   BudgetFactory budgetFactory = new PriorityBudgetFactory();
                   userBudget = budgetFactory.newFromInfo(
                       hold.getIncomeAmt(), hold.getHousingAmt(), hold.getBudgetType());
+                  userController.addNewBudget(userBudget);
                   userController.save();
                   Navigator.pushNamed(context, '/knownUser');
                 }

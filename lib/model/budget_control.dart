@@ -10,6 +10,7 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'history/month.dart';
 
 class BudgetControl implements Control {
 
@@ -17,7 +18,6 @@ class BudgetControl implements Control {
   static FileIO fileIO;
   static Password _password;
   static Crypter crypter;
-
   final Map<String,String> regexMap = {
     'pin':r'\d\d\d\d',
     'dollarAmnt':r'\d+?([.]\d\d)',
