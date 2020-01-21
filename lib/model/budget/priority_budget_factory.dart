@@ -139,7 +139,7 @@ class PriorityBudgetFactory implements BudgetFactory {
     _oldActualRatios = old.actualSpending.divide(_income);
     if (_userExceededBudget()) {
       // Return the same budget as last month
-      return Budget.fromOldAllottments(old);
+      return Budget.fromOldAllotments(old);
     }
     // Look at spending, see what fields were over and what were under
     _findSpendingDiffs();

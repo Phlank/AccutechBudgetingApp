@@ -111,6 +111,7 @@ class BudgetControl implements Control {
   @override
   void addTransaction(Transaction t) {
     _budget.addTransaction(t);
+    _loadedTransactions.add(t);
   }
 
   @override
