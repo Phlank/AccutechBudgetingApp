@@ -21,7 +21,7 @@ class MonthTime {
     return "$year" + "_" + "$month";
   }
 
-  static MonthTime currentMonthTime() {
+  static MonthTime now() {
     DateTime now = DateTime.now();
     return new MonthTime(now.year, now.month);
   }

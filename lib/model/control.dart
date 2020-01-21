@@ -20,4 +20,6 @@ abstract class Control {
   void loadPreviousMonthTransactions();
 
   void addTransaction(Transaction t);
+
+  void addNewBudget(Budget b);
 }

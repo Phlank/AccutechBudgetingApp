@@ -27,7 +27,7 @@ class SteelPassword implements Password {
   // This needs to exist so we have something to call verify() on.
   // Without this function, we have to work with the bare bone libraries, and
   // that's just nasty. When verify() is called, it should make all other
-  // functions usable because it takes secret and salt as params.
+  // functions usable because it takes secret as a param.
   static Password fromHashAndSalt(String hash, String salt) {
     SteelPassword pw = new SteelPassword("");
     pw._hash = hash;
