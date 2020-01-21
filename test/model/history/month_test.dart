@@ -1,7 +1,8 @@
 import 'package:budgetflow/model/history/month.dart';
+import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Month m = new Month(2019, 12, 1200.0);
+Month m = new Month(new MonthTime(2019, 12), 1200.0);
 
 void main() {
 	group("Month tests", () {

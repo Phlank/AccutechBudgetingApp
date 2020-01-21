@@ -58,7 +58,7 @@ class Budget {
     return _type;
   }
 
-  static Budget fromOldAllottments(Budget old) {
+  static Budget fromOldAllotments(Budget old) {
     Budget b = new Budget(old._monthlyIncome);
     b.allottedSpending = old.allottedSpending;
     return b;

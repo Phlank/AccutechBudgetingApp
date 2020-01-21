@@ -23,8 +23,8 @@ class BudgetControl implements Control {
     'dollarAmnt':r'\d+?([.]\d\d)',
     'name':r'\w+',
     'age':r'\d{2,3}'
-  }; 
-  
+  };
+
   bool _newUser;
   History _history;
   TransactionList _loadedTransactions;
@@ -117,9 +117,18 @@ class BudgetControl implements Control {
   @override
   void addTransaction(Transaction t) {
     _budget.addTransaction(t);
+    _loadedTransactions.add(t);
   }
-  
-  bool validInput(String value, String inputType){
+
+  bool validInput(String value, String inputType) {
     return new RegExp(regexMap[inputType]).hasMatch(value);
+  }
+  @override
+  void addNewBudget(Budget b) {
+    _history = new History();
+    Month m = Month.fromBudget(b);
+    _history.addMonth(m);
+    _loadedTransactions = b.transactions;
+    _budget = b;
   }
 }
