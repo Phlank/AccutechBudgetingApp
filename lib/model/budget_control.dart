@@ -119,7 +119,7 @@ class BudgetControl implements Control {
     _history = new History();
     Month m = Month.fromBudget(b);
     _history.addMonth(m);
-    _loadedTransactions = m.getTransactionData();
+    _loadedTransactions = b.transactions;
     _budget = b;
   }
 }
