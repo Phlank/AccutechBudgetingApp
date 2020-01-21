@@ -47,12 +47,12 @@ class History implements Serializable, Saveable {
   }
 
   bool _monthHasCurrentTime(Month m) {
-    return m.getMonthTime() == MonthTime.currentMonthTime();
+    return m.getMonthTime() == MonthTime.now();
   }
 
   Budget _createNewMonthBudget() {
     Month lastMonth = _months[_months.length - 1];
-    currentMonth = new Month(_year, _month, lastMonth.income);
+    currentMonth = new Month(MonthTime(_year, _month), lastMonth.income);
     Budget lastBudget = Budget.fromMonth(lastMonth);
     BudgetFactory factory = new PriorityBudgetFactory();
     Budget currentBudget = factory.newFromBudget(lastBudget);
@@ -89,6 +89,10 @@ class History implements Serializable, Saveable {
   Month getMonth(MonthTime mt) {
     return _months
       .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
+  }
+
+  void addMonth(Month m) {
+    _months.add(m);
   }
 
   @override

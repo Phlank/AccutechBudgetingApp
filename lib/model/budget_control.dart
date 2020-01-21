@@ -9,6 +9,7 @@ import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
+import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 
 class BudgetControl implements Control {
@@ -110,5 +111,14 @@ class BudgetControl implements Control {
   @override
   void addTransaction(Transaction t) {
     _budget.addTransaction(t);
+  }
+
+  @override
+  void addNewBudget(Budget b) {
+    _history = new History();
+    Month m = Month.fromBudget(b);
+    _history.addMonth(m);
+    _loadedTransactions = m.getTransactionData();
+    _budget = b;
   }
 }

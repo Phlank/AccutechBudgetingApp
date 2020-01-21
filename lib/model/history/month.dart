@@ -17,8 +17,8 @@ class Month implements Serializable {
   double income;
   BudgetType type;
 
-  Month(int year, int month, double income) {
-    _monthTime = new MonthTime(year, month);
+  Month(MonthTime mt, double income) {
+    _monthTime = mt;
     this.income = income;
     _createFilePaths();
   }
@@ -114,8 +114,7 @@ class Month implements Serializable {
   MonthTime getMonthTime() => _monthTime;
 
   static Month fromBudget(Budget b) {
-    DateTime now = DateTime.now();
-    Month m = new Month(now.year, now.month, b.getMonthlyIncome());
+    Month m = new Month(MonthTime.now(), b.getMonthlyIncome());
     m.transactionData = b.transactions;
     m.actualData = b.actualSpending;
     m.allottedData = b.allottedSpending;
@@ -140,7 +139,7 @@ class Month implements Serializable {
   }
 
   static unserializeMap(Map map) {
-    Month m = new Month(int.parse(map["year"]), int.parse(map["month"]),
+    Month m = new Month(new MonthTime(int.parse(map["year"]), int.parse(map["month"])),
         double.parse(map["income"]));
     m.type = jsonBudgetType[map["type"]];
     return m;
