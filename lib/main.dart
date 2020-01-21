@@ -24,6 +24,7 @@ RegExp emailVerification = new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
 RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
+InformationHolding hold = new InformationHolding();
 BudgetControl userController = new BudgetControl();
 Budget userBudget;
 
@@ -39,12 +40,11 @@ class BudgetingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: LoginPage(),
+      home: HomePage(),
       initialRoute: '/',
       //InitialRoute
       routes: {
         '/knownUser': (context) => UserPage(),
-        '/newUser': (context) => UserInformation(),
         '/housing': (context) => sideBar.HousingView(userBudget),
         '/edit': (context) => edit.EditInformationDirectory(userBudget),
         '/houseEdit': (context) => edit.HousingInformationEdit(userBudget),
@@ -73,26 +73,280 @@ class UserPage extends StatefulWidget {
   _UserPage createState() => _UserPage();
 }
 
-class LoginPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _LoginPage createState() => _LoginPage();
-
+  _HomePage createState() => _HomePage();
 }
 
-class UserInformation extends StatefulWidget {
+class _HomePage extends State<HomePage>{
+
+  Scaffold _loginPage(){
+    String user = 'nouser';
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+      body:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text('Please Login'),
+            Spacer(
+              flex: 1,
+            ),
+            Column(
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Enter your PIN',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) return 'Enter your PIN, please';
+                    if (!allNumbers.hasMatch(value))
+                      return 'your PIN should only be 4 numbers';
+                    if (userController.passwordIsValid(value)) user = 'user';
+                    userBudget = userController.getBudget();
+                    return null;
+                  },
+                  obscureText: true,
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    if (user == 'user') {
+                      Navigator.pushNamed(context, '/knownUser');
+                    } else {
+                      Text('please try again');
+                    }
+                  },
+                  child: Text('Submit'),
+                )
+              ],
+            ),
+          ],
+      ),
+    );
+  }
+
+  Scaffold _informationCollection(GlobalKey<FormState> _formKey) {
+    String nameButton = 'next';
+    final List<Card> inputFields = <Card>[
+      Card(
+        child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('all information is changable after submision'),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    labelText: 'Name: ',
+                    hintText: 'Enter your Name',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) return 'please enter your name';
+                    if (!allLetters.hasMatch(value))
+                      return 'only letters A-Z please';
+                    return null;
+                  },
+                  onSaved: (value) {
+                    //todo load in to global object
+                  },
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      labelText: 'How old are you?', hintText: 'age'),
+                  validator: (value) {
+                    if (value.isEmpty) return 'please do not leave blank';
+                    if (!new RegExp(r"[0-9]{2,3}").hasMatch(value))
+                      return 'please enter in numeric format';
+                    return null;
+                  },
+                ),
+              ],
+            )),
+      ),
+      Card(
+          child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: 'monthly income',
+                      labelText: 'regular income',
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) return 'please dont leave blank';
+                      if (!dollarAmount.hasMatch(value))
+                        return 'numerical values only please';
+                      hold.setIncomeAmt(double.tryParse(value));
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                        hintText: 'savings amount',
+                        labelText: 'How much do you have saved?'),
+                    validator: (value) {
+                      if (value.isEmpty)
+                        return ' Please don\'t leave this empty';
+                      if (!dollarAmount.hasMatch(value))
+                        return 'please put in numerical form';
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'If you are dependent on Savings',
+                      hintText: 'enter the amount you take monthly from your savings',
+                    ),
+                    validator: (value) {
+                      return null;
+                    },
+                    onChanged: (value) {
+                      if (value.isNotEmpty){
+                        hold.setBudgetType(BudgetType.savingDepletion);
+                      }
+                    },
+                  )
+                ],
+              )
+          )
+      ),
+      Card(
+        child: Form(
+          key: _formKey,
+          child: TextFormField(
+              decoration: InputDecoration(
+                  hintText: 'dollar amt',
+                  labelText: 'How much debt in total do you have?'),
+              validator: (value) {
+                if (value.isEmpty) return 'please do not leave empty';
+                if (!dollarAmount.hasMatch(value))
+                  return 'please put in to numerical value';
+                return null;
+              }),
+        ),
+      ),
+      Card(
+        /*Housing information continued*/
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText:'Housing Payment',
+                    hintText: 'Rent or Mortgage payment',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) return 'please dont leave Blank';
+                    if (!dollarAmount.hasMatch(value))
+                      return 'Numeric format please';
+                    hold.setHousingAmt(double.tryParse(value));
+                    return null;
+                  },
+                ),
+              ],
+            ),
+          )),
+      Card(
+        //todo figure out the regexp in these validators and why they don't like the the input
+        /*Security Information*/
+          child: Form(
+              key: _formKey,
+              child: Column(children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(
+                      hintText: 'any four numbers',
+                      labelText: 'enter your desired pin'),
+                  validator: (value) {
+                    if (value.isEmpty) return 'please do not leave blank';
+                   //if (allNumbers.hasMatch(value)) return 'please use only numbers';
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                      hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
+                  validator: (value) {
+                    if (value.isEmpty) return 'please do not leave blank';
+                    //if (new RegExp(r'\d+').hasMatch(value)) return 'please use only numbers';
+                    if (value.length != 4) return 'only four numbers please';
+                    userController.setPassword(value);
+                    return null;
+                  },
+                )
+              ])))
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('New User'),
+        leading: BackButton(
+          onPressed: (){
+            if(cardOrder>0) {
+              cardOrder--;
+              Navigator.pushNamed(context, '/newUser');
+            }else{
+
+            }
+          },
+        ),
+      ),
+      body:Column(
+        children: <Widget>[
+          inputFields[cardOrder],
+          RaisedButton(
+            child: Text(nameButton),
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                if (cardOrder < inputFields.length - 1) {
+                  if (cardOrder == inputFields.length - 2) {
+                    setState(() {
+                      nameButton = 'submit';
+                    });
+                  }
+                  cardOrder++;
+                  Navigator.pushNamed(context, '/');
+                } else {
+                  BudgetFactory budgetFactory = new PriorityBudgetFactory();
+                  userBudget = budgetFactory.newFromInfo(
+                      hold.getIncomeAmt(), hold.getHousingAmt(), hold.getBudgetType());
+                  userController.addNewBudget(userBudget);
+                  userController.save();
+                  Navigator.pushNamed(context, '/knownUser');
+                }
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Scaffold _chooseTheScreen() {
+    if(userController.isNewUser()){
+      final _formKey = GlobalKey<FormState>();
+      return  _informationCollection(_formKey);
+    }
+    return _loginPage();
+  }
+
   @override
-  _UserInformation createState() => _UserInformation();
-} //userInformation
+  Widget build(BuildContext context) => _chooseTheScreen();
+}
 
 class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    if (userBudget == null) {
-      userBudget = userController.getBudget();
-    }
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
-    TransactionList expenses = userBudget
-      .transactions; //todo get expenses list from where ever that might be
+    TransactionList expenses = userBudget.transactions;
     return Scaffold(
       appBar: AppBar(
         title: Text(/*users entered name when available*/ 'User Page'),
@@ -199,282 +453,6 @@ class _UserPage extends State<UserPage> {
     return map;
   }
 } // _UserPage
-
-class _LoginPage extends State<LoginPage> {
-  final formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    String user = 'nouser';
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text('Please Login'),
-            Spacer(
-              flex: 1,
-            ),
-            Column(
-              children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter your PIN',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) return 'Enter your PIN, please';
-                    if (!allNumbers.hasMatch(value))
-                      return 'your PIN should only be 4 numbers';
-                    if (userController.passwordIsValid(value)) user = 'user';
-                    //todo make check if user is a real user
-                    return null;
-                  },
-                  obscureText: true,
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    if (user != 'nouser') {
-                      Navigator.pushNamed(context, '/knownUser');
-                    } else {
-                      Text('please try again');
-                    }
-                  },
-                  child: Text('Submit'),
-                )
-              ],
-            ),
-            RaisedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/newUser');
-              },
-              child: Text('New User'),
-            )
-          ],
-        ),
-      ),
-    );
-  } // build
-} //_LoginPage
-
-InformationHolding hold = new InformationHolding();
-
-class _UserInformation extends State<UserInformation> {
-
-  Scaffold informationCollection() {
-    /* todo get rid of non used information fields
-    *  todo simplify the cards
-    *  todo
-    *   */
-    String nameButton = 'next';
-    final _formKey = GlobalKey<FormState>();
-
-    List<Card> inputFields = <Card>[
-      Card(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('all information is changable after submision'),
-              TextFormField(
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  labelText: 'Name: ',
-                  hintText: 'Enter your Name',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) return 'please enter your name';
-                  if (!allLetters.hasMatch(value))
-                    return 'only letters A-Z please';
-                  return null;
-                },
-                onSaved: (value) {
-                  //todo load in to global object
-                },
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'How old are you?', hintText: 'age'),
-                validator: (value) {
-                  if (value.isEmpty) return 'please do not leave blank';
-                  if (!new RegExp(r"[0-9]{2,3}").hasMatch(value))
-                    return 'please enter in numeric format';
-                  return null;
-                },
-              ),
-            ],
-          )),
-      ),
-      Card(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'monthly income',
-                    labelText: 'regular income',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) return 'please dont leave blank';
-                    if (!dollarAmount.hasMatch(value))
-                      return 'numerical values only please';
-                    hold.setIncomeAmt(double.tryParse(value));
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'savings amount',
-                    labelText: 'How much do you have saved?'),
-                  validator: (value) {
-                    if (value.isEmpty)
-                      return ' Please don\'t leave this empty';
-                    if (!dollarAmount.hasMatch(value))
-                      return 'please put in numerical form';
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'If you are dependent on Savings',
-                    hintText: 'enter the amount you take monthly from your savings',
-                  ),
-                  validator: (value) {
-                    return null;
-                  },
-                  onChanged: (value) {
-                    if (value.isNotEmpty){
-                      hold.setBudgetType(BudgetType.savingDepletion);
-                    }
-                  },
-                )
-              ],
-            )
-          )
-      ),
-      Card(
-        child: Form(
-          key: _formKey,
-          child: TextFormField(
-              decoration: InputDecoration(
-                  hintText: 'dollar amt',
-                  labelText: 'How much debt in total do you have?'),
-              validator: (value) {
-                if (value.isEmpty) return 'please do not leave empty';
-                if (!dollarAmount.hasMatch(value))
-                  return 'please put in to numerical value';
-                return null;
-              }),
-        ),
-      ),
-      Card(
-        /*Housing information continued*/
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText:'Housing Payment',
-                  hintText: 'Rent or Mortgage payment',
-                ),
-                validator: (value) {
-                  if (value.isEmpty) return 'please dont leave Blank';
-                  if (!dollarAmount.hasMatch(value))
-                    return 'Numeric format please';
-                  hold.setHousingAmt(double.tryParse(value));
-                  return null;
-                },
-              ),
-            ],
-          ),
-        )),
-      Card(
-        //todo figure out the regexp in these validators and why they don't like the the input
-        /*Security Information*/
-        child: Form(
-              key: _formKey,
-          child: Column(children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 'any four numbers',
-                labelText: 'enter your desired pin'),
-              validator: (value) {
-                if (value.isEmpty) return 'please do not leave blank';
-                //if (allNumbers.hasMatch(value)) return 'please use only numbers';
-                return null;
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
-              validator: (value) {
-                if (value.isEmpty) return 'please do not leave blank';
-                //if (new RegExp(r'[0-9][0-9][0-9][0-9]').hasMatch(value)) return 'please use only numbers';
-                if (value.length != 4) return 'only four numbers please';
-                return null;
-              },
-            )
-          ])))
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('New User'),
-        leading: BackButton(
-          onPressed: (){
-            if(cardOrder>0) {
-              cardOrder--;
-              Navigator.pushNamed(context, '/newUser');
-            }else{
-              Navigator.pushNamed(context, '/');
-            }
-          },
-        ),
-      ),
-      body: Column(
-        children: <Widget>[
-          inputFields[cardOrder],
-          RaisedButton(
-            child: Text(nameButton),
-            onPressed: () {
-              if (_formKey.currentState.validate()) {
-                if (cardOrder < inputFields.length - 1) {
-                  if (cardOrder == 5) {
-                    setState(() {
-                      nameButton = 'submit';
-                    });
-                  }
-                  cardOrder++;
-                  Navigator.pushNamed(context, '/newUser');
-                } else {
-                  BudgetFactory budgetFactory = new PriorityBudgetFactory();
-                  userBudget = budgetFactory.newFromInfo(
-                      hold.getIncomeAmt(), hold.getHousingAmt(), hold.getBudgetType());
-                  Navigator.pushNamed(context, '/knownUser');
-                }
-              }
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return informationCollection();
-  }
-}
 
 class InformationHolding {
   double _housingAmt;

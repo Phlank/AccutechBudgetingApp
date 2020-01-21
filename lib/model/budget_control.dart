@@ -9,15 +9,21 @@ import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
-import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'history/month.dart';
 
 class BudgetControl implements Control {
-  static const String _PASSWORD_PATH = "password";
 
+  static const String _PASSWORD_PATH = "password";
   static FileIO fileIO;
   static Password _password;
   static Crypter crypter;
+  final Map<String,String> regexMap = {
+    'pin':r'\d\d\d\d',
+    'dollarAmnt':r'\d+?([.]\d\d)',
+    'name':r'\w+',
+    'age':r'\d{2,3}'
+  };
 
   bool _newUser;
   History _history;
@@ -33,7 +39,7 @@ class BudgetControl implements Control {
 
   @override
   bool isNewUser() {
-    bool result = false;
+    bool result = true;
     fileIO.fileExists(History.HISTORY_PATH).then((value) {
       result = !value;
     });
@@ -114,6 +120,9 @@ class BudgetControl implements Control {
     _loadedTransactions.add(t);
   }
 
+  bool validInput(String value, String inputType) {
+    return new RegExp(regexMap[inputType]).hasMatch(value);
+  }
   @override
   void addNewBudget(Budget b) {
     _history = new History();
