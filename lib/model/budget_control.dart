@@ -78,7 +78,7 @@ class BudgetControl implements Control {
   }
 
   void save() {
-    _history.save();
+    _history.save(_budget);
     fileIO.writeFile(_PASSWORD_PATH, _password.serialize());
   }
 

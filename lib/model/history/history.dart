@@ -12,7 +12,7 @@ import 'package:budgetflow/model/file_io/serializable.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 
-class History implements Serializable, Saveable {
+class History implements Serializable {
   static const String HISTORY_PATH = "history";
 
   List<Month> _months;
@@ -25,9 +25,8 @@ class History implements Serializable, Saveable {
     _months = new List<Month>();
   }
 
-  @override
-  void save() {
-    _updateCurrentMonth(budget);
+  void save(Budget current) {
+    _updateCurrentMonth(current);
     _months.forEach((Month m) => m.save());
     Encrypted e = BudgetControl.crypter.encrypt(serialize());
     BudgetControl.fileIO.writeFile(HISTORY_PATH, e.serialize());
