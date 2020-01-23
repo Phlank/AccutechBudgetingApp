@@ -32,6 +32,10 @@ class Budget {
     return _monthlyIncome;
   }
 
+  void setMonthlyIncome(double income) {
+    _monthlyIncome = income;
+  }
+
   double addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       transactions.add(transaction);

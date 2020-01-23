@@ -110,7 +110,7 @@ class History implements Serializable {
     History output = new History();
     Map map = jsonDecode(serialized);
     map.forEach((dynamic s, dynamic d) {
-      output._months.add(Month.unserializeMap(d));
+      output.addMonth(Month.unserializeMap(d));
     });
     return output;
   }

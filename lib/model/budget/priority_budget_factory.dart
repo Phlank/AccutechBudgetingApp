@@ -28,14 +28,14 @@ class _SWN {
 }
 
 class PriorityBudgetFactory implements BudgetFactory {
-  static final _stage1Depletion = new _SWN(.6, .0, .4);
-  static final _stage2Depletion = new _SWN(.75, .0, .25);
-  static final _stage3Depletion = new _SWN(.9, .0, .1);
-  static final _stage4Depletion = new _SWN(.95, .0, .05);
-  static final _stage1Growth = new _SWN(.5, .2, .3);
-  static final _stage2Growth = new _SWN(.65, .2, .15);
-  static final _stage3Growth = new _SWN(.85, .05, .1);
-  static final _stage4Growth = new _SWN(.94, .01, .05);
+  static _SWN _stage1Depletion = new _SWN(.6, .0, .4);
+  static _SWN _stage2Depletion = new _SWN(.75, .0, .25);
+  static _SWN _stage3Depletion = new _SWN(.9, .0, .1);
+  static _SWN _stage4Depletion = new _SWN(.95, .0, .05);
+  static _SWN _stage1Growth = new _SWN(.5, .2, .3);
+  static _SWN _stage2Growth = new _SWN(.65, .2, .15);
+  static _SWN _stage3Growth = new _SWN(.85, .05, .1);
+  static _SWN _stage4Growth = new _SWN(.94, .01, .05);
   static const _STAGE_1_BOUND = .3;
   static const _STAGE_2_BOUND = .5;
   static const _STAGE_3_BOUND = .8;
@@ -53,13 +53,16 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   @override
   Budget newFromInfo(double income, double housing, BudgetType type) {
+    _currentDistribution = new _SWN(0.0, 0.0, 0.0);
+    _targetDistribution = new _SWN(0.0, 0.0, 0.0);
     _housingRatio = housing / income;
     _income = income;
     _decidePlan(type);
     Budget newBudget = new Budget(income);
     newBudget.setType(type);
     newBudget.setAllotment(BudgetCategory.housing, housing);
-    _updateWantsAndNeeds();
+    _currentDistribution.multiply(_income);
+    _targetDistribution.multiply(_income);
     newBudget = _createAllotments(newBudget);
     return newBudget;
   }
