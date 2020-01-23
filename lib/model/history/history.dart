@@ -7,7 +7,6 @@ import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
-import 'package:budgetflow/model/file_io/saveable.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
@@ -22,7 +21,9 @@ class History implements Serializable {
   bool newUser;
 
   History() {
+    print('built output');
     _months = new List<Month>();
+    print('list built');
   }
 
   void save(Budget current) {
@@ -37,10 +38,14 @@ class History implements Serializable {
   }
 
   Budget getLatestMonthBudget() {
+    print('in LatestMonth');
     currentMonth = _months.firstWhere(_monthHasCurrentTime, orElse: () => null);
+    print('have current month');
     if (currentMonth != null) {
+      print('old');
       return Budget.fromMonth(currentMonth);
     } else {
+      print("new");
       return _createNewMonthBudget();
     }
   }
@@ -50,13 +55,16 @@ class History implements Serializable {
   }
 
   Budget _createNewMonthBudget() {
-    Month lastMonth = _months[_months.length - 1];
-    currentMonth = new Month(MonthTime(_year, _month), lastMonth.income);
-    Budget lastBudget = Budget.fromMonth(lastMonth);
-    BudgetFactory factory = new PriorityBudgetFactory();
-    Budget currentBudget = factory.newFromBudget(lastBudget);
-    currentMonth.updateMonthData(currentBudget);
-    return currentBudget;
+    if(_months.isEmpty) {
+      Month lastMonth = _months[_months.length - 1];
+      currentMonth = new Month(MonthTime(_year, _month), lastMonth.income);
+      Budget lastBudget = Budget.fromMonth(lastMonth);
+      BudgetFactory factory = new PriorityBudgetFactory();
+      Budget currentBudget = factory.newFromBudget(lastBudget);
+      currentMonth.updateMonthData(currentBudget);
+      return currentBudget;
+    }
+    return null;
   }
 
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {
@@ -76,8 +84,13 @@ class History implements Serializable {
   }
 
   TransactionList getTransactionsFromMonthTime(MonthTime mt) {
+    print(mt.toString()+' geting transaaction');
     Month m = _months
-      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
+      .firstWhere((Month m) {
+        print('inside');
+        return _monthMatchesMonthTime(m, mt);
+      });
+    print('returnin');
     return m.getTransactionData();
   }
 
@@ -107,19 +120,21 @@ class History implements Serializable {
   }
 
   static History unserialize(String serialized) {
+    print('unserialize');
     History output = new History();
+    print(output);
     Map map = jsonDecode(serialized);
-    map.forEach((dynamic s, dynamic d) {
-      output._months.add(Month.unserializeMap(d));
+    print(map);
+    map.forEach((dynamic s, dynamic d) async {
+      print(s+''+d);
+      output._months.add(await Month.unserializeMap(d));
+      print(output);
     });
+    print('returning');
     return output;
   }
 
-  static History load() {
-    History h;
-    BudgetControl.fileIO.readFile(HISTORY_PATH).then((String content) {
-      h = unserialize(content);
-    });
-    return h;
-  }
+  static Future<String> getHistoryInfo() async => BudgetControl.fileIO.readFile(HISTORY_PATH);
+
+  static Future<History> load() async => unserialize( await getHistoryInfo());
 }

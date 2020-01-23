@@ -36,12 +36,10 @@ class Month implements Serializable {
     return allottedData;
   }
 
-  void loadAllottedSpendingData() {
-    BudgetControl.fileIO.readFile(_allottedFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      allottedData = BudgetMap.unserialize(plaintext);
-    });
+  void loadAllottedSpendingData() async {
+    Encrypted e = Encrypted.unserialize(await BudgetControl.fileIO.readFile(_allottedFilepath));
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    allottedData = BudgetMap.unserialize(plaintext);
   }
 
   BudgetMap getActualSpendingData() {
@@ -51,12 +49,10 @@ class Month implements Serializable {
     return actualData;
   }
 
-  void loadActualSpendingData() {
-    BudgetControl.fileIO.readFile(_actualFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      actualData = BudgetMap.unserialize(plaintext);
-    });
+  void loadActualSpendingData() async {
+    Encrypted e = Encrypted.unserialize(await BudgetControl.fileIO.readFile(_actualFilepath));
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    actualData = BudgetMap.unserialize(plaintext);
   }
 
   TransactionList getTransactionData() {
@@ -66,12 +62,10 @@ class Month implements Serializable {
     return transactionData;
   }
 
-  void loadTransactionData() {
-    BudgetControl.fileIO.readFile(_transactionFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      transactionData = TransactionList.unserialize(plaintext);
-    });
+  void loadTransactionData() async {
+    Encrypted e = Encrypted.unserialize(await BudgetControl.fileIO.readFile(_transactionFilepath));
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    transactionData = TransactionList.unserialize(plaintext);
   }
 
   void updateMonthData(Budget budget) {

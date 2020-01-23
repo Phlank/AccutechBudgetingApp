@@ -11,6 +11,7 @@ import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'history/month.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 class BudgetControl implements Control {
 
@@ -38,34 +39,25 @@ class BudgetControl implements Control {
   }
 
   @override
-  bool isNewUser() {
-    bool result = true;
-    fileIO.fileExists(History.HISTORY_PATH).then((value) {
-      result = !value;
-    });
-    _newUser = result;
-    return result;
+  Future<bool> isReturningUser() {
+    return fileIO.fileExists(History.HISTORY_PATH);
   }
 
   @override
-  bool passwordIsValid(String secret) {
-    bool result = false;
-    _password = SteelPassword.load();
+  Future<bool> passwordIsValid(String secret) async {
+    _password = await SteelPassword.load();
     bool passwordMatch = _password.verify(secret);
     if (passwordMatch) {
-      initialize();
-      result = true;
-    } else {
-      result = false;
+      initialize(false);
     }
-    return result;
+    return passwordMatch;
   }
 
   @override
-  void initialize() {
+  void initialize(bool newUser) {
     _updateMonthTimes();
     crypter = new SteelCrypter(_password);
-    if (!_newUser) {
+    if (!newUser) {
       _load();
     }
   }
@@ -76,11 +68,15 @@ class BudgetControl implements Control {
     _transactionMonthTime = new MonthTime(now.year, now.month);
   }
 
-  void _load() {
-    _history = History.load();
+  void _load() async{
+    print('loading history');
+    _history = await History.load();
+    print(_history);
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
+    print(_loadedTransactions);
     _budget = _history.getLatestMonthBudget();
+    print(_budget.toString());
   }
 
   void save() {
@@ -95,7 +91,7 @@ class BudgetControl implements Control {
   }
 
   @override
-  Budget getBudget() {
+  Budget getBudget()  {
     return _history.getLatestMonthBudget();
   }
 
@@ -123,6 +119,7 @@ class BudgetControl implements Control {
   bool validInput(String value, String inputType) {
     return new RegExp(regexMap[inputType]).hasMatch(value);
   }
+
   @override
   void addNewBudget(Budget b) {
     _history = new History();

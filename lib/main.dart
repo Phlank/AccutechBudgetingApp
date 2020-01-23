@@ -5,13 +5,11 @@ import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:budgetflow/model/budget_control.dart';
-
-
-
 import 'sidebar/account_display.dart' as account;
 import 'sidebar/history_display.dart' as history;
 import 'sidebar/user_catagory_displays.dart' as sideBar;
@@ -79,8 +77,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage>{
-
+  bool valid = false;
   Scaffold _loginPage(){
+    final validationkey = GlobalKey<FormState>();
     String user = 'nouser';
     return Scaffold(
       appBar: AppBar(
@@ -91,40 +90,47 @@ class _HomePage extends State<HomePage>{
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text('Please Login'),
-            Spacer(
-              flex: 1,
-            ),
             Column(
               children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter your PIN',
+                Form(
+                  key:validationkey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter your PIN',
+                    ),
+                    validator:(value) {
+                      if (value.isEmpty) return 'Enter your PIN, please';
+                      if (!allNumbers.hasMatch(value))
+                        return 'your PIN should only be 4 numbers';
+                      cool(value);
+                      if(!valid) return 'not valid password';
+                      return null;
+                    },
+                    obscureText: true,
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) return 'Enter your PIN, please';
-                    if (!allNumbers.hasMatch(value))
-                      return 'your PIN should only be 4 numbers';
-                    if (userController.passwordIsValid(value)) user = 'user';
-                    userBudget = userController.getBudget();
-                    return null;
-                  },
-                  obscureText: true,
                 ),
-                RaisedButton(
-                  onPressed: () {
-                    if (user == 'user') {
-                      Navigator.pushNamed(context, '/knownUser');
-                    } else {
-                      Text('please try again');
-                    }
-                  },
-                  child: Text('Submit'),
-                )
-              ],
-            ),
+                  RaisedButton(
+                    onPressed: () {
+                      validationkey.currentState.validate();
+                      if (user == 'user') {
+                        Navigator.pushNamed(context, '/knownUser');
+                      } else {
+                        Text('please try again');
+                      }
+                    },
+                    child: Text('Submit'),
+                  )
+                ],
+            )
           ],
       ),
     );
+  }
+
+  void cool(value) async {
+    if (await userController.passwordIsValid(value)) valid = true;
+   // userBudget = userController.getBudget();
+
   }
 
   Scaffold _informationCollection(GlobalKey<FormState> _formKey) {
@@ -148,9 +154,6 @@ class _HomePage extends State<HomePage>{
                     if (!allLetters.hasMatch(value))
                       return 'only letters A-Z please';
                     return null;
-                  },
-                  onSaved: (value) {
-                    //todo load in to global object
                   },
                 ),
                 TextFormField(
@@ -330,13 +333,51 @@ class _HomePage extends State<HomePage>{
     );
   }
 
-  Scaffold _chooseTheScreen() {
-    if(userController.isNewUser()){
-      final _formKey = GlobalKey<FormState>();
-      return  _informationCollection(_formKey);
-    }
-    return _loginPage();
-  }
+  Widget _chooseTheScreen() {
+     final _formKey = GlobalKey<FormState>();
+     return FutureBuilder(
+       future: userController.isReturningUser(),
+       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+         if (snapshot.hasData) {
+           bool user = snapshot.data;
+           print(user);
+           if(user) return _loginPage();
+           return _informationCollection(_formKey);
+         } else if (snapshot.hasError) {
+           return Scaffold(
+             appBar: AppBar(
+               title: Text('Error'),
+             ),
+             body:Text.rich(
+                 TextSpan(
+                   text: 'Error',
+                   style: TextStyle(
+                     color: Colors.red,
+                     backgroundColor: Colors.black,
+                     fontSize: 24,
+                     fontStyle: FontStyle.italic
+                   )
+                 )
+             )
+           );
+         }
+         return Scaffold(
+           body: Column(
+             children: <Widget>[
+               Text.rich(
+                 TextSpan(
+                   text:'deciding',
+                   style:TextStyle(
+                     fontSize: 20,
+                   )
+                 ),
+               )
+             ],
+           )
+         );
+       },
+     );
+   }
 
   @override
   Widget build(BuildContext context) => _chooseTheScreen();

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/password.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
 class SteelPassword implements Password {
@@ -75,11 +76,14 @@ class SteelPassword implements Password {
     return output;
   }
 
-  static Password load() {
+  static Future<String> getInfo() async{
+    return await BudgetControl.fileIO.readFile(PASSWORD_PATH);
+  }
+
+  static Future<Password> load() async{
     Password pw;
-    BudgetControl.fileIO.readFile(PASSWORD_PATH).then((String content) {
-      pw = SteelPassword.unserialize(content);
-    });
+    String s = await getInfo();
+    pw = SteelPassword.unserialize(s);
     return pw;
   }
 
