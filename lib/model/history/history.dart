@@ -55,7 +55,6 @@ class History implements Serializable {
   }
 
   Budget _createNewMonthBudget() {
-    if(_months.isEmpty) {
       Month lastMonth = _months[_months.length - 1];
       currentMonth = new Month(MonthTime(_year, _month), lastMonth.income);
       Budget lastBudget = Budget.fromMonth(lastMonth);
@@ -63,8 +62,6 @@ class History implements Serializable {
       Budget currentBudget = factory.newFromBudget(lastBudget);
       currentMonth.updateMonthData(currentBudget);
       return currentBudget;
-    }
-    return null;
   }
 
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {
