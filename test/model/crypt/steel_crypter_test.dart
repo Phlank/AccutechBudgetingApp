@@ -11,8 +11,8 @@ const String _MESSAGE_1 = "The quick brown fox jumps over the lazy dog.";
 const String _MESSAGE_2 =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-Password _pw1 = new SteelPassword(_SECRET_1);
-Password _pw2 = new SteelPassword(_SECRET_2);
+Password _pw1 = Password.fromSecret(_SECRET_1);
+Password _pw2 = Password.fromSecret(_SECRET_2);
 Crypter _c1 = new SteelCrypter(_pw1);
 Crypter _c2 = new SteelCrypter(_pw2);
 

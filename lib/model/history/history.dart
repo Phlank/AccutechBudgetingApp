@@ -52,7 +52,7 @@ class History implements Serializable {
 
   Budget _createNewMonthBudget() {
     Month lastMonth = _months[_months.length - 1];
-    currentMonth = new Month(MonthTime(_year, _month), lastMonth.income);
+    currentMonth = new Month(MonthTime.now(), lastMonth.getIncome());
     Budget lastBudget = Budget.fromMonth(lastMonth);
     BudgetFactory factory = new PriorityBudgetFactory();
     Budget currentBudget = factory.newFromBudget(lastBudget);
