@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/password.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
 class SteelPassword implements Password {
@@ -17,23 +16,27 @@ class SteelPassword implements Password {
   String _salt;
   PassCrypt _passCrypt;
 
-  SteelPassword(String secret) {
+  SteelPassword() {
+    _secret = "";
+    _hash = "";
+    _salt = "";
     _passCrypt = new PassCrypt(_ALGORITHM);
-    int diffTo32 = _KEY_LENGTH - secret.length;
-    _salt = CryptKey().genDart(diffTo32).substring(0, diffTo32);
-    _hash = _passCrypt.hashPass(_salt, secret);
-    _secret = secret;
   }
 
-  // This needs to exist so we have something to call verify() on.
-  // Without this function, we have to work with the bare bone libraries, and
-  // that's just nasty. When verify() is called, it should make all other
-  // functions usable because it takes secret as a param.
+  static Password fromSecret(String secret) {
+    SteelPassword pw = new SteelPassword();
+    pw._passCrypt = new PassCrypt(_ALGORITHM);
+    int diffTo32 = _KEY_LENGTH - secret.length;
+    pw._salt = CryptKey().genDart(diffTo32).substring(0, diffTo32);
+    pw._hash = pw._passCrypt.hashPass(pw._salt, secret);
+    pw._secret = secret;
+    return pw;
+  }
+
   static Password fromHashAndSalt(String hash, String salt) {
-    SteelPassword pw = new SteelPassword("");
+    SteelPassword pw = new SteelPassword();
     pw._hash = hash;
     pw._salt = salt;
-    pw._secret = "";
     return pw;
   }
 
@@ -62,29 +65,23 @@ class SteelPassword implements Password {
     return _salt;
   }
 
-  static Password unserialize(String serialized) {
-    Map map = jsonDecode(serialized);
-    SteelPassword password = new SteelPassword("");
-    password._salt = map[_SERIALIZED_SALT];
-    password._hash = map[_SERIALIZED_HASH];
-    return password;
-  }
-
   @override
   String serialize() {
     String output = '{"salt":"' + _salt + '","hash":"' + _hash + '"}';
     return output;
   }
 
-  static Future<String> getInfo() async{
-    return await BudgetControl.fileIO.readFile(PASSWORD_PATH);
+  static Password unserialize(String serialized) {
+    Map map = jsonDecode(serialized);
+    SteelPassword password = new SteelPassword();
+    password._salt = map[_SERIALIZED_SALT];
+    password._hash = map[_SERIALIZED_HASH];
+    return password;
   }
 
   static Future<Password> load() async{
-    Password pw;
-    String s = await getInfo();
-    pw = SteelPassword.unserialize(s);
-    return pw;
+    String s = await BudgetControl.fileIO.readFile(PASSWORD_PATH);
+    return unserialize(s);
   }
 
   @override
