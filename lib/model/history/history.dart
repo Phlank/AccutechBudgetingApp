@@ -115,19 +115,21 @@ class History implements Serializable {
   static History unserialize(String serialized) {
     print('unserialize');
     History output = new History();
-    print(output);
     Map map = jsonDecode(serialized);
     print(map);
     map.forEach((dynamic s, dynamic d) async {
-      print(s+''+d);
       output._months.add(await Month.unserializeMap(d));
-      print(output);
     });
-    print('returning');
     return output;
   }
 
   static Future<String> getHistoryInfo() async => BudgetControl.fileIO.readFile(HISTORY_PATH);
 
-  static Future<History> load() async => unserialize( await getHistoryInfo());
+  static Future<History> load() async {
+    String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);
+    Encrypted e = Encrypted.unserialize(cipher);
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    History h = History.unserialize(plaintext);
+    return h;
+  }
 }
