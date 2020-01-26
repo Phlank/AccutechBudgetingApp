@@ -62,8 +62,6 @@ class PriorityBudgetFactory implements BudgetFactory {
     _housingRatio = housing / income;
     _income = income;
     _decidePlan(type);
-    _currentDistribution.multiply(_income);
-    _targetDistribution.multiply(_income);
     _setAllotments(housing);
     _builder.setAllottedSpending(_allottedSpending);
     return _builder.build();
