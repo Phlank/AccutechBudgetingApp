@@ -94,10 +94,6 @@ class _NewTransaction extends State<NewTransaction> {
 	_NewTransaction(Budget userBudget);
 	List<DropdownMenuItem> methodList =
 	makeDropDown(['deposit', 'cash', 'debit', 'credit']);
-	String currentMethod = methodList[0].value;
-	List<DropdownMenuItem> categories =
-	makeDropDown(GeneralCategory().categoryMap.keys.toList());
-	String currentCategory = categories[0].value;
 	DateTime date;
 	String place;
 	String amnt;
@@ -131,24 +127,6 @@ class _NewTransaction extends State<NewTransaction> {
 									return null;
 								},
 							),
-							DropdownButton(
-								value: currentMethod,
-								items: methodList,
-								onChanged: (selectedMethod) {
-									setState(() {
-										currentMethod = selectedMethod;
-									});
-								},
-							),
-							DropdownButton(
-								value: currentCategory,
-								items: categories,
-								onChanged: (selectedCategory) {
-									setState(() {
-										currentCategory = selectedCategory;
-									});
-								},
-							),
 							TextFormField(
 									keyboardType: TextInputType.phone,
 									decoration: InputDecoration(labelText: 'amont of tranaction'),
@@ -160,20 +138,6 @@ class _NewTransaction extends State<NewTransaction> {
 									})
 						]),
 					),
-					RaisedButton(
-						child: Text('add transaction'),
-						onPressed: () {
-							if (formKey.currentState.validate()) {
-								Transaction trans = new Transaction(
-										place,
-										currentMethod,
-										double.parse(amnt),
-										GeneralCategory().categoryMap[currentCategory]);
-								userBudget.addTransaction(trans);
-								Navigator.pushNamed(context, '/knownUser');
-							}
-						},
-					)
 				]));
 	}
 
@@ -290,7 +254,7 @@ class GeneralCategory {
 		'kids': '/kids',
 		'pets': '/pets',
 		'miscellaneous': '/misc',
-		'home':'/knownUser'
+		'home': '/knownUser'
 	};
 
 	String categoryView;
@@ -305,7 +269,7 @@ class GeneralCategory {
 				body: Column(
 					mainAxisAlignment: MainAxisAlignment.center,
 					crossAxisAlignment: CrossAxisAlignment.start,
-					children: <Widget>[remainingInCategory(), categoryExpenses()],
+					children: <Widget>[remainingInCategory()],
 				));
 	}
 
@@ -323,8 +287,8 @@ class GeneralCategory {
 		);
 	}
 
-	FlatButton sideBarFlatButton(
-			String name, String route, BuildContext context) {
+	FlatButton sideBarFlatButton(String name, String route,
+			BuildContext context) {
 		return new FlatButton(
 			child: Text(name),
 			onPressed: () {
@@ -357,29 +321,6 @@ class GeneralCategory {
 			),
 		);
 	}
-
-	Card categoryExpenses() {
-		List categoryExpenses = getSpecificTransactions(categoryMap[categoryView]); //todo get specific types of transations
-		return Card(
-				child: new ListView.builder(
-					shrinkWrap: true,
-					scrollDirection: Axis.vertical,
-					itemCount: categoryExpenses.length,
-					itemBuilder: (BuildContext context, int index) {
-						return new Text(categoryExpenses[index]);
-					},
-				));
-	}
-
-	List getSpecificTransactions(BudgetCategory category) {
-		List retList = [];
-		for(Transaction tran in userBudget.transactions.getIterable()){
-			if(tran.category == category){
-				retList.add(tran);
-			}
-		}
-		return retList;
-	}
 }
 
 class GeneralSliderCategory{
@@ -406,8 +347,18 @@ class GeneralSliderCategory{
 	}
 
 	Card unbudgetedCard(String display){
-		
-		return Card();
+		return Card(
+			child: Text.rich(
+				TextSpan(
+					text:'\$'+(userController.sectionBudget(display)- playBudget.getNewTotalAlotted(display)).toString(),
+					style: TextStyle(
+						color: Colors.black,
+						fontSize: 20,
+						fontWeight: FontWeight.bold,
+					),
+				),
+			),
+		);
 	}
 
 	Slider sectionSlider(String category,String section){
@@ -438,7 +389,23 @@ class GeneralSliderCategory{
 	Card buttonCard(){
 		return Card(
 			child:ListView(
-
+				scrollDirection: Axis.horizontal,
+				children: <Widget>[
+					RaisedButton(
+						child:Text('submit'),
+						onPressed: (){
+							for(String category in userController.categoryMap.keys.toList()){
+								userController.changeAllotment(category ,playBudget.getCategory(userController.categoryMap[category]));
+							}
+						},
+					),
+					RaisedButton(
+						child:Text('cancel'),
+						onPressed: (){
+							Navigator.pushNamed(context, '/knownUser');
+						},
+					),
+				],
 			)
 		);
 	}

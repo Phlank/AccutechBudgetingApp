@@ -129,8 +129,6 @@ class _HomePage extends State<HomePage>{
 
   void checkValidity(value) async {
     if (await userController.passwordIsValid(value)) valid = true;
-   // userBudget = userController.getBudget();
-
   }
 
   Scaffold _informationCollection(GlobalKey<FormState> _formKey) {

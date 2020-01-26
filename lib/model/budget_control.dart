@@ -1,4 +1,5 @@
 import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
@@ -178,4 +179,16 @@ class MockBudget{
     return budget.getAllotment(category);
   }
 
+  double getNewTotalAlotted(String section){
+    Map<String, List<BudgetCategory>> mockMap ={
+      'need':[BudgetCategory.health,BudgetCategory.housing,BudgetCategory.utilities, BudgetCategory.groceries,BudgetCategory.transportation, BudgetCategory.kids],
+      'want':[BudgetCategory.pets,BudgetCategory.miscellaneous, BudgetCategory.entertainment],
+      'savings':[BudgetCategory.savings]
+    };
+    double total = 0.0;
+    for(BudgetCategory category in mockMap[section]){
+      total += budget.getAllotment(category);
+    }
+    return total;
+  }
 }
