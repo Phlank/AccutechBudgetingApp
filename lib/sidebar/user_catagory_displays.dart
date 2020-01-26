@@ -92,10 +92,10 @@ class NewTransaction extends StatefulWidget {
 
 class _NewTransaction extends State<NewTransaction> {
 	_NewTransaction(Budget userBudget);
-	static List<DropdownMenuItem> methodList =
+	List<DropdownMenuItem> methodList =
 	makeDropDown(['deposit', 'cash', 'debit', 'credit']);
 	String currentMethod = methodList[0].value;
-	static List<DropdownMenuItem> categories =
+	List<DropdownMenuItem> categories =
 	makeDropDown(GeneralCategory().categoryMap.keys.toList());
 	String currentCategory = categories[0].value;
 	DateTime date;
@@ -278,20 +278,6 @@ class _MiscView extends State<MiscView> {
 
 class GeneralCategory {
 
-	final Map<String, BudgetCategory> categoryMap = {
-		'housing': BudgetCategory.housing,
-		'utilities': BudgetCategory.utilities,
-		'groceries': BudgetCategory.groceries,
-		'savings': BudgetCategory.savings,
-		'health': BudgetCategory.health,
-		'transportation': BudgetCategory.transportation,
-		'education': BudgetCategory.education,
-		'entertainment': BudgetCategory.entertainment,
-		'kids': BudgetCategory.kids,
-		'pets': BudgetCategory.pets,
-		'miscellaneous': BudgetCategory.miscellaneous
-	};
-
 	final Map<String, String> routeMap = {
 		'housing': '/housing',
 		'utilities': '/utilities',
@@ -399,31 +385,78 @@ class GeneralCategory {
 class GeneralSliderCategory{
 
 	BudgetControl userController;
-	double unbudgeted;
+	MockBudget playBudget;
 
 	GeneralSliderCategory(BudgetControl userController){
 		this.userController = userController;
+		this.playBudget = new MockBudget(userController.getBudget());
 	}
 
 	Drawer sideMenu(){
-		return Drawer();
+		return Drawer(
+			child: ListView.builder(
+					scrollDirection: Axis.vertical,
+					shrinkWrap: true,
+					itemCount: 0,
+					itemBuilder: (BuildContext context, int index){
+						return null;
+					},
+			),
+		);
 	}
 
-	Card unbudgetedCard(){
+	Card unbudgetedCard(String display){
+		
 		return Card();
 	}
 
-	Slider sectionSlider(String category){
-
-		return Slider();
+	Slider sectionSlider(String category,String section){
+		return Slider(
+			value:userController.getBudget().getAllotment(userController.categoryMap[category]),
+			onChanged: (value){
+				playBudget.setCategory(userController.categoryMap[category], value);
+			},
+			min: 0,
+			max:userController.sectionBudget(section),
+			label: category,
+		);
 	}
 
 	Card changeCard(String display){
-		return Card();
+		return Card(
+			child: ListView.builder(
+				scrollDirection: Axis.vertical,
+				shrinkWrap: true,
+				itemCount:  userController.sectionMap[display].length,
+				itemBuilder: (context,int index){
+					return sectionSlider(userController.sectionMap[display][index],display);
+				},
+			),
+		);
 	}
 
-	Scaffold generalDisplay(){
-		return Scaffold();
+	Card buttonCard(){
+		return Card(
+			child:ListView(
+
+			)
+		);
+	}
+
+	Scaffold generalDisplay(String display){
+		return Scaffold(
+			appBar: AppBar(
+				title: Text('Change '+display+' alotments'),
+			),
+			drawer: sideMenu(),
+			body: Column(
+				children: <Widget>[
+					unbudgetedCard(display),
+					changeCard(display),
+					buttonCard(),
+				],
+			),
+		);
 	}
 
 

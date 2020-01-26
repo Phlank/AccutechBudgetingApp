@@ -18,12 +18,18 @@ class BudgetControl implements Control {
   static FileIO fileIO;
   static Password _password;
   static Crypter crypter;
+  History _history;
+  TransactionList _loadedTransactions;
+  MonthTime _currentMonthTime, _transactionMonthTime;
+  Budget _budget;
+
   final Map<String, String> regexMap = {
     'pin': r'\d\d\d\d',
     'dollarAmnt': r'\d+?([.]\d\d)',
     'name': r'\w+',
     'age': r'\d{2,3}'
   };
+
   final Map<String, BudgetCategory> categoryMap = {
     'housing': BudgetCategory.housing,
     'utilities': BudgetCategory.utilities,
@@ -38,10 +44,11 @@ class BudgetControl implements Control {
     'miscellaneous': BudgetCategory.miscellaneous
   };
 
-  History _history;
-  TransactionList _loadedTransactions;
-  MonthTime _currentMonthTime, _transactionMonthTime;
-  Budget _budget;
+  final Map<String,List<String>> sectionMap ={
+    'needs':['housung','utilities','groceries','health','transportation','education','kids'],
+    'wants':['entertainment','pets','miscellaneous'],
+    'savings':['savings']
+  };
 
   BudgetControl() {
     fileIO = new DartFileIO();
@@ -130,6 +137,15 @@ class BudgetControl implements Control {
 
   }
 
+  double sectionBudget(String section){
+    double secBudget = 0.0;
+    for(String category in sectionMap[section]){
+      secBudget += _budget.getAllotment(categoryMap[category]);
+    }
+    return secBudget;
+  }
+
+
   String getCashFlow(){
     double spent;
     for(int i = 0; i<_loadedTransactions.length(); i++ ) {
@@ -146,4 +162,20 @@ class BudgetControl implements Control {
     _loadedTransactions = b.transactions;
     _budget = b;
   }
+}
+
+class MockBudget{
+  Budget budget;
+  MockBudget(Budget budget){
+    this.budget = budget;
+  }
+
+  void setCategory(BudgetCategory category, double amount){
+    budget.setAllotment(category, amount);
+  }
+
+  double getCategory(BudgetCategory category){
+    return budget.getAllotment(category);
+  }
+
 }
