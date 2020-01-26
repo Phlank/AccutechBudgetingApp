@@ -14,6 +14,7 @@ Month _month;
 MonthBuilder _monthBuilder = new MonthBuilder();
 MonthTime _monthTime = new MonthTime(1998,4);
 BudgetControl bc = new BudgetControl();
+Budget b;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -68,11 +69,11 @@ void main() {
     });
     group("Testing fromMonth", (){
       test("Built budget works fromMonth", (){
-        Budget b = new Budget.fromMonth(_month);
+        b = new Budget.fromMonth(_month);
         expect(b.income, equals(300));
       });
       test("Built budget works fromMonth", (){
-        Budget b = new Budget.fromMonth(_month);
+        b = new Budget.fromMonth(_month);
         expect(b.type, equals(BudgetType.savingDepletion));
       });
     });

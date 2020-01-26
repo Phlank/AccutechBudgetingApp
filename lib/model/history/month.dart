@@ -101,15 +101,13 @@ class Month implements Serializable {
   }
 
   void loadAllotted() async {
-    String cipher = await BudgetControl.fileIO
-        .readFile(_allottedFilepath)
-        .catchError((Object o) {
+    BudgetControl.fileIO.readFile(_allottedFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      _allotted = BudgetMap.unserialize(plaintext);
+    }).catchError((Object o) {
       _allotted = new BudgetMap();
-      return;
     });
-    Encrypted e = Encrypted.unserialize(cipher);
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _allotted = BudgetMap.unserialize(plaintext);
   }
 
   BudgetMap get actual {
@@ -124,15 +122,13 @@ class Month implements Serializable {
   }
 
   void loadActual() async {
-    String cipher = await BudgetControl.fileIO
-        .readFile(_actualFilepath)
-        .catchError((Object o) {
+    BudgetControl.fileIO.readFile(_actualFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      _actual = BudgetMap.unserialize(plaintext);
+    }).catchError((Object o) {
       _actual = new BudgetMap();
-      return;
     });
-    Encrypted e = Encrypted.unserialize(cipher);
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _actual = BudgetMap.unserialize(plaintext);
   }
 
   TransactionList get transactions {
@@ -147,15 +143,13 @@ class Month implements Serializable {
   }
 
   void loadTransactions() async {
-    String cipher = await BudgetControl.fileIO
-        .readFile(_transactionsFilepath)
-        .catchError((Object o) {
+    BudgetControl.fileIO.readFile(_transactionsFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      _transactions = TransactionList.unserialize(plaintext);
+    }).catchError((Object o) {
       _transactions = new TransactionList();
-      return;
     });
-    Encrypted e = Encrypted.unserialize(cipher);
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _transactions = TransactionList.unserialize(plaintext);
   }
 
   void updateMonthData(Budget budget) {
