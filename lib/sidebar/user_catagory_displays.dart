@@ -1,11 +1,6 @@
-import 'package:budgetflow/main.dart';
-import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_category.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 
@@ -29,13 +24,12 @@ class _NewTransaction extends State{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+			appBar: AppBar(title:Text('New Transaction')),
+			drawer: GeneralSliderCategory(userController).sideMenu(),
+		);
   }
 }
-
-
-
-
 
 class Wants extends StatefulWidget{
 
@@ -55,7 +49,7 @@ class _Wants extends State<Needs>{
 	}
 
 	@override
-	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('wants');
+	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('wants', context);
 
 }
 
@@ -77,7 +71,7 @@ class _Savings extends State<Needs>{
 	}
 
 	@override
-	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('savings');
+	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('savings', context);
 
 }
 
@@ -100,7 +94,7 @@ class _Needs extends State<Needs>{
 	}
 
   @override
-  Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('needs');
+  Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('needs', context);
 
 }
 
@@ -178,7 +172,7 @@ class GeneralSliderCategory{
 		);
 	}
 
-	Card buttonCard(){
+	Card buttonCard(BuildContext context){
 		return Card(
 			child:ListView(
 				scrollDirection: Axis.horizontal,
@@ -202,7 +196,7 @@ class GeneralSliderCategory{
 		);
 	}
 
-	Scaffold generalDisplay(String display){
+	Scaffold generalDisplay(String display, BuildContext context){
 		return Scaffold(
 			appBar: AppBar(
 				title: Text('Change '+display+' alotments'),
@@ -212,7 +206,7 @@ class GeneralSliderCategory{
 				children: <Widget>[
 					unbudgetedCard(display),
 					changeCard(display),
-					buttonCard(),
+					buttonCard(context),
 				],
 			),
 		);
