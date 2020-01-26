@@ -394,3 +394,28 @@ class GeneralCategory {
 		return retList;
 	}
 }
+
+class GeneralSliderCategory{
+
+	BudgetCategory userController;
+	GeneralSliderCategory(BudgetCategory userController){
+		this.userController = userController;
+	}
+
+	Drawer sideMenu(){
+
+	}
+
+	Slider sectionSlider(){
+
+	}
+
+	Scaffold generalDisplay(){
+
+	}
+
+
+
+
+
+}

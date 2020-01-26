@@ -10,6 +10,7 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'budget/budget_category.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
@@ -23,6 +24,19 @@ class BudgetControl implements Control {
     'dollarAmnt':r'\d+?([.]\d\d)',
     'name':r'\w+',
     'age':r'\d{2,3}'
+  };
+  final Map<String, BudgetCategory> categoryMap = {
+    'housing': BudgetCategory.housing,
+    'utilities': BudgetCategory.utilities,
+    'groceries': BudgetCategory.groceries,
+    'savings': BudgetCategory.savings,
+    'health': BudgetCategory.health,
+    'transportation': BudgetCategory.transportation,
+    'education': BudgetCategory.education,
+    'entertainment': BudgetCategory.entertainment,
+    'kids': BudgetCategory.kids,
+    'pets': BudgetCategory.pets,
+    'miscellaneous': BudgetCategory.miscellaneous
   };
 
   History _history;
@@ -44,11 +58,7 @@ class BudgetControl implements Control {
   @override
   Future<bool> passwordIsValid(String secret) async {
     _password = await SteelPassword.load();
-    bool passwordMatch = _password.verify(secret);
-    if (passwordMatch) {
-      initialize(false);
-    }
-    return passwordMatch;
+     return _password.verify(secret);
   }
 
   @override
@@ -71,7 +81,6 @@ class BudgetControl implements Control {
     print(_history);
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
-    print(_loadedTransactions);
     _budget = _history.getLatestMonthBudget();
     print(_budget.toString());
   }
@@ -89,7 +98,7 @@ class BudgetControl implements Control {
 
   @override
   Budget getBudget()  {
-    return _history.getLatestMonthBudget();
+    return _budget;
   }
 
   @override
@@ -115,6 +124,19 @@ class BudgetControl implements Control {
 
   bool validInput(String value, String inputType) {
     return new RegExp(regexMap[inputType]).hasMatch(value);
+  }
+
+  void changeAllotment(String category, double newAmt){
+    _budget.setAllotment(categoryMap[category], newAmt);
+
+  }
+
+  String getCashFlow(){
+    double spent;
+    for(int i = 0; i<_loadedTransactions.length(); i++ ) {
+      spent += _loadedTransactions.getAt(i).delta;
+    }
+    return (_budget.getMonthlyIncome() - spent).toString();
   }
 
   @override
