@@ -46,6 +46,8 @@ class BudgetingApp extends StatelessWidget {
         '/knownUser': (context) => UserPage(userController),
         '/edit': (context) => edit.EditInformationDirectory(userBudget),
         '/needs':(context) => sideBar.Needs(userController),
+        '/wants':(context) => sideBar.Wants(userController),
+        '/savings':(context) => sideBar.Savings(userController),
         '/newTransaction': (context) => sideBar.NewTransaction(userController),
       }, //Routes
     );

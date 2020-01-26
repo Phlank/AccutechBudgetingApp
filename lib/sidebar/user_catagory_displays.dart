@@ -1,5 +1,8 @@
+import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -24,9 +27,67 @@ class _NewTransaction extends State{
 
   @override
   Widget build(BuildContext context) {
+  	final _transFormKey = GlobalKey<FormState>();
+  	TransactionInformationHolder holder = new TransactionInformationHolder();
     return Scaffold(
 			appBar: AppBar(title:Text('New Transaction')),
 			drawer: GeneralSliderCategory(userController).sideMenu(),
+			body: Column(
+				children: <Widget>[
+					Form(
+						key: _transFormKey,
+						child: Column(
+							children: <Widget>[
+								TextFormField(
+									decoration:InputDecoration(
+										labelText: 'Amount of Transaction',
+										hintText: 'numbers only'
+									),
+									validator:(value){
+										if(value.isEmpty)return 'dont leave empty';
+										if(userController.validInput(value, 'dollarAmnt')) return 'Numbers please';
+										holder.setAmnt(double.tryParse(value));
+										return null;
+									}
+								),
+								TextFormField(
+										decoration:InputDecoration(
+												labelText: 'Where did you spend method',
+												hintText: 'words only'
+										),
+										validator:(value){
+											if(value.isEmpty)return 'dont leave empty';
+											if(userController.validInput(value, 'name')) return 'words please';
+											holder.setVendor(value);
+											return null;
+										}
+								),
+								TextFormField(
+										decoration:InputDecoration(
+												labelText: 'Cash, Debit, or Credit',
+												hintText: 'words only'
+										),
+										validator:(value){
+											if(value.isEmpty)return 'dont leave empty';
+											if(userController.validInput(value, 'name')) return 'words please';
+											holder.setMethod(value);
+											return null;
+										}
+								),
+								DropdownButtonFormField(
+
+								)
+							],
+						)
+					),
+					RaisedButton(
+						onPressed: (){
+							Transaction trans = new Transaction(holder.vendor, holder.method, holder.delta, holder.category);
+							userController.addTransaction(trans);
+						},
+					)
+				],
+			),
 		);
   }
 }
@@ -215,5 +276,18 @@ class GeneralSliderCategory{
 
 
 
+
+}
+
+class TransactionInformationHolder {
+	double delta;
+	String vendor;
+	String method;
+	BudgetCategory category;
+
+	setAmnt(double amt){this.delta = amt;}
+	setVendor(String vendor){this.vendor = vendor;}
+	setMethod(String method){this.method = method;}
+	setCategory(BudgetCategory category) {this.category = category;}
 
 }
