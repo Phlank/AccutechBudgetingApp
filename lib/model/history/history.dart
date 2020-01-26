@@ -15,7 +15,6 @@ class History implements Serializable {
   static const String HISTORY_PATH = "history";
 
   List<Month> _months;
-  int _year, _month;
   Month currentMonth;
   Budget budget;
   bool newUser;
@@ -27,14 +26,14 @@ class History implements Serializable {
   }
 
   void save(Budget current) {
-    _months.add(_updateCurrentMonth(current));
+    _updateCurrentMonth(current);
     _months.forEach((Month m) => m.save());
     Encrypted e = BudgetControl.crypter.encrypt(serialize());
     BudgetControl.fileIO.writeFile(HISTORY_PATH, e.serialize());
   }
 
-  Month _updateCurrentMonth(Budget budget) {
-   return  Month.fromBudget(budget);
+  void _updateCurrentMonth(Budget budget) {
+    currentMonth = Month.fromBudget(budget);
   }
 
   Budget getLatestMonthBudget() {
@@ -52,7 +51,7 @@ class History implements Serializable {
 
   Budget _createNewMonthBudget() {
     Month lastMonth = _months[_months.length - 1];
-    currentMonth = new Month(MonthTime.now(), lastMonth.getIncome());
+    currentMonth = _buildCurrentMonth();
     Budget lastBudget = Budget.fromMonth(lastMonth);
     BudgetFactory factory = new PriorityBudgetFactory();
     Budget currentBudget = factory.newFromBudget(lastBudget);
@@ -60,31 +59,30 @@ class History implements Serializable {
     return currentBudget;
   }
 
+  Month _buildCurrentMonth() {}
+
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {
     return m.getMonthTime() == mt;
   }
 
   BudgetMap getAllottedSpendingFromMonthTime(MonthTime mt) {
-    Month m = _months
-      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-    return m.getAllottedSpendingData();
+    Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
+    return m.allotted;
   }
 
   BudgetMap getActualSpendingFromMonthTime(MonthTime mt) {
-    Month m = _months
-      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-    return m.getActualSpendingData();
+    Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
+    return m.actual;
   }
 
   TransactionList getTransactionsFromMonthTime(MonthTime mt) {
-    print(mt.toString()+' geting transaaction');
-    print(_months.toString());
-    Month m = _months
-      .firstWhere((Month m) {
-        return _monthMatchesMonthTime(m, mt);
-      });
+    print(mt.toString() + ' geting transaaction');
+    Month m = _months.firstWhere((Month m) {
+      print('inside');
+      return _monthMatchesMonthTime(m, mt);
+    });
     print('returnin');
-    return m.getTransactionData();
+    return m.transactions;
   }
 
   int getNumberOfMonths() {
@@ -92,8 +90,7 @@ class History implements Serializable {
   }
 
   Month getMonth(MonthTime mt) {
-    return _months
-      .firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
+    return _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
   }
 
   void addMonth(Month m) {
@@ -123,7 +120,8 @@ class History implements Serializable {
     return output;
   }
 
-  static Future<String> getHistoryInfo() async => BudgetControl.fileIO.readFile(HISTORY_PATH);
+  static Future<String> getHistoryInfo() async =>
+      BudgetControl.fileIO.readFile(HISTORY_PATH);
 
   static Future<History> load() async {
     String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);

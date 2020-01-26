@@ -74,9 +74,9 @@ class Budget {
   Budget.fromMonth(Month month) {
     _income = month.getIncome();
     _type = month.type;
-    _allottedSpending = month.getAllottedSpendingData();
-    _actualSpending = month.getActualSpendingData();
-    _transactions = month.getTransactionData();
+    _allottedSpending = month.allotted;
+    _actualSpending = month.actual;
+    _transactions = month.transactions;
   }
 
   double get income => _income;
@@ -105,7 +105,7 @@ class Budget {
   double addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actualSpending.addTo(transaction.category, transaction.delta);
+      _actualSpending.addTo(transaction.category, -transaction.delta);
       return _actualSpending.valueOf(transaction.category);
     }
     _actualSpending.addTo(BudgetCategory.miscellaneous, transaction.delta);
