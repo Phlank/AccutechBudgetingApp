@@ -15,6 +15,7 @@ void main() {
       builder.setType(BudgetType.savingGrowth);
       builder.setIncome(400.0);
       builder.setMonthTime(new MonthTime(2020, 01));
+      mSerialization = '{"year":"2020","month":"1","income":"400.0","type":"Growth"}';
       m = builder.build();
     });
     test("Built month has correct type", () {
@@ -35,7 +36,13 @@ void main() {
     test("Default built month has blank, non-null transactions", () {
       expect(m.transactions, equals(new TransactionList()));
     });
-    test("Serialization of new Month", () {});
-    test("Serialization is reversible", () {});
+    test("Serialization of new Month", () {
+      expect(m.serialize(), mSerialization);
+    });
+    test("Serialization is reversible", () {
+      String ms = m.serialize();
+      Month msm = Month.unserialize(ms);
+      expect(m, equals(msm));
+    });
   });
 }

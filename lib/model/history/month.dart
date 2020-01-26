@@ -212,4 +212,23 @@ class Month implements Serializable {
     builder.setType(jsonBudgetType[map["type"]]);
     return builder.build();
   }
+
+  bool operator ==(Object other) => other is Month && this._equals(other);
+
+  bool _equals(Month other) {
+    return this.monthTime == other.monthTime &&
+        this.income == other.income &&
+        this.type == other.type &&
+        this.allotted == other.allotted &&
+        this.actual == other.actual &&
+        this.transactions == other.transactions;
+  }
+
+  int get hashCode =>
+      monthTime.hashCode ^
+      income.hashCode ^
+      type.hashCode ^
+      allotted.hashCode ^
+      actual.hashCode ^
+      transactions.hashCode;
 }
