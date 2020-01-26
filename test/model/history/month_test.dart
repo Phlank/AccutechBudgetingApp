@@ -4,6 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 Month m;
 String mSerialization;
 
+MonthBuilder builder = new MonthBuilder();
+
+
 void main() {
   group("Month tests", () {
     setUp(() {});

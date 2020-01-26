@@ -75,8 +75,8 @@ class Month implements Serializable {
     _monthTime = MonthTime.now();
     _income = b.income;
     _type = b.type;
-    _allotted = b.allottedSpending;
-    _actual = b.actualSpending;
+    _allotted = b.allotted;
+    _actual = b.actual;
     _transactions = b.transactions;
     _createFilePaths();
   }
@@ -153,10 +153,10 @@ class Month implements Serializable {
   }
 
   void updateMonthData(Budget budget) {
-    _allotted = budget.allottedSpending;
-    _actual = budget.actualSpending;
+    _allotted = budget.allotted;
+    _actual = budget.actual;
     _transactions = budget.transactions;
-    _type = budget.getType();
+    _type = budget.type;
   }
 
   void save() {

@@ -53,20 +53,20 @@ class BudgetBuilder {
 }
 
 class Budget {
-  BudgetMap _allottedSpending, _actualSpending;
+  BudgetMap _allotted, _actual;
   TransactionList _transactions;
   double _income;
   BudgetType _type;
 
-  Budget._new(this._allottedSpending, this._actualSpending, this._transactions,
+  Budget._new(this._allotted, this._actual, this._transactions,
       this._income, this._type);
 
   // Makes a new budget based on the allocations of an old budget
   Budget.fromOldBudget(Budget old) {
     _income = old._income;
     _type = old._type;
-    _allottedSpending = BudgetMap.copyOf(old._allottedSpending);
-    _actualSpending = new BudgetMap();
+    _allotted = BudgetMap.copyOf(old._allotted);
+    _actual = new BudgetMap();
     _transactions = new TransactionList();
   }
 
@@ -74,8 +74,8 @@ class Budget {
   Budget.fromMonth(Month month) {
     _income = month.getIncome();
     _type = month.type;
-    _allottedSpending = month.allotted;
-    _actualSpending = month.actual;
+    _allotted = month.allotted;
+    _actual = month.actual;
     _transactions = month.transactions;
   }
 
@@ -83,14 +83,14 @@ class Budget {
 
   BudgetType get type => _type;
 
-  BudgetMap get allottedSpending => _allottedSpending;
+  BudgetMap get allotted => _allotted;
 
-  BudgetMap get actualSpending => _actualSpending;
+  BudgetMap get actual => _actual;
 
   TransactionList get transactions => _transactions;
 
   double setAllotment(BudgetCategory category, double amount) {
-    _allottedSpending.set(category, amount);
+    _allotted[category] = amount;
     return amount;
   }
 
@@ -105,26 +105,14 @@ class Budget {
   double addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actualSpending.addTo(transaction.category, -transaction.delta);
-      return _actualSpending.valueOf(transaction.category);
+      _actual.addTo(transaction.category, -transaction.delta);
+      return _actual[transaction.category];
     }
-    _actualSpending.addTo(BudgetCategory.miscellaneous, transaction.delta);
-    return _actualSpending.valueOf(BudgetCategory.miscellaneous);
-  }
-
-  double getSpending(BudgetCategory category) {
-    return _actualSpending.valueOf(category);
-  }
-
-  double getAllotment(BudgetCategory category) {
-    return _allottedSpending.valueOf(category);
+    _actual.addTo(BudgetCategory.miscellaneous, transaction.delta);
+    return _actual[BudgetCategory.miscellaneous];
   }
 
   void setType(BudgetType type) {
     this._type = type;
-  }
-
-  BudgetType getType() {
-    return _type;
   }
 }

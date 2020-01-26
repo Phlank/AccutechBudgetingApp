@@ -31,8 +31,8 @@ void main() {
     });
     group("Testing Built Budget", (){
       test("Built budget has no null fields", () {
-        expect(_builtBudget.actualSpending, isNot(null));
-        expect(_builtBudget.allottedSpending, isNot(null));
+        expect(_builtBudget.actual, isNot(null));
+        expect(_builtBudget.allotted, isNot(null));
         expect(_builtBudget.transactions, isNot(null));
         expect(_builtBudget.income, isNot(null));
         expect(_builtBudget.type, isNot(null));
@@ -45,7 +45,7 @@ void main() {
       });
       test("Built budget can have transaction added", () {
         _builtBudget.addTransaction(_t);
-        expect(_builtBudget.actualSpending[BudgetCategory.miscellaneous], 5.4);
+        expect(_builtBudget.actual[BudgetCategory.miscellaneous], 5.4);
       });
     });
     group("Testing fromOldBudget",(){
@@ -63,8 +63,8 @@ void main() {
       });
       test("test for correct allotted and actual spending logic", (){
         Budget b = new Budget.fromOldBudget(_builtBudget);
-        expect(b.allottedSpending, isNot(null));
-        expect(b.actualSpending, isNot(null));
+        expect(b.allotted, isNot(null));
+        expect(b.actual, isNot(null));
       });
     });
     group("Testing fromMonth", (){
@@ -82,8 +82,8 @@ void main() {
       });
       test("Test for alotted and actual spending", (){
         b = new Budget.fromMonth(_month);
-        expect(b.allottedSpending, equals(null));
-        expect(b.actualSpending, equals(null));
+        expect(b.allotted, equals(null));
+        expect(b.actual, equals(null));
       });
     });
   });

@@ -55,6 +55,8 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   @override
   Budget newFromInfo(double income, double housing, BudgetType type) {
+    _builder.setIncome(income);
+    _builder.setType(type);
     _currentDistribution = new _NSW(0.0, 0.0, 0.0);
     _targetDistribution = new _NSW(0.0, 0.0, 0.0);
     _housingRatio = housing / income;
@@ -63,6 +65,7 @@ class PriorityBudgetFactory implements BudgetFactory {
     _currentDistribution.multiply(_income);
     _targetDistribution.multiply(_income);
     _setAllotments(housing);
+    _builder.setAllottedSpending(_allottedSpending);
     return _builder.build();
   }
 
@@ -131,8 +134,8 @@ class PriorityBudgetFactory implements BudgetFactory {
   @override
   Budget newFromBudget(Budget old) {
     _income = old.getMonthlyIncome();
-    _oldAllotmentRatios = old.allottedSpending.divide(_income);
-    _oldActualRatios = old.actualSpending.divide(_income);
+    _oldAllotmentRatios = old.allotted.divide(_income);
+    _oldActualRatios = old.actual.divide(_income);
     if (_userExceededBudget()) {
       // Return the same budget as last month
       return Budget.fromOldBudget(old);
@@ -160,9 +163,9 @@ class PriorityBudgetFactory implements BudgetFactory {
     _spendingDiffs = new BudgetMap();
     _oldAllotmentRatios.forEach((BudgetCategory c, double d) {
       double allotted = d;
-      double spent = _oldActualRatios.valueOf(c);
-      if (_oldActualRatios.valueOf(c) != d) {
-        _spendingDiffs.set(c, spent - allotted);
+      double spent = _oldActualRatios[c];
+      if (_oldActualRatios[c] != d) {
+        _spendingDiffs[c] = spent - allotted;
       }
     });
   }
@@ -187,12 +190,11 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   void _reallocateCategory(BudgetCategory c, double d) {
     if (d < 0.0) {
-      _newAllotmentRatios.set(
-          c, _oldAllotmentRatios.valueOf(c) + d / _overspending);
+      _newAllotmentRatios[c] = _oldAllotmentRatios[c] + d / _overspending;
       _underspending -= d / _overspending;
     }
     if (d >= 0.0) {
-      _newAllotmentRatios.set(c, _oldActualRatios.valueOf(c));
+      _newAllotmentRatios[c] = _oldActualRatios[c];
     }
   }
 
