@@ -15,7 +15,7 @@ class SteelCrypter implements Crypter {
     _password = password;
     // Key must be of length 32, but the entered password doesn't need to be.
     // We just use the salt to get to a length of 32.
-    String key = _password.getSecret() + _password.getSalt();
+    String key = _password.secret + _password.salt;
     _aes = new AesCrypt(key, MODE, PADDING);
   }
 
