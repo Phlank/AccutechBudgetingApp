@@ -84,12 +84,19 @@ void main() {
                 .allotted[BudgetCategory.housing],
             equals(1250));
       });
-      test("test BudgetMap initalization", () {
+      test("test needs budgeting", () {
         expect(
             _budgetFactory
                 .newFromInfo(2500, 1250, BudgetType.savingDepletion)
                 .allotted[BudgetCategory.groceries],
-            equals(468.75));
+            equals(156.25));
+      });
+      test("test wants budgeting", (){
+        expect(
+            _budgetFactory
+                .newFromInfo(2500, 1250, BudgetType.savingDepletion)
+                .allotted[BudgetCategory.miscellaneous],
+            equals(125));
       });
     });
   });
