@@ -95,7 +95,11 @@ class Month implements Serializable {
 
   BudgetMap get allotted {
     if (_allotted == null) {
-      loadAllotted();
+      try {
+        loadAllotted();
+      } catch (Error) {
+        _allotted = new BudgetMap();
+      }
     }
     return _allotted;
   }
@@ -109,7 +113,11 @@ class Month implements Serializable {
 
   BudgetMap get actual {
     if (_actual == null) {
-      loadActual();
+      try {
+        loadActual();
+      } catch (Error) {
+        _actual = new BudgetMap();
+      }
     }
     return _actual;
   }
@@ -123,7 +131,11 @@ class Month implements Serializable {
 
   TransactionList get transactions {
     if (_transactions == null) {
-      loadTransactions();
+      try {
+        loadTransactions();
+      } catch (Error) {
+        _transactions = new TransactionList();
+      }
     }
     return _transactions;
   }
