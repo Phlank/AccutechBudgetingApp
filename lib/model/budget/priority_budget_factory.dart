@@ -4,10 +4,10 @@ import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 
-class _SWN {
+class _NSW {
   double needs, savings, wants;
 
-  _SWN(double needs, savings, wants) {
+  _NSW(double needs, savings, wants) {
     this.needs = needs;
     this.savings = savings;
     this.wants = wants;
@@ -28,43 +28,42 @@ class _SWN {
 }
 
 class PriorityBudgetFactory implements BudgetFactory {
-  static _SWN _stage1Depletion = new _SWN(.6, .0, .4);
-  static _SWN _stage2Depletion = new _SWN(.75, .0, .25);
-  static _SWN _stage3Depletion = new _SWN(.9, .0, .1);
-  static _SWN _stage4Depletion = new _SWN(.95, .0, .05);
-  static _SWN _stage1Growth = new _SWN(.5, .2, .3);
-  static _SWN _stage2Growth = new _SWN(.65, .2, .15);
-  static _SWN _stage3Growth = new _SWN(.85, .05, .1);
-  static _SWN _stage4Growth = new _SWN(.94, .01, .05);
+  static _NSW _stage1Depletion = new _NSW(.6, .0, .4);
+  static _NSW _stage2Depletion = new _NSW(.75, .0, .25);
+  static _NSW _stage3Depletion = new _NSW(.9, .0, .1);
+  static _NSW _stage4Depletion = new _NSW(.95, .0, .05);
+  static _NSW _stage1Growth = new _NSW(.5, .2, .3);
+  static _NSW _stage2Growth = new _NSW(.65, .2, .15);
+  static _NSW _stage3Growth = new _NSW(.85, .05, .1);
+  static _NSW _stage4Growth = new _NSW(.94, .01, .05);
   static const _STAGE_1_BOUND = .3;
   static const _STAGE_2_BOUND = .5;
   static const _STAGE_3_BOUND = .8;
   static const _STAGE_4_BOUND = 1.0;
 
   double _housingRatio, _income, _underspending, _overspending;
-  _SWN _currentDistribution, _targetDistribution;
+  _NSW _currentDistribution, _targetDistribution;
   double _wantsRatio, _needsRatio, _savingsRatio;
-  BudgetMap _oldAllotmentRatios,
-    _oldActualRatios,
-    _spendingDiffs,
-    _newAllotmentRatios;
+  BudgetMap _oldAllotmentRatios = new BudgetMap(),
+      _oldActualRatios = new BudgetMap(),
+      _spendingDiffs = new BudgetMap(),
+      _newAllotmentRatios = new BudgetMap(),
+      _allottedSpending = new BudgetMap();
+  BudgetBuilder _builder = new BudgetBuilder();
 
-  PriorityBudgetFactory() {}
+  PriorityBudgetFactory();
 
   @override
   Budget newFromInfo(double income, double housing, BudgetType type) {
-    _currentDistribution = new _SWN(0.0, 0.0, 0.0);
-    _targetDistribution = new _SWN(0.0, 0.0, 0.0);
+    _currentDistribution = new _NSW(0.0, 0.0, 0.0);
+    _targetDistribution = new _NSW(0.0, 0.0, 0.0);
     _housingRatio = housing / income;
     _income = income;
     _decidePlan(type);
-    Budget newBudget = new Budget(income);
-    newBudget.setType(type);
-    newBudget.setAllotment(BudgetCategory.housing, housing);
     _currentDistribution.multiply(_income);
     _targetDistribution.multiply(_income);
-    newBudget = _createAllotments(newBudget);
-    return newBudget;
+    _setAllotments(housing);
+    return _builder.build();
   }
 
   void _decidePlan(BudgetType type) {
@@ -110,45 +109,43 @@ class PriorityBudgetFactory implements BudgetFactory {
     }
   }
 
-  void _updateWantsAndNeeds() {
-    _currentDistribution.multiply(_income);
-    _targetDistribution.multiply(_income);
-  }
-
-  Budget _createAllotments(Budget budget) {
-    _needsRatio=_currentDistribution.needs-_housingRatio;
-    _wantsRatio=_currentDistribution.wants;
-    _savingsRatio =_currentDistribution.savings;
+  void _setAllotments(double housing) {
+    _allottedSpending[BudgetCategory.housing] = housing;
+    _needsRatio = _currentDistribution.needs - _housingRatio;
+    _wantsRatio = _currentDistribution.wants;
+    _savingsRatio = _currentDistribution.savings;
     double dNeedsRatio = _income * _needsRatio / 4.0;
     double dWantsRatio = _income * _wantsRatio / 5.0;
-    budget.setAllotment(BudgetCategory.utilities, dNeedsRatio);
-    budget.setAllotment(BudgetCategory.groceries, dNeedsRatio);
-    budget.setAllotment(BudgetCategory.health, dNeedsRatio);
-    budget.setAllotment(BudgetCategory.transportation, dNeedsRatio);
-    budget.setAllotment(BudgetCategory.education, dWantsRatio);
-    budget.setAllotment(BudgetCategory.entertainment, dWantsRatio);
-    budget.setAllotment(BudgetCategory.kids, dWantsRatio);
-    budget.setAllotment(BudgetCategory.pets, dWantsRatio);
-    budget.setAllotment(BudgetCategory.miscellaneous, dWantsRatio);
-    budget.setAllotment(BudgetCategory.savings, _income * _savingsRatio);
-    return budget;
+    _allottedSpending[BudgetCategory.utilities] = dNeedsRatio;
+    _allottedSpending[BudgetCategory.groceries] = dNeedsRatio;
+    _allottedSpending[BudgetCategory.health] = dNeedsRatio;
+    _allottedSpending[BudgetCategory.transportation] = dNeedsRatio;
+    _allottedSpending[BudgetCategory.education] = dWantsRatio;
+    _allottedSpending[BudgetCategory.entertainment] = dWantsRatio;
+    _allottedSpending[BudgetCategory.kids] = dWantsRatio;
+    _allottedSpending[BudgetCategory.pets] = dWantsRatio;
+    _allottedSpending[BudgetCategory.miscellaneous] = dWantsRatio;
+    _allottedSpending[BudgetCategory.savings] = _savingsRatio * _income;
   }
 
   @override
   Budget newFromBudget(Budget old) {
     _income = old.getMonthlyIncome();
-    Budget newBudget = new Budget(_income);
     _oldAllotmentRatios = old.allottedSpending.divide(_income);
     _oldActualRatios = old.actualSpending.divide(_income);
     if (_userExceededBudget()) {
       // Return the same budget as last month
-      return Budget.fromOldAllotments(old);
+      return Budget.fromOldBudget(old);
     }
     // Look at spending, see what fields were over and what were under
     _findSpendingDiffs();
+    // Reorganize funds between over and under fields, put the rest into savings
     _reallocate();
-    newBudget = _setAllotments(newBudget);
-    return newBudget;
+    _setAllotmentsForNextMonth();
+    _builder.setType(old.type);
+    _builder.setIncome(old.income);
+    _builder.setAllottedSpending(_allottedSpending);
+    return _builder.build();
   }
 
   bool _userExceededBudget() {
@@ -185,13 +182,13 @@ class PriorityBudgetFactory implements BudgetFactory {
     });
     double leftover = -_underspending;
     _newAllotmentRatios[BudgetCategory.savings] =
-      _oldAllotmentRatios[BudgetCategory.savings] + leftover;
+        _oldAllotmentRatios[BudgetCategory.savings] + leftover;
   }
 
   void _reallocateCategory(BudgetCategory c, double d) {
     if (d < 0.0) {
       _newAllotmentRatios.set(
-        c, _oldAllotmentRatios.valueOf(c) + d / _overspending);
+          c, _oldAllotmentRatios.valueOf(c) + d / _overspending);
       _underspending -= d / _overspending;
     }
     if (d >= 0.0) {
@@ -199,10 +196,9 @@ class PriorityBudgetFactory implements BudgetFactory {
     }
   }
 
-  Budget _setAllotments(Budget b) {
+  void _setAllotmentsForNextMonth() {
     for (BudgetCategory c in BudgetCategory.values) {
-      b.setAllotment(c, _newAllotmentRatios[c] * _income);
+      _allottedSpending[c] = _newAllotmentRatios[c] * _income;
     }
-    return b;
   }
 }

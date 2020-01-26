@@ -16,6 +16,13 @@ class BudgetMap implements Serializable {
     }
   }
 
+  BudgetMap.copyOf(BudgetMap toCopy) {
+    _map = new Map();
+    for (BudgetCategory category in BudgetCategory.values) {
+      _map[category] = toCopy[category];
+    }
+  }
+
   double valueOf(BudgetCategory category) {
     return _map[category];
   }
