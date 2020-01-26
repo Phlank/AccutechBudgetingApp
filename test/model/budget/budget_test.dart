@@ -66,12 +66,16 @@ void main() {
         expect(b.actualSpending, isNot(null));
       });
     });
-//    group("Testing fromMonth", (){
-//      test("Built budget works fromMonth", (){
-//        Budget b = new Budget.fromMonth(_month);
-//        expect(b.income, isNot(null));
-//      });
-//    });
+    group("Testing fromMonth", (){
+      test("Built budget works fromMonth", (){
+        Budget b = new Budget.fromMonth(_month);
+        expect(b.income, equals(300));
+      });
+      test("Built budget works fromMonth", (){
+        Budget b = new Budget.fromMonth(_month);
+        expect(b.type, equals(BudgetType.savingDepletion));
+      });
+    });
 
   });
 }
