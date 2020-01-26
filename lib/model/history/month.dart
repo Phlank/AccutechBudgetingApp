@@ -9,10 +9,54 @@ import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 
+class MonthBuilder {
+  MonthTime _monthTime;
+  double _income;
+  BudgetType _type;
+  BudgetMap _allotted, _actual;
+  TransactionList _transactions;
+
+  MonthBuilder();
+
+  void setMonthTime(MonthTime monthTime) {
+    _monthTime = monthTime;
+  }
+
+  void setIncome(double income) {
+    _income = income;
+  }
+
+  void setType(BudgetType type) {
+    _type = type;
+  }
+
+  void setAllotted(BudgetMap allotted) {
+    _allotted = allotted;
+  }
+
+  void setActual(BudgetMap actual) {
+    _actual = actual;
+  }
+
+  void setTransactions(TransactionList transactions) {
+    _transactions = transactions;
+  }
+
+  Month build() {
+    if (_monthTime == null) throw new NullThrownError();
+    if (_monthTime == null) throw new NullThrownError();
+    if (_monthTime == null) throw new NullThrownError();
+    if (_monthTime == null) throw new NullThrownError();
+    if (_monthTime == null) throw new NullThrownError();
+    if (_monthTime == null) throw new NullThrownError();
+    if (_monthTime == null) throw new NullThrownError();
+  }
+}
+
 class Month implements Serializable {
-  String _allottedFilepath, _actualFilepath, _transactionFilepath;
-  BudgetMap _allottedData, _actualData;
-  TransactionList _transactionData;
+  String _allottedFilepath, _actualFilepath, _transactionsFilepath;
+  BudgetMap _allotted, _actual;
+  TransactionList _transactions;
   MonthTime _monthTime;
   double _income;
   BudgetType type;
@@ -26,52 +70,55 @@ class Month implements Serializable {
   void _createFilePaths() {
     _allottedFilepath = _monthTime.getFilePathString() + "_allotted";
     _actualFilepath = _monthTime.getFilePathString() + "_actual";
-    _transactionFilepath = _monthTime.getFilePathString() + "_transactions";
+    _transactionsFilepath = _monthTime.getFilePathString() + "_transactions";
   }
 
   BudgetMap getAllottedSpendingData() {
-    if (_allottedData == null) {
+    if (_allotted == null) {
       loadAllottedSpendingData();
     }
-    return _allottedData;
+    return _allotted;
   }
 
   void loadAllottedSpendingData() async {
-    Encrypted e = Encrypted.unserialize(await BudgetControl.fileIO.readFile(_allottedFilepath));
+    Encrypted e = Encrypted.unserialize(
+        await BudgetControl.fileIO.readFile(_allottedFilepath));
     String plaintext = BudgetControl.crypter.decrypt(e);
-    _allottedData = BudgetMap.unserialize(plaintext);
+    _allotted = BudgetMap.unserialize(plaintext);
   }
 
   BudgetMap getActualSpendingData() {
-    if (_actualData == null) {
+    if (_actual == null) {
       loadActualSpendingData();
     }
-    return _actualData;
+    return _actual;
   }
 
   void loadActualSpendingData() async {
-    Encrypted e = Encrypted.unserialize(await BudgetControl.fileIO.readFile(_actualFilepath));
+    Encrypted e = Encrypted.unserialize(
+        await BudgetControl.fileIO.readFile(_actualFilepath));
     String plaintext = BudgetControl.crypter.decrypt(e);
-    _actualData = BudgetMap.unserialize(plaintext);
+    _actual = BudgetMap.unserialize(plaintext);
   }
 
   TransactionList getTransactionData() {
-    if (_transactionData == null) {
+    if (_transactions == null) {
       loadTransactionData();
     }
-    return _transactionData;
+    return _transactions;
   }
 
   void loadTransactionData() async {
-    Encrypted e = Encrypted.unserialize(await BudgetControl.fileIO.readFile(_transactionFilepath));
+    Encrypted e = Encrypted.unserialize(
+        await BudgetControl.fileIO.readFile(_transactionsFilepath));
     String plaintext = BudgetControl.crypter.decrypt(e);
-    _transactionData = TransactionList.unserialize(plaintext);
+    _transactions = TransactionList.unserialize(plaintext);
   }
 
   void updateMonthData(Budget budget) {
-    _allottedData = budget.allottedSpending;
-    _actualData = budget.actualSpending;
-    _transactionData = budget.transactions;
+    _allotted = budget.allottedSpending;
+    _actual = budget.actualSpending;
+    _transactions = budget.transactions;
     type = budget.getType();
   }
 
@@ -82,26 +129,26 @@ class Month implements Serializable {
   }
 
   void _saveAllottedSpending() {
-    if (_allottedData != null) {
-      String content = _allottedData.serialize();
+    if (_allotted != null) {
+      String content = _allotted.serialize();
       Encrypted e = BudgetControl.crypter.encrypt(content);
       BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize());
     }
   }
 
   void _saveActualSpending() {
-    if (_actualData != null) {
-      String content = _actualData.serialize();
+    if (_actual != null) {
+      String content = _actual.serialize();
       Encrypted e = BudgetControl.crypter.encrypt(content);
       BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize());
     }
   }
 
   void _saveTransactions() {
-    if (_transactionData != null) {
-      String content = _transactionData.serialize();
+    if (_transactions != null) {
+      String content = _transactions.serialize();
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      BudgetControl.fileIO.writeFile(_transactionFilepath, e.serialize());
+      BudgetControl.fileIO.writeFile(_transactionsFilepath, e.serialize());
     }
   }
 
@@ -111,9 +158,9 @@ class Month implements Serializable {
 
   static Month fromBudget(Budget b) {
     Month m = new Month(MonthTime.now(), b.getMonthlyIncome());
-    m._transactionData = b.transactions;
-    m._actualData = b.actualSpending;
-    m._allottedData = b.allottedSpending;
+    m._transactions = b.transactions;
+    m._actual = b.actualSpending;
+    m._allotted = b.allottedSpending;
     m.type = b.getType();
     m._createFilePaths();
     return m;
@@ -135,7 +182,8 @@ class Month implements Serializable {
   }
 
   static unserializeMap(Map map) {
-    Month m = new Month(new MonthTime(int.parse(map["year"]), int.parse(map["month"])),
+    Month m = new Month(
+        new MonthTime(int.parse(map["year"]), int.parse(map["month"])),
         double.parse(map["income"]));
     m.type = jsonBudgetType[map["type"]];
     return m;

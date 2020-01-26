@@ -105,7 +105,7 @@ class Budget {
   double addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actualSpending.addTo(transaction.category, transaction.delta);
+      _actualSpending.addTo(transaction.category, -transaction.delta);
       return _actualSpending.valueOf(transaction.category);
     }
     _actualSpending.addTo(BudgetCategory.miscellaneous, transaction.delta);
