@@ -2,6 +2,7 @@ import 'package:budgetflow/main.dart';
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -318,7 +319,7 @@ class GeneralCategory {
 				body: Column(
 					mainAxisAlignment: MainAxisAlignment.center,
 					crossAxisAlignment: CrossAxisAlignment.start,
-					children: <Widget>[remainingInCategory(), categoryExpences()],
+					children: <Widget>[remainingInCategory(), categoryExpenses()],
 				));
 	}
 
@@ -371,7 +372,7 @@ class GeneralCategory {
 		);
 	}
 
-	Card categoryExpences() {
+	Card categoryExpenses() {
 		List categoryExpenses = getSpecificTransactions(categoryMap[categoryView]); //todo get specific types of transations
 		return Card(
 				child: new ListView.builder(
@@ -397,21 +398,32 @@ class GeneralCategory {
 
 class GeneralSliderCategory{
 
-	BudgetCategory userController;
-	GeneralSliderCategory(BudgetCategory userController){
+	BudgetControl userController;
+	double unbudgeted;
+
+	GeneralSliderCategory(BudgetControl userController){
 		this.userController = userController;
 	}
 
 	Drawer sideMenu(){
-
+		return Drawer();
 	}
 
-	Slider sectionSlider(){
+	Card unbudgetedCard(){
+		return Card();
+	}
 
+	Slider sectionSlider(String category){
+
+		return Slider();
+	}
+
+	Card changeCard(String display){
+		return Card();
 	}
 
 	Scaffold generalDisplay(){
-
+		return Scaffold();
 	}
 
 
