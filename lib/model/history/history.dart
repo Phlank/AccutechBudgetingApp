@@ -27,14 +27,14 @@ class History implements Serializable {
   }
 
   void save(Budget current) {
-    _updateCurrentMonth(current);
+    _months.add(_updateCurrentMonth(current));
     _months.forEach((Month m) => m.save());
     Encrypted e = BudgetControl.crypter.encrypt(serialize());
     BudgetControl.fileIO.writeFile(HISTORY_PATH, e.serialize());
   }
 
-  void _updateCurrentMonth(Budget budget) {
-    currentMonth = Month.fromBudget(budget);
+  Month _updateCurrentMonth(Budget budget) {
+   return  Month.fromBudget(budget);
   }
 
   Budget getLatestMonthBudget() {
@@ -78,9 +78,9 @@ class History implements Serializable {
 
   TransactionList getTransactionsFromMonthTime(MonthTime mt) {
     print(mt.toString()+' geting transaaction');
+    print(_months.toString());
     Month m = _months
       .firstWhere((Month m) {
-        print('inside');
         return _monthMatchesMonthTime(m, mt);
       });
     print('returnin');

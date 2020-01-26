@@ -102,7 +102,7 @@ class _HomePage extends State<HomePage>{
                       if (value.isEmpty) return 'Enter your PIN, please';
                       if (!allNumbers.hasMatch(value))
                         return 'your PIN should only be 4 numbers';
-                      cool(value);
+                      checkValidity(value);
                       if(!valid) return 'not valid password';
                       return null;
                     },
@@ -127,7 +127,7 @@ class _HomePage extends State<HomePage>{
     );
   }
 
-  void cool(value) async {
+  void checkValidity(value) async {
     if (await userController.passwordIsValid(value)) valid = true;
    // userBudget = userController.getBudget();
 

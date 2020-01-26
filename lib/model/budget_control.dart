@@ -11,7 +11,6 @@ import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'history/month.dart';
-import 'package:stack_trace/stack_trace.dart';
 
 class BudgetControl implements Control {
 
@@ -26,7 +25,6 @@ class BudgetControl implements Control {
     'age':r'\d{2,3}'
   };
 
-  bool _newUser;
   History _history;
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
@@ -69,7 +67,6 @@ class BudgetControl implements Control {
   }
 
   void _load() async{
-    print('loading history');
     _history = await History.load();
     print(_history);
     _loadedTransactions =
