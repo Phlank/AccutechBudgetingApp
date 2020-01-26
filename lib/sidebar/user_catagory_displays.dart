@@ -2,7 +2,6 @@ import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -62,20 +61,17 @@ class _NewTransaction extends State{
 											return null;
 										}
 								),
-								TextFormField(
-										decoration:InputDecoration(
-												labelText: 'Cash, Debit, or Credit',
-												hintText: 'words only'
-										),
-										validator:(value){
-											if(value.isEmpty)return 'dont leave empty';
-											if(userController.validInput(value, 'name')) return 'words please';
-											holder.setMethod(value);
-											return null;
-										}
+								DropdownButtonFormField(
+									items: dropdownMethodItems(),
+									onChanged: (value){
+										holder.setMethod(value);
+									},
 								),
 								DropdownButtonFormField(
-
+									items: dropdownCategoryItems(),
+									onChanged:(value){
+										holder.setCategory(value);
+									}
 								)
 							],
 						)
@@ -90,6 +86,29 @@ class _NewTransaction extends State{
 			),
 		);
   }
+
+  List<DropdownMenuItem> dropdownMethodItems(){
+  	List<String> methods = ['credit','checking','savings','cash'];
+  	List<DropdownMenuItem> retList = new List();
+  	for(String method in methods){
+  		retList.add(new DropdownMenuItem(
+				child: Text(method),
+				value: method,
+			));
+		}
+	}
+
+  List<DropdownMenuItem> dropdownCategoryItems(){
+  	List<DropdownMenuItem> retList = new List();
+  	for(String name in userController.categoryMap.keys.toList()){
+  		retList.add(new DropdownMenuItem(
+				child: Text(name),
+				value: userController.categoryMap[name],
+			));
+		}
+  	return retList;
+	}
+
 }
 
 class Wants extends StatefulWidget{
