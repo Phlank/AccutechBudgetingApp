@@ -16,6 +16,7 @@ void main (){
       _builder.setIncome(2500.0);
       _builder.setType(BudgetType.savingDepletion);
       _budget = _builder.build();
+      _budgetFactory.newFromInfo(2500, 500, BudgetType.savingDepletion);
     });
     group("Testing newFromBudget", (){
       test("test factory intilization", (){
@@ -37,7 +38,8 @@ void main (){
     });
 
     group("Testing newFromInfo", (){
-      test("", (){
+      test("test process", (){
+        expect(_budgetFactory.newFromInfo(2500, 1250, BudgetType.savingDepletion), isNot(null));
       });
     });
   });
