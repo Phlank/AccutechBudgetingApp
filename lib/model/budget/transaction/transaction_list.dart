@@ -60,4 +60,19 @@ class TransactionList {
       }
     }
   }
+
+  Transaction operator[](int i) => _transactions[i];
+
+  bool operator ==(Object other) =>
+      other is TransactionList && this._equals(other);
+
+  bool _equals(TransactionList other) {
+    if (this.length() != other.length()) return false;
+    for (int i = 0; i < this.length(); i++) {
+      if (this[i]!= other[i]) return false;
+    }
+    return true;
+  }
+
+  int get hashCode => _transactions.hashCode;
 }

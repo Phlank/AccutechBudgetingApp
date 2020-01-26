@@ -470,33 +470,33 @@ class _UserPage extends State<UserPage> {
   Map<String, double> buildBudgetMap() {
     Map<String, double> map = new Map();
     map.putIfAbsent('housing',
-        () => userBudget.allottedSpending.valueOf(BudgetCategory.housing));
+        () => userBudget.allotted[BudgetCategory.housing]);
     map.putIfAbsent('utilities',
-        () => userBudget.allottedSpending.valueOf(BudgetCategory.utilities));
+        () => userBudget.allotted[BudgetCategory.utilities]);
     map.putIfAbsent('groceries',
-        () => userBudget.allottedSpending.valueOf(BudgetCategory.groceries));
+        () => userBudget.allotted[BudgetCategory.groceries]);
     map.putIfAbsent('savings',
-        () => userBudget.allottedSpending.valueOf(BudgetCategory.savings));
+        () => userBudget.allotted[BudgetCategory.savings]);
     map.putIfAbsent('helath',
-        () => userBudget.allottedSpending.valueOf(BudgetCategory.health));
+        () => userBudget.allotted[BudgetCategory.health]);
     map.putIfAbsent(
       'transportation',
         () =>
-        userBudget.allottedSpending.valueOf(BudgetCategory.transportation));
+        userBudget.allotted[BudgetCategory.transportation]);
     map.putIfAbsent('education',
-        () => userBudget.allottedSpending.valueOf(BudgetCategory.education));
+        () => userBudget.allotted[BudgetCategory.education]);
     map.putIfAbsent(
       'entertainment',
         () =>
-        userBudget.allottedSpending.valueOf(BudgetCategory.entertainment));
+        userBudget.allotted[BudgetCategory.entertainment]);
     map.putIfAbsent(
-      'kids', () => userBudget.allottedSpending.valueOf(BudgetCategory.kids));
+      'kids', () => userBudget.allotted[BudgetCategory.kids]);
     map.putIfAbsent(
-      'pets', () => userBudget.allottedSpending.valueOf(BudgetCategory.pets));
+      'pets', () => userBudget.allotted[BudgetCategory.pets]);
     map.putIfAbsent(
       'miscellaneous',
         () =>
-        userBudget.allottedSpending.valueOf(BudgetCategory.miscellaneous));
+        userBudget.allotted[BudgetCategory.miscellaneous]);
     return map;
   }
 } // _UserPage
