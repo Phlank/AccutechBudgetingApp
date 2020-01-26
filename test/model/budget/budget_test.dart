@@ -68,15 +68,23 @@ void main() {
       });
     });
     group("Testing fromMonth", (){
-      test("Built budget works fromMonth", (){
+      test("Test for income", (){
         b = new Budget.fromMonth(_month);
         expect(b.income, equals(300));
       });
-      test("Built budget works fromMonth", (){
+      test("Test for type", (){
         b = new Budget.fromMonth(_month);
         expect(b.type, equals(BudgetType.savingDepletion));
       });
+      test("Test for transaction", (){
+        b = new Budget.fromMonth(_month);
+        expect(b.transactions, equals(null));
+      });
+      test("Test for alotted and actual spending", (){
+        b = new Budget.fromMonth(_month);
+        expect(b.allottedSpending, equals(null));
+        expect(b.actualSpending, equals(null));
+      });
     });
-
   });
 }
