@@ -42,14 +42,19 @@ class MonthBuilder {
     _transactions = transactions;
   }
 
+  // Don't need to check if BudgetMaps are null because if they are they can be
+  // loaded.
   Month build() {
     if (_monthTime == null) throw new NullThrownError();
-    if (_monthTime == null) throw new NullThrownError();
-    if (_monthTime == null) throw new NullThrownError();
-    if (_monthTime == null) throw new NullThrownError();
-    if (_monthTime == null) throw new NullThrownError();
-    if (_monthTime == null) throw new NullThrownError();
-    if (_monthTime == null) throw new NullThrownError();
+    if (_income == null) throw new NullThrownError();
+    if (_type == null) throw new NullThrownError();
+    return new Month._new(
+        _monthTime, //
+        _income, //
+        _type, //
+        _allotted, //
+        _actual, //
+        _transactions);
   }
 }
 
@@ -59,11 +64,20 @@ class Month implements Serializable {
   TransactionList _transactions;
   MonthTime _monthTime;
   double _income;
-  BudgetType type;
+  BudgetType _type;
 
-  Month(MonthTime mt, double income) {
-    _monthTime = mt;
-    this._income = income;
+  Month._new(this._monthTime, this._income, this._type, this._allotted,
+      this._actual, this._transactions) {
+    _createFilePaths();
+  }
+
+  Month.fromBudget(Budget b) {
+    _monthTime = MonthTime.now();
+    _income = b.income;
+    _type = b.type;
+    _allotted = b.allottedSpending;
+    _actual = b.actualSpending;
+    _transactions = b.transactions;
     _createFilePaths();
   }
 
@@ -73,42 +87,48 @@ class Month implements Serializable {
     _transactionsFilepath = _monthTime.getFilePathString() + "_transactions";
   }
 
-  BudgetMap getAllottedSpendingData() {
+  MonthTime get monthTime => _monthTime;
+
+  double get income => _income;
+
+  BudgetType get type => _type;
+
+  BudgetMap get allotted {
     if (_allotted == null) {
-      loadAllottedSpendingData();
+      loadAllotted();
     }
     return _allotted;
   }
 
-  void loadAllottedSpendingData() async {
+  void loadAllotted() async {
     Encrypted e = Encrypted.unserialize(
         await BudgetControl.fileIO.readFile(_allottedFilepath));
     String plaintext = BudgetControl.crypter.decrypt(e);
     _allotted = BudgetMap.unserialize(plaintext);
   }
 
-  BudgetMap getActualSpendingData() {
+  BudgetMap get actual {
     if (_actual == null) {
-      loadActualSpendingData();
+      loadActual();
     }
     return _actual;
   }
 
-  void loadActualSpendingData() async {
+  void loadActual() async {
     Encrypted e = Encrypted.unserialize(
         await BudgetControl.fileIO.readFile(_actualFilepath));
     String plaintext = BudgetControl.crypter.decrypt(e);
     _actual = BudgetMap.unserialize(plaintext);
   }
 
-  TransactionList getTransactionData() {
+  TransactionList get transactions {
     if (_transactions == null) {
-      loadTransactionData();
+      loadTransactions();
     }
     return _transactions;
   }
 
-  void loadTransactionData() async {
+  void loadTransactions() async {
     Encrypted e = Encrypted.unserialize(
         await BudgetControl.fileIO.readFile(_transactionsFilepath));
     String plaintext = BudgetControl.crypter.decrypt(e);
@@ -119,7 +139,7 @@ class Month implements Serializable {
     _allotted = budget.allottedSpending;
     _actual = budget.actualSpending;
     _transactions = budget.transactions;
-    type = budget.getType();
+    _type = budget.getType();
   }
 
   void save() {
@@ -156,22 +176,12 @@ class Month implements Serializable {
 
   double getIncome() => _income;
 
-  static Month fromBudget(Budget b) {
-    Month m = new Month(MonthTime.now(), b.getMonthlyIncome());
-    m._transactions = b.transactions;
-    m._actual = b.actualSpending;
-    m._allotted = b.allottedSpending;
-    m.type = b.getType();
-    m._createFilePaths();
-    return m;
-  }
-
   String serialize() {
     String output = "{";
     output += '"year":"' + _monthTime.year.toString() + "\",";
     output += '"month":"' + _monthTime.month.toString() + '",';
     output += '"income":"' + _income.toString() + '",';
-    output += '"type":"' + budgetTypeJson[type] + '"';
+    output += '"type":"' + budgetTypeJson[_type] + '"';
     output += '}';
     return output;
   }
@@ -182,10 +192,12 @@ class Month implements Serializable {
   }
 
   static unserializeMap(Map map) {
-    Month m = new Month(
-        new MonthTime(int.parse(map["year"]), int.parse(map["month"])),
-        double.parse(map["income"]));
-    m.type = jsonBudgetType[map["type"]];
-    return m;
+    MonthBuilder builder = new MonthBuilder();
+    MonthTime monthTime = new MonthTime(
+        int.parse(map["year"]), int.parse(map["month"]));
+    builder.setMonthTime(monthTime);
+    builder.setIncome(double.parse(map["income"]));
+    builder.setType(jsonBudgetType[map["type"]]);
+    return builder.build();
   }
 }

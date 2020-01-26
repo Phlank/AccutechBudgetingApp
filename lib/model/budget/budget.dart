@@ -74,9 +74,9 @@ class Budget {
   Budget.fromMonth(Month month) {
     _income = month.getIncome();
     _type = month.type;
-    _allottedSpending = month.getAllottedSpendingData();
-    _actualSpending = month.getActualSpendingData();
-    _transactions = month.getTransactionData();
+    _allottedSpending = month.allotted;
+    _actualSpending = month.actual;
+    _transactions = month.transactions;
   }
 
   double get income => _income;
