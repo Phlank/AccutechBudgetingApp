@@ -38,8 +38,21 @@ void main (){
     });
 
     group("Testing newFromInfo", (){
-      test("test process", (){
+      test("test process initalization", (){
         expect(_budgetFactory.newFromInfo(2500, 1250, BudgetType.savingDepletion), isNot(null));
+      });
+      test("test income", (){
+        expect(_budgetFactory.newFromInfo(2500, 1250, BudgetType.savingDepletion).income, equals(2500) );
+      });
+      test("test type", (){
+        expect(_budgetFactory.newFromInfo(2500, 1250, BudgetType.savingDepletion).type, equals(BudgetType.savingDepletion) );
+      });
+      test("test BudgetMap initalization", (){
+        expect(_budgetFactory.newFromInfo(2500, 1250, BudgetType.savingDepletion).actual, isNot(null) );
+        expect(_budgetFactory.newFromInfo(2500, 1250, BudgetType.savingDepletion).allotted, isNot(null) );
+      });
+      test("test transactions", (){
+        expect(_budgetFactory.newFromInfo(2500, 1250, BudgetType.savingDepletion).transactions, isNot(null) );
       });
     });
   });
