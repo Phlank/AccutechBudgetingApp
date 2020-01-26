@@ -4,7 +4,7 @@ import 'package:budgetflow/model/file_io/serializable.dart';
 
 abstract class Password implements Serializable, Saveable {
   static Password fromSecret(String secret) {
-    return SteelPassword.fromSecret(secret);
+    return new SteelPassword.fromSecret(secret);
   }
 
   // This needs to exist so we have something to call verify() on.
@@ -12,7 +12,7 @@ abstract class Password implements Serializable, Saveable {
   // that's just nasty. When verify() is called, it should make all other
   // functions usable because it takes secret as a param.
   static Password fromHashAndSalt(String hash, String salt) {
-    return SteelPassword.fromHashAndSalt(hash, salt);
+    return new SteelPassword.fromHashAndSalt(hash, salt);
   }
 
   static Password unserialize(String serialized) {
@@ -25,9 +25,7 @@ abstract class Password implements Serializable, Saveable {
 
   bool verify(String secret);
 
-  String getHash();
-
-  String getSecret();
-
-  String getSalt();
+  String get hash;
+  String get secret;
+  String get salt;
 }

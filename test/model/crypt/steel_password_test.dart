@@ -8,20 +8,23 @@ const String _SECRET_2 = "password2";
 SteelPassword _pw1 = Password.fromSecret(_SECRET_1);
 SteelPassword _pw2 = Password.fromSecret(_SECRET_2);
 
+DateTime start, end;
+
 void main() {
   group("SteelPassword tests", () {
     setUp(() {
+      start = DateTime.now();
     });
     test("Secret and hash do not match", () {
-      expect("password1", isNot(_pw1.getHash()));
+      expect("password1", isNot(_pw1.hash));
     });
     test("Salt is different each SteelPassword object", () {
-      String s1 = _pw1.getSalt();
-      String s2 = Password.fromSecret(_SECRET_1).getSalt();
+      String s1 = _pw1.salt;
+      String s2 = Password.fromSecret(_SECRET_1).salt;
       expect(s1, isNot(s2));
     });
     test("Different passwords have different hashes", () {
-      expect (_pw1.getHash(), isNot(_pw2.getHash()));
+      expect(_pw1.hash, isNot(_pw2.hash));
     });
     test("Password verifies correctly", () {
       expect(_pw1.verify(_SECRET_1), true);
@@ -30,18 +33,22 @@ void main() {
       expect(_pw1.verify(_SECRET_2), false);
     });
     test("Salt + secret is 32 chars long", () {
-      String s1 = _pw1.getSalt();
+      String s1 = _pw1.salt;
       expect((_SECRET_1 + s1).length, 32);
     });
     test("Password made from hash can verify new secret", () {
-      Password p0 = SteelPassword.fromHashAndSalt(
-          _pw1.getHash(), _pw1.getSalt());
-      expect(_pw1.verify(_SECRET_1), true);
+      Password p0 = Password.fromHashAndSalt(_pw1.hash, _pw1.salt);
+      expect(p0.verify(_SECRET_1), true);
     });
     test("Serialization sanity", () {
       String _pw1s = _pw1.serialize();
       Password _pw1u = SteelPassword.unserialize(_pw1s);
       expect(_pw1u.verify(_SECRET_1), true);
+    });
+    tearDown(() {
+      end = DateTime.now();
+      int elapsed = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
+      print("Ms elapsed: $elapsed");
     });
   });
 }

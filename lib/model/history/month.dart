@@ -101,38 +101,55 @@ class Month implements Serializable {
   }
 
   void loadAllotted() async {
-    Encrypted e = Encrypted.unserialize(
-        await BudgetControl.fileIO.readFile(_allottedFilepath));
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _allotted = BudgetMap.unserialize(plaintext);
+    BudgetControl.fileIO.readFile(_allottedFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      _allotted = BudgetMap.unserialize(plaintext);
+    }).catchError((Object o) {
+      _allotted = new BudgetMap();
+    });
   }
 
   BudgetMap get actual {
     if (_actual == null) {
-      loadActual();
+      try {
+        loadActual();
+      } catch (NoSuchMethodError) {
+        _actual = new BudgetMap();
+      }
     }
     return _actual;
   }
 
   void loadActual() async {
-    Encrypted e = Encrypted.unserialize(
-        await BudgetControl.fileIO.readFile(_actualFilepath));
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _actual = BudgetMap.unserialize(plaintext);
+    BudgetControl.fileIO.readFile(_actualFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      _actual = BudgetMap.unserialize(plaintext);
+    }).catchError((Object o) {
+      _actual = new BudgetMap();
+    });
   }
 
   TransactionList get transactions {
     if (_transactions == null) {
-      loadTransactions();
+      try {
+        loadTransactions();
+      } catch (NoSuchMethodError) {
+        _transactions = new TransactionList();
+      }
     }
     return _transactions;
   }
 
   void loadTransactions() async {
-    Encrypted e = Encrypted.unserialize(
-        await BudgetControl.fileIO.readFile(_transactionsFilepath));
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _transactions = TransactionList.unserialize(plaintext);
+    BudgetControl.fileIO.readFile(_transactionsFilepath).then((String cipher) {
+      Encrypted e = Encrypted.unserialize(cipher);
+      String plaintext = BudgetControl.crypter.decrypt(e);
+      _transactions = TransactionList.unserialize(plaintext);
+    }).catchError((Object o) {
+      _transactions = new TransactionList();
+    });
   }
 
   void updateMonthData(Budget budget) {
@@ -193,8 +210,8 @@ class Month implements Serializable {
 
   static unserializeMap(Map map) {
     MonthBuilder builder = new MonthBuilder();
-    MonthTime monthTime = new MonthTime(
-        int.parse(map["year"]), int.parse(map["month"]));
+    MonthTime monthTime =
+        new MonthTime(int.parse(map["year"]), int.parse(map["month"]));
     builder.setMonthTime(monthTime);
     builder.setIncome(double.parse(map["income"]));
     builder.setType(jsonBudgetType[map["type"]]);

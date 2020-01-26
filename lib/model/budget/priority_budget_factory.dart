@@ -41,7 +41,7 @@ class PriorityBudgetFactory implements BudgetFactory {
   static const _STAGE_3_BOUND = .8;
   static const _STAGE_4_BOUND = 1.0;
 
-  double _housingRatio, _income, _underspending, _overspending;
+  double _housingRatio = 0.0, _income = 0.0, _underspending = 0.0, _overspending = 0.0;
   _NSW _currentDistribution, _targetDistribution;
   double _wantsRatio, _needsRatio, _savingsRatio;
   BudgetMap _oldAllotmentRatios = new BudgetMap(),
@@ -149,7 +149,7 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   bool _userExceededBudget() {
-    double total;
+    double total = 0.0;
     _oldActualRatios.forEach((BudgetCategory c, double d) {
       total += d;
     });

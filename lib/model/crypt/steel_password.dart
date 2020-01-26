@@ -23,21 +23,18 @@ class SteelPassword implements Password {
     _passCrypt = new PassCrypt(_ALGORITHM);
   }
 
-  static Password fromSecret(String secret) {
-    SteelPassword pw = new SteelPassword();
-    pw._passCrypt = new PassCrypt(_ALGORITHM);
+  SteelPassword.fromSecret(String secret) {
+    _passCrypt = new PassCrypt(_ALGORITHM);
     int diffTo32 = _KEY_LENGTH - secret.length;
-    pw._salt = CryptKey().genDart(diffTo32).substring(0, diffTo32);
-    pw._hash = pw._passCrypt.hashPass(pw._salt, secret);
-    pw._secret = secret;
-    return pw;
+    _salt = CryptKey().genDart(diffTo32).substring(0, diffTo32);
+    _hash = _passCrypt.hashPass(_salt, secret);
+    _secret = secret;
   }
 
-  static Password fromHashAndSalt(String hash, String salt) {
-    SteelPassword pw = new SteelPassword();
-    pw._hash = hash;
-    pw._salt = salt;
-    return pw;
+  SteelPassword.fromHashAndSalt(String hash, String salt) {
+    _hash = hash;
+    _salt = salt;
+    _passCrypt = new PassCrypt(_ALGORITHM);
   }
 
   @override
@@ -50,20 +47,11 @@ class SteelPassword implements Password {
     return success;
   }
 
-  @override
-  String getHash() {
-    return _hash;
-  }
+  String get hash => _hash;
 
-  @override
-  String getSecret() {
-    return _secret;
-  }
+  String get secret => _secret;
 
-  @override
-  String getSalt() {
-    return _salt;
-  }
+  String get salt => _salt;
 
   @override
   String serialize() {

@@ -15,7 +15,7 @@ import 'history/month.dart';
 
 class BudgetControl implements Control {
   static const String _PASSWORD_PATH = "password";
-  static FileIO fileIO;
+  static FileIO fileIO = new DartFileIO();
   static Password _password;
   static Crypter crypter;
   History _history;
@@ -93,6 +93,7 @@ class BudgetControl implements Control {
     print(_history);
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
+    print(_loadedTransactions);
     _budget = _history.getLatestMonthBudget();
     print(_budget.toString());
   }
