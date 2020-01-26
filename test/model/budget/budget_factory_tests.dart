@@ -29,8 +29,8 @@ void main (){
         expect(_budgetFactory.newFromBudget(_budget).type, equals(BudgetType.savingDepletion) );
       });
       test("test factory intialization", (){
-        expect(_budgetFactory.newFromBudget(_budget).allottedSpending, isNot(null) );
-        expect(_budgetFactory.newFromBudget(_budget).actualSpending, isNot(null));
+        expect(_budgetFactory.newFromBudget(_budget).allotted, isNot(null));
+        expect(_budgetFactory.newFromBudget(_budget).actual, isNot(null));
       });
       test("test factory transaction detection", (){
         expect(_budgetFactory.newFromBudget(_budget).transactions, isNot(null));

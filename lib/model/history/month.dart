@@ -42,12 +42,11 @@ class MonthBuilder {
     _transactions = transactions;
   }
 
-  // Don't need to check if BudgetMaps are null because if they are they can be
-  // loaded.
   Month build() {
     if (_monthTime == null) throw new NullThrownError();
     if (_income == null) throw new NullThrownError();
     if (_type == null) throw new NullThrownError();
+    // Don't need to check if BudgetMaps are null because if they are they can be loaded.
     return new Month._new(
         _monthTime, //
         _income, //
@@ -95,12 +94,14 @@ class Month implements Serializable {
 
   BudgetMap get allotted {
     if (_allotted == null) {
-      loadAllotted();
+      loadAllotted().whenComplete(() {
+        return _allotted;
+      });
     }
     return _allotted;
   }
 
-  void loadAllotted() async {
+  Future loadAllotted() async {
     BudgetControl.fileIO.readFile(_allottedFilepath).then((String cipher) {
       Encrypted e = Encrypted.unserialize(cipher);
       String plaintext = BudgetControl.crypter.decrypt(e);
@@ -112,16 +113,13 @@ class Month implements Serializable {
 
   BudgetMap get actual {
     if (_actual == null) {
-      try {
-        loadActual();
-      } catch (NoSuchMethodError) {
-        _actual = new BudgetMap();
-      }
+      loadActual().whenComplete(() {
+        return _actual;
+      });
     }
-    return _actual;
   }
 
-  void loadActual() async {
+  Future loadActual() async {
     BudgetControl.fileIO.readFile(_actualFilepath).then((String cipher) {
       Encrypted e = Encrypted.unserialize(cipher);
       String plaintext = BudgetControl.crypter.decrypt(e);
@@ -133,21 +131,18 @@ class Month implements Serializable {
 
   TransactionList get transactions {
     if (_transactions == null) {
-      try {
-        loadTransactions();
-      } catch (NoSuchMethodError) {
-        _transactions = new TransactionList();
-      }
+      loadTransactions().whenComplete(() {
+        return _transactions;
+      });
     }
-    return _transactions;
   }
 
-  void loadTransactions() async {
+  Future loadTransactions() async {
     BudgetControl.fileIO.readFile(_transactionsFilepath).then((String cipher) {
       Encrypted e = Encrypted.unserialize(cipher);
       String plaintext = BudgetControl.crypter.decrypt(e);
       _transactions = TransactionList.unserialize(plaintext);
-    }).catchError((Object o) {
+    }).catchError((Object error) {
       _transactions = new TransactionList();
     });
   }
