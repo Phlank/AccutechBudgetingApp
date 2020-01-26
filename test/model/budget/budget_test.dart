@@ -3,15 +3,23 @@ import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/history/month.dart';
+import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Budget _builtBudget;
 BudgetBuilder _builder = new BudgetBuilder();
 Transaction _t;
+Month _month;
+MonthBuilder _monthBuilder = new MonthBuilder();
+MonthTime _monthTime = new MonthTime(1998,4);
 
 void main() {
   group("_builtBudget tests", () {
     setUp(() {
+      _monthBuilder.setIncome(300);
+      _monthBuilder.setType(BudgetType.savingDepletion);
+      _monthBuilder.setMonthTime(_monthTime);
+      _month = _monthBuilder.build();
       _builder.setIncome(300.0);
       _builder.setType(BudgetType.savingDepletion);
       _builtBudget = _builder.build();
@@ -40,6 +48,8 @@ void main() {
       expect(b.income, equals(300));
     });
     test("Built budget works fromMonth", (){
+      Budget b = new Budget.fromMonth(_month);
+      expect(b.income, isNot(null));
     });
   });
 }
