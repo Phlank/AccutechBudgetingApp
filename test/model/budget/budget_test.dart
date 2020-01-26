@@ -2,6 +2,7 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/history/month.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Budget _builtBudget;
@@ -32,6 +33,13 @@ void main() {
     test("Built budget can have transaction added", () {
       _builtBudget.addTransaction(_t);
       expect(_builtBudget.actualSpending[BudgetCategory.miscellaneous], 5.4);
+    });
+    test("Built budget works fromOldBudget", (){
+      Budget b = new Budget.fromOldBudget(_builtBudget);
+      expect(b.type, equals(BudgetType.savingDepletion));
+      expect(b.income, equals(300));
+    });
+    test("Built budget works fromMonth", (){
     });
   });
 }
