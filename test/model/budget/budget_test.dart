@@ -2,6 +2,7 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,8 +13,10 @@ Transaction _t;
 Month _month;
 MonthBuilder _monthBuilder = new MonthBuilder();
 MonthTime _monthTime = new MonthTime(1998,4);
+BudgetControl bc = new BudgetControl();
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   group("_builtBudget tests", () {
     setUp(() {
       _monthBuilder.setIncome(300);

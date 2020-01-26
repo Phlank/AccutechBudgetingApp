@@ -15,7 +15,7 @@ import 'history/month.dart';
 
 class BudgetControl implements Control {
   static const String _PASSWORD_PATH = "password";
-  static FileIO fileIO;
+  static FileIO fileIO = new DartFileIO();
   static Password _password;
   static Crypter crypter;
   final Map<String, String> regexMap = {
@@ -25,7 +25,6 @@ class BudgetControl implements Control {
     'age': r'\d{2,3}'
   };
 
-  bool _newUser;
   History _history;
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
