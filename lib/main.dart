@@ -23,7 +23,7 @@ RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
 RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
 InformationHolding hold = new InformationHolding();
-BudgetControl userController = new BudgetControl();
+
 Budget userBudget;
 
 //todo move to all string and string dependent data to Strings.dart
@@ -31,6 +31,7 @@ Budget userBudget;
 void main() => runApp(BudgetingApp());
 
 class BudgetingApp extends StatelessWidget {
+  static BudgetControl userController = new BudgetControl();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,45 +39,44 @@ class BudgetingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: HomePage(),
+      home: HomePage(userController),
       initialRoute: '/',
       //InitialRoute
       routes: {
-        '/knownUser': (context) => UserPage(),
-        '/housing': (context) => sideBar.HousingView(userBudget),
+        '/knownUser': (context) => UserPage(userController),
         '/edit': (context) => edit.EditInformationDirectory(userBudget),
-        '/houseEdit': (context) => edit.HousingInformationEdit(userBudget),
-        '/budgetEdit': (context) => edit.CategoryInformationEdit(userBudget),
-        '/userEdit': (context) => edit.UserInformationEdit(userBudget),
-        '/historyVeiw': (context) => history.HistoryDisplay(),
-        '/accountVeiw': (context) => account.AccountDisplay(),
-        '/utilities': (context) => sideBar.UtilitiesView(userBudget),
-        '/groceries': (context) => sideBar.GroceriesView(userBudget),
-        '/savings': (context) => sideBar.SavingsView(userBudget),
-        '/health': (context) => sideBar.HealthView(userBudget),
-        '/transport': (context) => sideBar.TransportationView(userBudget),
-        '/education': (context) => sideBar.EducationView(userBudget),
-        '/kids': (context) => sideBar.KidsView(userBudget),
-        '/pets': (context) => sideBar.PetsView(userBudget),
-        '/misc': (context) => sideBar.MiscView(userBudget),
-        '/entertainment': (context) => sideBar.EntertainmentView(userBudget),
-        '/newTransaction': (context) => sideBar.NewTransaction(userBudget),
+        '/needs':(context) => sideBar.Needs(userController),
+        '/newTransaction': (context) => sideBar.NewTransaction(userController),
       }, //Routes
     );
   }
 } // BudgetingApp
 
 class UserPage extends StatefulWidget {
+  BudgetControl userController;
+  UserPage(BudgetControl userController){
+    this.userController = userController;
+  }
   @override
-  _UserPage createState() => _UserPage();
+  _UserPage createState() => _UserPage(userController);
 }
 
 class HomePage extends StatefulWidget {
+  BudgetControl userController;
+
+  HomePage(BudgetControl userController){
+    this.userController = userController;
+  }
   @override
-  _HomePage createState() => _HomePage();
+  _HomePage createState() => _HomePage(userController);
 }
 
 class _HomePage extends State<HomePage>{
+  BudgetControl userController;
+  _HomePage(BudgetControl userController){
+    this.userController = userController;
+  }
+  
   bool valid = false;
   Scaffold _loginPage(){
     final validationkey = GlobalKey<FormState>();
@@ -382,6 +382,12 @@ class _HomePage extends State<HomePage>{
 }
 
 class _UserPage extends State<UserPage> {
+  BudgetControl userController;
+
+  _UserPage(BudgetControl userController){
+    this.userController = userController;
+  }
+
   @override
   Widget build(BuildContext context) {
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
@@ -390,7 +396,7 @@ class _UserPage extends State<UserPage> {
       appBar: AppBar(
         title: Text(/*users entered name when available*/ 'User Page'),
       ),
-      drawer: new sideBar.GeneralCategory().sideMenu(),
+      drawer:sideBar.GeneralSliderCategory(userController).sideMenu(),
       body: ListView(
         padding: EdgeInsets.all(4.0),
         children: <Widget>[

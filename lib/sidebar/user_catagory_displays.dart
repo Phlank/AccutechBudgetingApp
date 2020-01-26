@@ -8,319 +8,100 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class HousingView extends StatefulWidget {
-  HousingView(Budget userBudget);
 
-	@override
-	_HousingView createState() => _HousingView(userBudget);
-}
-
-class UtilitiesView extends StatefulWidget {
-  UtilitiesView(Budget userBudget);
-
-	@override
-	_UtilitiesView createState() => _UtilitiesView(userBudget);
-}
-
-class GroceriesView extends StatefulWidget {
-  GroceriesView(Budget userBudget);
-
-	@override
-	_GroceriesView createState() => _GroceriesView(userBudget);
-}
-
-class SavingsView extends StatefulWidget {
-  SavingsView(Budget userBudget);
-
-	@override
-	_SavingsView createState() => _SavingsView(userBudget);
-}
-
-class HealthView extends StatefulWidget {
-  HealthView(Budget userBudget);
-
-	@override
-	_HealthView createState() => _HealthView(userBudget);
-}
-
-class TransportationView extends StatefulWidget {
-  TransportationView(Budget userBudget);
-
-	@override
-	_TransportationView createState() => _TransportationView(userBudget);
-}
-
-class EducationView extends StatefulWidget {
-  EducationView(Budget userBudget);
-
-	@override
-	_EducationView createState() => _EducationView(userBudget);
-}
-
-class EntertainmentView extends StatefulWidget {
-  EntertainmentView(Budget userBudget);
-	@override
-	_EntertainmentView createState() => _EntertainmentView(userBudget);
-}
-
-class KidsView extends StatefulWidget {
-  KidsView(Budget userBudget);
-
-	@override
-	_KidsView createState() => _KidsView(userBudget);
-}
-
-class PetsView extends StatefulWidget {
-  PetsView(Budget userBudget);
-
-	@override
-	_PetsView createState() => _PetsView(userBudget);
-}
-
-class MiscView extends StatefulWidget {
-  MiscView(Budget userBudget);
-
-	@override
-	_MiscView createState() => _MiscView(userBudget);
-}
 
 class NewTransaction extends StatefulWidget {
-	NewTransaction(Budget userBudget);
+
+  BudgetControl userController;
+	NewTransaction(BudgetControl userController){
+		this.userController = userController;
+	}
 	@override
-	_NewTransaction createState() => _NewTransaction(userBudget);
+	_NewTransaction createState() => _NewTransaction(userController);
 }
 
-class _NewTransaction extends State<NewTransaction> {
-	_NewTransaction(Budget userBudget);
-	List<DropdownMenuItem> methodList =
-	makeDropDown(['deposit', 'cash', 'debit', 'credit']);
-	DateTime date;
-	String place;
-	String amnt;
-	@override
-	Widget build(BuildContext context) {
-		final formKey = GlobalKey<FormState>();
-		return Scaffold(
-				appBar: AppBar(
-					title: Text('new transaction'),
-				),
-				drawer: GeneralCategory().sideMenu(),
-				body: Column(children: <Widget>[
-					Form(
-						key: formKey,
-						child: Column(children: <Widget>[
-							Text('What day did you make the transaction'),
-							CupertinoDatePicker(
-								mode: CupertinoDatePickerMode.date,
-								initialDateTime: DateTime.now(),
-								onDateTimeChanged: (value) {
-									date = value;
-								},
-							),
-							TextFormField(
-								decoration: InputDecoration(
-									labelText: 'Where did you make the transaction?',
-								),
-								validator: (value) {
-									if (value.isEmpty) return 'please don\'t leave this blank';
-									place = value;
-									return null;
-								},
-							),
-							TextFormField(
-									keyboardType: TextInputType.phone,
-									decoration: InputDecoration(labelText: 'amont of tranaction'),
-									validator: (value) {
-										if (value.isEmpty) {
-											return 'please do not leave empty';
-										}
-										return null;
-									})
-						]),
-					),
-				]));
+class _NewTransaction extends State{
+
+	BudgetControl userController;
+  _NewTransaction(BudgetControl userController){
+  	this.userController = userController;
 	}
 
-	static List<DropdownMenuItem> makeDropDown(List<String> list) {
-		List<DropdownMenuItem> retList = new List(list.length);
-		for (String item in list) {
-			retList.add(DropdownMenuItem(value: item, child: Text(item)));
-		}
-		return retList;
-	}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
 }
 
-class _HousingView extends State<HousingView> {
-	_HousingView(Budget userBudget);
 
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('housing',userBudget);
-}
 
-class _UtilitiesView extends State<UtilitiesView> {
-	Budget userBudget;
-	_UtilitiesView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('utilities',userBudget);
-}
 
-//todo onload() initialize *new* History thing to  pull all of the recently written data out to read
-class _GroceriesView extends State<GroceriesView> {
-	Budget userBudget;
-	_GroceriesView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('groceries',userBudget);
-}
 
-class _SavingsView extends State<SavingsView> {
-	Budget userBudget;
-	_SavingsView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('savings',userBudget);
-}
+class Wants extends StatefulWidget{
 
-class _HealthView extends State<HealthView> {
-	Budget userBudget;
-	_HealthView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('health',userBudget);
-}
-
-class _TransportationView extends State<TransportationView> {
-	Budget userBudget;
-	_TransportationView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('transportation',userBudget);
-}
-
-class _EducationView extends State<EducationView> {
-	Budget userBudget;
-	_EducationView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('education',userBudget);
-}
-
-class _EntertainmentView extends State<EntertainmentView> {
-
-  _EntertainmentView(Budget userBudget);
-
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('entertainment',userBudget);
-}
-
-class _KidsView extends State<KidsView> {
-	Budget userBudget;
-	_KidsView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('kids',userBudget);
-}
-
-class _PetsView extends State<PetsView> {
-	Budget userBudget;
-	_PetsView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('pets',userBudget);
-}
-
-class _MiscView extends State<MiscView> {
-	Budget userBudget;
-	_MiscView(Budget userBudget);
-	@override
-	Widget build(BuildContext context) =>
-			new GeneralCategory().generalDisplay('miscellaneous',userBudget);
-}
-
-class GeneralCategory {
-
-	final Map<String, String> routeMap = {
-		'housing': '/housing',
-		'utilities': '/utilities',
-		'groceries': '/groceries',
-		'savings': '/savings',
-		'health': '/health',
-		'transportation': '/transport',
-		'education': '/education',
-		'entertainment': '/entertainment',
-		'kids': '/kids',
-		'pets': '/pets',
-		'miscellaneous': '/misc',
-		'home': '/knownUser'
-	};
-
-	String categoryView;
-
-	Scaffold generalDisplay(String category, Budget userBudget) {
-		this.categoryView = category;
-		return Scaffold(
-				appBar: AppBar(
-					title: Text('User Info'),
-				),
-				drawer: sideMenu(),
-				body: Column(
-					mainAxisAlignment: MainAxisAlignment.center,
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: <Widget>[remainingInCategory()],
-				));
+	BudgetControl userController;
+	Wants(BudgetControl userController){
+		this.userController = userController;
 	}
 
-	Drawer sideMenu() {
-		return Drawer(
-			child: ListView.builder(
-				scrollDirection: Axis.vertical,
-				shrinkWrap: true,
-				itemCount: routeMap.keys.length,
-				itemBuilder: (BuildContext context, int item) {
-					return sideBarFlatButton(routeMap.keys.toList()[item],
-							routeMap[routeMap.keys.toList()[item]], context);
-				},
-			),
-		);
+	@override
+	_Wants createState() => _Wants(userController);
+}
+
+class _Wants extends State<Needs>{
+	BudgetControl userController;
+	_Wants(BudgetControl userController){
+		this.userController = userController;
 	}
 
-	FlatButton sideBarFlatButton(String name, String route,
-			BuildContext context) {
-		return new FlatButton(
-			child: Text(name),
-			onPressed: () {
-				Navigator.pushNamed(context, route);
-			},
-		);
+	@override
+	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('wants');
+
+}
+
+class Savings extends StatefulWidget{
+
+	BudgetControl userController;
+	Savings(BudgetControl userController){
+		this.userController = userController;
 	}
 
-	Card remainingInCategory() {
-		return Card(
-			child: RichText(
-				text: TextSpan(
-					text: 'Cash Flow in ' + categoryView + ':\n',
-					children: <TextSpan>[
-						TextSpan(
-								text: 'budgeted\n', //todo implement category amounts
-								style: TextStyle(color: Colors.green, fontSize: 12)),
-						TextSpan(
-								text: 'spent -\n',
-								style: TextStyle(color: Colors.red, fontSize: 12)),
-						TextSpan(
-							text: 'remaining:\n',
-							style: TextStyle(
-									color:
-									Colors.black, //todo implemnt color switcher if pos or neg
-									fontSize: 12),
-						)
-					],
-				),
-			),
-		);
+	@override
+	_Savings createState() => _Savings(userController);
+}
+
+class _Savings extends State<Needs>{
+	BudgetControl userController;
+	_Savings(BudgetControl userController){
+		this.userController = userController;
 	}
+
+	@override
+	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('savings');
+
+}
+
+
+class Needs extends StatefulWidget{
+
+	BudgetControl userController;
+	Needs(BudgetControl userController){
+		this.userController = userController;
+	}
+
+  @override
+  _Needs createState() => _Needs(userController);
+}
+
+class _Needs extends State<Needs>{
+	BudgetControl userController;
+	_Needs(BudgetControl userController){
+		this.userController = userController;
+	}
+
+  @override
+  Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('needs');
+
 }
 
 class GeneralSliderCategory{
@@ -333,14 +114,25 @@ class GeneralSliderCategory{
 		this.playBudget = new MockBudget(userController.getBudget());
 	}
 
+	FlatButton sideBarFlatButton(String name, String route,
+			BuildContext context) {
+		return new FlatButton(
+			child: Text(name),
+			onPressed: () {
+				Navigator.pushNamed(context, route);
+			},
+		);
+	}
+
 	Drawer sideMenu(){
 		return Drawer(
 			child: ListView.builder(
 					scrollDirection: Axis.vertical,
 					shrinkWrap: true,
-					itemCount: 0,
+					itemCount: userController.sectionMap.keys.toList().length,
 					itemBuilder: (BuildContext context, int index){
-						return null;
+						String name = userController.sectionMap.keys.toList()[index];
+						return sideBarFlatButton(name, userController.routeMap[name], context);
 					},
 			),
 		);

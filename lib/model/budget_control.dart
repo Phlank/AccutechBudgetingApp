@@ -1,5 +1,4 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
@@ -49,6 +48,12 @@ class BudgetControl implements Control {
     'needs':['housung','utilities','groceries','health','transportation','education','kids'],
     'wants':['entertainment','pets','miscellaneous'],
     'savings':['savings']
+  };
+
+  final Map<String,String> routeMap ={
+    'needs':'/needs',
+    'wants':'/wants',
+    'savings':'/sanvings'
   };
 
   BudgetControl() {
