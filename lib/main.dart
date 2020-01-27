@@ -16,11 +16,6 @@ import 'sidebar/user_catagory_displays.dart' as sideBar;
 import 'sidebar/user_info_display.dart' as edit;
 
 //user input validators
-RegExp allNumbers = new RegExp(r"[0-9]{4}");
-RegExp allLetters = new RegExp(r"[A-Za-z]+");
-RegExp emailVerification = new RegExp(r"([^@]+@[^@]+(.com|.org|.net|.gov))");
-RegExp dollarAmount = new RegExp(r"([$?0-9]+(.[0-9]{2})?)");
-RegExp userNameVerification = new RegExp(r"[A-z0-9!@#?&]{8,16}");
 int cardOrder = 0;
 InformationHolding hold = new InformationHolding();
 
@@ -102,7 +97,7 @@ class _HomePage extends State<HomePage>{
                     ),
                     validator:(value) {
                       if (value.isEmpty) return 'Enter your PIN, please';
-                      if (!allNumbers.hasMatch(value))
+                      if (!userController.validInput(value, 'pin'))
                         return 'your PIN should only be 4 numbers';
                       checkValidity(value);
                       if(!valid) return 'not valid password';
@@ -151,7 +146,7 @@ class _HomePage extends State<HomePage>{
                   ),
                   validator: (value) {
                     if (value.isEmpty) return 'please enter your name';
-                    if (!allLetters.hasMatch(value))
+                    if (!userController.validInput(value, 'name'))
                       return 'only letters A-Z please';
                     return null;
                   },
@@ -162,7 +157,7 @@ class _HomePage extends State<HomePage>{
                       labelText: 'How old are you?', hintText: 'age'),
                   validator: (value) {
                     if (value.isEmpty) return 'please do not leave blank';
-                    if (!new RegExp(r"[0-9]{2,3}").hasMatch(value))
+                    if (!userController.validInput(value, 'age'))
                       return 'please enter in numeric format';
                     return null;
                   },
@@ -183,7 +178,7 @@ class _HomePage extends State<HomePage>{
                     ),
                     validator: (value) {
                       if (value.isEmpty) return 'please dont leave blank';
-                      if (!dollarAmount.hasMatch(value))
+                      if (!userController.validInput(value, 'dollarAmnt'))
                         return 'numerical values only please';
                       hold.setIncomeAmt(double.tryParse(value));
                       return null;
@@ -197,7 +192,7 @@ class _HomePage extends State<HomePage>{
                     validator: (value) {
                       if (value.isEmpty)
                         return ' Please don\'t leave this empty';
-                      if (!dollarAmount.hasMatch(value))
+                      if (!userController.validInput(value, 'dollarAmnt'))
                         return 'please put in numerical form';
                       return null;
                     },
@@ -230,7 +225,7 @@ class _HomePage extends State<HomePage>{
                   labelText: 'How much debt in total do you have?'),
               validator: (value) {
                 if (value.isEmpty) return 'please do not leave empty';
-                if (!dollarAmount.hasMatch(value))
+                if (!userController.validInput(value, 'dollarAmnt'))
                   return 'please put in to numerical value';
                 return null;
               }),
@@ -249,7 +244,7 @@ class _HomePage extends State<HomePage>{
                   ),
                   validator: (value) {
                     if (value.isEmpty) return 'please dont leave Blank';
-                    if (!dollarAmount.hasMatch(value))
+                    if (!userController.validInput(value, 'dollarAmnt'))
                       return 'Numeric format please';
                     hold.setHousingAmt(double.tryParse(value));
                     return null;
@@ -270,7 +265,7 @@ class _HomePage extends State<HomePage>{
                       labelText: 'enter your desired pin'),
                   validator: (value) {
                     if (value.isEmpty) return 'please do not leave blank';
-                   //if (allNumbers.hasMatch(value)) return 'please use only numbers';
+                    if (!userController.validInput(value, 'pin')) return 'please use only numbers';
                     return null;
                   },
                 ),
@@ -279,7 +274,7 @@ class _HomePage extends State<HomePage>{
                       hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
                   validator: (value) {
                     if (value.isEmpty) return 'please do not leave blank';
-                    //if (new RegExp(r'\d+').hasMatch(value)) return 'please use only numbers';
+                    if (!userController.validInput(value, 'pin')) return 'please use only numbers';
                     if (value.length != 4) return 'only four numbers please';
                     userController.setPassword(value);
                     return null;
@@ -393,7 +388,7 @@ class _UserPage extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
-    TransactionList expenses = userBudget.transactions;
+    TransactionList expenses = userController.getLoadedTransactions();
     return Scaffold(
       appBar: AppBar(
         title: Text(/*users entered name when available*/ 'User Page'),
@@ -447,13 +442,16 @@ class _UserPage extends State<UserPage> {
                 itemCount: expenses.length(),
                 itemBuilder: (BuildContext context, int index) {
                   Transaction trans = expenses.getAt(index);
-                  return new Text(trans.vendor +
-                    '\n' +
-                    trans.delta.toString() +
-                    '\n' +
-                    trans.datetime.toIso8601String() +
-                    '\n' +
-                    trans.method);
+                  if(trans != null) {
+                    return new Text(trans.vendor +
+                        '\n' +
+                        trans.delta.toString() +
+                        '\n' +
+                        trans.datetime.toIso8601String() +
+                        '\n' +
+                        trans.method);
+                  }
+                  return Text('No Transactions');
                 },
               )),
         ],

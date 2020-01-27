@@ -122,7 +122,7 @@ class Wants extends StatefulWidget{
 	_Wants createState() => _Wants(userController);
 }
 
-class _Wants extends State<Needs>{
+class _Wants extends State<Wants>{
 	BudgetControl userController;
 	_Wants(BudgetControl userController){
 		this.userController = userController;
@@ -144,7 +144,7 @@ class Savings extends StatefulWidget{
 	_Savings createState() => _Savings(userController);
 }
 
-class _Savings extends State<Needs>{
+class _Savings extends State<Savings>{
 	BudgetControl userController;
 	_Savings(BudgetControl userController){
 		this.userController = userController;
@@ -255,7 +255,8 @@ class GeneralSliderCategory{
 	Card buttonCard(BuildContext context){
 		return Card(
 			child:ListView(
-				scrollDirection: Axis.horizontal,
+				scrollDirection: Axis.vertical,
+				shrinkWrap: true,
 				children: <Widget>[
 					RaisedButton(
 						child:Text('submit'),
@@ -283,6 +284,10 @@ class GeneralSliderCategory{
 			),
 			drawer: sideMenu(),
 			body: Column(
+				verticalDirection: VerticalDirection.down,
+				mainAxisAlignment: MainAxisAlignment.center,
+				crossAxisAlignment: CrossAxisAlignment.start,
+				textDirection: TextDirection.ltr,
 				children: <Widget>[
 					unbudgetedCard(display),
 					changeCard(display),

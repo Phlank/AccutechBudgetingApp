@@ -25,7 +25,7 @@ class BudgetControl implements Control {
 
   final Map<String, String> regexMap = {
     'pin': r'\d\d\d\d',
-    'dollarAmnt': r'\d+?([.]\d\d)',
+    'dollarAmnt': r'\d+(.\d\d)?',
     'name': r'\w+',
     'age': r'\d{2,3}'
   };
@@ -45,7 +45,7 @@ class BudgetControl implements Control {
   };
 
   final Map<String,List<String>> sectionMap ={
-    'needs':['housung','utilities','groceries','health','transportation','education','kids'],
+    'needs':['housing','utilities','groceries','health','transportation','education','kids'],
     'wants':['entertainment','pets','miscellaneous'],
     'savings':['savings']
   };
@@ -53,7 +53,8 @@ class BudgetControl implements Control {
   final Map<String,String> routeMap ={
     'needs':'/needs',
     'wants':'/wants',
-    'savings':'/sanvings'
+    'savings':'/savings',
+    'home':'/knownUser'
   };
 
   BudgetControl() {
@@ -187,8 +188,8 @@ class MockBudget{
 
   double getNewTotalAlotted(String section){
     Map<String, List<BudgetCategory>> mockMap ={
-      'need':[BudgetCategory.health,BudgetCategory.housing,BudgetCategory.utilities, BudgetCategory.groceries,BudgetCategory.transportation, BudgetCategory.kids],
-      'want':[BudgetCategory.pets,BudgetCategory.miscellaneous, BudgetCategory.entertainment],
+      'needs':[BudgetCategory.health,BudgetCategory.housing,BudgetCategory.utilities, BudgetCategory.groceries,BudgetCategory.transportation, BudgetCategory.kids],
+      'wants':[BudgetCategory.pets,BudgetCategory.miscellaneous, BudgetCategory.entertainment],
       'savings':[BudgetCategory.savings]
     };
     double total = 0.0;
