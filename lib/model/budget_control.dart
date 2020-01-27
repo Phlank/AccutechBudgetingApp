@@ -89,14 +89,12 @@ class BudgetControl implements Control {
     _transactionMonthTime = new MonthTime(now.year, now.month);
   }
 
-  void _load() async{
+  Future<bool> _load() async{
     _history = await History.load();
-    print(_history);
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
-    print(_loadedTransactions);
     _budget = _history.getLatestMonthBudget();
-    print(_budget.toString());
+    return _budget != null;
   }
 
   void save() {
@@ -148,7 +146,7 @@ class BudgetControl implements Control {
   double sectionBudget(String section){
     double secBudget = 0.0;
     for(String category in sectionMap[section]){
-      secBudget += _budget.getAllotment(categoryMap[category]);
+      secBudget += _budget.allotted[categoryMap[category]];
     }
     return secBudget;
   }
@@ -170,6 +168,40 @@ class BudgetControl implements Control {
     _loadedTransactions = b.transactions;
     _budget = b;
   }
+
+  Map<String, double> buildBudgetMap() {
+    Map<String, double> map = new Map();
+    map.putIfAbsent('housing',
+            () => _budget.allotted[BudgetCategory.housing]);
+    map.putIfAbsent('utilities',
+            () => _budget.allotted[BudgetCategory.utilities]);
+    map.putIfAbsent('groceries',
+            () => _budget.allotted[BudgetCategory.groceries]);
+    map.putIfAbsent('savings',
+            () => _budget.allotted[BudgetCategory.savings]);
+    map.putIfAbsent('helath',
+            () => _budget.allotted[BudgetCategory.health]);
+    map.putIfAbsent(
+        'transportation',
+            () =>
+        _budget.allotted[BudgetCategory.transportation]);
+    map.putIfAbsent('education',
+            () => _budget.allotted[BudgetCategory.education]);
+    map.putIfAbsent(
+        'entertainment',
+            () =>
+        _budget.allotted[BudgetCategory.entertainment]);
+    map.putIfAbsent(
+        'kids', () => _budget.allotted[BudgetCategory.kids]);
+    map.putIfAbsent(
+        'pets', () => _budget.allotted[BudgetCategory.pets]);
+    map.putIfAbsent(
+        'miscellaneous',
+            () =>
+        _budget.allotted[BudgetCategory.miscellaneous]);
+    return map;
+  }
+
 }
 
 class MockBudget{
@@ -183,7 +215,7 @@ class MockBudget{
   }
 
   double getCategory(BudgetCategory category){
-    return budget.getAllotment(category);
+    return budget.allotted[category];
   }
 
   double getNewTotalAlotted(String section){
@@ -194,8 +226,9 @@ class MockBudget{
     };
     double total = 0.0;
     for(BudgetCategory category in mockMap[section]){
-      total += budget.getAllotment(category);
+      total += budget.allotted[category];
     }
     return total;
   }
+
 }

@@ -28,6 +28,8 @@ class _NewTransaction extends State{
   Widget build(BuildContext context) {
   	final _transFormKey = GlobalKey<FormState>();
   	TransactionInformationHolder holder = new TransactionInformationHolder();
+  	BudgetCategory dropDown = BudgetCategory.miscellaneous;
+  	String method = 'cash';
     return Scaffold(
 			appBar: AppBar(title:Text('New Transaction')),
 			drawer: GeneralSliderCategory(userController).sideMenu(),
@@ -62,14 +64,22 @@ class _NewTransaction extends State{
 										}
 								),
 								DropdownButtonFormField(
+									value: method,
 									items: dropdownMethodItems(),
 									onChanged: (value){
+										setState(() {
+										  method = value;
+										});
 										holder.setMethod(value);
 									},
 								),
 								DropdownButtonFormField(
+									value: dropDown,
 									items: dropdownCategoryItems(),
 									onChanged:(value){
+										setState(() {
+										  dropDown = value;
+										});
 										holder.setCategory(value);
 									}
 								)
@@ -78,8 +88,12 @@ class _NewTransaction extends State{
 					),
 					RaisedButton(
 						onPressed: (){
-							Transaction trans = new Transaction(holder.vendor, holder.method, holder.delta, holder.category);
-							userController.addTransaction(trans);
+							if(_transFormKey.currentState.validate()) {
+								Transaction trans = new Transaction(
+										holder.vendor, holder.method, holder.delta,
+										holder.category);
+								userController.addTransaction(trans);
+							}
 						},
 					)
 				],
@@ -203,9 +217,9 @@ class GeneralSliderCategory{
 			child: ListView.builder(
 					scrollDirection: Axis.vertical,
 					shrinkWrap: true,
-					itemCount: userController.sectionMap.keys.toList().length,
+					itemCount: userController.routeMap.keys.toList().length,
 					itemBuilder: (BuildContext context, int index){
-						String name = userController.sectionMap.keys.toList()[index];
+						String name = userController.routeMap.keys.toList()[index];
 						return sideBarFlatButton(name, userController.routeMap[name], context);
 					},
 			),
@@ -229,7 +243,7 @@ class GeneralSliderCategory{
 
 	Slider sectionSlider(String category,String section){
 		return Slider(
-			value:userController.getBudget().getAllotment(userController.categoryMap[category]),
+			value:userController.getBudget().allotted[userController.categoryMap[category]],
 			onChanged: (value){
 				playBudget.setCategory(userController.categoryMap[category], value);
 			},

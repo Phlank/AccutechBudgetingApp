@@ -108,11 +108,12 @@ class _HomePage extends State<HomePage>{
                 ),
                   RaisedButton(
                     onPressed: () {
-                      validationkey.currentState.validate();
-                      if (user == 'user') {
-                        Navigator.pushNamed(context, '/knownUser');
-                      } else {
-                        Text('please try again');
+                      if(validationkey.currentState.validate()) {
+                        if (valid) {
+                          Navigator.pushNamed(context, '/knownUser');
+                        } else {
+
+                        }
                       }
                     },
                     child: Text('Submit'),
@@ -385,9 +386,8 @@ class _UserPage extends State<UserPage> {
     this.userController = userController;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Map<String, double> budgetCatagoryAMNTS = buildBudgetMap();
+  Scaffold userPage{
+    Map<String, double> budgetCatagoryAMNTS = userController.buildBudgetMap();
     TransactionList expenses = userController.getLoadedTransactions();
     return Scaffold(
       appBar: AppBar(
@@ -463,40 +463,17 @@ class _UserPage extends State<UserPage> {
         },
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return FutureBuilder(
+
+    );
   } //build
 
-  Map<String, double> buildBudgetMap() {
-    Map<String, double> map = new Map();
-    map.putIfAbsent('housing',
-        () => userBudget.allotted[BudgetCategory.housing]);
-    map.putIfAbsent('utilities',
-        () => userBudget.allotted[BudgetCategory.utilities]);
-    map.putIfAbsent('groceries',
-        () => userBudget.allotted[BudgetCategory.groceries]);
-    map.putIfAbsent('savings',
-        () => userBudget.allotted[BudgetCategory.savings]);
-    map.putIfAbsent('helath',
-        () => userBudget.allotted[BudgetCategory.health]);
-    map.putIfAbsent(
-      'transportation',
-        () =>
-        userBudget.allotted[BudgetCategory.transportation]);
-    map.putIfAbsent('education',
-        () => userBudget.allotted[BudgetCategory.education]);
-    map.putIfAbsent(
-      'entertainment',
-        () =>
-        userBudget.allotted[BudgetCategory.entertainment]);
-    map.putIfAbsent(
-      'kids', () => userBudget.allotted[BudgetCategory.kids]);
-    map.putIfAbsent(
-      'pets', () => userBudget.allotted[BudgetCategory.pets]);
-    map.putIfAbsent(
-      'miscellaneous',
-        () =>
-        userBudget.allotted[BudgetCategory.miscellaneous]);
-    return map;
-  }
+
 } // _UserPage
 
 class InformationHolding {

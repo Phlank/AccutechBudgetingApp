@@ -94,10 +94,6 @@ class Budget {
     return amount;
   }
 
-  double getAllotment(BudgetCategory category){
-    return _allotted[category];
-  }
-
   double getMonthlyIncome() {
     return _income;
   }
