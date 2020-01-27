@@ -1,9 +1,9 @@
 import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -449,7 +449,7 @@ class _UserPage extends State<UserPage> {
                     textAlign: TextAlign.center,
                     text: TextSpan(children: <TextSpan>[
                       TextSpan(
-                          text: 'Income: '+userController.getBudget().income.toString()+'\n',
+                          text: 'available Income: '+(userController.getBudget().income-userController.getBudget().allotted[BudgetCategory.housing]).toString()+'\n',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.green,
@@ -468,7 +468,7 @@ class _UserPage extends State<UserPage> {
                           ))
                     ]))),
             Card(/*user warnings*/),
-            Card(
+            Card(//todo make better scrollable
               /*expense tracker*/
                 child: new ListView.builder(
                   padding: EdgeInsets.all(8),

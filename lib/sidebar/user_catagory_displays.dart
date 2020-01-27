@@ -139,7 +139,7 @@ class Wants extends StatefulWidget{
 
 	@override
 	_Wants createState() => _Wants(userController);
-}
+}//todo figure out why the calculations are going awry
 
 class _Wants extends State<Wants>{
 	BudgetControl userController;
@@ -161,7 +161,7 @@ class Savings extends StatefulWidget{
 
 	@override
 	_Savings createState() => _Savings(userController);
-}
+}//todo figure out the calculations that are going awry
 
 class _Savings extends State<Savings>{
 	BudgetControl userController;
@@ -197,7 +197,7 @@ class _Needs extends State<Needs>{
 
 }
 
-class GeneralSliderCategory{// todo figure out why sliders dont slide and make them slide
+class GeneralSliderCategory{// todo figure out why sliders don't slide and make them slide
 
 	BudgetControl userController;
 	MockBudget playBudget;
@@ -248,10 +248,11 @@ class GeneralSliderCategory{// todo figure out why sliders dont slide and make t
 
 	Slider sectionSlider(String category,String section){
 		return Slider(
+			activeColor: Colors.lightGreen,
 			value:userController.getBudget().allotted[userController.categoryMap[category]],
-			onChanged: (value){
+			onChangeEnd:(value){
 				playBudget.setCategory(userController.categoryMap[category], value);
-			},
+			} ,
 			min: 0,
 			max:userController.sectionBudget(section),
 			label: category,
