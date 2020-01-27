@@ -91,6 +91,8 @@ class _FirstLoad extends State<FirstLoad>{
         if(snapshot.hasData){
           Navigator.pushNamed(context, '/knownUser');
         }else if(snapshot.hasError){
+          Error snap = snapshot.error;
+          print(snap.stackTrace);
           return Scaffold(
               body: Center(child: Text('Error '+snapshot.error.toString()),)
           );

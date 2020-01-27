@@ -97,6 +97,7 @@ class BudgetControl implements Control {
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
     _budget = _history.getLatestMonthBudget();
+    print(_budget);
     return _budget != null;
   }
 
