@@ -156,11 +156,7 @@ class BudgetControl implements Control {
 
 
   String getCashFlow(){
-    double spent;
-    for(int i = 0; i<_loadedTransactions.length(); i++ ) {
-      spent += _loadedTransactions.getAt(i).delta;
-    }
-    return (_budget.getMonthlyIncome() - spent).toString();
+    return (_budget.getMonthlyIncome() - expenseTotal()).toString();
   }
 
   @override
@@ -203,6 +199,14 @@ class BudgetControl implements Control {
             () =>
         _budget.allotted[BudgetCategory.miscellaneous]);
     return map;
+  }
+
+  double expenseTotal() {
+    double spent = 0.0;
+    for(int i = 0; i<_loadedTransactions.length(); i++){
+      spent += _loadedTransactions.getAt(i).delta;
+    }
+    return spent;
   }
 
 }

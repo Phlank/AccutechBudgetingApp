@@ -37,7 +37,9 @@ class _NewTransaction extends State{
 				children: <Widget>[
 					Form(
 						key: _transFormKey,
-						child: Column(
+						child: ListView(
+							scrollDirection: Axis.vertical,
+							shrinkWrap: true,
 							children: <Widget>[
 								TextFormField(
 									decoration:InputDecoration(
@@ -46,7 +48,7 @@ class _NewTransaction extends State{
 									),
 									validator:(value){
 										if(value.isEmpty)return 'dont leave empty';
-										if(userController.validInput(value, 'dollarAmnt')) return 'Numbers please';
+										//if(new RegExp(r'\d+').hasMatch(value)) return 'Numbers please';
 										holder.setAmnt(double.tryParse(value));
 										return null;
 									}
@@ -58,7 +60,7 @@ class _NewTransaction extends State{
 										),
 										validator:(value){
 											if(value.isEmpty)return 'dont leave empty';
-											if(userController.validInput(value, 'name')) return 'words please';
+											//if(new RegExp(r'\w+').hasMatch(value)) return 'words please';
 											holder.setVendor(value);
 											return null;
 										}
@@ -87,12 +89,15 @@ class _NewTransaction extends State{
 						)
 					),
 					RaisedButton(
+						child: Text('submit'),
 						onPressed: (){
 							if(_transFormKey.currentState.validate()) {
 								Transaction trans = new Transaction(
 										holder.vendor, holder.method, holder.delta,
 										holder.category);
 								userController.addTransaction(trans);
+							}else{
+								Navigator.pushNamed(context, '/knownUser');
 							}
 						},
 					)
@@ -192,7 +197,7 @@ class _Needs extends State<Needs>{
 
 }
 
-class GeneralSliderCategory{
+class GeneralSliderCategory{// todo figure out why sliders dont slide and make them slide
 
 	BudgetControl userController;
 	MockBudget playBudget;

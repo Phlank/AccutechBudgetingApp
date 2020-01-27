@@ -33,7 +33,7 @@ class History implements Serializable {
   }
 
   void _updateCurrentMonth(Budget budget) {
-    currentMonth = Month.fromBudget(budget);
+    _months.add(Month.fromBudget(budget));
   }
 
   Budget getLatestMonthBudget() {
@@ -102,15 +102,18 @@ class History implements Serializable {
     String output = '{';
     int i = 0;
     _months.forEach((Month m) {
-      output += '"' + i.toString() + '":' + m.serialize();
+      output += '"' + i.toString() + '":' + m.serialize()+',';
       i++;
     });
     output += '}';
+    output = output.replaceAll('},}', '}}');
+    print(output);
     return output;
   }
 
   static History unserialize(String serialized) {
     print('unserialize');
+    print(serialized);
     History output = new History();
     Map map = jsonDecode(serialized);
     print(map);

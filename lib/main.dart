@@ -1,5 +1,4 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
@@ -7,11 +6,10 @@ import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:budgetflow/model/budget_control.dart';
-import 'sidebar/account_display.dart' as account;
-import 'sidebar/history_display.dart' as history;
 import 'sidebar/user_catagory_displays.dart' as sideBar;
 import 'sidebar/user_info_display.dart' as edit;
 
@@ -43,6 +41,7 @@ class BudgetingApp extends StatelessWidget {
         '/wants':(context) => sideBar.Wants(userController),
         '/savings':(context) => sideBar.Savings(userController),
         '/newTransaction': (context) => sideBar.NewTransaction(userController),
+        '/firstLoad':(context) => FirstLoad(userController),
       }, //Routes
     );
   }
@@ -67,6 +66,41 @@ class HomePage extends StatefulWidget {
   _HomePage createState() => _HomePage(userController);
 }
 
+class FirstLoad extends StatefulWidget{
+  BudgetControl userController;
+  FirstLoad(BudgetControl userController){
+    this.userController = userController;
+  }
+
+  @override
+  _FirstLoad createState()=> _FirstLoad(userController);
+}
+
+class _FirstLoad extends State<FirstLoad>{
+  BudgetControl userController;
+  _FirstLoad(BudgetControl userController){
+    this.userController = userController;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return FutureBuilder(
+      future: userController.initialize(newUser),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+        if(snapshot.hasData){
+          Navigator.pushNamed(context, '/knownUser');
+        }else if(snapshot.hasError){
+          return Scaffold(
+              body: Center(child: Text('Error '+snapshot.error.toString()),)
+          );
+        }
+        return sideBar.GeneralSliderCategory(userController).loadingPage();
+      },
+    );
+  }
+}
+
 class _HomePage extends State<HomePage>{
   BudgetControl userController;
   _HomePage(BudgetControl userController){
@@ -76,7 +110,6 @@ class _HomePage extends State<HomePage>{
   bool valid = false;
   Scaffold _loginPage(){
     final validationkey = GlobalKey<FormState>();
-    String user = 'nouser';
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -99,7 +132,6 @@ class _HomePage extends State<HomePage>{
                       if (!userController.validInput(value, 'pin'))
                         return 'your PIN should only be 4 numbers';
                       checkValidity(value);
-                      if(!valid) return 'not valid password';
                       return null;
                     },
                     obscureText: true,
@@ -109,9 +141,9 @@ class _HomePage extends State<HomePage>{
                     onPressed: () {
                       if(validationkey.currentState.validate()) {
                         if (valid) {
-                          Navigator.pushNamed(context, '/knownUser');
+                          Navigator.pushNamed(context, '/firstLoad');
                         } else {
-
+                          AlertDialog(content: Text('wrong pin'),);
                         }
                       }
                     },
@@ -339,6 +371,7 @@ class _HomePage extends State<HomePage>{
              newUser = !user;
              return _loginPage();
            }
+           newUser = true;
            return _informationCollection(_formKey);
          } else if (snapshot.hasError) {
            return Scaffold(
@@ -387,101 +420,82 @@ class _UserPage extends State<UserPage> {
     this.userController = userController;
   }
 
-  Scaffold userPage(){
-    Map<String, double> budgetCatagoryAMNTS = userController.buildBudgetMap();
-    TransactionList expenses = userController.getLoadedTransactions();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(/*users entered name when available*/ 'User Page'),
-      ),
-      drawer:sideBar.GeneralSliderCategory(userController).sideMenu(),
-      body: ListView(
-        padding: EdgeInsets.all(4.0),
-        children: <Widget>[
-          Card(
-            /*pie chart display*/
-              child: PieChart(
-                dataMap: budgetCatagoryAMNTS,
-                showChartValues: true,
-                showLegends: true,
-                colorList: Colors.primaries,
-                showChartValuesOutside: true,
-                showChartValueLabel: true,
-                chartType: ChartType.ring,
-              )),
-          Card(
-            /*user cash flow*/
-              child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                      text: 'Income:\n',
-                      //todo implement income here
-                        style: TextStyle(
-                          color: Colors.green,
-                        )),
-                    TextSpan(
-                      text: 'Expences: -\n',
-                      //todo implement expenses total right here
-                        style: TextStyle(
-                          color: Colors.red,
-                        )),
-                    TextSpan(
-                      text: 'Cash Flow',
-                      //todo implement function to calculate cashFlow
-                        style: TextStyle(
-                          color: Colors
-                              .black, //todo implement a function to return red or green based on cashFlow
-                        ))
-                  ]))),
-          Card(/*user warnings*/),
-          Card(
-            /*expense tracker*/
-              child: new ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: expenses.length(),
-                itemBuilder: (BuildContext context, int index) {
-                  Transaction trans = expenses.getAt(index);
-                  if(trans != null) {
-                    return new Text(trans.vendor +
-                        '\n' +
-                        trans.delta.toString() +
-                        '\n' +
-                        trans.datetime.toIso8601String() +
-                        '\n' +
-                        trans.method);
-                  }
-                  return Text('No Transactions');
-                },
-              )),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.pushNamed(context, '/newTransaction');
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return FutureBuilder(
-      future: userController.initialize(newUser),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
-        if(snapshot.hasData){
-          return userPage();
-        }else if(snapshot.hasError){
-          return Scaffold(
-            body: Text('Error'),
-          );
-        }
-        return sideBar.GeneralSliderCategory(userController).loadingPage();
-      },
-    );
+    {
+      Map<String, double> budgetCatagoryAMNTS = userController.buildBudgetMap();
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(/*users entered name when available*/ 'User Page'),
+        ),
+        drawer: sideBar.GeneralSliderCategory(userController).sideMenu(),
+        body: ListView(
+          padding: EdgeInsets.all(4.0),
+          children: <Widget>[
+            Card(
+              /*pie chart display*/
+                child: PieChart(
+                  dataMap: budgetCatagoryAMNTS,
+                  showChartValues: true,
+                  showLegends: true,
+                  colorList: Colors.primaries,
+                  showChartValuesOutside: true,
+                  showChartValueLabel: true,
+                  chartType: ChartType.ring,
+                )),
+            Card(
+              /*user cash flow*/
+                child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(children: <TextSpan>[
+                      TextSpan(
+                          text: 'Income: '+userController.getBudget().income.toString()+'\n',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.green,
+                          )),
+                      TextSpan(
+                          text: 'Expences: -'+userController.expenseTotal().toString()+'\n',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.red,
+                          )),
+                      TextSpan(
+                          text: 'Cash Flow '+userController.getCashFlow()+'\n',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.red, //todo implement a function to return red or green based on cashFlow
+                          ))
+                    ]))),
+            Card(/*user warnings*/),
+            Card(
+              /*expense tracker*/
+                child: new ListView.builder(
+                  padding: EdgeInsets.all(8),
+                  scrollDirection: Axis.vertical,
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: userController.getLoadedTransactions().length(),
+                  itemBuilder: (BuildContext context, int index) {
+                    Transaction trans = userController.getLoadedTransactions().getAt(index);
+                    if (trans != null) {
+                      return new Text(trans.vendor +
+                          ' ' +
+                          trans.delta.toString() );
+                    }
+                    return Text('No Transactions');
+                  },
+                )),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.pushNamed(context, '/newTransaction');
+          },
+        ),
+      );
+    }
   }
 
 } // _UserPage
