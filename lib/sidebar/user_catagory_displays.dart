@@ -291,6 +291,14 @@ class GeneralSliderCategory{
 		);
 	}
 
+	Scaffold loadingPage() {
+		return Scaffold(
+				body:Center(
+					child: CircularProgressIndicator(),
+				)
+		);
+	} //build
+
 	Scaffold generalDisplay(String display, BuildContext context){
 		return Scaffold(
 			appBar: AppBar(

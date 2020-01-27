@@ -18,8 +18,7 @@ import 'sidebar/user_info_display.dart' as edit;
 //user input validators
 int cardOrder = 0;
 InformationHolding hold = new InformationHolding();
-
-Budget userBudget;
+bool newUser;
 
 //todo move to all string and string dependent data to Strings.dart
 
@@ -39,7 +38,7 @@ class BudgetingApp extends StatelessWidget {
       //InitialRoute
       routes: {
         '/knownUser': (context) => UserPage(userController),
-        '/edit': (context) => edit.EditInformationDirectory(userBudget),
+        '/edit': (context) => edit.EditInformationDirectory(userController.getBudget()),
         '/needs':(context) => sideBar.Needs(userController),
         '/wants':(context) => sideBar.Wants(userController),
         '/savings':(context) => sideBar.Savings(userController),
@@ -315,7 +314,7 @@ class _HomePage extends State<HomePage>{
                   Navigator.pushNamed(context, '/');
                 } else {
                   BudgetFactory budgetFactory = new PriorityBudgetFactory();
-                  userBudget = budgetFactory.newFromInfo(
+                  Budget userBudget = budgetFactory.newFromInfo(
                       hold.getIncomeAmt(), hold.getHousingAmt(), hold.getBudgetType());
                   userController.addNewBudget(userBudget);
                   userController.save();
@@ -336,8 +335,10 @@ class _HomePage extends State<HomePage>{
        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
          if (snapshot.hasData) {
            bool user = snapshot.data;
-           print(user);
-           if(user) return _loginPage();
+           if(user){
+             newUser = !user;
+             return _loginPage();
+           }
            return _informationCollection(_formKey);
          } else if (snapshot.hasError) {
            return Scaffold(
@@ -386,7 +387,7 @@ class _UserPage extends State<UserPage> {
     this.userController = userController;
   }
 
-  Scaffold userPage{
+  Scaffold userPage(){
     Map<String, double> budgetCatagoryAMNTS = userController.buildBudgetMap();
     TransactionList expenses = userController.getLoadedTransactions();
     return Scaffold(
@@ -469,10 +470,19 @@ class _UserPage extends State<UserPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return FutureBuilder(
-
+      future: userController.initialize(newUser),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+        if(snapshot.hasData){
+          return userPage();
+        }else if(snapshot.hasError){
+          return Scaffold(
+            body: Text('Error'),
+          );
+        }
+        return sideBar.GeneralSliderCategory(userController).loadingPage();
+      },
     );
-  } //build
-
+  }
 
 } // _UserPage
 

@@ -75,12 +75,15 @@ class BudgetControl implements Control {
   }
 
   @override
-  void initialize(bool newUser) {
+  Future<bool> initialize(bool newUser) {
     _updateMonthTimes();
     crypter = new SteelCrypter(_password);
     if (!newUser) {
-      _load();
+     return  _load();
     }
+    return new Future((){
+      return true;
+    });
   }
 
   void _updateMonthTimes() {
