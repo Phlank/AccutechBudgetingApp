@@ -89,6 +89,16 @@ class Budget {
 
   TransactionList get transactions => _transactions;
 
+  double get spent {
+    double spent = 0.0;
+    for (BudgetCategory category in BudgetCategory.values) {
+      spent += _actual[category];
+    }
+    return spent;
+  }
+
+  double get remaining => _income - spent;
+
   double setAllotment(BudgetCategory category, double amount) {
     _allotted[category] = amount;
     return amount;
