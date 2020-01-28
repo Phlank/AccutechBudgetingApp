@@ -10,6 +10,7 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+
 import 'budget/budget_category.dart';
 import 'history/month.dart';
 
@@ -22,13 +23,6 @@ class BudgetControl implements Control {
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
   Budget _budget;
-
-  final Map<String, String> regexMap = {
-    'pin': r'\d\d\d\d',
-    'dollarAmnt': r'\d+(.\d\d)?',
-    'name': r'\w+',
-    'age': r'\d{2,3}'
-  };
 
   final Map<String, BudgetCategory> categoryMap = {
     'housing': BudgetCategory.housing,
@@ -136,10 +130,6 @@ class BudgetControl implements Control {
   void addTransaction(Transaction t) {
     _budget.addTransaction(t);
     _loadedTransactions.add(t);
-  }
-
-  bool validInput(String value, String inputType) {
-    return new RegExp(regexMap[inputType]).hasMatch(value);
   }
 
   void changeAllotment(String category, double newAmt){

@@ -1,15 +1,17 @@
+import 'package:budgetflow/input_validator.dart';
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:budgetflow/model/budget_control.dart';
+
 import 'sidebar/user_catagory_displays.dart' as sideBar;
 import 'sidebar/user_info_display.dart' as edit;
 
@@ -24,6 +26,7 @@ void main() => runApp(BudgetingApp());
 
 class BudgetingApp extends StatelessWidget {
   static BudgetControl userController = new BudgetControl();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,9 +52,11 @@ class BudgetingApp extends StatelessWidget {
 
 class UserPage extends StatefulWidget {
   BudgetControl userController;
+
   UserPage(BudgetControl userController){
     this.userController = userController;
   }
+
   @override
   _UserPage createState() => _UserPage(userController);
 }
@@ -62,12 +67,14 @@ class HomePage extends StatefulWidget {
   HomePage(BudgetControl userController){
     this.userController = userController;
   }
+
   @override
   _HomePage createState() => _HomePage(userController);
 }
 
 class FirstLoad extends StatefulWidget{
   BudgetControl userController;
+
   FirstLoad(BudgetControl userController){
     this.userController = userController;
   }
@@ -78,6 +85,7 @@ class FirstLoad extends StatefulWidget{
 
 class _FirstLoad extends State<FirstLoad>{
   BudgetControl userController;
+
   _FirstLoad(BudgetControl userController){
     this.userController = userController;
   }
@@ -105,11 +113,13 @@ class _FirstLoad extends State<FirstLoad>{
 
 class _HomePage extends State<HomePage>{
   BudgetControl userController;
+
   _HomePage(BudgetControl userController){
     this.userController = userController;
   }
-  
+
   bool valid = false;
+
   Scaffold _loginPage(){
     final validationkey = GlobalKey<FormState>();
     return Scaffold(
@@ -117,43 +127,43 @@ class _HomePage extends State<HomePage>{
         title: Text('Login'),
       ),
       body:Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text('Please Login'),
-            Column(
-              children: <Widget>[
-                Form(
-                  key:validationkey,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'Enter your PIN',
-                    ),
-                    validator:(value) {
-                      if (value.isEmpty) return 'Enter your PIN, please';
-                      if (!userController.validInput(value, 'pin'))
-                        return 'your PIN should only be 4 numbers';
-                      checkValidity(value);
-                      return null;
-                    },
-                    obscureText: true,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text('Please Login'),
+          Column(
+            children: <Widget>[
+              Form(
+                key:validationkey,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Enter your PIN',
                   ),
+                  validator:(value) {
+                    if (value.isEmpty) return 'Enter your PIN, please';
+                    if (!InputValidator.pin(value))
+                      return 'your PIN should only be 4 numbers';
+                    checkValidity(value);
+                    return null;
+                  },
+                  obscureText: true,
                 ),
-                  RaisedButton(
-                    onPressed: () {
-                      if(validationkey.currentState.validate()) {
-                        if (valid) {
-                          Navigator.pushNamed(context, '/firstLoad');
-                        } else {
-                          AlertDialog(content: Text('wrong pin'),);
-                        }
-                      }
-                    },
-                    child: Text('Submit'),
-                  )
-                ],
-            )
-          ],
+              ),
+              RaisedButton(
+                onPressed: () {
+                  if(validationkey.currentState.validate()) {
+                    if (valid) {
+                      Navigator.pushNamed(context, '/firstLoad');
+                    } else {
+                      AlertDialog(content: Text('wrong pin'),);
+                    }
+                  }
+                },
+                child: Text('Submit'),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
@@ -180,7 +190,7 @@ class _HomePage extends State<HomePage>{
                   ),
                   validator: (value) {
                     if (value.isEmpty) return 'please enter your name';
-                    if (!userController.validInput(value, 'name'))
+                    if (!InputValidator.name(value))
                       return 'only letters A-Z please';
                     return null;
                   },
@@ -191,7 +201,7 @@ class _HomePage extends State<HomePage>{
                       labelText: 'How old are you?', hintText: 'age'),
                   validator: (value) {
                     if (value.isEmpty) return 'please do not leave blank';
-                    if (!userController.validInput(value, 'age'))
+                    if (!InputValidator.age(value))
                       return 'please enter in numeric format';
                     return null;
                   },
@@ -212,7 +222,7 @@ class _HomePage extends State<HomePage>{
                     ),
                     validator: (value) {
                       if (value.isEmpty) return 'please dont leave blank';
-                      if (!userController.validInput(value, 'dollarAmnt'))
+                      if (!InputValidator.dollarAmount(value))
                         return 'numerical values only please';
                       hold.setIncomeAmt(double.tryParse(value));
                       return null;
@@ -226,7 +236,7 @@ class _HomePage extends State<HomePage>{
                     validator: (value) {
                       if (value.isEmpty)
                         return ' Please don\'t leave this empty';
-                      if (!userController.validInput(value, 'dollarAmnt'))
+                      if (!InputValidator.dollarAmount(value))
                         return 'please put in numerical form';
                       return null;
                     },
@@ -259,7 +269,7 @@ class _HomePage extends State<HomePage>{
                   labelText: 'How much debt in total do you have?'),
               validator: (value) {
                 if (value.isEmpty) return 'please do not leave empty';
-                if (!userController.validInput(value, 'dollarAmnt'))
+                if (!InputValidator.dollarAmount(value))
                   return 'please put in to numerical value';
                 return null;
               }),
@@ -278,7 +288,7 @@ class _HomePage extends State<HomePage>{
                   ),
                   validator: (value) {
                     if (value.isEmpty) return 'please dont leave Blank';
-                    if (!userController.validInput(value, 'dollarAmnt'))
+                    if (!InputValidator.dollarAmount(value))
                       return 'Numeric format please';
                     hold.setHousingAmt(double.tryParse(value));
                     return null;
@@ -299,7 +309,8 @@ class _HomePage extends State<HomePage>{
                       labelText: 'enter your desired pin'),
                   validator: (value) {
                     if (value.isEmpty) return 'please do not leave blank';
-                    if (!userController.validInput(value, 'pin')) return 'please use only numbers';
+                    if (!InputValidator.pin(value))
+                      return 'please use only numbers';
                     return null;
                   },
                 ),
@@ -308,7 +319,8 @@ class _HomePage extends State<HomePage>{
                       hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
                   validator: (value) {
                     if (value.isEmpty) return 'please do not leave blank';
-                    if (!userController.validInput(value, 'pin')) return 'please use only numbers';
+                    if (!InputValidator.pin(value))
+                      return 'please use only numbers';
                     if (value.length != 4) return 'only four numbers please';
                     userController.setPassword(value);
                     return null;
@@ -363,53 +375,53 @@ class _HomePage extends State<HomePage>{
   }
 
   Widget _chooseTheScreen() {
-     final _formKey = GlobalKey<FormState>();
-     return FutureBuilder(
-       future: userController.isReturningUser(),
-       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-         if (snapshot.hasData) {
-           bool user = snapshot.data;
-           if(user){
-             newUser = !user;
-             return _loginPage();
-           }
-           newUser = true;
-           return _informationCollection(_formKey);
-         } else if (snapshot.hasError) {
-           return Scaffold(
-             appBar: AppBar(
-               title: Text('Error'),
-             ),
-             body:Text.rich(
-                 TextSpan(
-                   text: 'Error',
-                   style: TextStyle(
-                     color: Colors.red,
-                     backgroundColor: Colors.black,
-                     fontSize: 24,
-                     fontStyle: FontStyle.italic
-                   )
-                 )
-             )
-           );
-         }
-         return Scaffold(
-           body: Column(
-             children: <Widget>[
-               Text.rich(
-                 TextSpan(
-                   text:'deciding',
-                   style:TextStyle(
-                     fontSize: 20,
-                   )
-                 ),
-               )
-             ],
-           )
-         );
-       },
-     );
-   }
+    final _formKey = GlobalKey<FormState>();
+    return FutureBuilder(
+      future: userController.isReturningUser(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          bool user = snapshot.data;
+          if(user){
+            newUser = !user;
+            return _loginPage();
+          }
+          newUser = true;
+          return _informationCollection(_formKey);
+        } else if (snapshot.hasError) {
+          return Scaffold(
+              appBar: AppBar(
+                title: Text('Error'),
+              ),
+              body:Text.rich(
+                  TextSpan(
+                      text: 'Error',
+                      style: TextStyle(
+                          color: Colors.red,
+                          backgroundColor: Colors.black,
+                          fontSize: 24,
+                          fontStyle: FontStyle.italic
+                      )
+                  )
+              )
+          );
+        }
+        return Scaffold(
+            body: Column(
+              children: <Widget>[
+                Text.rich(
+                  TextSpan(
+                      text:'deciding',
+                      style:TextStyle(
+                        fontSize: 20,
+                      )
+                  ),
+                )
+              ],
+            )
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) => _chooseTheScreen();
@@ -512,11 +524,13 @@ class InformationHolding {
   setHousingAmt(double housingAmt) {
     _housingAmt = housingAmt;
   }
+
   double getIncomeAmt()=> _incomeAmt;
 
   setIncomeAmt(double incomeAmt) {
     _incomeAmt = incomeAmt;
   }
+
   BudgetType getBudgetType() {
     if(_budgetType!=null) return _budgetType;
     return BudgetType.savingGrowth;
