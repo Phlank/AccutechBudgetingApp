@@ -1,5 +1,5 @@
-import 'package:budgetflow/sidebar/user_catagory_displays.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
