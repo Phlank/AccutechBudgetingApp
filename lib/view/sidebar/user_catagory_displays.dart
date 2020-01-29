@@ -26,6 +26,8 @@ class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out wh
 	BudgetControl userController;
 	MockBudget playBudget;
 	String section;
+	double allotedForCategory;
+	double allotedForSection;
 
 	_GeneralCategoryState(String section){
 		this.userController = BudgetingApp.userController;
@@ -57,10 +59,14 @@ class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out wh
 			activeColor: Colors.lightGreen,
 			value:userController.getBudget().allotted[userController.categoryMap[category]],
 			onChanged:(value) {
-				playBudget.setCategory(userController.categoryMap[category], value);
+				setState(() {
+					playBudget.setCategory(userController.categoryMap[category], value);
+				});
 			},
 			onChangeEnd:(value){
-				playBudget.setCategory(userController.categoryMap[category], value);
+				setState(() {
+					playBudget.setCategory(userController.categoryMap[category], value);
+				});
 			},
 			min: 0,
 			max:userController.sectionBudget(section),
@@ -105,6 +111,7 @@ class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out wh
 
 
 	Scaffold generalDisplay(){
+		//todo init the fluctuating allotments
 		return Scaffold(
 			appBar: AppBar(
 				title: Text('Change '+section+' alotments'),
