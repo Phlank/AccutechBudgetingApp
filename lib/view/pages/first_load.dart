@@ -5,10 +5,10 @@ import 'package:flutter/widgets.dart';
 
 class FirstLoad extends StatefulWidget {
   @override
-  FirstLoadState createState() => FirstLoadState();
+  _FirstLoadState createState() => _FirstLoadState();
 }
 
-class FirstLoadState extends State<FirstLoad> {
+class _FirstLoadState extends State<FirstLoad> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

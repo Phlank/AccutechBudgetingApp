@@ -12,15 +12,13 @@ class SetupPage extends StatefulWidget {
   static const String ROUTE = '/setup';
 
   @override
-  State<StatefulWidget> createState() => SetupPageState();
+  State<StatefulWidget> createState() => _SetupPageState();
 }
 
-class SetupPageState extends State<SetupPage> {
+class _SetupPageState extends State<SetupPage> {
   var _formKey;
   InformationHolding hold = new InformationHolding();
-
   String nameButton = 'next';
-
   AppBar appBar;
   Card nameAndAgeCard, incomeAndSavingsCard, housingCard, pinCard;
   TextFormField nameInput,
@@ -33,7 +31,7 @@ class SetupPageState extends State<SetupPage> {
       confirmPinInput;
   List<Card> inputCards;
 
-  SetupPageState() {
+  _SetupPageState() {
     _formKey = GlobalKey<FormState>();
     _initControls();
   }

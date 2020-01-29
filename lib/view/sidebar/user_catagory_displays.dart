@@ -129,6 +129,7 @@ class GeneralSliderCategory{// todo figure out why sliders don't slide and make 
 			min: 0,
 			max:userController.sectionBudget(section),
 			label: category,
+
 		);
 	}
 
