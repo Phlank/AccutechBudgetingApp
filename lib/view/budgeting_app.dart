@@ -2,6 +2,7 @@ import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/pages/add_transaction.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/pages/home_page.dart';
+import 'package:budgetflow/view/pages/login_page.dart';
 import 'package:budgetflow/view/pages/setup_page.dart';
 import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
@@ -22,6 +23,7 @@ class BudgetingApp extends StatelessWidget {
       home: HomePage(),
       routes: {
         SetupPage.ROUTE: (BuildContext context) => SetupPage(),
+        LoginPage.ROUTE: (BuildContext context) => LoginPage(),
         '/knownUser': (BuildContext context) => UserPage(),
         '/edit': (BuildContext context) =>
             EditInformationDirectory(userController.getBudget()),

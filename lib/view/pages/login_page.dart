@@ -5,6 +5,8 @@ import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
+  static const String ROUTE = '/login';
+
   @override
   State<StatefulWidget> createState() => LoginPageState();
 }
