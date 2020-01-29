@@ -94,19 +94,16 @@ class BudgetControl implements Control {
   }
 
   void _updateMonthTimes() {
-    DateTime now = DateTime.now();
-    _currentMonthTime = new MonthTime(now.year, now.month);
-    _transactionMonthTime = new MonthTime(now.year, now.month);
+    _currentMonthTime = MonthTime.now();
+    _transactionMonthTime = MonthTime.now();
   }
 
   Future _load() async {
     print("Loading in BudgetControl");
     _history = await History.load();
     print("History loaded");
-    _loadedTransactions =
-    await _history.getTransactionsFromMonthTime(_currentMonthTime);
-    print("Transactions loaded");
     _budget = await _history.getLatestMonthBudget();
+    _loadedTransactions = _budget.transactions;
     print("Budget created");
   }
 
@@ -142,7 +139,7 @@ class BudgetControl implements Control {
   Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
     TransactionList transactions =
-    await _history.getTransactionsFromMonthTime(_transactionMonthTime);
+    await _history.getTransactionsFromMonthTime(MonthTime.now());
     transactions.forEach((Transaction t) {
       _loadedTransactions.add(t);
     });

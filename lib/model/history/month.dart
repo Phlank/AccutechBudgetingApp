@@ -94,21 +94,21 @@ class Month implements Serializable {
 
   Future<BudgetMap> get allotted async {
     if (_allotted == null) {
-      await loadAllotted();
+      _allotted = await loadAllotted();
     }
     return _allotted;
   }
 
-  Future loadAllotted() async {
-    BudgetControl.fileIO.readFile(_allottedFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      _allotted = BudgetMap.unserialize(plaintext);
-    }).catchError((Object o) {
-      print("Something went wrong when loading the allotments of month: " +
-          this.toString());
+  Future<BudgetMap> loadAllotted() async {
+    String cipher = await BudgetControl.fileIO.readFile(_allottedFilepath)
+        .catchError((Object error) {
       _allotted = new BudgetMap();
+      return _allotted;
     });
+    Encrypted e = Encrypted.unserialize(cipher);
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    _allotted = BudgetMap.unserialize(plaintext);
+    return _allotted;
   }
 
   Future<BudgetMap> get actual async {
@@ -119,15 +119,15 @@ class Month implements Serializable {
   }
 
   Future loadActual() async {
-    BudgetControl.fileIO.readFile(_actualFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      _actual = BudgetMap.unserialize(plaintext);
-    }).catchError((Object o) {
-      print("Something went wrong when loading the actuals of month: " +
-          this.toString());
+    String cipher = await BudgetControl.fileIO.readFile(_actualFilepath)
+        .catchError((Object error) {
       _actual = new BudgetMap();
+      return _actual;
     });
+    Encrypted e = Encrypted.unserialize(cipher);
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    _actual = BudgetMap.unserialize(plaintext);
+    return _actual;
   }
 
   Future<TransactionList> get transactions async {
@@ -138,15 +138,15 @@ class Month implements Serializable {
   }
 
   Future loadTransactions() async {
-    BudgetControl.fileIO.readFile(_transactionsFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      _transactions = TransactionList.unserialize(plaintext);
-    }).catchError((Object error) {
-      print("Something went wrong when loading the transactions of month: " +
-          this.toString());
+    String cipher = await BudgetControl.fileIO.readFile(_transactionsFilepath)
+        .catchError((Object error) {
       _transactions = new TransactionList();
+      return _transactions;
     });
+    Encrypted e = Encrypted.unserialize(cipher);
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    _transactions = TransactionList.unserialize(plaintext);
+    return _transactions;
   }
 
   void updateMonthData(Budget budget) {

@@ -33,20 +33,18 @@ class History implements Serializable {
   }
 
   void _updateCurrentMonth(Budget budget) {
-    _months.add(Month.fromBudget(budget));
+    getMonth(MonthTime.now()).updateMonthData(budget);
   }
 
   Future<Budget> getLatestMonthBudget() async {
-    currentMonth = _months.firstWhere(_monthHasCurrentTime, orElse: () => null);
+    currentMonth = _months.firstWhere(
+            (Month m) => _monthMatchesMonthTime(m, MonthTime.now()),
+        orElse: () => null);
     if (currentMonth != null) {
-      return await Budget.fromMonth(currentMonth);
+      return Budget.fromMonth(currentMonth);
     } else {
       return _createNewMonthBudget();
     }
-  }
-
-  bool _monthHasCurrentTime(Month m) {
-    return m.getMonthTime() == MonthTime.now();
   }
 
   Future<Budget> _createNewMonthBudget() async {
@@ -60,9 +58,7 @@ class History implements Serializable {
     return currentBudget;
   }
 
-  Month _buildCurrentMonth() {
-
-  }
+  Month _buildCurrentMonth() {}
 
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {
     return m.getMonthTime() == mt;
@@ -101,7 +97,7 @@ class History implements Serializable {
     String output = '{';
     int i = 0;
     _months.forEach((Month m) {
-      output += '"' + i.toString() + '":' + m.serialize()+',';
+      output += '"' + i.toString() + '":' + m.serialize() + ',';
       i++;
     });
     output += '}';
@@ -116,7 +112,7 @@ class History implements Serializable {
     print(map);
     map.forEach((dynamic s, dynamic d) async {
       print("Building month: $s: $d");
-      output._months.add(await Month.unserializeMap(d));
+      output.addMonth(Month.unserializeMap(d));
     });
     return output;
   }
