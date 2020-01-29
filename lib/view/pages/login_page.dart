@@ -9,17 +9,17 @@ class LoginPage extends StatefulWidget {
   static const String ROUTE = '/login';
 
   @override
-  State<StatefulWidget> createState() => LoginPageState();
+  State<StatefulWidget> createState() => _LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
   static bool valid = false;
   var _formKey = GlobalKey<FormState>();
   TextFormField pinLoginInput;
   RaisedButton loginButton;
   Scaffold loginPage;
 
-  LoginPageState() {
+  _LoginPageState() {
     _initControls();
   }
 

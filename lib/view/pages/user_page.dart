@@ -8,14 +8,14 @@ import 'package:pie_chart/pie_chart.dart';
 
 class UserPage extends StatefulWidget {
   @override
-  UserPageState createState() => new UserPageState();
+  _UserPageState createState() => new _UserPageState();
 }
 
-class UserPageState extends State<UserPage> {
+class _UserPageState extends State<UserPage> {
   Future _load;
   Scaffold userPage;
 
-  UserPageState() {
+  _UserPageState() {
     _initUserPage();
   }
 

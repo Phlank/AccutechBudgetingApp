@@ -7,10 +7,10 @@ class FirstLoad extends StatefulWidget {
   static const String ROUTE = '/firstLoad';
 
   @override
-  FirstLoadState createState() => FirstLoadState();
+  _FirstLoadState createState() => _FirstLoadState();
 }
 
-class FirstLoadState extends State<FirstLoad> {
+class _FirstLoadState extends State<FirstLoad> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

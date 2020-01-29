@@ -9,10 +9,10 @@ class HomePage extends StatefulWidget {
   static int cardOrder = 0;
 
   @override
-  HomePageState createState() => HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) =>
       FutureBuilder(

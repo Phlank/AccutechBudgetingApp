@@ -7,10 +7,10 @@ import 'package:flutter/widgets.dart';
 
 class AddTransaction extends StatefulWidget {
   @override
-  AddTransactionState createState() => AddTransactionState();
+  _AddTransactionState createState() => _AddTransactionState();
 }
 
-class AddTransactionState extends State<AddTransaction> {
+class _AddTransactionState extends State<AddTransaction> {
   @override
   Widget build(BuildContext context) {
     final addTransactionKey = GlobalKey<FormState>();
