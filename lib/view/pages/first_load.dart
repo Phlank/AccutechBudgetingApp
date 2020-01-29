@@ -15,7 +15,9 @@ class _FirstLoadState extends State<FirstLoad> {
     return FutureBuilder(
       future: BudgetingApp.userController.initialize(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        print('load page');
         if (snapshot.hasData) {
+          print('has data');
           Navigator.pushNamed(context, '/knownUser');
         } else if (snapshot.hasError) {
           Error snap = snapshot.error;

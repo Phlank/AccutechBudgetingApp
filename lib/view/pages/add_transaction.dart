@@ -2,6 +2,7 @@ import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
+import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -26,7 +27,7 @@ class _AddTransactionState extends State<AddTransaction> {
         },
         validator: (value) {
           if (value.isEmpty) return 'dont leave empty';
-          //if(new RegExp(r'\d+').hasMatch(value)) return 'Numbers please';
+          if(InputValidator.dollarAmount(value)) return 'Numbers please';
           holder.delta = -double.tryParse(value);
           return null;
         });
@@ -39,7 +40,7 @@ class _AddTransactionState extends State<AddTransaction> {
         },
         validator: (value) {
           if (value.isEmpty) return 'dont leave empty';
-          //if(new RegExp(r'\w+').hasMatch(value)) return 'words please';
+          if(InputValidator.name(value)) return 'words please';
           holder.vendor = value;
           return null;
         });

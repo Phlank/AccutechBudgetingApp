@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/error_page.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,7 +25,7 @@ class _UserPageState extends State<UserPage> {
     BudgetingApp.userController.buildBudgetMap();
     userPage = Scaffold(
       appBar: AppBar(
-        title: Text(/*users entered name when available*/ 'User Page'),
+        title: Text('User Page'),
       ),
       drawer: GeneralSliderCategory(BudgetingApp.userController).sideMenu(),
       body: ListView(
@@ -113,23 +114,14 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _load = BudgetingApp.userController.initialize();
-  }
+  //@override
+  //void initState() {
+  //  super.initState();
+  //  _load = BudgetingApp.userController.initialize();
+  //}
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _load,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return userPage;
-          } else {
-            return CircularProgressIndicator();
-          }
-        }
-    );
+    return userPage;
   }
 } // _UserPage
