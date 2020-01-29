@@ -6,17 +6,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AddTransaction extends StatefulWidget {
+  static const String ROUTE = '/addTransaction';
+
   @override
-  _AddTransactionState createState() => _AddTransactionState();
+  State<StatefulWidget> createState() => _AddTransactionState();
 }
 
 class _AddTransactionState extends State<AddTransaction> {
   @override
   Widget build(BuildContext context) {
-    final addTransactionKey = GlobalKey<FormState>();
+    var addTransactionKey = GlobalKey<FormState>();
     TransactionInformationHolder holder = new TransactionInformationHolder();
     BudgetCategory defaultCategory = BudgetCategory.groceries;
-    String defaultMethod = 'Cash';
+    final List<String> methodStrings = [
+      'Credit',
+      'Checking',
+      'Savings',
+      'Cash'
+    ];
+    List<DropdownMenuItem> methods = new List<DropdownMenuItem>();
+    String method = 'Cash';
+    List<DropdownMenuItem> categories = new List<DropdownMenuItem>();
+    BudgetCategory category = BudgetCategory.groceries;
+
+    void initState() {
+      for (String s in methodStrings) {
+        methods.add(new DropdownMenuItem(child: Text(s), value: s));
+      }
+      for (BudgetCategory c in BudgetCategory.values) {
+        categories
+            .add(new DropdownMenuItem(child: Text(categoryJson[c]), value: c));
+      }
+    }
 
     TextFormField amountInput = TextFormField(
         decoration: InputDecoration(
@@ -44,24 +65,12 @@ class _AddTransactionState extends State<AddTransaction> {
           return null;
         });
 
-    List<DropdownMenuItem> dropdownMethodItems() {
-      List<String> methods = ['Credit', 'Checking', 'Savings', 'Cash'];
-      List<DropdownMenuItem> retList = new List();
-      for (String method in methods) {
-        retList.add(new DropdownMenuItem(
-          child: Text(method),
-          value: method,
-        ));
-      }
-      return retList;
-    }
-
     DropdownButtonFormField methodInput = DropdownButtonFormField(
-      value: defaultMethod,
-      items: dropdownMethodItems(),
+      value: method,
+      items: methods,
       onChanged: (value) {
         setState(() {
-          defaultMethod = value;
+          method = value;
         });
         holder.method = value;
         return value;
@@ -112,8 +121,8 @@ class _AddTransactionState extends State<AddTransaction> {
             child: Text('submit'),
             onPressed: () {
               if (addTransactionKey.currentState.validate()) {
-                Transaction t = new Transaction(holder.vendor, holder.method,
-                    holder.delta, holder.category);
+                Transaction t = new Transaction(holder.vendor,
+                    holder.method.toString(), holder.delta, holder.category);
                 BudgetingApp.userController.addTransaction(t);
               } else {
                 Navigator.pushNamed(context, '/knownUser');

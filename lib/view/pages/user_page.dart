@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/add_transaction.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -107,7 +108,7 @@ class _UserPageState extends State<UserPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.pushNamed(context, '/newTransaction');
+          Navigator.pushNamed(context, AddTransaction.ROUTE);
         },
       ),
     );
