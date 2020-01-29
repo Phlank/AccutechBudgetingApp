@@ -125,7 +125,7 @@ class GeneralSliderCategory{// todo figure out why sliders don't slide and make 
 			activeColor: Colors.lightGreen,
 			value:userController.getBudget().allotted[userController.categoryMap[category]],
 			onChanged:(value) {
-				playBudget.setCategory(userController.categoryMap[category], value)
+				playBudget.setCategory(userController.categoryMap[category], value);
 			},
 			onChangeEnd:(value){
 				playBudget.setCategory(userController.categoryMap[category], value);
