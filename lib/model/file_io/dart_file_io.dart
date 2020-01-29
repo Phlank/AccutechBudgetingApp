@@ -20,6 +20,7 @@ class DartFileIO implements FileIO {
     String path = homePath + pathSuffix;
     File target = await _getTargetFile(path);
     target.writeAsString(content);
+    print("File written: $_path$pathSuffix");
   }
 
   Future<File> _getTargetFile(String path) async {

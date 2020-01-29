@@ -20,41 +20,38 @@ class History implements Serializable {
   bool newUser;
 
   History() {
-    print('built output');
     _months = new List<Month>();
-    print('list built');
   }
 
   void save(Budget current) {
     _updateCurrentMonth(current);
-    _months.forEach((Month m) => m.save());
+    for (int i = 0; i < _months.length; i++) {
+      _months[i].save();
+    }
     Encrypted e = BudgetControl.crypter.encrypt(serialize());
     BudgetControl.fileIO.writeFile(HISTORY_PATH, e.serialize());
   }
 
   void _updateCurrentMonth(Budget budget) {
-    _months.add(Month.fromBudget(budget));
+    getMonth(MonthTime.now()).updateMonthData(budget);
   }
 
-  Budget getLatestMonthBudget() {
-    currentMonth = _months.firstWhere(_monthHasCurrentTime, orElse: () => null);
+  Future<Budget> getLatestMonthBudget() async {
+    currentMonth = _months.firstWhere(
+            (Month m) => _monthMatchesMonthTime(m, MonthTime.now()),
+        orElse: () => null);
     if (currentMonth != null) {
-      print('here');
       return Budget.fromMonth(currentMonth);
     } else {
-      print('there');
       return _createNewMonthBudget();
     }
   }
 
-  bool _monthHasCurrentTime(Month m) {
-    return m.getMonthTime() == MonthTime.now();
-  }
-
-  Budget _createNewMonthBudget() {//todo what if there is no month
+  Future<Budget> _createNewMonthBudget() async {
+    //todo what if there is no month
     Month lastMonth = _months[_months.length - 1];
     currentMonth = _buildCurrentMonth();
-    Budget lastBudget = Budget.fromMonth(lastMonth);
+    Budget lastBudget = await Budget.fromMonth(lastMonth);
     BudgetFactory factory = new PriorityBudgetFactory();
     Budget currentBudget = factory.newFromBudget(lastBudget);
     currentMonth.updateMonthData(currentBudget);
@@ -67,21 +64,20 @@ class History implements Serializable {
     return m.getMonthTime() == mt;
   }
 
-  BudgetMap getAllottedSpendingFromMonthTime(MonthTime mt) {
+  Future<BudgetMap> getAllottedSpendingFromMonthTime(MonthTime mt) async {
     Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-    return m.allotted;
+    return await m.allotted;
   }
 
-  BudgetMap getActualSpendingFromMonthTime(MonthTime mt) {
+  Future<BudgetMap> getActualSpendingFromMonthTime(MonthTime mt) async {
     Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-    return m.actual;
+    return await m.actual;
   }
 
-  TransactionList getTransactionsFromMonthTime(MonthTime mt) {//todo look here
-    Month m = _months.firstWhere((Month m) {
-      return _monthMatchesMonthTime(m, mt);
-    });
-    return m.transactions;
+  Future<TransactionList> getTransactionsFromMonthTime(MonthTime mt) async {
+    //todo look here
+    Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
+    return await m.transactions;
   }
 
   int getNumberOfMonths() {
@@ -101,7 +97,7 @@ class History implements Serializable {
     String output = '{';
     int i = 0;
     _months.forEach((Month m) {
-      output += '"' + i.toString() + '":' + m.serialize()+',';
+      output += '"' + i.toString() + '":' + m.serialize() + ',';
       i++;
     });
     output += '}';
@@ -110,11 +106,13 @@ class History implements Serializable {
   }
 
   static History unserialize(String serialized) {
+    print(serialized);
     History output = new History();
     Map map = jsonDecode(serialized);
     print(map);
     map.forEach((dynamic s, dynamic d) async {
-      output._months.add(await Month.unserializeMap(d));
+      print("Building month: $s: $d");
+      output.addMonth(Month.unserializeMap(d));
     });
     return output;
   }
@@ -123,9 +121,12 @@ class History implements Serializable {
       BudgetControl.fileIO.readFile(HISTORY_PATH);
 
   static Future<History> load() async {
+    print("Loading history");
     String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);
+    print("History contents: " + cipher);
     Encrypted e = Encrypted.unserialize(cipher);
     String plaintext = BudgetControl.crypter.decrypt(e);
+    print("History serialized: " + plaintext);
     History h = History.unserialize(plaintext);
     return h;
   }

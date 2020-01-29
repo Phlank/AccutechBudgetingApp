@@ -12,7 +12,7 @@ void main() {
     setUp(() {
       builder.setType(BudgetType.savingGrowth);
       builder.setIncome(400.0);
-      builder.setMonthTime(new MonthTime(2020, 01));
+      builder.setMonthTime(new MonthTime(2020, 1));
       mSerialization = '{"year":"2020","month":"1","income":"400.0","type":"Growth"}';
       m = builder.build();
     });
@@ -28,10 +28,16 @@ void main() {
     test("Serialization of new Month", () {
       expect(m.serialize(), mSerialization);
     });
-    test("Serialization is reversible", () {
+    test("Serialization is reversible", () async {
       String ms = m.serialize();
       Month msm = Month.unserialize(ms);
-      expect(m, equals(msm));
+      await m.loadAllotted();
+      await m.loadActual();
+      await m.loadTransactions();
+      await msm.loadAllotted();
+      await msm.loadActual();
+      await msm.loadTransactions();
+      expect(m == msm, isTrue);
     });
   });
 }

@@ -92,59 +92,61 @@ class Month implements Serializable {
 
   BudgetType get type => _type;
 
-  BudgetMap get allotted {
+  Future<BudgetMap> get allotted async {
     if (_allotted == null) {
-      loadAllotted().whenComplete(() {
-        return _allotted;
-      });
+      _allotted = await loadAllotted();
     }
     return _allotted;
   }
 
-  Future loadAllotted() async {
-    BudgetControl.fileIO.readFile(_allottedFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      _allotted = BudgetMap.unserialize(plaintext);
-    }).catchError((Object o) {
+  Future<BudgetMap> loadAllotted() async {
+    String cipher = await BudgetControl.fileIO.readFile(_allottedFilepath)
+        .catchError((Object error) {
       _allotted = new BudgetMap();
+      return _allotted;
     });
+    Encrypted e = Encrypted.unserialize(cipher);
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    _allotted = BudgetMap.unserialize(plaintext);
+    return _allotted;
   }
 
-  BudgetMap get actual {
+  Future<BudgetMap> get actual async {
     if (_actual == null) {
-      loadActual().whenComplete(() {
-        return _actual;
-      });
+      await loadActual();
     }
+    return _actual;
   }
 
   Future loadActual() async {
-    BudgetControl.fileIO.readFile(_actualFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      _actual = BudgetMap.unserialize(plaintext);
-    }).catchError((Object o) {
+    String cipher = await BudgetControl.fileIO.readFile(_actualFilepath)
+        .catchError((Object error) {
       _actual = new BudgetMap();
+      return _actual;
     });
+    Encrypted e = Encrypted.unserialize(cipher);
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    _actual = BudgetMap.unserialize(plaintext);
+    return _actual;
   }
 
-  TransactionList get transactions {
+  Future<TransactionList> get transactions async {
     if (_transactions == null) {
-      loadTransactions().whenComplete(() {
-        return _transactions;
-      });
+      await loadTransactions();
     }
+    return _transactions;
   }
 
   Future loadTransactions() async {
-    BudgetControl.fileIO.readFile(_transactionsFilepath).then((String cipher) {
-      Encrypted e = Encrypted.unserialize(cipher);
-      String plaintext = BudgetControl.crypter.decrypt(e);
-      _transactions = TransactionList.unserialize(plaintext);
-    }).catchError((Object error) {
+    String cipher = await BudgetControl.fileIO.readFile(_transactionsFilepath)
+        .catchError((Object error) {
       _transactions = new TransactionList();
+      return _transactions;
     });
+    Encrypted e = Encrypted.unserialize(cipher);
+    String plaintext = BudgetControl.crypter.decrypt(e);
+    _transactions = TransactionList.unserialize(plaintext);
+    return _transactions;
   }
 
   void updateMonthData(Budget budget) {
@@ -220,9 +222,9 @@ class Month implements Serializable {
     return this.monthTime == other.monthTime &&
         this.income == other.income &&
         this.type == other.type &&
-        this.allotted == other.allotted &&
-        this.actual == other.actual &&
-        this.transactions == other.transactions;
+        this._allotted == other._allotted &&
+        this._actual == other._actual &&
+        this._transactions == other._transactions;
   }
 
   int get hashCode =>
@@ -232,4 +234,8 @@ class Month implements Serializable {
       allotted.hashCode ^
       actual.hashCode ^
       transactions.hashCode;
+
+  String toString() {
+    return monthTime.year.toString() + "_" + monthTime.month.toString();
+  }
 }

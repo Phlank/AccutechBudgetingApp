@@ -1,7 +1,9 @@
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
@@ -68,22 +70,22 @@ void main() {
       });
     });
     group("Testing fromMonth", (){
-      test("Test for income", (){
-        b = new Budget.fromMonth(_month);
+      test("Test for income", () async {
+        b = await Budget.fromMonth(_month);
         expect(b.income, equals(300));
       });
-      test("Test for type", (){
-        b = new Budget.fromMonth(_month);
+      test("Test for type", () async {
+        b = await Budget.fromMonth(_month);
         expect(b.type, equals(BudgetType.savingDepletion));
       });
-      test("Test for transaction", (){
-        b = new Budget.fromMonth(_month);
-        expect(b.transactions, equals(null));
+      test("Test for transaction", () async {
+        b = await Budget.fromMonth(_month);
+        expect(b.transactions, equals(new TransactionList()));
       });
-      test("Test for alotted and actual spending", (){
-        b = new Budget.fromMonth(_month);
-        expect(b.allotted, equals(null));
-        expect(b.actual, equals(null));
+      test("Test for alotted and actual spending", () async {
+        b = await Budget.fromMonth(_month);
+        expect(b.allotted, equals(new BudgetMap()));
+        expect(b.actual, equals(new BudgetMap()));
       });
     });
   });

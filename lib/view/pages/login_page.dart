@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
       valid = true;
       print("Valid");
       Navigator.pop(context);
-      Navigator.pushNamed(context, '/knownUser');
+      Navigator.pushNamed(context, FirstLoad.ROUTE);
     }
   }
 
