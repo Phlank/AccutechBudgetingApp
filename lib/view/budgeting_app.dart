@@ -21,7 +21,7 @@ class BudgetingApp extends StatelessWidget {
       ),
       home: HomePage(),
       routes: {
-        '/setup': (BuildContext context) => SetupPage(),
+        SetupPage.ROUTE: (BuildContext context) => SetupPage(),
         '/knownUser': (BuildContext context) => UserPage(),
         '/edit': (BuildContext context) =>
             EditInformationDirectory(userController.getBudget()),

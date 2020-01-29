@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,7 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   static bool valid = false;
-  static final validationKey = GlobalKey<FormState>();
+  var _formKey = GlobalKey<FormState>();
   TextFormField pinLoginInput;
   RaisedButton loginButton;
   Scaffold loginPage;
@@ -34,21 +36,26 @@ class LoginPageState extends State<LoginPage> {
         if (value.isEmpty) return 'Enter your PIN';
         if (!InputValidator.pin(value))
           return 'your PIN should only be 4 numbers';
-        checkValidity(value);
+        validatePassword(value);
         return null;
       },
       obscureText: true,
     );
   }
 
-  Future checkValidity(value) async {
-    if (await BudgetingApp.userController.passwordIsValid(value)) valid = true;
+  Future validatePassword(value) async {
+    if (await BudgetingApp.userController.passwordIsValid(value)) {
+      valid = true;
+      print("Valid");
+      Navigator.pop(context);
+      Navigator.pushNamed(context, '/knownUser');
+    }
   }
 
   void _initLoginButton() {
     loginButton = RaisedButton(
       onPressed: () {
-        if (validationKey.currentState.validate()) {
+        if (_formKey.currentState.validate()) {
           if (valid) {
             Navigator.pushNamed(context, '/firstLoad');
           } else {
@@ -75,7 +82,7 @@ class LoginPageState extends State<LoginPage> {
           Column(
             children: <Widget>[
               Form(
-                key: validationKey,
+                key: _formKey,
                 child: pinLoginInput,
               ),
               loginButton
