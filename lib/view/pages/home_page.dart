@@ -16,10 +16,55 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   InformationHolding hold = new InformationHolding();
-  bool valid = false;
+  static bool valid = false;
+  static final validationKey = GlobalKey<FormState>();
+
+  TextFormField pinLoginInput;
+  RaisedButton loginButton;
+
+  HomePageState() {
+    _initControls();
+  }
+
+  void _initControls() {
+    _initPinLoginInput();
+    _initLoginButton();
+  }
+
+  void _initPinLoginInput() {
+    pinLoginInput = TextFormField(
+      decoration: InputDecoration(
+        hintText: 'PIN',
+      ),
+      validator: (value) {
+        if (value.isEmpty) return 'Enter your PIN';
+        if (!InputValidator.pin(value))
+          return 'your PIN should only be 4 numbers';
+        checkValidity(value);
+        return null;
+      },
+      obscureText: true,
+    );
+  }
+
+  void _initLoginButton() {
+    loginButton = RaisedButton(
+      onPressed: () {
+        if (validationKey.currentState.validate()) {
+          if (valid) {
+            Navigator.pushNamed(context, '/firstLoad');
+          } else {
+            AlertDialog(
+              content: Text('wrong pin'),
+            );
+          }
+        }
+      },
+      child: Text('Submit'),
+    );
+  }
 
   Scaffold _loginPage() {
-    final validationKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -33,34 +78,9 @@ class HomePageState extends State<HomePage> {
             children: <Widget>[
               Form(
                 key: validationKey,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter your PIN',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) return 'Enter your PIN, please';
-                    if (!InputValidator.pin(value))
-                      return 'your PIN should only be 4 numbers';
-                    checkValidity(value);
-                    return null;
-                  },
-                  obscureText: true,
-                ),
+                child: pinLoginInput,
               ),
-              RaisedButton(
-                onPressed: () {
-                  if (validationKey.currentState.validate()) {
-                    if (valid) {
-                      Navigator.pushNamed(context, '/firstLoad');
-                    } else {
-                      AlertDialog(
-                        content: Text('wrong pin'),
-                      );
-                    }
-                  }
-                },
-                child: Text('Submit'),
-              )
+              loginButton
             ],
           )
         ],
@@ -68,17 +88,24 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void checkValidity(value) async {
+  static Future checkValidity(value) async {
     if (await BudgetingApp.userController.passwordIsValid(value)) valid = true;
   }
 
   Scaffold _informationCollection(GlobalKey<FormState> _formKey) {
     String nameButton = 'next';
 
-    Card nameAndAge, incomeAndSavings;
-    TextFormField name, age, income, savings, deplete;
+    Card nameAndAgeCard, incomeAndSavingsCard, housingCard, pinCard;
+    TextFormField nameInput,
+        ageInput,
+        incomeInput,
+        savingsInput,
+        depleteInput,
+        housingInput,
+        pinInput,
+        confirmPinInput;
 
-    name = TextFormField(
+    nameInput = TextFormField(
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: 'Name',
@@ -90,7 +117,7 @@ class HomePageState extends State<HomePage> {
       },
     );
 
-    age = TextFormField(
+    ageInput = TextFormField(
       keyboardType: TextInputType.number,
       decoration:
           InputDecoration(labelText: 'How old are you?', hintText: 'Age'),
@@ -101,20 +128,20 @@ class HomePageState extends State<HomePage> {
       },
     );
 
-    nameAndAge = Card(
+    nameAndAgeCard = Card(
       child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('All information is changable after submission'),
-              name,
-              age,
+              nameInput,
+              ageInput,
             ],
           )),
     );
 
-    income = TextFormField(
+    incomeInput = TextFormField(
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: 'Monthly Income',
@@ -129,7 +156,7 @@ class HomePageState extends State<HomePage> {
       },
     );
 
-    savings = TextFormField(
+    savingsInput = TextFormField(
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
           hintText: 'savings amount', labelText: 'How much do you have saved?'),
@@ -141,7 +168,7 @@ class HomePageState extends State<HomePage> {
       },
     );
 
-    deplete = TextFormField(
+    depleteInput = TextFormField(
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'If you are dependent on Savings',
@@ -157,68 +184,67 @@ class HomePageState extends State<HomePage> {
       },
     );
 
-    incomeAndSavings = Card(
+    incomeAndSavingsCard = Card(
         child: Form(
             key: _formKey,
             child: Column(
-              children: <Widget>[income, savings, deplete],
+              children: <Widget>[incomeInput, savingsInput, depleteInput],
             )));
 
-    final List<Card> inputFields = <Card>[
-      nameAndAge,
-      incomeAndSavings,
-      Card(
-          /*Housing information continued*/
-          child: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Housing Payment',
-                hintText: 'Rent or Mortgage payment',
-              ),
-              validator: (value) {
-                if (value.isEmpty) return 'please dont leave Blank';
-                if (!InputValidator.dollarAmount(value))
-                  return 'Numeric format please';
-                hold.setHousingAmt(double.tryParse(value));
-                return null;
-              },
-            ),
-          ],
-        ),
-      )),
-      Card(
-          //todo figure out the regexp in these validators and why they don't like the the input
-          /*Security Information*/
-          child: Form(
-              key: _formKey,
-              child: Column(children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(
-                      hintText: 'any four numbers',
-                      labelText: 'enter your desired pin'),
-                  validator: (value) {
-                    if (value.isEmpty) return 'please do not leave blank';
-                    if (!InputValidator.pin(value))
-                      return 'please use only numbers';
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
-                  validator: (value) {
-                    if (value.isEmpty) return 'please do not leave blank';
-                    if (!InputValidator.pin(value))
-                      return 'please use only numbers';
-                    if (value.length != 4) return 'only four numbers please';
-                    BudgetingApp.userController.setPassword(value);
-                    return null;
-                  },
-                )
-              ])))
+    housingInput = TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Housing Payment',
+        hintText: 'Rent or Mortgage payment',
+      ),
+      validator: (value) {
+        if (value.isEmpty) return 'please dont leave Blank';
+        if (!InputValidator.dollarAmount(value)) return 'Numeric format please';
+        hold.setHousingAmt(double.tryParse(value));
+        return null;
+      },
+    );
+
+    housingCard = Card(
+      /*Housing information continued*/
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[housingInput],
+          ),
+        ));
+
+    pinInput = TextFormField(
+      decoration: InputDecoration(
+          hintText: 'any four numbers', labelText: 'enter your desired pin'),
+      validator: (value) {
+        if (value.isEmpty) return 'please do not leave blank';
+        if (!InputValidator.pin(value)) return 'please use only numbers';
+        return null;
+      },
+    );
+
+    confirmPinInput = TextFormField(
+      decoration: InputDecoration(
+          hintText: 're-enter your PIN', labelText: 'Confirm PIN'),
+      validator: (value) {
+        if (value.isEmpty) return 'please do not leave blank';
+        if (!InputValidator.pin(value)) return 'please use only numbers';
+        if (value.length != 4) return 'only four numbers please';
+        BudgetingApp.userController.setPassword(value);
+        return null;
+      },
+    );
+
+    pinCard = Card(
+        child: Form(
+            key: _formKey,
+            child: Column(children: <Widget>[pinInput, confirmPinInput])));
+
+    final List<Card> inputCards = <Card>[
+      nameAndAgeCard,
+      incomeAndSavingsCard,
+      housingCard,
+      pinCard
     ];
 
     return Scaffold(
@@ -235,13 +261,13 @@ class HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: <Widget>[
-          inputFields[HomePage.cardOrder],
+          inputCards[HomePage.cardOrder],
           RaisedButton(
             child: Text(nameButton),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                if (HomePage.cardOrder < inputFields.length - 1) {
-                  if (HomePage.cardOrder == inputFields.length - 2) {
+                if (HomePage.cardOrder < inputCards.length - 1) {
+                  if (HomePage.cardOrder == inputCards.length - 2) {
                     setState(() {
                       nameButton = 'submit';
                     });

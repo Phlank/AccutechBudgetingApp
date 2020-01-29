@@ -195,7 +195,6 @@ class Month implements Serializable {
     output += '"income":"' + _income.toString() + '",';
     output += '"type":"' + budgetTypeJson[_type] + '"';
     output += '}';
-    print(output);
     return output;
   }
 

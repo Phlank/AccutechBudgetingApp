@@ -1,6 +1,4 @@
-import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,15 +24,6 @@ void main() {
     });
     test("Built month has correct monthTime", () {
       expect(m.monthTime, new MonthTime(2020, 01));
-    });
-    test("Default built month has blank, non-null allotted", () {
-      expect(m.allotted, equals(new BudgetMap()));
-    });
-    test("Default built month has blank, non-null actual", () {
-      expect(m.actual, equals(new BudgetMap()));
-    });
-    test("Default built month has blank, non-null transactions", () {
-      expect(m.transactions, equals(new TransactionList()));
     });
     test("Serialization of new Month", () {
       expect(m.serialize(), mSerialization);
