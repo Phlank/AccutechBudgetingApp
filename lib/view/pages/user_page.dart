@@ -12,11 +12,17 @@ class UserPage extends StatefulWidget {
 }
 
 class UserPageState extends State<UserPage> {
-  @override
-  Widget build(BuildContext context) {
+  Future _load;
+  Scaffold userPage;
+
+  UserPageState() {
+    _initUserPage();
+  }
+
+  void _initUserPage() {
     Map<String, double> budgetCategoryAmounts =
-        BudgetingApp.userController.buildBudgetMap();
-    return Scaffold(
+    BudgetingApp.userController.buildBudgetMap();
+    userPage = Scaffold(
       appBar: AppBar(
         title: Text(/*users entered name when available*/ 'User Page'),
       ),
@@ -25,27 +31,29 @@ class UserPageState extends State<UserPage> {
         padding: EdgeInsets.all(4.0),
         children: <Widget>[
           Card(
-              /*pie chart display*/
+            /*pie chart display*/
               child: PieChart(
-            dataMap: budgetCategoryAmounts,
-            showChartValues: true,
-            showLegends: true,
-            colorList: Colors.primaries,
-            showChartValuesOutside: true,
-            showChartValueLabel: true,
-            chartType: ChartType.ring,
-          )),
+                dataMap: budgetCategoryAmounts,
+                showChartValues: true,
+                showLegends: true,
+                colorList: Colors.primaries,
+                showChartValuesOutside: true,
+                showChartValueLabel: true,
+                chartType: ChartType.ring,
+              )),
           Card(
-              /*user cash flow*/
+            /*user cash flow*/
               child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: 'Available Income: ' +
-                            (BudgetingApp.userController.getBudget().income -
-                                    BudgetingApp.userController
-                                        .getBudget()
-                                        .allotted[BudgetCategory.housing])
+                            (BudgetingApp.userController
+                                .getBudget()
+                                .income -
+                                BudgetingApp.userController
+                                    .getBudget()
+                                    .allotted[BudgetCategory.housing])
                                 .toString() +
                             '\n',
                         style: TextStyle(
@@ -74,25 +82,26 @@ class UserPageState extends State<UserPage> {
                   ]))),
           Card(/*user warnings*/),
           Card(
-              //todo make better scrollable
-              /*expense tracker*/
+            //todo make better scrollable
+            /*expense tracker*/
               child: new ListView.builder(
-            padding: EdgeInsets.all(8),
-            scrollDirection: Axis.vertical,
-            physics: ScrollPhysics(),
-            shrinkWrap: true,
-            itemCount:
+                padding: EdgeInsets.all(8),
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(),
+                shrinkWrap: true,
+                itemCount:
                 BudgetingApp.userController.getLoadedTransactions().length(),
-            itemBuilder: (BuildContext context, int index) {
-              Transaction trans = BudgetingApp.userController
-                  .getLoadedTransactions()
-                  .getAt(index);
-              if (trans != null) {
-                return new Text(trans.vendor + ' ' + trans.delta.toString());
-              }
-              return Text('No Transactions');
-            },
-          )),
+                itemBuilder: (BuildContext context, int index) {
+                  Transaction trans = BudgetingApp.userController
+                      .getLoadedTransactions()
+                      .getAt(index);
+                  if (trans != null) {
+                    return new Text(
+                        trans.vendor + ' ' + trans.delta.toString());
+                  }
+                  return Text('No Transactions');
+                },
+              )),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -101,6 +110,26 @@ class UserPageState extends State<UserPage> {
           Navigator.pushNamed(context, '/newTransaction');
         },
       ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _load = BudgetingApp.userController.initialize();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: _load,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return userPage;
+          } else {
+            return CircularProgressIndicator();
+          }
+        }
     );
   }
 } // _UserPage

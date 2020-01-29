@@ -154,33 +154,34 @@ class Month implements Serializable {
     _type = budget.type;
   }
 
-  void save() {
-    _saveAllottedSpending();
-    _saveActualSpending();
-    _saveTransactions();
+  Future save() async {
+    await _saveAllottedSpending();
+    await _saveActualSpending();
+    await _saveTransactions();
   }
 
-  void _saveAllottedSpending() {
+  Future _saveAllottedSpending() async {
     if (_allotted != null) {
       String content = _allotted.serialize();
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize());
+      await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize());
     }
   }
 
-  void _saveActualSpending() {
+  Future _saveActualSpending() async {
     if (_actual != null) {
       String content = _actual.serialize();
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize());
+      await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize());
     }
   }
 
-  void _saveTransactions() {
+  Future _saveTransactions() async {
     if (_transactions != null) {
       String content = _transactions.serialize();
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      BudgetControl.fileIO.writeFile(_transactionsFilepath, e.serialize());
+      await BudgetControl.fileIO.writeFile(
+          _transactionsFilepath, e.serialize());
     }
   }
 

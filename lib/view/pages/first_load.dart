@@ -13,7 +13,7 @@ class FirstLoadState extends State<FirstLoad> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return FutureBuilder(
-      future: BudgetingApp.userController.initialize(BudgetingApp.newUser),
+      future: BudgetingApp.userController.initialize(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
           Navigator.pushNamed(context, '/knownUser');

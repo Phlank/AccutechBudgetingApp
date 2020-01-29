@@ -23,6 +23,7 @@ class BudgetControl implements Control {
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
   Budget _budget;
+  bool _oldUser;
 
   final Map<String, BudgetCategory> categoryMap = {
     'housing': BudgetCategory.housing,
@@ -66,8 +67,9 @@ class BudgetControl implements Control {
   }
 
   @override
-  Future<bool> isReturningUser() {
-    return fileIO.fileExists(History.HISTORY_PATH);
+  Future<bool> isReturningUser() async {
+    _oldUser = await fileIO.fileExists(History.HISTORY_PATH);
+    return _oldUser;
   }
 
   @override
@@ -77,10 +79,10 @@ class BudgetControl implements Control {
   }
 
   @override
-  Future<bool> initialize(bool newUser) {
+  Future<bool> initialize() async {
     _updateMonthTimes();
     crypter = new SteelCrypter(_password);
-    if (!newUser) {
+    if (_oldUser) {
       return _load();
     }
     return new Future(() {
@@ -94,16 +96,22 @@ class BudgetControl implements Control {
     _transactionMonthTime = new MonthTime(now.year, now.month);
   }
 
-  Future<bool> _load() async {
+  Future _load() async {
     _history = await History.load();
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
     _budget = _history.getLatestMonthBudget();
     print(_budget);
-    return _budget != null;
   }
 
-  void save() {
+  Future save() async {
+    if (_history.getMonth(MonthTime.now()) == null) {
+      MonthBuilder builder = new MonthBuilder();
+      builder.setMonthTime(MonthTime.now());
+      builder.setIncome(_budget.income);
+      builder.setType(_budget.type);
+      _history.addMonth(builder.build());
+    }
     _history.save(_budget);
     fileIO.writeFile(_PASSWORD_PATH, _password.serialize());
   }

@@ -21,7 +21,7 @@ class HomePageState extends State<HomePage> {
           if (snapshot.hasData) {
             bool user = snapshot.data;
             if (user) {
-              BudgetingApp.newUser = !user;
+              BudgetingApp.newUser = false;
               return new LoginPage();
             } else {
               BudgetingApp.newUser = true;
@@ -29,6 +29,8 @@ class HomePageState extends State<HomePage> {
             }
           } else if (snapshot.hasError) {
             return ErrorPage();
+          } else {
+            return new CircularProgressIndicator();
           }
           return Scaffold(
               body: Column(
