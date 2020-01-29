@@ -33,13 +33,13 @@ class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out wh
 		this.section = section;
 	}
 
-	Card unbudgetedCard(String display){
+	Card unbudgetedCard(){
 		return Card(
 			child: Text.rich(
 				TextSpan(
 					text:'Unbudgeted in Section\n',
 					children: <TextSpan>[
-						TextSpan()
+						TextSpan(text:'\$')
 					],
 					style: TextStyle(
 						color: userController.cashFlowColor,
@@ -51,7 +51,7 @@ class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out wh
 		);
 	}
 
-	Slider sectionSlider(String category,String section){
+	Slider sectionSlider(String category){
 		return Slider(
 
 			activeColor: Colors.lightGreen,
@@ -69,56 +69,45 @@ class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out wh
 		);
 	}
 
-	Card changeCard(String display){
+	ListTile categoryTile(String category) {
+		return ListTile(
+			title: Text(category+'\t'+(playBudget.budget.allotted[userController.categoryMap[category]]).toString()),
+			subtitle:sectionSlider(category),
+		);
+	}
+
+	Card changeCard(){
 		return Card(
 			child: ListView.builder(
+				controller: ScrollController(),
 				scrollDirection: Axis.vertical,
+				physics: ClampingScrollPhysics(),
 				shrinkWrap: true,
-				itemCount:  userController.sectionMap[display].length,
+				itemCount:  userController.sectionMap[section].length,
 				itemBuilder: (context,int index){
-					return sectionSlider(userController.sectionMap[display][index],display);
+					return categoryTile(userController.sectionMap[section][index]);
 				},
 			),
 		);
 	}
 
-	Card buttonCard(BuildContext context){
+	Card buttonCard(){
 		return Card(
 			child:ListView(
 				scrollDirection: Axis.vertical,
 				shrinkWrap: true,
 				children: <Widget>[
-					RaisedButton(
-						child:Text('submit'),
-						onPressed: (){
-							for(String category in userController.categoryMap.keys.toList()){
-								userController.changeAllotment(category ,playBudget.getCategory(userController.categoryMap[category]));
-							}
-						},
-					),
-					RaisedButton(
-						child:Text('cancel'),
-						onPressed: (){
-							Navigator.pushNamed(context, '/knownUser');
-						},
-					),
+
 				],
 			)
 		);
 	}
 
-	Scaffold loadingPage() {
-		return Scaffold(
-				body:Center(
-					child: CircularProgressIndicator(),
-				)
-		);
-	} //build
 
-	Scaffold generalDisplay(String display, BuildContext context){
+	Scaffold generalDisplay(){
 		return Scaffold(
 			appBar: AppBar(
-				title: Text('Change '+display+' alotments'),
+				title: Text('Change '+section+' alotments'),
 			),
 			drawer: SideMenu().sideMenu(userController),
 			body: Column(
@@ -127,22 +116,31 @@ class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out wh
 				crossAxisAlignment: CrossAxisAlignment.start,
 				textDirection: TextDirection.ltr,
 				children: <Widget>[
-					unbudgetedCard(display),
-					changeCard(display),
-					buttonCard(context),
+					unbudgetedCard(),
+					changeCard(),
 				],
+
 			),
+			persistentFooterButtons: <Widget>[
+				RaisedButton(
+
+					child:Text('submit'),
+					onPressed: (){
+						for(String category in userController.categoryMap.keys.toList()){
+							userController.changeAllotment(category ,playBudget.getCategory(userController.categoryMap[category]));
+						}
+					},
+				),
+				RaisedButton(
+					child:Text('cancel'),
+					onPressed: (){
+						Navigator.pushNamed(context, '/knownUser');
+					},
+				),
+			],
 		);
 	}
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
-
-
-
-
-
+  Widget build(BuildContext context) => generalDisplay();
 }
