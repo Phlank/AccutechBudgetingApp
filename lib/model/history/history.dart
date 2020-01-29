@@ -33,14 +33,16 @@ class History implements Serializable {
   }
 
   void _updateCurrentMonth(Budget budget) {
-    currentMonth = Month.fromBudget(budget);
+    _months.add(Month.fromBudget(budget));
   }
 
   Budget getLatestMonthBudget() {
     currentMonth = _months.firstWhere(_monthHasCurrentTime, orElse: () => null);
     if (currentMonth != null) {
+      print('here');
       return Budget.fromMonth(currentMonth);
     } else {
+      print('there');
       return _createNewMonthBudget();
     }
   }
@@ -49,7 +51,7 @@ class History implements Serializable {
     return m.getMonthTime() == MonthTime.now();
   }
 
-  Budget _createNewMonthBudget() {
+  Budget _createNewMonthBudget() {//todo what if there is no month
     Month lastMonth = _months[_months.length - 1];
     currentMonth = _buildCurrentMonth();
     Budget lastBudget = Budget.fromMonth(lastMonth);
@@ -75,13 +77,10 @@ class History implements Serializable {
     return m.actual;
   }
 
-  TransactionList getTransactionsFromMonthTime(MonthTime mt) {
-    print(mt.toString() + ' geting transaaction');
+  TransactionList getTransactionsFromMonthTime(MonthTime mt) {//todo look here
     Month m = _months.firstWhere((Month m) {
-      print('inside');
       return _monthMatchesMonthTime(m, mt);
     });
-    print('returnin');
     return m.transactions;
   }
 
@@ -102,15 +101,15 @@ class History implements Serializable {
     String output = '{';
     int i = 0;
     _months.forEach((Month m) {
-      output += '"' + i.toString() + '":' + m.serialize();
+      output += '"' + i.toString() + '":' + m.serialize()+',';
       i++;
     });
     output += '}';
+    output = output.replaceAll('},}', '}}');
     return output;
   }
 
   static History unserialize(String serialized) {
-    print('unserialize');
     History output = new History();
     Map map = jsonDecode(serialized);
     print(map);

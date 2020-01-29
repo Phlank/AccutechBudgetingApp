@@ -1,13 +1,13 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 
 abstract class Control {
   Future<bool> isReturningUser();
 
   Future<bool> passwordIsValid(String secret);
 
-  void initialize(bool newUser);
+  void initialize();
 
   void setPassword(String newSecret);
 

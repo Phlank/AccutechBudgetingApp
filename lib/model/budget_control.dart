@@ -11,6 +11,7 @@ import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 
+import 'budget/budget_category.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
@@ -18,17 +19,46 @@ class BudgetControl implements Control {
   static FileIO fileIO = new DartFileIO();
   static Password _password;
   static Crypter crypter;
-  final Map<String, String> regexMap = {
-    'pin': r'\d\d\d\d',
-    'dollarAmnt': r'\d+?([.]\d\d)',
-    'name': r'\w+',
-    'age': r'\d{2,3}'
-  };
-
   History _history;
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
   Budget _budget;
+  bool _oldUser;
+
+  final Map<String, BudgetCategory> categoryMap = {
+    'housing': BudgetCategory.housing,
+    'utilities': BudgetCategory.utilities,
+    'groceries': BudgetCategory.groceries,
+    'savings': BudgetCategory.savings,
+    'health': BudgetCategory.health,
+    'transportation': BudgetCategory.transportation,
+    'education': BudgetCategory.education,
+    'entertainment': BudgetCategory.entertainment,
+    'kids': BudgetCategory.kids,
+    'pets': BudgetCategory.pets,
+    'miscellaneous': BudgetCategory.miscellaneous
+  };
+
+  final Map<String, List<String>> sectionMap = {
+    'needs': [
+      'housing',
+      'utilities',
+      'groceries',
+      'health',
+      'transportation',
+      'education',
+      'kids'
+    ],
+    'wants': ['entertainment', 'pets', 'miscellaneous'],
+    'savings': ['savings']
+  };
+
+  final Map<String, String> routeMap = {
+    'needs': '/needs',
+    'wants': '/wants',
+    'savings': '/savings',
+    'home': '/knownUser'
+  };
 
   BudgetControl() {
     fileIO = new DartFileIO();
@@ -37,27 +67,27 @@ class BudgetControl implements Control {
   }
 
   @override
-  Future<bool> isReturningUser() {
-    return fileIO.fileExists(History.HISTORY_PATH);
+  Future<bool> isReturningUser() async {
+    _oldUser = await fileIO.fileExists(History.HISTORY_PATH);
+    return _oldUser;
   }
 
   @override
   Future<bool> passwordIsValid(String secret) async {
     _password = await SteelPassword.load();
-    bool passwordMatch = _password.verify(secret);
-    if (passwordMatch) {
-      initialize(false);
-    }
-    return passwordMatch;
+    return _password.verify(secret);
   }
 
   @override
-  void initialize(bool newUser) {
+  Future<bool> initialize() async {
     _updateMonthTimes();
     crypter = new SteelCrypter(_password);
-    if (!newUser) {
-      _load();
+    if (_oldUser) {
+      return _load();
     }
+    return new Future(() {
+      return true;
+    });
   }
 
   void _updateMonthTimes() {
@@ -66,18 +96,22 @@ class BudgetControl implements Control {
     _transactionMonthTime = new MonthTime(now.year, now.month);
   }
 
-  void _load() async {
-    print('loading history');
+  Future _load() async {
     _history = await History.load();
-    print(_history);
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
-    print(_loadedTransactions);
     _budget = _history.getLatestMonthBudget();
-    print(_budget.toString());
+    print(_budget);
   }
 
-  void save() {
+  Future save() async {
+    if (_history.getMonth(MonthTime.now()) == null) {
+      MonthBuilder builder = new MonthBuilder();
+      builder.setMonthTime(MonthTime.now());
+      builder.setIncome(_budget.income);
+      builder.setType(_budget.type);
+      _history.addMonth(builder.build());
+    }
     _history.save(_budget);
     fileIO.writeFile(_PASSWORD_PATH, _password.serialize());
   }
@@ -90,7 +124,7 @@ class BudgetControl implements Control {
 
   @override
   Budget getBudget() {
-    return _history.getLatestMonthBudget();
+    return _budget;
   }
 
   @override
@@ -114,8 +148,20 @@ class BudgetControl implements Control {
     _loadedTransactions.add(t);
   }
 
-  bool validInput(String value, String inputType) {
-    return new RegExp(regexMap[inputType]).hasMatch(value);
+  void changeAllotment(String category, double newAmt) {
+    _budget.setAllotment(categoryMap[category], newAmt);
+  }
+
+  double sectionBudget(String section) {
+    double secBudget = 0.0;
+    for (String category in sectionMap[section]) {
+      secBudget += _budget.allotted[categoryMap[category]];
+    }
+    return secBudget;
+  }
+
+  String getCashFlow() {
+    return (_budget.getMonthlyIncome() - expenseTotal()).toString();
   }
 
   @override
@@ -125,5 +171,75 @@ class BudgetControl implements Control {
     _history.addMonth(m);
     _loadedTransactions = b.transactions;
     _budget = b;
+  }
+
+  Map<String, double> buildBudgetMap() {
+    Map<String, double> map = new Map();
+    map.putIfAbsent('housing', () => _budget.allotted[BudgetCategory.housing]);
+    map.putIfAbsent(
+        'utilities', () => _budget.allotted[BudgetCategory.utilities]);
+    map.putIfAbsent(
+        'groceries', () => _budget.allotted[BudgetCategory.groceries]);
+    map.putIfAbsent('savings', () => _budget.allotted[BudgetCategory.savings]);
+    map.putIfAbsent('helath', () => _budget.allotted[BudgetCategory.health]);
+    map.putIfAbsent('transportation',
+            () => _budget.allotted[BudgetCategory.transportation]);
+    map.putIfAbsent(
+        'education', () => _budget.allotted[BudgetCategory.education]);
+    map.putIfAbsent(
+        'entertainment', () => _budget.allotted[BudgetCategory.entertainment]);
+    map.putIfAbsent('kids', () => _budget.allotted[BudgetCategory.kids]);
+    map.putIfAbsent('pets', () => _budget.allotted[BudgetCategory.pets]);
+    map.putIfAbsent(
+        'miscellaneous', () => _budget.allotted[BudgetCategory.miscellaneous]);
+    return map;
+  }
+
+  double expenseTotal() {
+    double spent = 0.0;
+    for (int i = 0; i < _loadedTransactions.length(); i++) {
+      spent += _loadedTransactions.getAt(i).delta;
+    }
+    return spent;
+  }
+}
+
+class MockBudget {
+  Budget budget;
+
+  MockBudget(Budget budget) {
+    this.budget = budget;
+  }
+
+  void setCategory(BudgetCategory category, double amount) {
+    budget.setAllotment(category, amount);
+  }
+
+  double getCategory(BudgetCategory category) {
+    return budget.allotted[category];
+  }
+
+  double getNewTotalAlotted(String section) {
+    Map<String, List<BudgetCategory>> mockMap = {
+      'needs': [
+        BudgetCategory.health,
+        BudgetCategory.housing,
+        BudgetCategory.utilities,
+        BudgetCategory.groceries,
+        BudgetCategory.transportation,
+        BudgetCategory.kids
+      ],
+      'wants': [
+        BudgetCategory.pets,
+        BudgetCategory.miscellaneous,
+        BudgetCategory.entertainment
+      ],
+      'savings': [BudgetCategory.savings]
+    };
+    double total = 0.0;
+    for (BudgetCategory category in mockMap[section]) {
+      total += budget.allotted[category];
+    }
+    return total;
   }
 }
