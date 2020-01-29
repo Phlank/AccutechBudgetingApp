@@ -1,6 +1,8 @@
 import 'package:budgetflow/model/budget_control.dart';
+import 'package:budgetflow/view/pages/add_transaction.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/pages/home_page.dart';
+import 'package:budgetflow/view/pages/setup_page.dart';
 import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
 import 'package:budgetflow/view/sidebar/user_info_display.dart';
@@ -18,17 +20,16 @@ class BudgetingApp extends StatelessWidget {
         primarySwatch: Colors.lightGreen,
       ),
       home: HomePage(),
-      initialRoute: '/',
-      //InitialRoute
       routes: {
-        '/knownUser': (context) => UserPage(),
-        '/edit': (context) =>
+        '/setup': (BuildContext context) => SetupPage(),
+        '/knownUser': (BuildContext context) => UserPage(),
+        '/edit': (BuildContext context) =>
             EditInformationDirectory(userController.getBudget()),
-        '/needs': (context) => Needs(userController),
-        '/wants': (context) => Wants(userController),
-        '/savings': (context) => Savings(userController),
-        '/newTransaction': (context) => NewTransaction(userController),
-        '/firstLoad': (context) => FirstLoad(),
+        '/needs': (BuildContext context) => Needs(userController),
+        '/wants': (BuildContext context) => Wants(userController),
+        '/savings': (BuildContext context) => Savings(userController),
+        '/newTransaction': (BuildContext context) => AddTransaction(),
+        '/firstLoad': (BuildContext context) => FirstLoad(),
       }, //Routes
     );
   }

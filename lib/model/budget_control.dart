@@ -38,17 +38,25 @@ class BudgetControl implements Control {
     'miscellaneous': BudgetCategory.miscellaneous
   };
 
-  final Map<String,List<String>> sectionMap ={
-    'needs':['housing','utilities','groceries','health','transportation','education','kids'],
-    'wants':['entertainment','pets','miscellaneous'],
-    'savings':['savings']
+  final Map<String, List<String>> sectionMap = {
+    'needs': [
+      'housing',
+      'utilities',
+      'groceries',
+      'health',
+      'transportation',
+      'education',
+      'kids'
+    ],
+    'wants': ['entertainment', 'pets', 'miscellaneous'],
+    'savings': ['savings']
   };
 
-  final Map<String,String> routeMap ={
-    'needs':'/needs',
-    'wants':'/wants',
-    'savings':'/savings',
-    'home':'/knownUser'
+  final Map<String, String> routeMap = {
+    'needs': '/needs',
+    'wants': '/wants',
+    'savings': '/savings',
+    'home': '/knownUser'
   };
 
   BudgetControl() {
@@ -65,7 +73,7 @@ class BudgetControl implements Control {
   @override
   Future<bool> passwordIsValid(String secret) async {
     _password = await SteelPassword.load();
-     return _password.verify(secret);
+    return _password.verify(secret);
   }
 
   @override
@@ -73,9 +81,9 @@ class BudgetControl implements Control {
     _updateMonthTimes();
     crypter = new SteelCrypter(_password);
     if (!newUser) {
-     return  _load();
+      return _load();
     }
-    return new Future((){
+    return new Future(() {
       return true;
     });
   }
@@ -86,7 +94,7 @@ class BudgetControl implements Control {
     _transactionMonthTime = new MonthTime(now.year, now.month);
   }
 
-  Future<bool> _load() async{
+  Future<bool> _load() async {
     _history = await History.load();
     _loadedTransactions =
         _history.getTransactionsFromMonthTime(_currentMonthTime);
@@ -107,7 +115,7 @@ class BudgetControl implements Control {
   }
 
   @override
-  Budget getBudget()  {
+  Budget getBudget() {
     return _budget;
   }
 
@@ -132,21 +140,19 @@ class BudgetControl implements Control {
     _loadedTransactions.add(t);
   }
 
-  void changeAllotment(String category, double newAmt){
+  void changeAllotment(String category, double newAmt) {
     _budget.setAllotment(categoryMap[category], newAmt);
-
   }
 
-  double sectionBudget(String section){
+  double sectionBudget(String section) {
     double secBudget = 0.0;
-    for(String category in sectionMap[section]){
+    for (String category in sectionMap[section]) {
       secBudget += _budget.allotted[categoryMap[category]];
     }
     return secBudget;
   }
 
-
-  String getCashFlow(){
+  String getCashFlow() {
     return (_budget.getMonthlyIncome() - expenseTotal()).toString();
   }
 
@@ -161,72 +167,71 @@ class BudgetControl implements Control {
 
   Map<String, double> buildBudgetMap() {
     Map<String, double> map = new Map();
-    map.putIfAbsent('housing',
-            () => _budget.allotted[BudgetCategory.housing]);
-    map.putIfAbsent('utilities',
-            () => _budget.allotted[BudgetCategory.utilities]);
-    map.putIfAbsent('groceries',
-            () => _budget.allotted[BudgetCategory.groceries]);
-    map.putIfAbsent('savings',
-            () => _budget.allotted[BudgetCategory.savings]);
-    map.putIfAbsent('helath',
-            () => _budget.allotted[BudgetCategory.health]);
+    map.putIfAbsent('housing', () => _budget.allotted[BudgetCategory.housing]);
     map.putIfAbsent(
-        'transportation',
-            () =>
-        _budget.allotted[BudgetCategory.transportation]);
-    map.putIfAbsent('education',
-            () => _budget.allotted[BudgetCategory.education]);
+        'utilities', () => _budget.allotted[BudgetCategory.utilities]);
     map.putIfAbsent(
-        'entertainment',
-            () =>
-        _budget.allotted[BudgetCategory.entertainment]);
+        'groceries', () => _budget.allotted[BudgetCategory.groceries]);
+    map.putIfAbsent('savings', () => _budget.allotted[BudgetCategory.savings]);
+    map.putIfAbsent('helath', () => _budget.allotted[BudgetCategory.health]);
+    map.putIfAbsent('transportation',
+            () => _budget.allotted[BudgetCategory.transportation]);
     map.putIfAbsent(
-        'kids', () => _budget.allotted[BudgetCategory.kids]);
+        'education', () => _budget.allotted[BudgetCategory.education]);
     map.putIfAbsent(
-        'pets', () => _budget.allotted[BudgetCategory.pets]);
+        'entertainment', () => _budget.allotted[BudgetCategory.entertainment]);
+    map.putIfAbsent('kids', () => _budget.allotted[BudgetCategory.kids]);
+    map.putIfAbsent('pets', () => _budget.allotted[BudgetCategory.pets]);
     map.putIfAbsent(
-        'miscellaneous',
-            () =>
-        _budget.allotted[BudgetCategory.miscellaneous]);
+        'miscellaneous', () => _budget.allotted[BudgetCategory.miscellaneous]);
     return map;
   }
 
   double expenseTotal() {
     double spent = 0.0;
-    for(int i = 0; i<_loadedTransactions.length(); i++){
+    for (int i = 0; i < _loadedTransactions.length(); i++) {
       spent += _loadedTransactions.getAt(i).delta;
     }
     return spent;
   }
-
 }
 
-class MockBudget{
+class MockBudget {
   Budget budget;
-  MockBudget(Budget budget){
+
+  MockBudget(Budget budget) {
     this.budget = budget;
   }
 
-  void setCategory(BudgetCategory category, double amount){
+  void setCategory(BudgetCategory category, double amount) {
     budget.setAllotment(category, amount);
   }
 
-  double getCategory(BudgetCategory category){
+  double getCategory(BudgetCategory category) {
     return budget.allotted[category];
   }
 
-  double getNewTotalAlotted(String section){
-    Map<String, List<BudgetCategory>> mockMap ={
-      'needs':[BudgetCategory.health,BudgetCategory.housing,BudgetCategory.utilities, BudgetCategory.groceries,BudgetCategory.transportation, BudgetCategory.kids],
-      'wants':[BudgetCategory.pets,BudgetCategory.miscellaneous, BudgetCategory.entertainment],
-      'savings':[BudgetCategory.savings]
+  double getNewTotalAlotted(String section) {
+    Map<String, List<BudgetCategory>> mockMap = {
+      'needs': [
+        BudgetCategory.health,
+        BudgetCategory.housing,
+        BudgetCategory.utilities,
+        BudgetCategory.groceries,
+        BudgetCategory.transportation,
+        BudgetCategory.kids
+      ],
+      'wants': [
+        BudgetCategory.pets,
+        BudgetCategory.miscellaneous,
+        BudgetCategory.entertainment
+      ],
+      'savings': [BudgetCategory.savings]
     };
     double total = 0.0;
-    for(BudgetCategory category in mockMap[section]){
+    for (BudgetCategory category in mockMap[section]) {
       total += budget.allotted[category];
     }
     return total;
   }
-
 }
