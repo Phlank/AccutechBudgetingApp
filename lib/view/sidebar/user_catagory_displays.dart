@@ -1,116 +1,48 @@
 import 'package:budgetflow/model/budget_control.dart';
+import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Wants extends StatefulWidget{
-
-	BudgetControl userController;
-	Wants(BudgetControl userController){
-		this.userController = userController;
-	}
-
-	@override
-	_Wants createState() => _Wants(userController);
-}//todo figure out why the calculations are going awry
-
-class _Wants extends State<Wants>{
-	BudgetControl userController;
-	_Wants(BudgetControl userController){
-		this.userController = userController;
-	}
-
-	@override
-	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('wants', context);
-
-}
-
-class Savings extends StatefulWidget{
-
-	BudgetControl userController;
-	Savings(BudgetControl userController){
-		this.userController = userController;
-	}
-
-	@override
-	_Savings createState() => _Savings(userController);
-}//todo figure out the calculations that are going awry
-
-class _Savings extends State<Savings>{
-	BudgetControl userController;
-	_Savings(BudgetControl userController){
-		this.userController = userController;
-	}
-
-	@override
-	Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('savings', context);
-
-}
+class GeneralCategory extends StatefulWidget{
+  String section;
+  static final String NEEDS_ROUTE = '/needs';
+	static final String WANTS_ROUTE = '/wants';
+	static final String SAVINGS_ROUTE = '/savings';
 
 
-class Needs extends StatefulWidget{
-
-	BudgetControl userController;
-	Needs(BudgetControl userController){
-		this.userController = userController;
+	GeneralCategory(String section){
+		this.section = section;
 	}
 
   @override
-  _Needs createState() => _Needs(userController);
-}
-
-class _Needs extends State<Needs>{
-	BudgetControl userController;
-	_Needs(BudgetControl userController){
-		this.userController = userController;
-	}
-
-  @override
-  Widget build(BuildContext context) => GeneralSliderCategory(userController).generalDisplay('needs', context);
+  State<StatefulWidget> createState() =>_GeneralCategoryState(section);
 
 }
 
-class GeneralSliderCategory{// todo figure out why sliders don't slide and make them slide
+class _GeneralCategoryState extends State<GeneralCategory>{// todo figure out why sliders don't slide and make them slide
 
 	BudgetControl userController;
 	MockBudget playBudget;
+	String section;
 
-	GeneralSliderCategory(BudgetControl userController){
-		this.userController = userController;
+	_GeneralCategoryState(String section){
+		this.userController = BudgetingApp.userController;
 		this.playBudget = new MockBudget(userController.getBudget());
-	}
-
-	FlatButton sideBarFlatButton(String name, String route,
-			BuildContext context) {
-		return new FlatButton(
-			child: Text(name),
-			onPressed: () {
-				Navigator.pushNamed(context, route);
-			},
-		);
-	}
-
-	Drawer sideMenu(){
-		return Drawer(
-			child: ListView.builder(
-					scrollDirection: Axis.vertical,
-					shrinkWrap: true,
-					itemCount: userController.routeMap.keys.toList().length,
-					itemBuilder: (BuildContext context, int index){
-						String name = userController.routeMap.keys.toList()[index];
-						return sideBarFlatButton(name, userController.routeMap[name], context);
-					},
-			),
-		);
+		this.section = section;
 	}
 
 	Card unbudgetedCard(String display){
 		return Card(
 			child: Text.rich(
 				TextSpan(
-					text:'\$'+(userController.sectionBudget(display)- playBudget.getNewTotalAlotted(display)).toString(),
+					text:'Unbudgeted in Section\n',
+					children: <TextSpan>[
+						TextSpan()
+					],
 					style: TextStyle(
-						color: Colors.black,
+						color: userController.cashFlowColor,
 						fontSize: 20,
 						fontWeight: FontWeight.bold,
 					),
@@ -188,7 +120,7 @@ class GeneralSliderCategory{// todo figure out why sliders don't slide and make 
 			appBar: AppBar(
 				title: Text('Change '+display+' alotments'),
 			),
-			drawer: sideMenu(),
+			drawer: SideMenu().sideMenu(userController),
 			body: Column(
 				verticalDirection: VerticalDirection.down,
 				mainAxisAlignment: MainAxisAlignment.center,
@@ -202,6 +134,12 @@ class GeneralSliderCategory{// todo figure out why sliders don't slide and make 
 			),
 		);
 	}
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
 
 
 

@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
+import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -94,7 +94,7 @@ class _AddTransactionState extends State<AddTransaction> {
 
     return Scaffold(
       appBar: AppBar(title: Text('New Transaction')),
-      drawer: GeneralSliderCategory(BudgetingApp.userController).sideMenu(),
+      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: Column(
         children: <Widget>[
           Form(
