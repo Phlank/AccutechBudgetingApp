@@ -31,7 +31,7 @@ class BudgetingApp extends StatelessWidget {
         '/wants': (BuildContext context) => Wants(userController),
         '/savings': (BuildContext context) => Savings(userController),
         '/newTransaction': (BuildContext context) => AddTransaction(),
-        '/firstLoad': (BuildContext context) => FirstLoad(),
+        FirstLoad.ROUTE: (BuildContext context) => FirstLoad(),
       }, //Routes
     );
   }

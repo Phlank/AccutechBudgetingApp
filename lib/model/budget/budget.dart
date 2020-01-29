@@ -71,12 +71,14 @@ class Budget {
   }
 
   // Makes a new budget based on data currently represented within a month
-  Budget.fromMonth(Month month) {
-    _income = month.getIncome();
-    _type = month.type;
-    _allotted = month.allotted;
-    _actual = month.actual;
-    _transactions = month.transactions;
+  static Future<Budget> fromMonth(Month month) async {
+    BudgetBuilder builder = new BudgetBuilder();
+    builder.setIncome(month.income);
+    builder.setType(month.type);
+    builder.setAllottedSpending(await month.allotted);
+    builder.setActualSpending(await month.actual);
+    builder.setTransactions(await month.transactions);
+    return builder.build();
   }
 
   double get income => _income;

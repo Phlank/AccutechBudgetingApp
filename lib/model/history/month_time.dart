@@ -29,7 +29,7 @@ class MonthTime {
   @override
   bool operator ==(Object o) => o is MonthTime && this._equals(o);
 
-  bool _equals(MonthTime o) => year == o.year && month == o.month;
+  bool _equals(MonthTime o) => this.year == o.year && this.month == o.month;
 
   @override
   int get hashCode => year.hashCode ^ month.hashCode;
