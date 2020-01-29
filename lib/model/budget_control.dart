@@ -80,14 +80,17 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> initialize() async {
+    print("Initializing BudgetControl");
     _updateMonthTimes();
+    print("MonthTimes updated");
     crypter = new SteelCrypter(_password);
+    print("Crypter created");
     if (_oldUser) {
-      return _load();
-    }
-    return new Future(() {
+      await _load();
       return true;
-    });
+    } else {
+      return false;
+    }
   }
 
   void _updateMonthTimes() {
@@ -97,11 +100,14 @@ class BudgetControl implements Control {
   }
 
   Future _load() async {
+    print("Loading in BudgetControl");
     _history = await History.load();
+    print("History loaded");
     _loadedTransactions =
-        _history.getTransactionsFromMonthTime(_currentMonthTime);
-    _budget = _history.getLatestMonthBudget();
-    print(_budget);
+    await _history.getTransactionsFromMonthTime(_currentMonthTime);
+    print("Transactions loaded");
+    _budget = await _history.getLatestMonthBudget();
+    print("Budget created");
   }
 
   Future save() async {
@@ -133,11 +139,11 @@ class BudgetControl implements Control {
   }
 
   @override
-  void loadPreviousMonthTransactions() {
+  Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
-    _history
-        .getTransactionsFromMonthTime(_transactionMonthTime)
-        .forEach((Transaction t) {
+    TransactionList transactions =
+    await _history.getTransactionsFromMonthTime(_transactionMonthTime);
+    transactions.forEach((Transaction t) {
       _loadedTransactions.add(t);
     });
   }

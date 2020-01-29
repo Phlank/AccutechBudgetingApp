@@ -17,7 +17,7 @@ abstract class Control {
 
   TransactionList getLoadedTransactions();
 
-  void loadPreviousMonthTransactions();
+  Future loadPreviousMonthTransactions();
 
   void addTransaction(Transaction t);
 

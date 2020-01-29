@@ -92,11 +92,9 @@ class Month implements Serializable {
 
   BudgetType get type => _type;
 
-  BudgetMap get allotted {
+  Future<BudgetMap> get allotted async {
     if (_allotted == null) {
-      loadAllotted().whenComplete(() {
-        return _allotted;
-      });
+      await loadAllotted();
     }
     return _allotted;
   }
@@ -107,16 +105,17 @@ class Month implements Serializable {
       String plaintext = BudgetControl.crypter.decrypt(e);
       _allotted = BudgetMap.unserialize(plaintext);
     }).catchError((Object o) {
+      print("Something went wrong when loading the allotments of month: " +
+          this.toString());
       _allotted = new BudgetMap();
     });
   }
 
-  BudgetMap get actual {
+  Future<BudgetMap> get actual async {
     if (_actual == null) {
-      loadActual().whenComplete(() {
-        return _actual;
-      });
+      await loadActual();
     }
+    return _actual;
   }
 
   Future loadActual() async {
@@ -125,16 +124,17 @@ class Month implements Serializable {
       String plaintext = BudgetControl.crypter.decrypt(e);
       _actual = BudgetMap.unserialize(plaintext);
     }).catchError((Object o) {
+      print("Something went wrong when loading the actuals of month: " +
+          this.toString());
       _actual = new BudgetMap();
     });
   }
 
-  TransactionList get transactions {
+  Future<TransactionList> get transactions async {
     if (_transactions == null) {
-      loadTransactions().whenComplete(() {
-        return _transactions;
-      });
+      await loadTransactions();
     }
+    return _transactions;
   }
 
   Future loadTransactions() async {
@@ -143,6 +143,8 @@ class Month implements Serializable {
       String plaintext = BudgetControl.crypter.decrypt(e);
       _transactions = TransactionList.unserialize(plaintext);
     }).catchError((Object error) {
+      print("Something went wrong when loading the transactions of month: " +
+          this.toString());
       _transactions = new TransactionList();
     });
   }
@@ -220,9 +222,9 @@ class Month implements Serializable {
     return this.monthTime == other.monthTime &&
         this.income == other.income &&
         this.type == other.type &&
-        this.allotted == other.allotted &&
-        this.actual == other.actual &&
-        this.transactions == other.transactions;
+        this._allotted == other._allotted &&
+        this._actual == other._actual &&
+        this._transactions == other._transactions;
   }
 
   int get hashCode =>
@@ -232,4 +234,8 @@ class Month implements Serializable {
       allotted.hashCode ^
       actual.hashCode ^
       transactions.hashCode;
+
+  String toString() {
+    return monthTime.year.toString() + "_" + monthTime.month.toString();
+  }
 }
