@@ -121,8 +121,11 @@ class GeneralSliderCategory{// todo figure out why sliders don't slide and make 
 
 	Slider sectionSlider(String category,String section){
 		return Slider(
+
 			activeColor: Colors.lightGreen,
 			value:userController.getBudget().allotted[userController.categoryMap[category]],
+			onChanged:(value){
+					playBudget.setCategory(userController.categoryMap[category], value);},
 			onChangeEnd:(value){
 				playBudget.setCategory(userController.categoryMap[category], value);
 			} ,

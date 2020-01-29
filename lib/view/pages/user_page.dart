@@ -114,11 +114,11 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  //@override
-  //void initState() {
-  //  super.initState();
-  //  _load = BudgetingApp.userController.initialize();
-  //}
+  @override
+  void initState() {
+    super.initState();
+    _load = BudgetingApp.userController.initialize();
+  }
 
   @override
   Widget build(BuildContext context) {
