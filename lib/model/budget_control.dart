@@ -20,10 +20,10 @@ class BudgetControl implements Control {
   static FileIO fileIO = new DartFileIO();
   static Password _password;
   static Crypter crypter;
+  Budget _budget;
   History _history;
   TransactionList _loadedTransactions;
   MonthTime _currentMonthTime, _transactionMonthTime;
-  Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
 
