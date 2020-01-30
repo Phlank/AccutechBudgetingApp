@@ -108,7 +108,8 @@ class GeneralSliderCategory{// todo figure out why sliders don't slide and make 
 		return Card(
 			child: Text.rich(
 				TextSpan(
-					text:'\$'+(userController.sectionBudget(display)- playBudget.getNewTotalAlotted(display)).toString(),
+          text: '\$' + (userController.sectionBudget(display) -
+              playBudget.getNewTotalAllotted(display)).toString(),
 					style: TextStyle(
 						color: Colors.black,
 						fontSize: 20,

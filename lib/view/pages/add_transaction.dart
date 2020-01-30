@@ -13,91 +13,37 @@ class AddTransaction extends StatefulWidget {
 }
 
 class _AddTransactionState extends State<AddTransaction> {
+  static double amount;
+  static String vendor;
+  static String method;
+  static BudgetCategory category;
+
   @override
   Widget build(BuildContext context) {
-    var addTransactionKey = GlobalKey<FormState>();
-    TransactionInformationHolder holder = new TransactionInformationHolder();
-    BudgetCategory defaultCategory = BudgetCategory.groceries;
-    final List<String> methodStrings = [
-      'Credit',
-      'Checking',
-      'Savings',
-      'Cash'
-    ];
-    List<DropdownMenuItem> methods = new List<DropdownMenuItem>();
-    String method = 'Cash';
-    List<DropdownMenuItem> categories = new List<DropdownMenuItem>();
-    BudgetCategory category = BudgetCategory.groceries;
-
-    void initState() {
-      for (String s in methodStrings) {
-        methods.add(new DropdownMenuItem(child: Text(s), value: s));
-      }
-      for (BudgetCategory c in BudgetCategory.values) {
-        categories
-            .add(new DropdownMenuItem(child: Text(categoryJson[c]), value: c));
-      }
-    }
+    final _formKey = GlobalKey<FormState>();
 
     TextFormField amountInput = TextFormField(
-        decoration: InputDecoration(
-            labelText: 'Amount of Transaction', hintText: 'numbers only'),
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(labelText: 'Amount of Transaction'),
         onChanged: (value) {
-          holder.delta = -double.tryParse(value);
+          amount = -double.tryParse(value);
         },
         validator: (value) {
           if (value.isEmpty) return 'dont leave empty';
           //if(new RegExp(r'\d+').hasMatch(value)) return 'Numbers please';
-          holder.delta = -double.tryParse(value);
+          amount = -double.tryParse(value);
           return null;
         });
 
     TextFormField vendorInput = TextFormField(
-        decoration: InputDecoration(
-            labelText: 'Where did you spend method', hintText: 'words only'),
+        decoration: InputDecoration(labelText: 'Vendor Name'),
         onChanged: (value) {
-          holder.vendor = value;
+          vendor = value;
         },
         validator: (value) {
-          if (value.isEmpty) return 'dont leave empty';
-          //if(new RegExp(r'\w+').hasMatch(value)) return 'words please';
-          holder.vendor = value;
+          if (value.isEmpty) return 'Cannot be empty';
+          vendor = value;
           return null;
-        });
-
-    DropdownButtonFormField methodInput = DropdownButtonFormField(
-      value: method,
-      items: methods,
-      onChanged: (value) {
-        setState(() {
-          method = value;
-        });
-        holder.method = value;
-        return value;
-      },
-    );
-
-    List<DropdownMenuItem> dropdownCategoryItems() {
-      List<DropdownMenuItem> retList = new List();
-      for (String name
-          in BudgetingApp.userController.categoryMap.keys.toList()) {
-        retList.add(new DropdownMenuItem(
-          child: Text(name),
-          value: BudgetingApp.userController.categoryMap[name],
-        ));
-      }
-      return retList;
-    }
-
-    DropdownButtonFormField categoryInput = DropdownButtonFormField(
-        value: defaultCategory,
-        items: dropdownCategoryItems(),
-        onChanged: (value) {
-          setState(() {
-            defaultCategory = value;
-          });
-          holder.category = value;
-          return value;
         });
 
     return Scaffold(
@@ -106,24 +52,27 @@ class _AddTransactionState extends State<AddTransaction> {
       body: Column(
         children: <Widget>[
           Form(
-              key: addTransactionKey,
+              key: _formKey,
               child: ListView(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 children: <Widget>[
                   amountInput,
                   vendorInput,
-                  methodInput,
-                  categoryInput
+                  MethodDropdownButton(),
+                  CategoryDropdownButton()
                 ],
               )),
           RaisedButton(
             child: Text('submit'),
             onPressed: () {
-              if (addTransactionKey.currentState.validate()) {
-                Transaction t = new Transaction(holder.vendor,
-                    holder.method.toString(), holder.delta, holder.category);
+              if (_formKey.currentState.validate()) {
+                Transaction t = new Transaction(vendor,
+                    method, amount, category);
+                print(t);
                 BudgetingApp.userController.addTransaction(t);
+                BudgetingApp.userController.save();
+                Navigator.pushNamed(context, '/knownUser');
               } else {
                 Navigator.pushNamed(context, '/knownUser');
               }
@@ -131,6 +80,70 @@ class _AddTransactionState extends State<AddTransaction> {
           )
         ],
       ),
+    );
+  }
+}
+
+class MethodDropdownButton extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _MethodDropdownButtonState();
+}
+
+class _MethodDropdownButtonState extends State<MethodDropdownButton> {
+  String methodValue = 'Cash';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: methodValue,
+      icon: Icon(Icons.arrow_drop_down),
+      iconSize: 24,
+      elevation: 16,
+      onChanged: (String newValue) {
+        setState(() {
+          methodValue = newValue;
+          _AddTransactionState.method = newValue;
+        });
+      },
+      items: <String>['Cash', 'Credit', 'Checking', 'Savings']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+}
+
+class CategoryDropdownButton extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _CategoryDropdownButtonState();
+}
+
+class _CategoryDropdownButtonState extends State<CategoryDropdownButton> {
+  BudgetCategory categoryValue = BudgetCategory.miscellaneous;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<BudgetCategory>(
+      value: categoryValue,
+      icon: Icon(Icons.arrow_drop_down),
+      iconSize: 24,
+      elevation: 16,
+      onChanged: (BudgetCategory newValue) {
+        setState(() {
+          categoryValue = newValue;
+          _AddTransactionState.category = newValue;
+        });
+      },
+      items: BudgetCategory.values
+          .map<DropdownMenuItem<BudgetCategory>>((BudgetCategory category) {
+        return DropdownMenuItem<BudgetCategory>(
+          value: category,
+          child: Text(categoryJson[category]),
+        );
+      }).toList(),
     );
   }
 }

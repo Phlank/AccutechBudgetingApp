@@ -21,7 +21,7 @@ class BudgetControl implements Control {
   static Crypter crypter;
   History _history;
   TransactionList _loadedTransactions;
-  MonthTime _currentMonthTime, _transactionMonthTime;
+  MonthTime _transactionMonthTime;
   Budget _budget;
   bool _oldUser;
 
@@ -94,7 +94,6 @@ class BudgetControl implements Control {
   }
 
   void _updateMonthTimes() {
-    _currentMonthTime = MonthTime.now();
     _transactionMonthTime = MonthTime.now();
   }
 
@@ -147,8 +146,12 @@ class BudgetControl implements Control {
 
   @override
   void addTransaction(Transaction t) {
+    print("Adding transaction");
     _budget.addTransaction(t);
+    print("Adding transaction - budget");
+    _history.getMonth(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
+    print("Adding transaction - loadedTransactions");
   }
 
   void changeAllotment(String category, double newAmt) {
@@ -222,7 +225,7 @@ class MockBudget {
     return budget.allotted[category];
   }
 
-  double getNewTotalAlotted(String section) {
+  double getNewTotalAllotted(String section) {
     Map<String, List<BudgetCategory>> mockMap = {
       'needs': [
         BudgetCategory.health,

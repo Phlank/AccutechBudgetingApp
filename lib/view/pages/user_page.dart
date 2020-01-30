@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/add_transaction.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
@@ -20,7 +21,27 @@ class _UserPageState extends State<UserPage> {
     _initUserPage();
   }
 
+  List<Widget> transactionTiles() {
+    List<Widget> tiles = new List<Widget>();
+    TransactionList transactions = BudgetingApp.userController
+        .getLoadedTransactions();
+    for (int i = 0; i < transactions.length(); i++) {
+      print(i.toString());
+      tiles.add(fromTransaction(transactions[i]));
+    }
+    return tiles;
+  }
+
+  Widget fromTransaction(Transaction t) {
+    final String subtitle = t.vendor + ' ' + categoryJson[t.category];
+    return ListTile(
+      title: Text(t.delta.toString()),
+      subtitle: Text(subtitle),
+    );
+  }
+
   void _initUserPage() {
+    final tiles = transactionTiles();
     Map<String, double> budgetCategoryAmounts =
     BudgetingApp.userController.buildBudgetMap();
     userPage = Scaffold(
@@ -85,23 +106,12 @@ class _UserPageState extends State<UserPage> {
           Card(
             //todo make better scrollable
             /*expense tracker*/
-              child: new ListView.builder(
+              child: ListView(
+                shrinkWrap: true,
                 padding: EdgeInsets.all(8),
                 scrollDirection: Axis.vertical,
                 physics: ScrollPhysics(),
-                shrinkWrap: true,
-                itemCount:
-                BudgetingApp.userController.getLoadedTransactions().length(),
-                itemBuilder: (BuildContext context, int index) {
-                  Transaction trans = BudgetingApp.userController
-                      .getLoadedTransactions()
-                      .getAt(index);
-                  if (trans != null) {
-                    return new Text(
-                        trans.vendor + ' ' + trans.delta.toString());
-                  }
-                  return Text('No Transactions');
-                },
+                children: tiles,
               )),
         ],
       ),
@@ -130,7 +140,6 @@ class _UserPageState extends State<UserPage> {
           } else {
             return CircularProgressIndicator();
           }
-        }
-    );
+        });
   }
 } // _UserPage
