@@ -22,27 +22,7 @@ class _UserPageState extends State<UserPage> {
     _initUserPage();
   }
 
-  List<Widget> transactionTiles() {
-    List<Widget> tiles = new List<Widget>();
-    TransactionList transactions = BudgetingApp.userController
-        .getLoadedTransactions();
-    for (int i = 0; i < transactions.length(); i++) {
-      print(i.toString());
-      tiles.add(fromTransaction(transactions[i]));
-    }
-    return tiles;
-  }
-
-  Widget fromTransaction(Transaction t) {
-    final String subtitle = t.vendor;
-    return ListTile(
-      title: Text(t.delta.toString()),
-      subtitle: Text(subtitle),
-    );
-  }
-
   void _initUserPage() {
-    final tiles = transactionTiles();
     Map<String, double> budgetCategoryAmounts =
     BudgetingApp.userController.buildBudgetMap();
     userPage = Scaffold(
@@ -103,17 +83,7 @@ class _UserPageState extends State<UserPage> {
                               .red, //todo implement a function to return red or green based on cashFlow
                         ))
                   ]))),
-          Card(/*user warnings*/),
-          Card(
-            //todo make better scrollable
-            /*expense tracker*/
-              child: ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.all(8),
-                scrollDirection: Axis.vertical,
-                physics: ScrollPhysics(),
-                children: tiles,
-              )),
+          new _TransactionListView()
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -144,3 +114,54 @@ class _UserPageState extends State<UserPage> {
         });
   }
 } // _UserPage
+
+class _TransactionListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    TransactionList transactions =
+    BudgetingApp.userController.getLoadedTransactions();
+    print('Generating ' +
+        transactions.length.toString() +
+        ' transaction list items');
+    return Card(
+        child: new ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(8),
+            scrollDirection: Axis.vertical,
+            physics: ScrollPhysics(),
+            itemCount: transactions.length,
+            itemBuilder: (context, index) {
+              return _buildTransactionListViewItem(index);
+            }));
+  }
+
+  Widget _buildTransactionListViewItem(int index) {
+    Transaction t = BudgetingApp.userController.getLoadedTransactions()[index];
+    return Table(children: [
+      TableRow(children: [
+        Text(
+          t.vendor,
+          textAlign: TextAlign.left,
+        ),
+        Text(
+          _formatDelta(t.delta),
+          textAlign: TextAlign.right,
+        )
+      ]),
+      TableRow(children: [
+        Text(t.datetime.toLocal().toIso8601String(), textAlign: TextAlign.left),
+        Text(categoryJson[t.category], textAlign: TextAlign.right)
+      ])
+    ]);
+  }
+
+  String _formatDelta(double delta) {
+    String output = delta.toStringAsPrecision(2);
+    if (output.contains('-')) {
+      output = output.replaceAll('-', '-\$');
+    } else {
+      output = '\$' + output;
+    }
+    return output;
+  }
+}

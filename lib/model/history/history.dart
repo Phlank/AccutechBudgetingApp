@@ -58,7 +58,8 @@ class History implements Serializable {
     return currentBudget;
   }
 
-  Month _buildCurrentMonth() {}
+  Month _buildCurrentMonth() {
+  }
 
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {
     return m.getMonthTime() == mt;
@@ -121,12 +122,9 @@ class History implements Serializable {
       BudgetControl.fileIO.readFile(HISTORY_PATH);
 
   static Future<History> load() async {
-    print("Loading history");
     String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);
-    print("History contents: " + cipher);
     Encrypted e = Encrypted.unserialize(cipher);
     String plaintext = BudgetControl.crypter.decrypt(e);
-    print("History serialized: " + plaintext);
     History h = History.unserialize(plaintext);
     return h;
   }

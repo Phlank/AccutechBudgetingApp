@@ -11,8 +11,15 @@ class DartFileIO implements FileIO {
   }
 
   static Future<String> _getPath() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    return appDocDir.path;
+    Directory appDocDir;
+    String appPath;
+    try {
+      appDocDir = await getApplicationDocumentsDirectory();
+      appPath = appDocDir.path;
+    } catch (MissingPluginException) {
+      appPath = null;
+    }
+    return appPath;
   }
 
   Future writeFile(String pathSuffix, String content) async {
@@ -20,7 +27,7 @@ class DartFileIO implements FileIO {
     String path = homePath + pathSuffix;
     File target = await _getTargetFile(path);
     target.writeAsString(content);
-    print("File written: $_path$pathSuffix");
+    print("File written: $_path/$pathSuffix");
   }
 
   Future<File> _getTargetFile(String path) async {
@@ -29,7 +36,7 @@ class DartFileIO implements FileIO {
 
   Future<String> readFile(String pathSuffix) async {
     String path = await _path;
-    File target = await _getTargetFile(path + pathSuffix);
+    File target = await _getTargetFile(path + '/' + pathSuffix);
     return target.readAsString();
   }
 

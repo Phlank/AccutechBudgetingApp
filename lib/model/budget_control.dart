@@ -70,7 +70,12 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> isReturningUser() async {
-    _oldUser = await fileIO.fileExists(History.HISTORY_PATH);
+    _oldUser = await fileIO
+        .fileExists(History.HISTORY_PATH)
+        .catchError((Object error) {
+      _oldUser = false;
+      return false;
+    });
     return _oldUser;
   }
 
@@ -100,12 +105,9 @@ class BudgetControl implements Control {
   }
 
   Future _load() async {
-    print("Loading in BudgetControl");
     _history = await History.load();
-    print("History loaded");
     _budget = await _history.getLatestMonthBudget();
     _loadedTransactions = _budget.transactions;
-    print("Budget created");
   }
 
   Future save() async {
@@ -148,12 +150,9 @@ class BudgetControl implements Control {
 
   @override
   void addTransaction(Transaction t) {
-    print("Adding transaction");
     _budget.addTransaction(t);
-    print("Adding transaction - budget");
     _history.getMonth(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
-    print("Adding transaction - loadedTransactions");
   }
 
   void changeAllotment(String category, double newAmt) {
@@ -170,7 +169,8 @@ class BudgetControl implements Control {
 
   String getCashFlow() {
     double amt = _budget.getMonthlyIncome() -
-        _budget.allotted[BudgetCategory.housing] + expenseTotal();
+        _budget.allotted[BudgetCategory.housing] +
+        expenseTotal();
     if (amt > 0) {
       cashFlowColor = Colors.green;
     } else if (amt < 0) {
@@ -186,7 +186,7 @@ class BudgetControl implements Control {
     _history = new History();
     Month m = Month.fromBudget(b);
     _history.addMonth(m);
-    _loadedTransactions = b.transactions;
+    _loadedTransactions = new TransactionList.copy(b.transactions);
     _budget = b;
   }
 
@@ -214,7 +214,7 @@ class BudgetControl implements Control {
 
   double expenseTotal() {
     double spent = 0.0;
-    for (int i = 0; i < _loadedTransactions.length(); i++) {
+    for (int i = 0; i < _loadedTransactions.length; i++) {
       spent += _loadedTransactions.getAt(i).delta;
     }
     return spent;

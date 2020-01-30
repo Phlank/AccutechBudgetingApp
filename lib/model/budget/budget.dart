@@ -17,24 +17,29 @@ class BudgetBuilder {
     _transactions = new TransactionList();
   }
 
-  void setIncome(double income) {
+  BudgetBuilder setIncome(double income) {
     _income = income;
+    return this;
   }
 
-  void setType(BudgetType type) {
+  BudgetBuilder setType(BudgetType type) {
     _type = type;
+    return this;
   }
 
-  void setAllottedSpending(BudgetMap allottedSpending) {
+  BudgetBuilder setAllottedSpending(BudgetMap allottedSpending) {
     _allottedSpending = allottedSpending;
+    return this;
   }
 
-  void setActualSpending(BudgetMap actualSpending) {
+  BudgetBuilder setActualSpending(BudgetMap actualSpending) {
     _actualSpending = actualSpending;
+    return this;
   }
 
-  void setTransactions(TransactionList transactions) {
+  BudgetBuilder setTransactions(TransactionList transactions) {
     _transactions = transactions;
+    return this;
   }
 
   Budget build() {
@@ -58,8 +63,8 @@ class Budget {
   double _income;
   BudgetType _type;
 
-  Budget._new(this._allotted, this._actual, this._transactions,
-      this._income, this._type);
+  Budget._new(this._allotted, this._actual, this._transactions, this._income,
+      this._type);
 
   // Makes a new budget based on the allocations of an old budget
   Budget.fromOldBudget(Budget old) {
@@ -71,13 +76,18 @@ class Budget {
   }
 
   // Makes a new budget based on data currently represented within a month
+  // Used to load a budget object from disk
   static Future<Budget> fromMonth(Month month) async {
     BudgetBuilder builder = new BudgetBuilder();
-    builder.setIncome(month.income);
-    builder.setType(month.type);
-    builder.setAllottedSpending(await month.allotted);
-    builder.setActualSpending(await month.actual);
-    builder.setTransactions(await month.transactions);
+    BudgetMap allotted = await month.allotted;
+    BudgetMap actual = await month.actual;
+    TransactionList transactions = await month.transactions;
+    builder
+        .setIncome(month.income)
+        .setType(month.type)
+        .setAllottedSpending(allotted)
+        .setActualSpending(actual)
+        .setTransactions(transactions);
     return builder.build();
   }
 
@@ -114,14 +124,13 @@ class Budget {
     _income = income;
   }
 
-  double addTransaction(Transaction transaction) {
+  void addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
       _actual.addTo(transaction.category, -transaction.delta);
-      return _actual[transaction.category];
+    } else {
+      _actual.addTo(BudgetCategory.miscellaneous, -transaction.delta);
     }
-    _actual.addTo(BudgetCategory.miscellaneous, transaction.delta);
-    return _actual[BudgetCategory.miscellaneous];
   }
 
   void setType(BudgetType type) {
