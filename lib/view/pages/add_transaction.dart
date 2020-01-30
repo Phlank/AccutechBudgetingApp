@@ -116,8 +116,6 @@ class _AddTransactionState extends State<AddTransaction> {
                 Transaction t = new Transaction(holder.vendor, holder.method,
                     holder.delta, holder.category);
                 BudgetingApp.userController.addTransaction(t);
-              } else {
-                Navigator.pushNamed(context, '/knownUser');
               }
             },
           )
