@@ -2,11 +2,12 @@ import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/add_transaction.dart';
-import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
+import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
+
+import 'add_transaction.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   Widget fromTransaction(Transaction t) {
-    final String subtitle = t.vendor + ' ' + categoryJson[t.category];
+    final String subtitle = t.vendor;
     return ListTile(
       title: Text(t.delta.toString()),
       subtitle: Text(subtitle),
@@ -46,9 +47,9 @@ class _UserPageState extends State<UserPage> {
     BudgetingApp.userController.buildBudgetMap();
     userPage = Scaffold(
       appBar: AppBar(
-        title: Text(/*users entered name when available*/ 'User Page'),
+        title: Text('User Page'),
       ),
-      drawer: GeneralSliderCategory(BudgetingApp.userController).sideMenu(),
+      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: ListView(
         padding: EdgeInsets.all(4.0),
         children: <Widget>[

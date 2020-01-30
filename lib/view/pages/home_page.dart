@@ -32,18 +32,6 @@ class _HomePageState extends State<HomePage> {
           } else {
             return new CircularProgressIndicator();
           }
-          return Scaffold(
-              body: Column(
-                children: <Widget>[
-                  Text.rich(
-                    TextSpan(
-                        text: 'deciding',
-                        style: TextStyle(
-                          fontSize: 20,
-                        )),
-                  )
-                ],
-              ));
         },
       );
 }

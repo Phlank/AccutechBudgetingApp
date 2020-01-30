@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
+import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -30,7 +30,7 @@ class _AddTransactionState extends State<AddTransaction> {
         },
         validator: (value) {
           if (value.isEmpty) return 'dont leave empty';
-          //if(new RegExp(r'\d+').hasMatch(value)) return 'Numbers please';
+//          if (InputValidator.dollarAmount(value)) return 'Numbers please';
           amount = -double.tryParse(value);
           return null;
         });
@@ -42,13 +42,14 @@ class _AddTransactionState extends State<AddTransaction> {
         },
         validator: (value) {
           if (value.isEmpty) return 'Cannot be empty';
+//          if (InputValidator.name(value)) return 'words please';
           vendor = value;
           return null;
         });
 
     return Scaffold(
       appBar: AppBar(title: Text('New Transaction')),
-      drawer: GeneralSliderCategory(BudgetingApp.userController).sideMenu(),
+      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: Column(
         children: <Widget>[
           Form(
@@ -67,13 +68,12 @@ class _AddTransactionState extends State<AddTransaction> {
             child: Text('submit'),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                Transaction t = new Transaction(vendor,
-                    method, amount, category);
+                Transaction t =
+                new Transaction(vendor, method, amount, category);
                 print(t);
                 BudgetingApp.userController.addTransaction(t);
+                print('Added transaction');
                 BudgetingApp.userController.save();
-                Navigator.pushNamed(context, '/knownUser');
-              } else {
                 Navigator.pushNamed(context, '/knownUser');
               }
             },
@@ -134,7 +134,7 @@ class _CategoryDropdownButtonState extends State<CategoryDropdownButton> {
       onChanged: (BudgetCategory newValue) {
         setState(() {
           categoryValue = newValue;
-          _AddTransactionState.category = newValue;
+          _AddTransactionState.category = categoryValue;
         });
       },
       items: BudgetCategory.values

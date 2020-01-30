@@ -10,6 +10,7 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:flutter/material.dart';
 
 import 'budget/budget_category.dart';
 import 'history/month.dart';
@@ -24,6 +25,7 @@ class BudgetControl implements Control {
   MonthTime _transactionMonthTime;
   Budget _budget;
   bool _oldUser;
+  Color cashFlowColor;
 
   final Map<String, BudgetCategory> categoryMap = {
     'housing': BudgetCategory.housing,
@@ -167,7 +169,16 @@ class BudgetControl implements Control {
   }
 
   String getCashFlow() {
-    return (_budget.getMonthlyIncome() - expenseTotal()).toString();
+    double amt = _budget.getMonthlyIncome() -
+        _budget.allotted[BudgetCategory.housing] + expenseTotal();
+    if (amt > 0) {
+      cashFlowColor = Colors.green;
+    } else if (amt < 0) {
+      cashFlowColor = Colors.red;
+    } else {
+      cashFlowColor = Colors.black;
+    }
+    return (amt).toString();
   }
 
   @override

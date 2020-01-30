@@ -27,9 +27,12 @@ class BudgetingApp extends StatelessWidget {
         '/knownUser': (BuildContext context) => UserPage(),
         '/edit': (BuildContext context) =>
             EditInformationDirectory(userController.getBudget()),
-        '/needs': (BuildContext context) => Needs(userController),
-        '/wants': (BuildContext context) => Wants(userController),
-        '/savings': (BuildContext context) => Savings(userController),
+        GeneralCategory.NEEDS_ROUTE: (BuildContext context) =>
+            GeneralCategory('needs'),
+        GeneralCategory.WANTS_ROUTE: (BuildContext context) =>
+            GeneralCategory('wants'),
+        GeneralCategory.SAVINGS_ROUTE: (BuildContext context) =>
+            GeneralCategory('savings'),
         AddTransaction.ROUTE: (BuildContext context) => AddTransaction(),
         FirstLoad.ROUTE: (BuildContext context) => FirstLoad(),
       }, //Routes
