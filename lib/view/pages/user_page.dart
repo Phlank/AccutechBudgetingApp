@@ -2,6 +2,7 @@ import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
+import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -76,11 +77,31 @@ class _UserPageState extends State<UserPage> {
                             '\n',
                         style: TextStyle(
                           fontSize: 20,
-                          color: Colors
-                              .red, //todo implement a function to return red or green based on cashFlow
+                          color: BudgetingApp.userController.cashFlowColor,
                         ))
                   ]))),
-          Card(/*user warnings*/),
+          Card(
+            child: ListView.builder(
+              padding: EdgeInsets.all(8),
+              scrollDirection: Axis.vertical,
+              physics: ScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: BudgetingApp.userController.sectionMap.keys.toList().length,
+              itemBuilder: (context, int index){
+                String section = BudgetingApp.userController.sectionMap.keys.toList()[index];
+                double remaining =  BudgetingApp.userController.remainingInSection(section);
+                double spent = BudgetingApp.userController.expenseInSection(section);
+                String route = BudgetingApp.userController.routeMap[section];
+                return ListTile(
+                  title:Text(Format.titleFormat(section)),
+                  subtitle: Text(Format.dollarFormat(spent)+'\t'+Format.dollarFormat((remaining))),
+                  onTap: (){
+                    Navigator.pushNamed(context, route);
+                  },
+                );
+              },
+            )
+          ),
           Card(
             //todo make better scrollable
             /*expense tracker*/
