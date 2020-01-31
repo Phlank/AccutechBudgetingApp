@@ -80,8 +80,7 @@ class _UserPageState extends State<UserPage> {
                             '\n',
                         style: TextStyle(
                           fontSize: 20,
-                          color: Colors
-                              .red, //todo implement a function to return red or green based on cashFlow
+                          color: BudgetingApp.userController.cashFlowColor,
                         ))
                   ]))),
           new _TransactionListView()

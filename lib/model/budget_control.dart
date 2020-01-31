@@ -219,6 +219,20 @@ class BudgetControl implements Control {
     }
     return spent;
   }
+
+  double expenseInSection(String section) {
+    double spent = 0.0;
+    for (Transaction t in _loadedTransactions.getIterable()) {
+      if (sectionMap[section].contains(t.category)) {
+        spent += t.delta;
+      }
+    }
+    return spent;
+  }
+
+  double remainingInSection(String section) {
+    return sectionBudget(section) + expenseInSection(section);
+  }
 }
 
 class MockBudget {
