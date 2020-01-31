@@ -1,8 +1,7 @@
 class InputValidator {
   static final Map<String, String> _regexMap = {
     'pin': r'\d\d\d\d',
-    // Found at https://stackoverflow.com/questions/354044/what-is-the-best-u-s-currency-regex
-    'dollarAmount': r'^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$',
+    'dollarAmount': r'^\$?\-?([1-9]{1}[0-9]{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\-?\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\(\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))\)$',
     'name': r'\w+',
     'age': r'\d{2,3}'
   };
@@ -20,7 +19,12 @@ class InputValidator {
   static const String PIN_MESSAGE = 'Must be four digits';
 
   static bool dollarAmount(String input) {
-    return new RegExp(_regexMap['dollarAmount']).hasMatch(input);
+    try {
+      double.parse(input);
+      return true;
+    } catch (Object) {
+      return false;
+    }
   }
 
   static const String DOLLAR_MESSAGE = 'Must be a valid dollar amount';

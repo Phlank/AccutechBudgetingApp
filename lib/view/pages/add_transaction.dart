@@ -27,7 +27,7 @@ class _AddTransactionState extends State<AddTransaction> {
         decoration: InputDecoration(labelText: 'Amount of Transaction'),
         validator: (value) {
           if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
-          if (InputValidator.dollarAmount(value))
+          if (!InputValidator.dollarAmount(value))
             return InputValidator.DOLLAR_MESSAGE;
           amountValue = value;
           return null;
@@ -110,7 +110,6 @@ class _AddTransactionState extends State<AddTransaction> {
                     vendorValue, methodValue, -double.parse(amountValue),
                     categoryValue);
                 BudgetingApp.userController.addTransaction(t);
-                print('Added transaction');
                 BudgetingApp.userController.save();
                 Navigator.pushNamed(context, '/knownUser');
               }

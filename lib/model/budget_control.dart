@@ -107,7 +107,7 @@ class BudgetControl implements Control {
   Future _load() async {
     _history = await History.load();
     _budget = await _history.getLatestMonthBudget();
-    _loadedTransactions = _budget.transactions;
+    _loadedTransactions = TransactionList.copy(_budget.transactions);
   }
 
   Future save() async {

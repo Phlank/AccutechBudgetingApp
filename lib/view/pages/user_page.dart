@@ -185,6 +185,6 @@ class _TransactionListView extends StatelessWidget {
   String _formatDate(DateTime dateTime) {
     DateFormat dMy = new DateFormat('LLLL d, y');
     DateFormat jm = new DateFormat('jm');
-    return dMy.format(dateTime) + '   ' + jm.format(dateTime);
+    return dMy.format(dateTime) + ' ' + jm.format(dateTime);
   }
 }
