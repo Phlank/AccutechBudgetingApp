@@ -3,6 +3,7 @@ import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
+import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -83,6 +84,28 @@ class _UserPageState extends State<UserPage> {
                           color: BudgetingApp.userController.cashFlowColor,
                         ))
                   ]))),
+          Card(
+              child: ListView.builder(
+                padding: EdgeInsets.all(8),
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: BudgetingApp.userController.sectionMap.keys.toList().length,
+                itemBuilder: (context, int index){
+                  String section = BudgetingApp.userController.sectionMap.keys.toList()[index];
+                  double remaining =  BudgetingApp.userController.remainingInSection(section);
+                  double spent = BudgetingApp.userController.expenseInSection(section);
+                  String route = BudgetingApp.userController.routeMap[section];
+                  return ListTile(
+                    title:Text(Format.titleFormat(section)),
+                    subtitle: Text(Format.dollarFormat(spent)+'\t'+Format.dollarFormat((remaining))),
+                    onTap: (){
+                      Navigator.pushNamed(context, route);
+                    },
+                  );
+                },
+              )
+          ),
           new _TransactionListView()
         ],
       ),
