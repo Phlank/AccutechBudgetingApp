@@ -167,7 +167,7 @@ class BudgetControl implements Control {
     return secBudget;
   }
 
-  String getCashFlow() {
+  double getCashFlow() {
     double amt = _budget.getMonthlyIncome() -
         _budget.allotted[BudgetCategory.housing] +
         expenseTotal();
@@ -178,7 +178,7 @@ class BudgetControl implements Control {
     } else {
       cashFlowColor = Colors.black;
     }
-    return (amt).toString();
+    return amt;
   }
 
   @override
@@ -222,16 +222,19 @@ class BudgetControl implements Control {
 
   double expenseInSection(String section) {
     double spent = 0.0;
-    for (Transaction t in _loadedTransactions.getIterable()) {
-      if (sectionMap[section].contains(t.category)) {
-        spent += t.delta;
+    for(String cat in sectionMap[section]){
+      for(int i= 0; i<_loadedTransactions.length; i++){
+        BudgetCategory rel = _loadedTransactions.getAt(i).category;
+        if( rel == categoryMap[cat]){
+          spent += _budget.allotted[rel];
+        }
       }
     }
     return spent;
   }
 
   double remainingInSection(String section) {
-    return sectionBudget(section) + expenseInSection(section);
+    return sectionBudget(section) - expenseInSection(section);
   }
 }
 

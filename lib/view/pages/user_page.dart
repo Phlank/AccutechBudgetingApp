@@ -53,23 +53,22 @@ class _UserPageState extends State<UserPage> {
                   text: TextSpan(children: <TextSpan>[
                     TextSpan(
                         text: 'Available Income: ' +
-                            (BudgetingApp.userController
+                            Format.dollarFormat(BudgetingApp.userController
                                 .getBudget()
                                 .income -
                                 BudgetingApp.userController
                                     .getBudget()
                                     .allotted[BudgetCategory.housing])
-                                .toString() +
+                                 +
                             '\n',
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.green,
                         )),
                     TextSpan(
-                        text: 'Expenses: -' +
-                            BudgetingApp.userController
-                                .expenseTotal()
-                                .toString() +
+                        text: 'Expenses:' +
+                            Format.dollarFormat(BudgetingApp.userController
+                                .expenseTotal())+
                             '\n',
                         style: TextStyle(
                           fontSize: 20,
@@ -77,7 +76,7 @@ class _UserPageState extends State<UserPage> {
                         )),
                     TextSpan(
                         text: 'Cash Flow ' +
-                            BudgetingApp.userController.getCashFlow() +
+                            Format.dollarFormat(BudgetingApp.userController.getCashFlow())+
                             '\n',
                         style: TextStyle(
                           fontSize: 20,
@@ -98,7 +97,7 @@ class _UserPageState extends State<UserPage> {
                   String route = BudgetingApp.userController.routeMap[section];
                   return ListTile(
                     title:Text(Format.titleFormat(section)),
-                    subtitle: Text(Format.dollarFormat(spent)+'\t'+Format.dollarFormat((remaining))),
+                    subtitle: Text('Spent: '+Format.dollarFormat(spent)+'\t Remains: '+Format.dollarFormat((remaining))),
                     onTap: (){
                       Navigator.pushNamed(context, route);
                     },
