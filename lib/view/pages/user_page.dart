@@ -5,6 +5,7 @@ import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 import 'add_transaction.dart';
@@ -116,6 +117,9 @@ class _UserPageState extends State<UserPage> {
 } // _UserPage
 
 class _TransactionListView extends StatelessWidget {
+  final double _topRowFontSize = 20;
+  final double _bottomRowFontSize = 16;
+
   @override
   Widget build(BuildContext context) {
     TransactionList transactions =
@@ -142,26 +146,45 @@ class _TransactionListView extends StatelessWidget {
         Text(
           t.vendor,
           textAlign: TextAlign.left,
+          style: TextStyle(fontSize: _topRowFontSize),
         ),
-        Text(
-          _formatDelta(t.delta),
-          textAlign: TextAlign.right,
-        )
+        Text(_formatDelta(t.delta),
+            textAlign: TextAlign.right,
+            style: TextStyle(
+                fontSize: _topRowFontSize, color: _deltaColor(t.delta)))
       ]),
       TableRow(children: [
-        Text(t.datetime.toLocal().toIso8601String(), textAlign: TextAlign.left),
-        Text(categoryJson[t.category], textAlign: TextAlign.right)
+        Text(_formatDate(t.datetime),
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: _bottomRowFontSize)),
+        Text(categoryJson[t.category],
+            textAlign: TextAlign.right,
+            style: TextStyle(fontSize: _bottomRowFontSize))
       ])
     ]);
   }
 
   String _formatDelta(double delta) {
-    String output = delta.toStringAsPrecision(2);
+    String output = delta.toStringAsFixed(2);
     if (output.contains('-')) {
       output = output.replaceAll('-', '-\$');
     } else {
       output = '\$' + output;
     }
     return output;
+  }
+
+  MaterialColor _deltaColor(double delta) {
+    if (delta < 0) {
+      return Colors.red;
+    } else {
+      return Colors.green;
+    }
+  }
+
+  String _formatDate(DateTime dateTime) {
+    DateFormat dMy = new DateFormat('LLLL d, y');
+    DateFormat jm = new DateFormat('jm');
+    return dMy.format(dateTime) + '   ' + jm.format(dateTime);
   }
 }

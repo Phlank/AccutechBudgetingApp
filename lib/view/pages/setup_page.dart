@@ -60,7 +60,7 @@ class _SetupPageState extends State<SetupPage> {
         labelText: 'Name',
       ),
       validator: (value) {
-        if (value.isEmpty) return 'Cannot leave blank';
+        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
         if (!InputValidator.name(value)) return 'Must be a valid name';
         return null;
       },
@@ -73,7 +73,7 @@ class _SetupPageState extends State<SetupPage> {
       decoration:
           InputDecoration(labelText: 'How old are you?', hintText: 'Age'),
       validator: (value) {
-        if (value.isEmpty) return 'Cannot leave blank';
+        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
         if (!InputValidator.age(value)) return 'Must be a valid number';
         return null;
       },
@@ -103,9 +103,9 @@ class _SetupPageState extends State<SetupPage> {
         labelText: 'Regular Income',
       ),
       validator: (value) {
-        if (value.isEmpty) return 'Must be filled in';
+        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
         if (!InputValidator.dollarAmount(value))
-          return 'Must be a valid number';
+          return InputValidator.DOLLAR_MESSAGE;
         hold.setIncomeAmt(double.tryParse(value));
         return null;
       },
@@ -118,7 +118,7 @@ class _SetupPageState extends State<SetupPage> {
       decoration: InputDecoration(
           hintText: 'savings amount', labelText: 'How much do you have saved?'),
       validator: (value) {
-        if (value.isEmpty) return ' Please don\'t leave this empty';
+        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
         if (!InputValidator.dollarAmount(value))
           return 'please put in numerical form';
         return null;
