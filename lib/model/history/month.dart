@@ -94,21 +94,23 @@ class Month implements Serializable {
 
   Future<BudgetMap> get allotted async {
     if (_allotted == null) {
-      _allotted = await loadAllotted();
+      await loadAllotted();
     }
     return _allotted;
   }
 
-  Future<BudgetMap> loadAllotted() async {
-    String cipher = await BudgetControl.fileIO.readFile(_allottedFilepath)
+  Future loadAllotted() async {
+    String cipher, plaintext;
+    Encrypted e;
+    cipher = await BudgetControl.fileIO.readFile(_allottedFilepath)
         .catchError((Object error) {
       _allotted = new BudgetMap();
-      return _allotted;
     });
-    Encrypted e = Encrypted.unserialize(cipher);
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _allotted = BudgetMap.unserialize(plaintext);
-    return _allotted;
+    if (cipher != null) {
+      e = Encrypted.unserialize(cipher);
+      plaintext = BudgetControl.crypter.decrypt(e);
+      _allotted = BudgetMap.unserialize(plaintext);
+    }
   }
 
   Future<BudgetMap> get actual async {
@@ -119,15 +121,17 @@ class Month implements Serializable {
   }
 
   Future loadActual() async {
-    String cipher = await BudgetControl.fileIO.readFile(_actualFilepath)
+    String cipher, plaintext;
+    Encrypted e;
+    cipher = await BudgetControl.fileIO.readFile(_actualFilepath)
         .catchError((Object error) {
       _actual = new BudgetMap();
-      return _actual;
     });
-    Encrypted e = Encrypted.unserialize(cipher);
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _actual = BudgetMap.unserialize(plaintext);
-    return _actual;
+    if (cipher != null) {
+      e = Encrypted.unserialize(cipher);
+      plaintext = BudgetControl.crypter.decrypt(e);
+      _actual = BudgetMap.unserialize(plaintext);
+    }
   }
 
   Future<TransactionList> get transactions async {
@@ -138,15 +142,17 @@ class Month implements Serializable {
   }
 
   Future loadTransactions() async {
-    String cipher = await BudgetControl.fileIO.readFile(_transactionsFilepath)
+    String cipher, plaintext;
+    Encrypted e;
+    cipher = await BudgetControl.fileIO.readFile(_transactionsFilepath)
         .catchError((Object error) {
       _transactions = new TransactionList();
-      return _transactions;
     });
-    Encrypted e = Encrypted.unserialize(cipher);
-    String plaintext = BudgetControl.crypter.decrypt(e);
-    _transactions = TransactionList.unserialize(plaintext);
-    return _transactions;
+    if (cipher != null) {
+      e = Encrypted.unserialize(cipher);
+      plaintext = BudgetControl.crypter.decrypt(e);
+      _transactions = TransactionList.unserialize(plaintext);
+    }
   }
 
   void updateMonthData(Budget budget) {

@@ -7,115 +7,111 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AddTransaction extends StatefulWidget {
+  static const String ROUTE = '/addTransaction';
+
   @override
-  _AddTransactionState createState() => _AddTransactionState();
+  State<StatefulWidget> createState() => _AddTransactionState();
 }
 
 class _AddTransactionState extends State<AddTransaction> {
+  final _formKey = GlobalKey<FormState>();
+  static String methodValue = 'Cash';
+  static String amountValue;
+  static String vendorValue;
+  static BudgetCategory categoryValue = BudgetCategory.miscellaneous;
+
   @override
   Widget build(BuildContext context) {
-    final addTransactionKey = GlobalKey<FormState>();
-    TransactionInformationHolder holder = new TransactionInformationHolder();
-    BudgetCategory defaultCategory = BudgetCategory.groceries;
-    String defaultMethod = 'Cash';
-
     TextFormField amountInput = TextFormField(
-        decoration: InputDecoration(
-            labelText: 'Amount of Transaction', hintText: 'numbers only'),
-        onChanged: (value) {
-          holder.delta = -double.tryParse(value);
-        },
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(labelText: 'Amount of Transaction'),
         validator: (value) {
-          if (value.isEmpty) return 'dont leave empty';
-          if(InputValidator.dollarAmount(value)) return 'Numbers please';
-          holder.delta = -double.tryParse(value);
+          if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+          if (!InputValidator.dollarAmount(value))
+            return InputValidator.DOLLAR_MESSAGE;
+          amountValue = value;
           return null;
         });
 
     TextFormField vendorInput = TextFormField(
-        decoration: InputDecoration(
-            labelText: 'Where did you spend method', hintText: 'words only'),
-        onChanged: (value) {
-          holder.vendor = value;
-        },
+        decoration: InputDecoration(labelText: 'Vendor Name'),
         validator: (value) {
-          if (value.isEmpty) return 'dont leave empty';
-          if(InputValidator.name(value)) return 'words please';
-          holder.vendor = value;
+          if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+          vendorValue = value;
           return null;
         });
 
-    List<DropdownMenuItem> dropdownMethodItems() {
-      List<String> methods = ['Credit', 'Checking', 'Savings', 'Cash'];
-      List<DropdownMenuItem> retList = new List();
-      for (String method in methods) {
-        retList.add(new DropdownMenuItem(
-          child: Text(method),
-          value: method,
-        ));
-      }
-      return retList;
-    }
-
-    DropdownButtonFormField methodInput = DropdownButtonFormField(
-      value: defaultMethod,
-      items: dropdownMethodItems(),
-      onChanged: (value) {
+    DropdownButton methodInput = DropdownButton<String>(
+      value: methodValue,
+      icon: Icon(Icons.arrow_drop_down),
+      iconSize: 24,
+      elevation: 16,
+      onChanged: (String newValue) {
         setState(() {
-          defaultMethod = value;
+          methodValue = newValue;
         });
-        holder.method = value;
-        return value;
       },
+      items: <String>['Cash', 'Credit', 'Checking', 'Savings']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
 
-    List<DropdownMenuItem> dropdownCategoryItems() {
-      List<DropdownMenuItem> retList = new List();
-      for (String name
-          in BudgetingApp.userController.categoryMap.keys.toList()) {
-        retList.add(new DropdownMenuItem(
-          child: Text(name),
-          value: BudgetingApp.userController.categoryMap[name],
-        ));
-      }
-      return retList;
-    }
-
-    DropdownButtonFormField categoryInput = DropdownButtonFormField(
-        value: defaultCategory,
-        items: dropdownCategoryItems(),
-        onChanged: (value) {
-          setState(() {
-            defaultCategory = value;
-          });
-          holder.category = value;
-          return value;
+    DropdownButton categoryInput = DropdownButton<BudgetCategory>(
+      value: categoryValue,
+      icon: Icon(Icons.arrow_drop_down),
+      iconSize: 24,
+      elevation: 16,
+      onChanged: (BudgetCategory newValue) {
+        setState(() {
+          categoryValue = newValue;
         });
+      },
+      items: BudgetCategory.values
+          .map<DropdownMenuItem<BudgetCategory>>((BudgetCategory category) {
+        return DropdownMenuItem<BudgetCategory>(
+          value: category,
+          child: Text(categoryJson[category]),
+        );
+      }).toList(),
+    );
+
+    Form addTransactionForm = Form(
+        key: _formKey,
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          children: <Widget>[
+            amountInput,
+            vendorInput,
+            methodInput,
+            categoryInput
+          ],
+        ));
 
     return Scaffold(
       appBar: AppBar(title: Text('New Transaction')),
       drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: Column(
         children: <Widget>[
-          Form(
-              key: addTransactionKey,
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                children: <Widget>[
-                  amountInput,
-                  vendorInput,
-                  methodInput,
-                  categoryInput
-                ],
-              )),
+          addTransactionForm,
           RaisedButton(
             child: Text('submit'),
             onPressed: () {
-              if (addTransactionKey.currentState.validate()) {
-                Transaction t = new Transaction(holder.vendor, holder.method,
-                    holder.delta, holder.category);
+              if (_formKey.currentState.validate()) {
+                print('Vendor: $vendorValue');
+                print('Method: $methodValue');
+                print('Amount: $amountValue');
+                print('Category: $categoryValue');
+                Transaction t = new Transaction(
+                    vendorValue, methodValue, -double.parse(amountValue),
+                    categoryValue);
                 BudgetingApp.userController.addTransaction(t);
+                BudgetingApp.userController.save();
+                Navigator.pushNamed(context, '/knownUser');
               }
             },
           )
@@ -123,11 +119,4 @@ class _AddTransactionState extends State<AddTransaction> {
       ),
     );
   }
-}
-
-class TransactionInformationHolder {
-  double delta;
-  String vendor;
-  String method;
-  BudgetCategory category;
 }

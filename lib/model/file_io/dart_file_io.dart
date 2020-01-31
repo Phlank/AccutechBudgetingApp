@@ -11,16 +11,26 @@ class DartFileIO implements FileIO {
   }
 
   static Future<String> _getPath() async {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    return appDocDir.path;
+    Directory appDocDir;
+    String appPath;
+    try {
+      appDocDir = await getApplicationDocumentsDirectory();
+      appPath = appDocDir.path;
+    } catch (MissingPluginException) {
+      appPath = null;
+    }
+    return appPath;
   }
 
   Future writeFile(String pathSuffix, String content) async {
-    String homePath = await _path;
-    String path = homePath + pathSuffix;
+    String path = await pathSuffixToPath(pathSuffix);
     File target = await _getTargetFile(path);
     target.writeAsString(content);
-    print("File written: $_path$pathSuffix");
+    print("File written: $path");
+  }
+
+  Future<String> pathSuffixToPath(String pathSuffix) async {
+    return await _path + '/' + pathSuffix;
   }
 
   Future<File> _getTargetFile(String path) async {
@@ -28,14 +38,14 @@ class DartFileIO implements FileIO {
   }
 
   Future<String> readFile(String pathSuffix) async {
-    String path = await _path;
-    File target = await _getTargetFile(path + pathSuffix);
+    String path = await pathSuffixToPath(pathSuffix);
+    File target = await _getTargetFile(path);
     return target.readAsString();
   }
 
   Future<bool> fileExists(String pathSuffix) async {
-    String path = await _path;
-    File target = await _getTargetFile(path + pathSuffix);
+    String path = await pathSuffixToPath(pathSuffix);
+    File target = await _getTargetFile(path);
     return target.exists();
   }
 }

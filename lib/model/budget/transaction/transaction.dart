@@ -10,13 +10,8 @@ class Transaction implements Serializable {
   double delta;
   BudgetCategory category;
 
-  Transaction(
-      String vendor, String method, double delta, BudgetCategory category) {
+  Transaction(this.vendor, this.method, this.delta, this.category) {
     datetime = DateTime.now();
-    this.vendor = vendor;
-    this.method = method;
-    this.delta = delta;
-    this.category = category;
   }
 
   static Transaction unserialize(String serialized) {
@@ -43,7 +38,7 @@ class Transaction implements Serializable {
   String serialize() {
     String output = '{';
     output +=
-      '"datetime":"' + datetime.millisecondsSinceEpoch.toString() + '",';
+        '"datetime":"' + datetime.millisecondsSinceEpoch.toString() + '",';
     output += '"vendor":"' + vendor + '",';
     output += '"method":"' + method + '",';
     output += '"delta":"' + delta.toString() + '",';
