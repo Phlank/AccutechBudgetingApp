@@ -2,6 +2,20 @@ class BudgetCategory {
   String name;
   Priority priority;
 
+  static final BudgetCategory //
+      housing = new BudgetCategory("Housing", Priority.required),
+      utilities = new BudgetCategory("Housing", Priority.required),
+      groceries = new BudgetCategory("Housing", Priority.required),
+      savings = new BudgetCategory("Housing", Priority.required),
+      health = new BudgetCategory("Housing", Priority.required),
+      transportation = new BudgetCategory("Housing", Priority.required),
+      education = new BudgetCategory("Housing", Priority.required),
+      entertainment = new BudgetCategory("Housing", Priority.required),
+      kids = new BudgetCategory("Housing", Priority.required),
+      pets = new BudgetCategory("Housing", Priority.required),
+      miscellaneous = new BudgetCategory("Housing", Priority.required),
+      uncategorized = new BudgetCategory("Housing", Priority.required);
+
   BudgetCategory(this.name, this.priority);
 
   bool operator ==(Object other) =>
@@ -28,18 +42,18 @@ class Priority {
 
 class BudgetCategoryList {
   static final List<BudgetCategory> defaultCategories = [
-    new BudgetCategory("Housing", Priority.required),
-    new BudgetCategory("Utilities", Priority.need),
-    new BudgetCategory("Groceries", Priority.need),
-    new BudgetCategory("Savings", Priority.savings),
-    new BudgetCategory("Health", Priority.need),
-    new BudgetCategory("Transportation", Priority.need),
-    new BudgetCategory("Education", Priority.want),
-    new BudgetCategory("Entertainment", Priority.want),
-    new BudgetCategory("Kids", Priority.want),
-    new BudgetCategory("Pets", Priority.want),
-    new BudgetCategory("Miscellaneous", Priority.want),
-    new BudgetCategory("Uncategorized", Priority.other)
+    BudgetCategory.housing,
+    BudgetCategory.utilities,
+    BudgetCategory.groceries,
+    BudgetCategory.savings,
+    BudgetCategory.health,
+    BudgetCategory.transportation,
+    BudgetCategory.education,
+    BudgetCategory.entertainment,
+    BudgetCategory.kids,
+    BudgetCategory.pets,
+    BudgetCategory.miscellaneous,
+    BudgetCategory.uncategorized
   ];
 
   List<BudgetCategory> categories;
@@ -68,14 +82,11 @@ class BudgetCategoryList {
     return !nameMatch;
   }
 
-  bool removeIfPresent(BudgetCategory category) {
-
-  }
+  bool removeIfPresent(BudgetCategory category) {}
 
   void forEach(void action(BudgetCategory category)) {
     categories.forEach(action);
   }
 
-  BudgetCategoryList get values {
-  }
+  BudgetCategoryList get values {}
 }
