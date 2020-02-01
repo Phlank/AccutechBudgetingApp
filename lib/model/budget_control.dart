@@ -20,10 +20,10 @@ class BudgetControl implements Control {
   static FileIO fileIO = new DartFileIO();
   static Password _password;
   static Crypter crypter;
-  Budget _budget;
   History _history;
   TransactionList _loadedTransactions;
-  MonthTime _currentMonthTime, _transactionMonthTime;
+  MonthTime _transactionMonthTime;
+  Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
 
@@ -70,7 +70,12 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> isReturningUser() async {
-    _oldUser = await fileIO.fileExists(History.HISTORY_PATH);
+    _oldUser = await fileIO
+        .fileExists(History.HISTORY_PATH)
+        .catchError((Object error) {
+      _oldUser = false;
+      return false;
+    });
     return _oldUser;
   }
 
@@ -96,17 +101,13 @@ class BudgetControl implements Control {
   }
 
   void _updateMonthTimes() {
-    _currentMonthTime = MonthTime.now();
     _transactionMonthTime = MonthTime.now();
   }
 
   Future _load() async {
-    print("Loading in BudgetControl");
     _history = await History.load();
-    print("History loaded");
     _budget = await _history.getLatestMonthBudget();
-    _loadedTransactions = _budget.transactions;
-    print("Budget created");
+    _loadedTransactions = TransactionList.copy(_budget.transactions);
   }
 
   Future save() async {
@@ -150,6 +151,7 @@ class BudgetControl implements Control {
   @override
   void addTransaction(Transaction t) {
     _budget.addTransaction(t);
+    _history.getMonth(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
   }
 
@@ -166,12 +168,14 @@ class BudgetControl implements Control {
   }
 
   String getCashFlow() {
-    double amt = _budget.getMonthlyIncome() -_budget.allotted[BudgetCategory.housing] + expenseTotal();
-    if(amt>0){
+    double amt = _budget.getMonthlyIncome() -
+        _budget.allotted[BudgetCategory.housing] +
+        expenseTotal();
+    if (amt > 0) {
       cashFlowColor = Colors.green;
-    }else if(amt<0){
+    } else if (amt < 0) {
       cashFlowColor = Colors.red;
-    }else{
+    } else {
       cashFlowColor = Colors.black;
     }
     return (amt).toString();
@@ -182,7 +186,7 @@ class BudgetControl implements Control {
     _history = new History();
     Month m = Month.fromBudget(b);
     _history.addMonth(m);
-    _loadedTransactions = b.transactions;
+    _loadedTransactions = new TransactionList.copy(b.transactions);
     _budget = b;
   }
 
@@ -210,7 +214,7 @@ class BudgetControl implements Control {
 
   double expenseTotal() {
     double spent = 0.0;
-    for (int i = 0; i < _loadedTransactions.length(); i++) {
+    for (int i = 0; i < _loadedTransactions.length; i++) {
       spent += _loadedTransactions.getAt(i).delta;
     }
     return spent;
@@ -218,15 +222,15 @@ class BudgetControl implements Control {
 
   double expenseInSection(String section) {
     double spent = 0.0;
-    for(Transaction t in _loadedTransactions.getIterable()){
-      if(sectionMap[section].contains(t.category)){
+    for (Transaction t in _loadedTransactions.getIterable()) {
+      if (sectionMap[section].contains(t.category)) {
         spent += t.delta;
       }
     }
     return spent;
   }
 
-  double remainingInSection(String section){
+  double remainingInSection(String section) {
     return sectionBudget(section) + expenseInSection(section);
   }
 }
@@ -246,7 +250,7 @@ class MockBudget {
     return budget.allotted[category];
   }
 
-  double getNewTotalAlotted(String section) {
+  double getNewTotalAllotted(String section) {
     Map<String, List<BudgetCategory>> mockMap = {
       'needs': [
         BudgetCategory.health,

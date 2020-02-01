@@ -80,12 +80,12 @@ void main() {
       });
       test("Test for transaction", () async {
         b = await Budget.fromMonth(_month);
-        expect(b.transactions, equals(new TransactionList()));
+        expect(b.transactions, new TransactionList());
       });
       test("Test for alotted and actual spending", () async {
         b = await Budget.fromMonth(_month);
-        expect(b.allotted, equals(new BudgetMap()));
-        expect(b.actual, equals(new BudgetMap()));
+        expect(b.allotted, new BudgetMap());
+        expect(b.actual, new BudgetMap());
       });
     });
   });

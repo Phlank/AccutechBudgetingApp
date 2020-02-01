@@ -18,8 +18,10 @@ void main() {
         tl1.add(t2);
         tl1.add(t3);
     });
-    test("Serialization of new TransactionList", () {
-        print(tl1.serialize());
+    test("Added transactions are in TransactionList", () {
+      expect(tl1.contains(t1), true);
+      expect(tl1.contains(t2), true);
+      expect(tl1.contains(t3), true);
     });
     test("Serialization is reversible", () {
         String tl1s = tl1.serialize();

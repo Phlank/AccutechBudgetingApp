@@ -1,11 +1,14 @@
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
-import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
+
+import 'add_transaction.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -27,7 +30,7 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         title: Text('User Page'),
       ),
-      drawer:  SideMenu().sideMenu(BudgetingApp.userController),
+      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: ListView(
         padding: EdgeInsets.all(4.0),
         children: <Widget>[
@@ -80,55 +83,13 @@ class _UserPageState extends State<UserPage> {
                           color: BudgetingApp.userController.cashFlowColor,
                         ))
                   ]))),
-          Card(
-            child: ListView.builder(
-              padding: EdgeInsets.all(8),
-              scrollDirection: Axis.vertical,
-              physics: ScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: BudgetingApp.userController.sectionMap.keys.toList().length,
-              itemBuilder: (context, int index){
-                String section = BudgetingApp.userController.sectionMap.keys.toList()[index];
-                double remaining =  BudgetingApp.userController.remainingInSection(section);
-                double spent = BudgetingApp.userController.expenseInSection(section);
-                String route = BudgetingApp.userController.routeMap[section];
-                return ListTile(
-                  title:Text(Format.titleFormat(section)),
-                  subtitle: Text(Format.dollarFormat(spent)+'\t'+Format.dollarFormat((remaining))),
-                  onTap: (){
-                    Navigator.pushNamed(context, route);
-                  },
-                );
-              },
-            )
-          ),
-          Card(
-            //todo make better scrollable
-            /*expense tracker*/
-              child: new ListView.builder(
-                padding: EdgeInsets.all(8),
-                scrollDirection: Axis.vertical,
-                physics: ScrollPhysics(),
-                shrinkWrap: true,
-                itemCount:
-                BudgetingApp.userController.getLoadedTransactions().length(),
-                itemBuilder: (BuildContext context, int index) {
-                  Transaction trans = BudgetingApp.userController
-                      .getLoadedTransactions()
-                      .getAt(index);
-                  if (trans != null) {
-                    return new Text(
-                        trans.vendor + ' ' + trans.delta.toString());
-                  }
-                  return Text('No Transactions');
-                },
-              )),
+          new _TransactionListView()
         ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.pushNamed(context, '/newTransaction');
+          Navigator.pushNamed(context, AddTransaction.ROUTE);
         },
       ),
     );
@@ -142,6 +103,87 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return userPage;
+    return FutureBuilder(
+        future: _load,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return userPage;
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
   }
 } // _UserPage
+
+class _TransactionListView extends StatelessWidget {
+  final double _topRowFontSize = 20;
+  final double _bottomRowFontSize = 16;
+
+  @override
+  Widget build(BuildContext context) {
+    TransactionList transactions =
+    BudgetingApp.userController.getLoadedTransactions();
+    print('Generating ' +
+        transactions.length.toString() +
+        ' transaction list items');
+    return Card(
+        child: new ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(8),
+            scrollDirection: Axis.vertical,
+            physics: ScrollPhysics(),
+            itemCount: transactions.length,
+            itemBuilder: (context, index) {
+              return _buildTransactionListViewItem(index);
+            }));
+  }
+
+  Widget _buildTransactionListViewItem(int index) {
+    Transaction t = BudgetingApp.userController.getLoadedTransactions()[index];
+    return Table(children: [
+      TableRow(children: [
+        Text(
+          t.vendor,
+          textAlign: TextAlign.left,
+          style: TextStyle(fontSize: _topRowFontSize),
+        ),
+        Text(_formatDelta(t.delta),
+            textAlign: TextAlign.right,
+            style: TextStyle(
+                fontSize: _topRowFontSize, color: _deltaColor(t.delta)))
+      ]),
+      TableRow(children: [
+        Text(_formatDate(t.datetime),
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: _bottomRowFontSize)),
+        Text(categoryJson[t.category],
+            textAlign: TextAlign.right,
+            style: TextStyle(fontSize: _bottomRowFontSize))
+      ])
+    ]);
+  }
+
+  String _formatDelta(double delta) {
+    String output = delta.toStringAsFixed(2);
+    if (output.contains('-')) {
+      output = output.replaceAll('-', '-\$');
+    } else {
+      output = '\$' + output;
+    }
+    return output;
+  }
+
+  MaterialColor _deltaColor(double delta) {
+    if (delta < 0) {
+      return Colors.red;
+    } else {
+      return Colors.green;
+    }
+  }
+
+  String _formatDate(DateTime dateTime) {
+    DateFormat dMy = new DateFormat('LLLL d, y');
+    DateFormat jm = new DateFormat('jm');
+    return dMy.format(dateTime) + ' ' + jm.format(dateTime);
+  }
+}

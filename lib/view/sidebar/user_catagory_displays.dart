@@ -37,7 +37,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   }
 
   Card unbudgetedCard() {
-    allotedForSection = playBudget.getNewTotalAlotted(section);
+    allotedForSection = playBudget.getNewTotalAllotted(section);
     return Card(
       shape: BeveledRectangleBorder(),
       child: Text.rich(
@@ -80,7 +80,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
 
   ListTile categoryTile(String category) {
     allotedForCategory =
-        (playBudget.budget.allotted[userController.categoryMap[category]]);
+    (playBudget.budget.allotted[userController.categoryMap[category]]);
     return ListTile(
       title: Text(category + '\t' + Format.dollarFormat(allotedForCategory)),
       subtitle: sectionSlider(category),
@@ -104,7 +104,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
 
   Scaffold generalDisplay() {
     //todo init the fluctuating allotments
-    beginningAlotttments = playBudget.getNewTotalAlotted(section);
+    beginningAlotttments = playBudget.getNewTotalAllotted(section);
     return Scaffold(
       appBar: AppBar(
         title: Text('Change ' + section + ' alotments'),
