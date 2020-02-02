@@ -6,6 +6,7 @@ import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 
 class BudgetBuilder {
+
   BudgetMap _allottedSpending, _actualSpending;
   BudgetType _type;
   TransactionList _transactions;
@@ -103,7 +104,7 @@ class Budget {
 
   double get spent {
     double spent = 0.0;
-    for (BudgetCategory category in BudgetCategory.values) {
+    for (BudgetCategory category in BudgetCategoryList.defaultCategories) {
       spent += _actual[category];
     }
     return spent;

@@ -6,20 +6,23 @@ import 'package:budgetflow/model/file_io/serializable.dart';
 class BudgetMap implements Serializable {
   Map<BudgetCategory, double> _map = new Map();
   String _serialization = "";
+  BudgetCategoryList _categories;
   static BudgetMap _unserialized;
   static Map _decoded;
 
-  BudgetMap() {
-    for (BudgetCategory category in BudgetCategory.values) {
-      _map[category] = 0.0;
-    }
+  BudgetMap(BudgetCategoryList categories) {
+    _categories = categories;
+    categories.forEach((BudgetCategory c) {
+      _map[c] = 0;
+    });
   }
 
   BudgetMap.copyOf(BudgetMap toCopy) {
     _map = new Map();
-    for (BudgetCategory category in BudgetCategory.values) {
-      _map[category] = toCopy[category];
-    }
+    _categories = toCopy._categories;
+    _categories.forEach((BudgetCategory c) {
+      _map[c] = toCopy[c];
+    });
   }
 
   double addTo(BudgetCategory category, double amt) {
@@ -39,7 +42,7 @@ class BudgetMap implements Serializable {
   }
 
   void _makeSerializable(BudgetCategory c, double d) {
-    _serialization += '"' + categoryJson[c] + '":"' + d.toString() + '"';
+    _serialization += '"' + c.name + '":"' + d.toString() + '"';
     if (!(c == BudgetCategory.miscellaneous)) {
       _serialization += ',';
     }

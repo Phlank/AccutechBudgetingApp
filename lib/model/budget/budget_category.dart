@@ -3,7 +3,7 @@ class BudgetCategory {
   Priority priority;
 
   static final BudgetCategory //
-      housing = new BudgetCategory("Housing", Priority.required),
+  housing = new BudgetCategory("Housing", Priority.required),
       utilities = new BudgetCategory("Housing", Priority.required),
       groceries = new BudgetCategory("Housing", Priority.required),
       savings = new BudgetCategory("Housing", Priority.required),
@@ -17,6 +17,16 @@ class BudgetCategory {
       uncategorized = new BudgetCategory("Housing", Priority.required);
 
   BudgetCategory(this.name, this.priority);
+
+  int _compareTo(BudgetCategory other) {
+    if (this.priority._compareTo(other.priority) == 1) {
+      return 1;
+    } else if (this.priority._compareTo(other.priority) == 0) {
+      return this.name.compareTo(other.name);
+    } else {
+      return -1;
+    }
+  }
 
   bool operator ==(Object other) =>
       other is BudgetCategory && this._equals(other);
@@ -37,7 +47,21 @@ class Priority {
   static final savings = Priority._new("Savings");
   static final other = Priority._new("Other");
 
+  static final Map<Priority, int> _valueOf = {
+    required: 5,
+    need: 4,
+    want: 3,
+    savings: 2,
+    other: 1
+  };
+
   Priority._new(this.name);
+
+  int _compareTo(Priority other) {
+    if (_valueOf[this] > _valueOf[other]) return 1;
+    if (_valueOf[this] == _valueOf[other]) return 0;
+    return -1;
+  }
 }
 
 class BudgetCategoryList {
@@ -56,20 +80,21 @@ class BudgetCategoryList {
     BudgetCategory.uncategorized
   ];
 
-  List<BudgetCategory> categories;
+  List<BudgetCategory> _categories;
 
   BudgetCategoryList() {
-    categories = new List();
+    _categories = new List();
     defaultCategories.forEach((category) {
-      categories.add(category);
+      _categories.add(category);
     });
   }
 
-  BudgetCategoryList.fromCategories(this.categories);
+  BudgetCategoryList.fromCategories(this._categories);
 
-  bool contains(BudgetCategory category) => categories.contains(category);
+  bool contains(BudgetCategory category) => _categories.contains(category);
 
-  bool addIfNotPresent(BudgetCategory category) {
+  // Does not accept duplicates.
+  bool add(BudgetCategory category) {
     bool nameMatch = false;
     forEach((BudgetCategory c) {
       if (c.name == category.name) {
@@ -77,16 +102,32 @@ class BudgetCategoryList {
       }
     });
     if (!nameMatch) {
-      categories.add(category);
+      _categories.add(category);
+      _sort();
     }
     return !nameMatch;
   }
 
-  bool removeIfPresent(BudgetCategory category) {}
-
-  void forEach(void action(BudgetCategory category)) {
-    categories.forEach(action);
+  void _sort() {
+    _categories.sort((BudgetCategory a, BudgetCategory b) {
+      return a._compareTo(b);
+    });
   }
 
-  BudgetCategoryList get values {}
+  // Removes the specified category from the list if it is present.
+  // Returns true if the element was found and deleted from the list, otherwise
+  // returns false. If the specified category is the special category
+  // 'BudgetCategory.uncategorized', it will not be removed and the function
+  // will return false.
+  bool remove(BudgetCategory category) {
+    if (contains(category) && category != BudgetCategory.uncategorized) {
+      _categories.remove(category);
+      return true;
+    }
+    return false;
+  }
+
+  void forEach(void action(BudgetCategory category)) {
+    _categories.forEach(action);
+  }
 }
