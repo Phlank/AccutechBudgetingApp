@@ -18,16 +18,15 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   Future _load;
-  Scaffold userPage;
 
-  _UserPageState() {
-    _initUserPage();
+  @override
+  void initState() {
+    super.initState();
+    _load = BudgetingApp.userController.initialize();
   }
 
-  void _initUserPage() {
-    Map<String, double> budgetCategoryAmounts =
-    BudgetingApp.userController.buildBudgetMap();
-    userPage = Scaffold(
+  Widget _initUserPage() {
+    return Scaffold(
       appBar: AppBar(
         title: Text('User Page'),
       ),
@@ -38,7 +37,7 @@ class _UserPageState extends State<UserPage> {
           Card(
             /*pie chart display*/
               child: PieChart(
-                dataMap: budgetCategoryAmounts,
+                dataMap: BudgetingApp.userController.buildBudgetMap(),
                 showChartValues: true,
                 showLegends: true,
                 colorList: Colors.primaries,
@@ -117,11 +116,6 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _load = BudgetingApp.userController.initialize();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +123,7 @@ class _UserPageState extends State<UserPage> {
         future: _load,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return userPage;
+            return _initUserPage();
           } else {
             return CircularProgressIndicator();
           }
@@ -156,12 +150,11 @@ class _TransactionListView extends StatelessWidget {
             physics: ScrollPhysics(),
             itemCount: transactions.length,
             itemBuilder: (context, index) {
-              return _buildTransactionListViewItem(index);
+              return _buildTransactionListViewItem(transactions.getAt(index));
             }));
   }
 
-  Widget _buildTransactionListViewItem(int index) {
-    Transaction t = BudgetingApp.userController.getLoadedTransactions()[index];
+  Widget _buildTransactionListViewItem(Transaction t){
     return Table(children: [
       TableRow(children: [
         Text(
