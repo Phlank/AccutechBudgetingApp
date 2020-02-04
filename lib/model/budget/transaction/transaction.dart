@@ -8,7 +8,7 @@ class Transaction implements Serializable {
   String vendor;
   String method;
   double delta;
-  BudgetCategory category;
+  Category category;
 
   Transaction(this.vendor, this.method, this.delta, this.category) {
     datetime = DateTime.now();
@@ -20,7 +20,7 @@ class Transaction implements Serializable {
   }
 
   static Transaction _emptyTransaction() {
-    Transaction t = new Transaction("", "", 0.0, BudgetCategory.housing);
+    Transaction t = new Transaction("", "", 0.0, Category.housing);
     return t;
   }
 
@@ -31,7 +31,7 @@ class Transaction implements Serializable {
     t.vendor = map["vendor"];
     t.method = map["method"];
     t.delta = double.parse(map["delta"]);
-    t.category = jsonCategory[map["category"]];
+    t.category = Category.unserializeMap(map["category"]);
     return t;
   }
 
@@ -42,7 +42,7 @@ class Transaction implements Serializable {
     output += '"vendor":"' + vendor + '",';
     output += '"method":"' + method + '",';
     output += '"delta":"' + delta.toString() + '",';
-    output += '"category":"' + categoryJson[category] + '"';
+    output += '"category":"' + category.name + '"';
     output += '}';
     return output;
   }

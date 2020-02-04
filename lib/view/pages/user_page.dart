@@ -57,7 +57,7 @@ class _UserPageState extends State<UserPage> {
                                 .income -
                                 BudgetingApp.userController
                                     .getBudget()
-                                    .allotted[BudgetCategory.housing])
+                                    .allotted[Category.housing])
                                 .toString() +
                             '\n',
                         style: TextStyle(
@@ -156,7 +156,7 @@ class _TransactionListView extends StatelessWidget {
         Text(_formatDate(t.datetime),
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: _bottomRowFontSize)),
-        Text(categoryJson[t.category],
+        Text(t.category.name,
             textAlign: TextAlign.right,
             style: TextStyle(fontSize: _bottomRowFontSize))
       ])

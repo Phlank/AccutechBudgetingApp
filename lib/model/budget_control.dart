@@ -27,18 +27,18 @@ class BudgetControl implements Control {
   bool _oldUser;
   Color cashFlowColor;
 
-  final Map<String, BudgetCategory> categoryMap = {
-    'housing': BudgetCategory.housing,
-    'utilities': BudgetCategory.utilities,
-    'groceries': BudgetCategory.groceries,
-    'savings': BudgetCategory.savings,
-    'health': BudgetCategory.health,
-    'transportation': BudgetCategory.transportation,
-    'education': BudgetCategory.education,
-    'entertainment': BudgetCategory.entertainment,
-    'kids': BudgetCategory.kids,
-    'pets': BudgetCategory.pets,
-    'miscellaneous': BudgetCategory.miscellaneous
+  final Map<String, Category> categoryMap = {
+    'housing': Category.housing,
+    'utilities': Category.utilities,
+    'groceries': Category.groceries,
+    'savings': Category.savings,
+    'health': Category.health,
+    'transportation': Category.transportation,
+    'education': Category.education,
+    'entertainment': Category.entertainment,
+    'kids': Category.kids,
+    'pets': Category.pets,
+    'miscellaneous': Category.miscellaneous
   };
 
   final Map<String, List<String>> sectionMap = {
@@ -169,7 +169,7 @@ class BudgetControl implements Control {
 
   String getCashFlow() {
     double amt = _budget.getMonthlyIncome() -
-        _budget.allotted[BudgetCategory.housing] +
+        _budget.allotted[Category.housing] +
         expenseTotal();
     if (amt > 0) {
       cashFlowColor = Colors.green;
@@ -192,23 +192,23 @@ class BudgetControl implements Control {
 
   Map<String, double> buildBudgetMap() {
     Map<String, double> map = new Map();
-    map.putIfAbsent('housing', () => _budget.allotted[BudgetCategory.housing]);
+    map.putIfAbsent('housing', () => _budget.allotted[Category.housing]);
     map.putIfAbsent(
-        'utilities', () => _budget.allotted[BudgetCategory.utilities]);
+        'utilities', () => _budget.allotted[Category.utilities]);
     map.putIfAbsent(
-        'groceries', () => _budget.allotted[BudgetCategory.groceries]);
-    map.putIfAbsent('savings', () => _budget.allotted[BudgetCategory.savings]);
-    map.putIfAbsent('helath', () => _budget.allotted[BudgetCategory.health]);
+        'groceries', () => _budget.allotted[Category.groceries]);
+    map.putIfAbsent('savings', () => _budget.allotted[Category.savings]);
+    map.putIfAbsent('helath', () => _budget.allotted[Category.health]);
     map.putIfAbsent('transportation',
-            () => _budget.allotted[BudgetCategory.transportation]);
+            () => _budget.allotted[Category.transportation]);
     map.putIfAbsent(
-        'education', () => _budget.allotted[BudgetCategory.education]);
+        'education', () => _budget.allotted[Category.education]);
     map.putIfAbsent(
-        'entertainment', () => _budget.allotted[BudgetCategory.entertainment]);
-    map.putIfAbsent('kids', () => _budget.allotted[BudgetCategory.kids]);
-    map.putIfAbsent('pets', () => _budget.allotted[BudgetCategory.pets]);
+        'entertainment', () => _budget.allotted[Category.entertainment]);
+    map.putIfAbsent('kids', () => _budget.allotted[Category.kids]);
+    map.putIfAbsent('pets', () => _budget.allotted[Category.pets]);
     map.putIfAbsent(
-        'miscellaneous', () => _budget.allotted[BudgetCategory.miscellaneous]);
+        'miscellaneous', () => _budget.allotted[Category.miscellaneous]);
     return map;
   }
 
@@ -242,33 +242,33 @@ class MockBudget {
     this.budget = budget;
   }
 
-  void setCategory(BudgetCategory category, double amount) {
+  void setCategory(Category category, double amount) {
     budget.setAllotment(category, amount);
   }
 
-  double getCategory(BudgetCategory category) {
+  double getCategory(Category category) {
     return budget.allotted[category];
   }
 
   double getNewTotalAllotted(String section) {
-    Map<String, List<BudgetCategory>> mockMap = {
+    Map<String, List<Category>> mockMap = {
       'needs': [
-        BudgetCategory.health,
-        BudgetCategory.housing,
-        BudgetCategory.utilities,
-        BudgetCategory.groceries,
-        BudgetCategory.transportation,
-        BudgetCategory.kids
+        Category.health,
+        Category.housing,
+        Category.utilities,
+        Category.groceries,
+        Category.transportation,
+        Category.kids
       ],
       'wants': [
-        BudgetCategory.pets,
-        BudgetCategory.miscellaneous,
-        BudgetCategory.entertainment
+        Category.pets,
+        Category.miscellaneous,
+        Category.entertainment
       ],
-      'savings': [BudgetCategory.savings]
+      'savings': [Category.savings]
     };
     double total = 0.0;
-    for (BudgetCategory category in mockMap[section]) {
+    for (Category category in mockMap[section]) {
       total += budget.allotted[category];
     }
     return total;

@@ -1,24 +1,26 @@
-class BudgetCategory {
-  String name;
-  Priority priority;
+import 'dart:convert';
 
-  static final BudgetCategory //
-  housing = new BudgetCategory("Housing", Priority.required),
-      utilities = new BudgetCategory("Housing", Priority.required),
-      groceries = new BudgetCategory("Housing", Priority.required),
-      savings = new BudgetCategory("Housing", Priority.required),
-      health = new BudgetCategory("Housing", Priority.required),
-      transportation = new BudgetCategory("Housing", Priority.required),
-      education = new BudgetCategory("Housing", Priority.required),
-      entertainment = new BudgetCategory("Housing", Priority.required),
-      kids = new BudgetCategory("Housing", Priority.required),
-      pets = new BudgetCategory("Housing", Priority.required),
-      miscellaneous = new BudgetCategory("Housing", Priority.required),
-      uncategorized = new BudgetCategory("Housing", Priority.required);
+class Category {
+  final String name;
+  final Priority priority;
 
-  BudgetCategory(this.name, this.priority);
+  static const Category //
+      housing = Category("Housing", Priority.required),
+      utilities = Category("Utilities", Priority.need),
+      groceries = Category("Groceries", Priority.need),
+      savings = Category("Savings", Priority.savings),
+      health = Category("Health", Priority.need),
+      transportation = Category("Transportation", Priority.need),
+      education = Category("Education", Priority.want),
+      entertainment = Category("Entertainment", Priority.want),
+      kids = Category("Kids", Priority.want),
+      pets = Category("Pets", Priority.want),
+      miscellaneous = Category("Miscellaneous", Priority.want),
+      uncategorized = Category("Uncategorized", Priority.other);
 
-  int _compareTo(BudgetCategory other) {
+  const Category(this.name, this.priority);
+
+  int _compareTo(Category other) {
     if (this.priority._compareTo(other.priority) == 1) {
       return 1;
     } else if (this.priority._compareTo(other.priority) == 0) {
@@ -28,24 +30,40 @@ class BudgetCategory {
     }
   }
 
-  bool operator ==(Object other) =>
-      other is BudgetCategory && this._equals(other);
+  bool operator ==(Object other) => other is Category && this._equals(other);
 
-  bool _equals(BudgetCategory other) {
+  bool _equals(Category other) {
     return this.name == other.name && this.priority == other.priority;
   }
 
   int hashCode() => name.hashCode ^ priority.hashCode;
+
+  String serialize() {
+    String output = '{';
+    output += '"name":"' + name + '",';
+    output += '"priority":"' + priority.name + '"';
+    output += '}';
+    return output;
+  }
+
+  static Category unserialize(String serialized) {
+    Map map = jsonDecode(serialized);
+    return unserializeMap(map);
+  }
+
+  static Category unserializeMap(Map map) {
+    return new Category(map['name'], Priority._new(map['priority']));
+  }
 }
 
 class Priority {
-  String name;
+  final String name;
 
-  static final required = Priority._new("Required");
-  static final need = Priority._new("Need");
-  static final want = Priority._new("Want");
-  static final savings = Priority._new("Savings");
-  static final other = Priority._new("Other");
+  static const required = Priority._new("Required");
+  static const need = Priority._new("Need");
+  static const want = Priority._new("Want");
+  static const savings = Priority._new("Savings");
+  static const other = Priority._new("Other");
 
   static final Map<Priority, int> _valueOf = {
     required: 5,
@@ -55,7 +73,7 @@ class Priority {
     other: 1
   };
 
-  Priority._new(this.name);
+  const Priority._new(this.name);
 
   int _compareTo(Priority other) {
     if (_valueOf[this] > _valueOf[other]) return 1;
@@ -64,39 +82,41 @@ class Priority {
   }
 }
 
-class BudgetCategoryList {
-  static final List<BudgetCategory> defaultCategories = [
-    BudgetCategory.housing,
-    BudgetCategory.utilities,
-    BudgetCategory.groceries,
-    BudgetCategory.savings,
-    BudgetCategory.health,
-    BudgetCategory.transportation,
-    BudgetCategory.education,
-    BudgetCategory.entertainment,
-    BudgetCategory.kids,
-    BudgetCategory.pets,
-    BudgetCategory.miscellaneous,
-    BudgetCategory.uncategorized
+class CategoryList {
+  static const List<Category> defaultCategories = [
+    Category.housing,
+    Category.utilities,
+    Category.groceries,
+    Category.savings,
+    Category.health,
+    Category.transportation,
+    Category.education,
+    Category.entertainment,
+    Category.kids,
+    Category.pets,
+    Category.miscellaneous,
+    Category.uncategorized
   ];
 
-  List<BudgetCategory> _categories;
+  List<Category> _categories;
 
-  BudgetCategoryList() {
+  CategoryList({List<Category> list = defaultCategories}) {
     _categories = new List();
-    defaultCategories.forEach((category) {
+    list.forEach((category) {
       _categories.add(category);
     });
   }
 
-  BudgetCategoryList.fromCategories(this._categories);
+  CategoryList.fromCategories(this._categories);
 
-  bool contains(BudgetCategory category) => _categories.contains(category);
+  int get length => _categories.length;
+
+  bool contains(Category category) => _categories.contains(category);
 
   // Does not accept duplicates.
-  bool add(BudgetCategory category) {
+  bool add(Category category) {
     bool nameMatch = false;
-    forEach((BudgetCategory c) {
+    forEach((Category c) {
       if (c.name == category.name) {
         nameMatch = true;
       }
@@ -109,7 +129,7 @@ class BudgetCategoryList {
   }
 
   void _sort() {
-    _categories.sort((BudgetCategory a, BudgetCategory b) {
+    _categories.sort((Category a, Category b) {
       return a._compareTo(b);
     });
   }
@@ -119,15 +139,31 @@ class BudgetCategoryList {
   // returns false. If the specified category is the special category
   // 'BudgetCategory.uncategorized', it will not be removed and the function
   // will return false.
-  bool remove(BudgetCategory category) {
-    if (contains(category) && category != BudgetCategory.uncategorized) {
+  bool remove(Category category) {
+    if (contains(category) && category != Category.uncategorized) {
       _categories.remove(category);
       return true;
     }
     return false;
   }
 
-  void forEach(void action(BudgetCategory category)) {
+  void forEach(void action(Category category)) {
     _categories.forEach(action);
   }
+
+  Iterable<T> map<T>(T f(Category c)) => _categories.map(f);
+
+  bool operator ==(Object o) => o is CategoryList && this._equals(o);
+
+  bool _equals(CategoryList other) {
+    if (this.length != other.length) return false;
+    this._sort();
+    other._sort();
+    for (int i = 0; i < this.length; i++) {
+      if (this._categories[i] != other._categories[i]) return false;
+    }
+    return true;
+  }
+
+  int get hashCode => _categories.hashCode;
 }

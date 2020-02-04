@@ -4,15 +4,15 @@ import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
 class BudgetMap implements Serializable {
-  Map<BudgetCategory, double> _map = new Map();
+
+  Map<Category, double> _map = new Map();
   String _serialization = "";
-  BudgetCategoryList _categories;
-  static BudgetMap _unserialized;
+  CategoryList _categories;
   static Map _decoded;
 
-  BudgetMap(BudgetCategoryList categories) {
-    _categories = categories;
-    categories.forEach((BudgetCategory c) {
+  BudgetMap() {
+    _categories = CategoryList();
+    _categories.forEach((Category c) {
       _map[c] = 0;
     });
   }
@@ -20,17 +20,17 @@ class BudgetMap implements Serializable {
   BudgetMap.copyOf(BudgetMap toCopy) {
     _map = new Map();
     _categories = toCopy._categories;
-    _categories.forEach((BudgetCategory c) {
+    _categories.forEach((Category c) {
       _map[c] = toCopy[c];
     });
   }
 
-  double addTo(BudgetCategory category, double amt) {
+  double addTo(Category category, double amt) {
     _map[category] += amt;
     return _map[category];
   }
 
-  void forEach(void action(BudgetCategory c, double d)) {
+  void forEach(void action(Category c, double d)) {
     _map.forEach(action);
   }
 
@@ -41,45 +41,43 @@ class BudgetMap implements Serializable {
     return _serialization;
   }
 
-  void _makeSerializable(BudgetCategory c, double d) {
+  void _makeSerializable(Category c, double d) {
     _serialization += '"' + c.name + '":"' + d.toString() + '"';
-    if (!(c == BudgetCategory.miscellaneous)) {
+    if (!(c == Category.miscellaneous)) {
       _serialization += ',';
     }
   }
 
   static BudgetMap unserialize(String serialized) {
-    _unserialized = new BudgetMap();
+    BudgetMap _unserialized = new BudgetMap();
     _decoded = jsonDecode(serialized);
-    _decoded.forEach(_convertDecoded);
-    return _unserialized;
-  }
+    _decoded.forEach((k, v) {
 
-  static _convertDecoded(dynamic s, dynamic d) {
-    _unserialized.addTo(jsonCategory[s], double.parse(d));
+    });
+    return _unserialized;
   }
 
   BudgetMap divide(double n) {
     BudgetMap newBudgetMap = new BudgetMap();
-    _map.forEach((BudgetCategory bc, double d) {
+    _map.forEach((Category bc, double d) {
       newBudgetMap[bc] = d / n;
     });
     return newBudgetMap;
   }
 
-  operator [](BudgetCategory i) => _map[i];
+  operator [](Category i) => _map[i];
 
-  operator []=(BudgetCategory i, double value) => _map[i] = value;
+  operator []=(Category i, double value) => _map[i] = value;
 
   operator ==(Object other) => other is BudgetMap && this._equals(other);
 
   bool _equals(BudgetMap other) {
-    for (BudgetCategory c in BudgetCategory.values) {
-      if (other[c] != this[c]) {
-        return false;
-      }
-    }
-    return true;
+    bool result = true;
+    _map.forEach((Category key, double value) {
+      if (!(other._categories.contains(key) && other[key] == value))
+        result = false;
+    });
+    return result;
   }
 
   int get hashCode => _map.hashCode ^ _serialization.hashCode;

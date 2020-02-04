@@ -44,6 +44,7 @@ class PriorityBudgetFactory implements BudgetFactory {
   double _housingRatio = 0.0, _income = 0.0, _underspending = 0.0, _overspending = 0.0;
   _NSW _currentDistribution, _targetDistribution;
   double _wantsRatio, _needsRatio, _savingsRatio;
+  Budget _oldBudget;
   BudgetMap _oldAllotmentRatios = new BudgetMap(),
       _oldActualRatios = new BudgetMap(),
       _spendingDiffs = new BudgetMap(),
@@ -111,26 +112,27 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   void _setAllotments(double housing) {
-    _allottedSpending[BudgetCategory.housing] = housing;
+    _allottedSpending[Category.housing] = housing;
     _needsRatio = _currentDistribution.needs - _housingRatio;
     _wantsRatio = _currentDistribution.wants;
     _savingsRatio = _currentDistribution.savings;
     double dNeedsRatio = _income * _needsRatio / 4.0;
     double dWantsRatio = _income * _wantsRatio / 5.0;
-    _allottedSpending[BudgetCategory.utilities] = dNeedsRatio;
-    _allottedSpending[BudgetCategory.groceries] = dNeedsRatio;
-    _allottedSpending[BudgetCategory.health] = dNeedsRatio;
-    _allottedSpending[BudgetCategory.transportation] = dNeedsRatio;
-    _allottedSpending[BudgetCategory.education] = dWantsRatio;
-    _allottedSpending[BudgetCategory.entertainment] = dWantsRatio;
-    _allottedSpending[BudgetCategory.kids] = dWantsRatio;
-    _allottedSpending[BudgetCategory.pets] = dWantsRatio;
-    _allottedSpending[BudgetCategory.miscellaneous] = dWantsRatio;
-    _allottedSpending[BudgetCategory.savings] = _savingsRatio * _income;
+    _allottedSpending[Category.utilities] = dNeedsRatio;
+    _allottedSpending[Category.groceries] = dNeedsRatio;
+    _allottedSpending[Category.health] = dNeedsRatio;
+    _allottedSpending[Category.transportation] = dNeedsRatio;
+    _allottedSpending[Category.education] = dWantsRatio;
+    _allottedSpending[Category.entertainment] = dWantsRatio;
+    _allottedSpending[Category.kids] = dWantsRatio;
+    _allottedSpending[Category.pets] = dWantsRatio;
+    _allottedSpending[Category.miscellaneous] = dWantsRatio;
+    _allottedSpending[Category.savings] = _savingsRatio * _income;
   }
 
   @override
   Budget newFromBudget(Budget old) {
+    _oldBudget = old;
     _income = old.getMonthlyIncome();
     _oldAllotmentRatios = old.allotted.divide(_income);
     _oldActualRatios = old.actual.divide(_income);
@@ -151,7 +153,7 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   bool _userExceededBudget() {
     double total = 0.0;
-    _oldActualRatios.forEach((BudgetCategory c, double d) {
+    _oldActualRatios.forEach((Category c, double d) {
       total += d;
     });
     return total > _income;
@@ -159,7 +161,7 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   void _findSpendingDiffs() {
     _spendingDiffs = new BudgetMap();
-    _oldAllotmentRatios.forEach((BudgetCategory c, double d) {
+    _oldAllotmentRatios.forEach((Category c, double d) {
       double allotted = d;
       double spent = _oldActualRatios[c];
       if (_oldActualRatios[c] != d) {
@@ -170,23 +172,23 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   void _reallocate() {
     _newAllotmentRatios = new BudgetMap();
-    _spendingDiffs.forEach((BudgetCategory c, double d) {
-      if (c != BudgetCategory.savings) {
+    _spendingDiffs.forEach((Category c, double d) {
+      if (c != Category.savings) {
         if (d < 0.0) _underspending += d;
         if (d > 0.0) _overspending += d;
       }
     });
-    _spendingDiffs.forEach((BudgetCategory c, double d) {
-      if (c != BudgetCategory.savings) {
+    _spendingDiffs.forEach((Category c, double d) {
+      if (c != Category.savings) {
         _reallocateCategory(c, d);
       }
     });
     double leftover = -_underspending;
-    _newAllotmentRatios[BudgetCategory.savings] =
-        _oldAllotmentRatios[BudgetCategory.savings] + leftover;
+    _newAllotmentRatios[Category.savings] =
+        _oldAllotmentRatios[Category.savings] + leftover;
   }
 
-  void _reallocateCategory(BudgetCategory c, double d) {
+  void _reallocateCategory(Category c, double d) {
     if (d < 0.0) {
       _newAllotmentRatios[c] = _oldAllotmentRatios[c] + d / _overspending;
       _underspending -= d / _overspending;
@@ -197,8 +199,8 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   void _setAllotmentsForNextMonth() {
-    for (BudgetCategory c in BudgetCategory.values) {
+    _oldBudget.categories.forEach((Category c) {
       _allottedSpending[c] = _newAllotmentRatios[c] * _income;
-    }
+    });
   }
 }

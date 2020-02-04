@@ -6,16 +6,16 @@ import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 
 class BudgetBuilder {
-
+  CategoryList _categories;
   BudgetMap _allottedSpending, _actualSpending;
   BudgetType _type;
   TransactionList _transactions;
   double _income;
 
   BudgetBuilder() {
+    _categories = new CategoryList();
     _allottedSpending = new BudgetMap();
     _actualSpending = new BudgetMap();
-    _transactions = new TransactionList();
   }
 
   BudgetBuilder setIncome(double income) {
@@ -43,6 +43,11 @@ class BudgetBuilder {
     return this;
   }
 
+  BudgetBuilder setCategories(CategoryList categories) {
+    _categories = categories;
+    return this;
+  }
+
   Budget build() {
     if (_income == null) throw new NullThrownError();
     if (_type == null) throw new NullThrownError();
@@ -59,6 +64,7 @@ class BudgetBuilder {
 }
 
 class Budget {
+  CategoryList _categories;
   BudgetMap _allotted, _actual;
   TransactionList _transactions;
   double _income;
@@ -102,9 +108,11 @@ class Budget {
 
   TransactionList get transactions => _transactions;
 
+  CategoryList get categories => _categories;
+
   double get spent {
     double spent = 0.0;
-    for (BudgetCategory category in BudgetCategoryList.defaultCategories) {
+    for (Category category in CategoryList.defaultCategories) {
       spent += _actual[category];
     }
     return spent;
@@ -112,7 +120,7 @@ class Budget {
 
   double get remaining => _income - spent;
 
-  double setAllotment(BudgetCategory category, double amount) {
+  double setAllotment(Category category, double amount) {
     _allotted[category] = amount;
     return amount;
   }
@@ -130,7 +138,7 @@ class Budget {
       _transactions.add(transaction);
       _actual.addTo(transaction.category, -transaction.delta);
     } else {
-      _actual.addTo(BudgetCategory.miscellaneous, -transaction.delta);
+      _actual.addTo(Category.miscellaneous, -transaction.delta);
     }
   }
 

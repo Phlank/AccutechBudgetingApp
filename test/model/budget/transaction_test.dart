@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 Transaction t1 = new Transaction(null, null, 0.0, null);
 Transaction t2 =
-    new Transaction("Walmart", "Credit Card", 0.0, BudgetCategory.groceries);
+    new Transaction("Walmart", "Credit Card", 0.0, Category.groceries);
 String t2s =
     "{\"datetime\":\"1578881628138\",\"vendor\":\"Walmart\",\"method\":\"Credit Card\",\"delta\":\"0.0\",\"category\":\"Groceries\"}";
 
