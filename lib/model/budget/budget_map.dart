@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:budgetflow/model/budget/category/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
 class BudgetMap implements Serializable {

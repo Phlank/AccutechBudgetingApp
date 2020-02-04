@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 
