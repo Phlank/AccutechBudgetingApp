@@ -50,5 +50,13 @@ void main() {
     test('Test cNeed2.serialize', () {
       expect(cNeed2.serialize(), '{"name":"2","priority":"Need"}');
     });
+    test('Test unserialize cNeed1', () {
+      Category fromSerialized = Category.unserialize('{"name":"1","priority":"Need"}');
+      expect(fromSerialized == cNeed1, true);
+    });
+    test('Test unserialize cNeed2', () {
+      Category fromSerialized = Category.unserialize('{"name":"2","priority":"Need"}');
+      expect(fromSerialized == cNeed2, true);
+    });
   });
 }

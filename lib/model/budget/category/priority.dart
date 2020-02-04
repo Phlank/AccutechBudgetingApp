@@ -22,4 +22,8 @@ class Priority {
     if (_valueOf[this] == _valueOf[other]) return 0;
     return -1;
   }
+
+  bool operator ==(Object o) => o is Priority && name == o.name;
+
+  int get hashCode => name.hashCode;
 }
