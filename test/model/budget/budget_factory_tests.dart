@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';

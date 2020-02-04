@@ -20,10 +20,10 @@ class Category {
 
   const Category(this.name, this.priority);
 
-  int _compareTo(Category other) {
-    if (this.priority._compareTo(other.priority) == 1) {
+  int compareTo(Category other) {
+    if (this.priority.compareTo(other.priority) == 1) {
       return 1;
-    } else if (this.priority._compareTo(other.priority) == 0) {
+    } else if (this.priority.compareTo(other.priority) == 0) {
       return this.name.compareTo(other.name);
     } else {
       return -1;
@@ -36,7 +36,7 @@ class Category {
     return this.name == other.name && this.priority == other.priority;
   }
 
-  int hashCode() => name.hashCode ^ priority.hashCode;
+  int get hashCode => name.hashCode ^ priority.hashCode;
 
   String serialize() {
     String output = '{';
@@ -75,7 +75,7 @@ class Priority {
 
   const Priority._new(this.name);
 
-  int _compareTo(Priority other) {
+  int compareTo(Priority other) {
     if (_valueOf[this] > _valueOf[other]) return 1;
     if (_valueOf[this] == _valueOf[other]) return 0;
     return -1;
@@ -123,14 +123,14 @@ class CategoryList {
     });
     if (!nameMatch) {
       _categories.add(category);
-      _sort();
+      sort();
     }
     return !nameMatch;
   }
 
-  void _sort() {
+  void sort() {
     _categories.sort((Category a, Category b) {
-      return a._compareTo(b);
+      return a.compareTo(b);
     });
   }
 
@@ -157,8 +157,8 @@ class CategoryList {
 
   bool _equals(CategoryList other) {
     if (this.length != other.length) return false;
-    this._sort();
-    other._sort();
+    this.sort();
+    other.sort();
     for (int i = 0; i < this.length; i++) {
       if (this._categories[i] != other._categories[i]) return false;
     }

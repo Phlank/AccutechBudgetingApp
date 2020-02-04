@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
@@ -16,6 +16,7 @@ class BudgetBuilder {
     _categories = new CategoryList();
     _allottedSpending = new BudgetMap();
     _actualSpending = new BudgetMap();
+    _transactions = new TransactionList();
   }
 
   BudgetBuilder setIncome(double income) {
@@ -59,7 +60,8 @@ class BudgetBuilder {
         _actualSpending, //
         _transactions, //
         _income, //
-        _type);
+        _type, //
+        _categories);
   }
 }
 
@@ -71,7 +73,7 @@ class Budget {
   BudgetType _type;
 
   Budget._new(this._allotted, this._actual, this._transactions, this._income,
-      this._type);
+      this._type, this._categories);
 
   // Makes a new budget based on the allocations of an old budget
   Budget.fromOldBudget(Budget old) {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/budget_category.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
 class Transaction implements Serializable {
@@ -42,7 +42,7 @@ class Transaction implements Serializable {
     output += '"vendor":"' + vendor + '",';
     output += '"method":"' + method + '",';
     output += '"delta":"' + delta.toString() + '",';
-    output += '"category":"' + category.name + '"';
+    output += '"category":' + category.serialize();
     output += '}';
     return output;
   }

@@ -1,18 +1,27 @@
+import 'package:budgetflow/model/budget/category/budget_category.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-BudgetMap bm1 = new BudgetMap();
-String bm1Serialized = "{\"Housing\":\"0.0\",\"Utilities\":\"0.0\",\"Groceries\":\"0.0\",\"Savings\":\"0.0\",\"Health\":\"0.0\",\"Transportation\":\"0.0\",\"Education\":\"0.0\",\"Entertainment\":\"0.0\",\"Kids\":\"0.0\",\"Pets\":\"0.0\",\"Miscellaneous\":\"0.0\"}";
-String bm2Serialized = "{\"Housing\":\"4.0\",\"Utilities\":\"3.0\",\"Groceries\":\"4.0\",\"Savings\":\"5.0\",\"Health\":\"0.0\",\"Transportation\":\"0.0\",\"Education\":\"0.0\",\"Entertainment\":\"0.0\",\"Kids\":\"0.0\",\"Pets\":\"0.0\",\"Miscellaneous\":\"0.0\"}";
-
+BudgetMap bm1, bm2;
+String bm1Serialized =
+    '{"0.0":{"name":"Housing","priority":"Required"},"0.0":{"name":"Utilities","priority":"Need"},"0.0":{"name":"Groceries","priority":"Need"},"0.0":{"name":"Savings","priority":"Savings"},"0.0":{"name":"Health","priority":"Need"},"0.0":{"name":"Transportation","priority":"Need"},"0.0":{"name":"Education","priority":"Want"},"0.0":{"name":"Entertainment","priority":"Want"},"0.0":{"name":"Kids","priority":"Want"},"0.0":{"name":"Pets","priority":"Want"},"0.0":{"name":"Miscellaneous","priority":"Want"},"0.0":{"name":"Uncategorized","priority":"Other"}}';
 
 void main() {
-	test("Test new map has all categories", () {
-		BudgetMap b = new BudgetMap();
-		expect(b.serialize(), equals(bm1Serialized));
-	});
-	test("Map from serialized has categories", () {
-		BudgetMap b = BudgetMap.unserialize(bm2Serialized);
-		print(b.serialize());
-	});
+  group('BudgetMap tests', () {
+    setUp(() {
+      bm1 = new BudgetMap();
+      bm2 = new BudgetMap();
+      bm2.addTo(Category.housing, 200.0);
+    });
+    test("New map serialization", () {
+      expect(bm1.serialize(), bm1Serialized);
+    });
+    test("New map serialization sanity", () {
+      BudgetMap bm1Copy = BudgetMap.unserialize(bm1.serialize());
+      expect(bm1Copy, bm1);
+    });
+    test("addTo adds correct amount", () {
+      expect(bm2[Category.housing], 200.0);
+    });
+  });
 }
