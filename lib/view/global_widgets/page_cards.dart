@@ -35,6 +35,6 @@ class GlobalCards{
                     fontSize: 20,
                     color: Format.deltaColor(remaining),
                   ))
-            ])))
+            ])));
   }
 }
