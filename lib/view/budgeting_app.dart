@@ -5,6 +5,7 @@ import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/login_page.dart';
 import 'package:budgetflow/view/pages/setup_page.dart';
 import 'package:budgetflow/view/pages/user_page.dart';
+import 'package:budgetflow/view/sidebar/account_display.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
 import 'package:budgetflow/view/sidebar/user_info_display.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class BudgetingApp extends StatelessWidget {
             GeneralCategory('savings'),
         AddTransaction.ROUTE: (BuildContext context) => AddTransaction(),
         FirstLoad.ROUTE: (BuildContext context) => FirstLoad(),
+        '/accounts':(BuildContext context) => AccountDisplay(),
       }, //Routes
     );
   }
