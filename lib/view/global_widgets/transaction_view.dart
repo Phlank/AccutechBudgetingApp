@@ -30,6 +30,7 @@ class TransactionListView extends StatelessWidget {
   }
 
   Widget _buildTransactionListViewItem(Transaction t){
+    // could add functionality for on tap if used list item and text spans
     return Table(children: [
       TableRow(children: [
         Text(

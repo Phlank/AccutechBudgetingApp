@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/budget_category.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
+import 'package:budgetflow/view/global_widgets/page_cards.dart';
 import 'package:budgetflow/view/global_widgets/transaction_view.dart';
 import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
 
   Widget _initUserPage() {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('User Page'),
@@ -34,42 +36,7 @@ class _UserPageState extends State<UserPage> {
                 colorList: Colors.primaries,
                 chartType: ChartType.ring,
               )),
-          Card(
-              child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                        text: 'Available Income: ' +
-                            Format.dollarFormat(BudgetingApp.userController
-                                .getBudget()
-                                .income -
-                                BudgetingApp.userController
-                                    .getBudget()
-                                    .allotted[BudgetCategory.housing])
-                                 +
-                            '\n',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.green,
-                        )),
-                    TextSpan(
-                        text: 'Expenses:' +
-                            Format.dollarFormat(BudgetingApp.userController
-                                .expenseTotal())+
-                            '\n',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.red,
-                        )),
-                    TextSpan(
-                        text: 'Cash Flow ' +
-                            Format.dollarFormat(BudgetingApp.userController.getCashFlow())+
-                            '\n',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: BudgetingApp.userController.cashFlowColor,
-                        ))
-                  ]))),
+              GlobalCards.cashFlowCard(),
           Card(
               child: ListView.builder(
                 padding: EdgeInsets.all(8),
