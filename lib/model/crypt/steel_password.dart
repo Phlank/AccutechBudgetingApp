@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/password.dart';
-import 'package:steel_crypt/steel_crypt.dart';
+import 'package:steel_crypt/PointyCastleN/api.dart';
+import 'package:steel_crypt/PointyCastleN/export.dart';
 
 class SteelPassword implements Password {
   static const String PASSWORD_PATH = "password";
@@ -10,37 +13,75 @@ class SteelPassword implements Password {
   static const String _SERIALIZED_HASH = "hash";
   static const String _ALGORITHM = "scrypt";
   static const int _KEY_LENGTH = 32;
+  static const int _SCRYPT_N = 4096;
+  static const int _SCRYPT_r = 16;
+  static const int _SCRYPT_p = 1;
 
   String _secret;
   String _hash;
   String _salt;
-  PassCrypt _passCrypt;
+  KeyDerivator _keyDerivator;
 
   SteelPassword() {
     _secret = "";
     _hash = "";
     _salt = "";
-    _passCrypt = new PassCrypt(_ALGORITHM);
+    _keyDerivator = KeyDerivator(_ALGORITHM);
   }
 
   SteelPassword.fromSecret(String secret) {
-    _passCrypt = new PassCrypt(_ALGORITHM);
-    int diffTo32 = _KEY_LENGTH - secret.length;
-    _salt = CryptKey().genDart(diffTo32).substring(0, diffTo32);
-    _hash = _passCrypt.hashPass(_salt, secret);
     _secret = secret;
+    _salt = _generateSalt(secret);
+    _keyDerivator = _generateKeyDerivator(_salt);
+    _hash = _generateHash(_secret, _keyDerivator);
+  }
+
+  static String _generateSalt(String secret) {
+    String output = ":";
+    int diff = _KEY_LENGTH - secret.length;
+    Random random = Random.secure();
+    var saltBytes;
+    while (!(_isValidSalt(output))) {
+      saltBytes = List<int>.generate(_KEY_LENGTH, (i) => random.nextInt(256));
+      output = base64Url.encode(saltBytes);
+      output = output.substring(0, diff);
+    }
+    return output;
+  }
+
+  static bool _isValidSalt(String salt) {
+    return !(salt.contains('{') ||
+        salt.contains('}') ||
+        salt.contains('"') ||
+        salt.contains(':'));
+  }
+
+  static KeyDerivator _generateKeyDerivator(String salt) {
+    Uint8List saltBytes = Uint8List.fromList(salt.codeUnits);
+    ScryptParameters params = ScryptParameters(
+        _SCRYPT_N, _SCRYPT_r, _SCRYPT_p, _KEY_LENGTH, saltBytes);
+    KeyDerivator output = KeyDerivator(_ALGORITHM);
+    output.init(params);
+    return output;
+  }
+
+  static String _generateHash(String secret, KeyDerivator keyDerivator) {
+    List<int> secretBytes = Uint8List.fromList(utf8.encode(secret));
+    return base64.encode(keyDerivator.process(secretBytes));
   }
 
   SteelPassword.fromHashAndSalt(String hash, String salt) {
     _hash = hash;
     _salt = salt;
-    _passCrypt = new PassCrypt(_ALGORITHM);
+    _keyDerivator = KeyDerivator(_ALGORITHM);
   }
 
   @override
   Future<bool> verify(String secret) {
     Future<bool> success = Future(() {
-      return _passCrypt.checkPassKey(_salt, secret, _hash);
+      KeyDerivator inputKeyDerivator = _generateKeyDerivator(_salt);
+      String inputHash = _generateHash(secret, inputKeyDerivator);
+      return inputHash == _hash;
     });
     success.then((bool verified) {
       if (verified) _secret = secret;
@@ -68,7 +109,7 @@ class SteelPassword implements Password {
     return password;
   }
 
-  static Future<Password> load() async{
+  static Future<Password> load() async {
     String s = await BudgetControl.fileIO.readFile(PASSWORD_PATH);
     return unserialize(s);
   }
