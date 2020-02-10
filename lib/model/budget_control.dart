@@ -123,8 +123,8 @@ class BudgetControl implements Control {
   }
 
   @override
-  void setPassword(String newSecret) {
-    _password = Password.fromSecret(newSecret);
+  Future setPassword(String newSecret) async {
+    _password = await Password.fromSecret(newSecret);
     crypter = new SteelCrypter(_password);
   }
 

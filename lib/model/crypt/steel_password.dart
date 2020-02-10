@@ -38,12 +38,13 @@ class SteelPassword implements Password {
   }
 
   @override
-  bool verify(String secret) {
-    bool success = _passCrypt.checkPassKey(_salt, secret, _hash);
-    if (success) {
-      _secret = secret;
-      _passCrypt = new PassCrypt(_ALGORITHM);
-    }
+  Future<bool> verify(String secret) {
+    Future<bool> success = Future(() {
+      return _passCrypt.checkPassKey(_salt, secret, _hash);
+    });
+    success.then((bool verified) {
+      if (verified) _secret = secret;
+    });
     return success;
   }
 
