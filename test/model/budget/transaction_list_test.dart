@@ -1,15 +1,15 @@
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 TransactionList tl1 = new TransactionList();
 Transaction t1 =
-    new Transaction("Walmart", "Credit card", -21.29, BudgetCategory.groceries);
+    new Transaction("Walmart", "Credit card", -21.29, Category.groceries);
 Transaction t2 =
-    new Transaction("Walmart", "Credit card", -41.29, BudgetCategory.groceries);
+    new Transaction("Walmart", "Credit card", -41.29, Category.groceries);
 Transaction t3 =
-    new Transaction("KFC", "Credit card", -5.40, BudgetCategory.miscellaneous);
+    new Transaction("KFC", "Credit card", -5.40, Category.miscellaneous);
 
 void main() {
   group("TransactionList tests", () {

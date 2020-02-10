@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
@@ -29,7 +29,7 @@ void main() {
       _builder.setIncome(300.0);
       _builder.setType(BudgetType.savingDepletion);
       _builtBudget = _builder.build();
-      _t = new Transaction("KFC", "Cash", -5.4, BudgetCategory.miscellaneous);
+      _t = new Transaction("KFC", "Cash", -5.4, Category.miscellaneous);
     });
     group("Testing Built Budget", (){
       test("Built budget has no null fields", () {
@@ -47,7 +47,7 @@ void main() {
       });
       test("Built budget can have transaction added", () {
         _builtBudget.addTransaction(_t);
-        expect(_builtBudget.actual[BudgetCategory.miscellaneous], 5.4);
+        expect(_builtBudget.actual[Category.miscellaneous], 5.4);
       });
     });
     group("Testing fromOldBudget",(){

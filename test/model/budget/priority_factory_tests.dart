@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
@@ -81,21 +81,21 @@ void main() {
         expect(
             _budgetFactory
                 .newFromInfo(2500, 1250, BudgetType.savingDepletion)
-                .allotted[BudgetCategory.housing],
+                .allotted[Category.housing],
             equals(1250));
       });
       test("test needs budgeting", () {
         expect(
             _budgetFactory
                 .newFromInfo(2500, 1250, BudgetType.savingDepletion)
-                .allotted[BudgetCategory.groceries],
+                .allotted[Category.groceries],
             equals(156.25));
       });
       test("test wants budgeting", (){
         expect(
             _budgetFactory
                 .newFromInfo(2500, 1250, BudgetType.savingDepletion)
-                .allotted[BudgetCategory.miscellaneous],
+                .allotted[Category.miscellaneous],
             equals(125));
       });
     });

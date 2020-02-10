@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
@@ -16,11 +16,11 @@ TransactionList tL;
 void main() {
 	group("History tests", () {
 		setUp(() {
-			t1 = new Transaction("KFC", "Cash", -6.48, BudgetCategory.miscellaneous);
+			t1 = new Transaction("KFC", "Cash", -6.48, Category.miscellaneous);
 			t2 = new Transaction(
-					"Speedway", "Credit", -20.24, BudgetCategory.transportation);
+					"Speedway", "Credit", -20.24, Category.transportation);
 			t3 =
-			new Transaction("Walmart", "Checking", -31.20, BudgetCategory.groceries);
+			new Transaction("Walmart", "Checking", -31.20, Category.groceries);
 			tL = new TransactionList();
 			tL.add(t1);
 			tL.add(t2);

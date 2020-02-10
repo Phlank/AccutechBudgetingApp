@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
@@ -18,7 +18,7 @@ class _AddTransactionState extends State<AddTransaction> {
   static String methodValue = 'Cash';
   static String amountValue;
   static String vendorValue;
-  static BudgetCategory categoryValue = BudgetCategory.miscellaneous;
+  static Category categoryValue = Category.miscellaneous;
 
   @override
   Widget build(BuildContext context) {
@@ -60,21 +60,21 @@ class _AddTransactionState extends State<AddTransaction> {
       }).toList(),
     );
 
-    DropdownButton categoryInput = DropdownButton<BudgetCategory>(
+    DropdownButton categoryInput = DropdownButton<Category>(
       value: categoryValue,
       icon: Icon(Icons.arrow_drop_down),
       iconSize: 24,
       elevation: 16,
-      onChanged: (BudgetCategory newValue) {
+      onChanged: (Category newValue) {
         setState(() {
           categoryValue = newValue;
         });
       },
-      items: BudgetCategory.values
-          .map<DropdownMenuItem<BudgetCategory>>((BudgetCategory category) {
-        return DropdownMenuItem<BudgetCategory>(
+      items: BudgetingApp.userController.getBudget().categories
+          .map<DropdownMenuItem<Category>>((Category category) {
+        return DropdownMenuItem<Category>(
           value: category,
-          child: Text(categoryJson[category]),
+          child: Text(category.name),
         );
       }).toList(),
     );
