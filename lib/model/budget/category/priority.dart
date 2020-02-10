@@ -7,6 +7,14 @@ class Priority {
   static const savings = Priority("Savings");
   static const other = Priority("Other");
 
+  static const List<Priority> DEFAULT_PRIORITIES = [
+    required,
+    need,
+    want,
+    savings,
+    other
+  ];
+
   static final Map<Priority, int> _valueOf = {
     required: 5,
     need: 4,

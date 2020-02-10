@@ -36,23 +36,28 @@ class BudgetMap implements Serializable {
 
   String serialize() {
     _serialization = '{';
+    int i = 0;
     for (Category key in _map.keys) {
-      _serialization += '"' + _map[key].toString() + '":' + key.serialize();
+      _serialization += '"$i":' + _makeSerializable(key);
       if (key != _map.keys.last) _serialization += ',';
+      i++;
     }
     _serialization += '}';
     return _serialization;
   }
 
-  void _makeSerializable(Category c, double d) {
-    _serialization += '"' + c.name + '":"' + d.toString() + '",';
+  String _makeSerializable(Category c) {
+    return '{"category":' + c.serialize() + ',"amount":"' + _map[c].toString() + '"}';
   }
 
   static BudgetMap unserialize(String serialized) {
-    BudgetMap _unserialized = new BudgetMap();
+    BudgetMap unserialized = new BudgetMap();
     _decoded = jsonDecode(serialized);
-    _decoded.forEach((k, v) {});
-    return _unserialized;
+    // Key is the double, value is the category
+    _decoded.forEach((key, value) {
+      unserialized.addTo(Category.unserializeMap(value["category"]), double.parse(value["amount"]));
+    });
+    return unserialized;
   }
 
   BudgetMap divide(double n) {
