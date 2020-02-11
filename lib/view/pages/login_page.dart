@@ -17,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   var _formKey = GlobalKey<FormState>();
   TextFormField pinLoginInput;
   RaisedButton loginButton;
-  Scaffold loginPage;
 
   _LoginPageState() {
     _initControls();
@@ -72,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _initLoginPage() {
-    loginPage = Scaffold(
+  Widget _initLoginPage() {
+    return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
       ),
@@ -97,5 +96,5 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) => loginPage;
+  Widget build(BuildContext context) => _initLoginPage();
 }
