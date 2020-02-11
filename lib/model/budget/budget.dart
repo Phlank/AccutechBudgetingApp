@@ -1,17 +1,20 @@
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
+import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 
 class BudgetBuilder {
+  CategoryList _categories;
   BudgetMap _allottedSpending, _actualSpending;
   BudgetType _type;
   TransactionList _transactions;
   double _income;
 
   BudgetBuilder() {
+    _categories = new CategoryList();
     _allottedSpending = new BudgetMap();
     _actualSpending = new BudgetMap();
     _transactions = new TransactionList();
@@ -42,6 +45,11 @@ class BudgetBuilder {
     return this;
   }
 
+  BudgetBuilder setCategories(CategoryList categories) {
+    _categories = categories;
+    return this;
+  }
+
   Budget build() {
     if (_income == null) throw new NullThrownError();
     if (_type == null) throw new NullThrownError();
@@ -53,18 +61,20 @@ class BudgetBuilder {
         _actualSpending, //
         _transactions, //
         _income, //
-        _type);
+        _type, //
+        _categories);
   }
 }
 
 class Budget {
+  CategoryList _categories;
   BudgetMap _allotted, _actual;
   TransactionList _transactions;
   double _income;
   BudgetType _type;
 
   Budget._new(this._allotted, this._actual, this._transactions, this._income,
-      this._type);
+      this._type, this._categories);
 
   // Makes a new budget based on the allocations of an old budget
   Budget.fromOldBudget(Budget old) {
@@ -101,9 +111,11 @@ class Budget {
 
   TransactionList get transactions => _transactions;
 
+  CategoryList get categories => _categories;
+
   double get spent {
     double spent = 0.0;
-    for (BudgetCategory category in BudgetCategory.values) {
+    for (Category category in CategoryList.defaultCategories) {
       spent += _actual[category];
     }
     return spent;
@@ -111,7 +123,7 @@ class Budget {
 
   double get remaining => _income - spent;
 
-  double setAllotment(BudgetCategory category, double amount) {
+  double setAllotment(Category category, double amount) {
     _allotted[category] = amount;
     return amount;
   }
@@ -129,7 +141,7 @@ class Budget {
       _transactions.add(transaction);
       _actual.addTo(transaction.category, -transaction.delta);
     } else {
-      _actual.addTo(BudgetCategory.miscellaneous, -transaction.delta);
+      _actual.addTo(Category.miscellaneous, -transaction.delta);
     }
   }
 
