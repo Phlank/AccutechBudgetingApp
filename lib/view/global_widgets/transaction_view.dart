@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget_category.dart';
+
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/utils/output_formater.dart';
@@ -47,7 +47,7 @@ class TransactionListView extends StatelessWidget {
         Text(Format.dateFormat(t.datetime),
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: _bottomRowFontSize)),
-        Text(categoryJson[t.category],
+        Text(t.category.name,
             textAlign: TextAlign.right,
             style: TextStyle(fontSize: _bottomRowFontSize))
       ])

@@ -42,15 +42,8 @@ class BudgetControl implements Control {
   };
 
   final Map<String, List<String>> sectionMap = {
-    'needs': [
-      'housing',
-      'utilities',
-      'groceries',
-      'health',
-      'transportation',
-      'education',
-      'kids'
-    ],
+    'needs': ['housing','utilities','groceries','health','transportation',
+      'education','kids'],
     'wants': ['entertainment', 'pets', 'miscellaneous'],
     'savings': ['savings']
   };
@@ -59,7 +52,8 @@ class BudgetControl implements Control {
     'needs': '/needs',
     'wants': '/wants',
     'savings': '/savings',
-    'home': '/knownUser'
+    'home': '/knownUser',
+    'accounts':'/accounts'
   };
 
   BudgetControl() {
@@ -224,7 +218,7 @@ class BudgetControl implements Control {
     double spent = 0.0;
     for(String cat in sectionMap[section]){
       for(int i= 0; i<_loadedTransactions.length; i++){
-        BudgetCategory rel = _loadedTransactions.getAt(i).category;
+        Category rel = _loadedTransactions.getAt(i).category;
         if( rel == categoryMap[cat]){
           spent += _budget.allotted[rel];
         }

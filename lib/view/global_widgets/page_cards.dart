@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget_category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
 
@@ -7,10 +7,10 @@ import '../budgeting_app.dart';
 class GlobalCards{
   static Card cashFlowCard(){
     double income = BudgetingApp.userController.getBudget().income -
-        BudgetingApp.userController.getBudget().allotted[BudgetCategory.housing];
+        BudgetingApp.userController.getBudget().allotted[Category.housing];
     double spent = BudgetingApp.userController.expenseTotal();
     double remaining= BudgetingApp.userController.getCashFlow();
-    return          Card(
+    return Card(
         child: RichText(
             textAlign: TextAlign.center,
             text: TextSpan(children: <TextSpan>[
