@@ -17,18 +17,12 @@ class SetupPage extends StatefulWidget {
 
 class _SetupPageState extends State<SetupPage> {
   var _formKey;
-  InformationHolding hold = new InformationHolding();
+  _InformationHolding hold = new _InformationHolding();
   String nameButton = 'next';
   AppBar appBar;
   Card nameAndAgeCard, incomeAndSavingsCard, housingCard, pinCard;
-  TextFormField nameInput,
-      ageInput,
-      incomeInput,
-      savingsInput,
-      depleteInput,
-      housingInput,
-      pinInput,
-      confirmPinInput;
+  TextFormField nameInput, ageInput, incomeInput, savingsInput, depleteInput,
+      housingInput, pinInput, confirmPinInput;
   List<Card> inputCards;
 
   _SetupPageState() {
@@ -277,7 +271,7 @@ class _SetupPageState extends State<SetupPage> {
   }
 }
 
-class InformationHolding {
+class _InformationHolding {
   static double _housingAmt;
   static double _incomeAmt;
   static BudgetType _budgetType;
