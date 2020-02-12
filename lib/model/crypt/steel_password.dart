@@ -7,6 +7,8 @@ import 'package:budgetflow/model/crypt/password.dart';
 import 'package:steel_crypt/PointyCastleN/api.dart';
 import 'package:steel_crypt/PointyCastleN/export.dart';
 
+import 'encrypted.dart';
+
 class SteelPassword implements Password {
   static const String PASSWORD_PATH = "password";
   static const String _SERIALIZED_SALT = "salt";
@@ -37,23 +39,8 @@ class SteelPassword implements Password {
   }
 
   static String _generateSalt(String secret) {
-    String output = ":";
     int diff = _KEY_LENGTH - secret.length;
-    Random random = Random.secure();
-    var saltBytes;
-    while (!(_isValidSalt(output))) {
-      saltBytes = List<int>.generate(_KEY_LENGTH, (i) => random.nextInt(256));
-      output = base64Url.encode(saltBytes);
-      output = output.substring(0, diff);
-    }
-    return output;
-  }
-
-  static bool _isValidSalt(String salt) {
-    return !(salt.contains('{') ||
-        salt.contains('}') ||
-        salt.contains('"') ||
-        salt.contains(':'));
+    return generateRandom(diff);
   }
 
   static KeyDerivator _generateKeyDerivator(String salt) {

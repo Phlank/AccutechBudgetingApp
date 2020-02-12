@@ -81,7 +81,7 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> passwordIsValid(String secret) async {
-    _password = await SteelPassword.load();
+    _password = await Password.load();
     return _password.verify(secret);
   }
 

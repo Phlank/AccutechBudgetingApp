@@ -20,7 +20,7 @@ class SteelCrypter implements Crypter {
   }
 
   Encrypted encrypt(String plaintext) {
-    String iv = CryptKey().genDart(IV_LENGTH);
+    String iv = generateRandom(IV_LENGTH);
     String cipher = _aes.encrypt(plaintext, iv);
     Encrypted encrypted = new Encrypted(iv, cipher);
     return encrypted;
