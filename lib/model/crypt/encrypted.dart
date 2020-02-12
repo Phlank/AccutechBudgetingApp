@@ -2,19 +2,21 @@ import 'dart:convert';
 import 'dart:math';
 
 class Encrypted {
+  static const String _IV_KEY = 'iv';
+  static const String _CIPHER_KEY = 'cipher';
   final String iv, cipher;
 
   Encrypted(this.iv, this.cipher);
 
   static Encrypted unserialize(String serialized) {
     Map map = jsonDecode(serialized);
-    String iv = map["iv"];
-    String cipher = map["cipher"];
+    String iv = map[_IV_KEY];
+    String cipher = map[_CIPHER_KEY];
     return new Encrypted(iv, cipher);
   }
 
   String serialize() {
-    String output = '{"iv":"' + iv + '","cipher":"' + cipher + '"}';
+    String output = '{"$_IV_KEY":"$iv","$_CIPHER_KEY":"$cipher"}';
     return output;
   }
 }
