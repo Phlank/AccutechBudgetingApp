@@ -20,7 +20,7 @@ class Transaction implements Serializable {
     time = DateTime.now();
   }
 
-  Transaction.withTime(this.vendor, this.method, this.delta, this.category, this.datetime);
+  Transaction.withTime(this.vendor, this.method, this.delta, this.category, this.time);
 
   static Transaction unserialize(String serialized) {
     Map map = jsonDecode(serialized);
