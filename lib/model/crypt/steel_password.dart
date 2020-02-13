@@ -11,8 +11,8 @@ import 'encrypted.dart';
 
 class SteelPassword implements Password {
   static const String PASSWORD_PATH = "password";
-  static const String _SERIALIZED_SALT = "salt";
-  static const String _SERIALIZED_HASH = "hash";
+  static const String _SALT_KEY = "salt";
+  static const String _HASH_KEY = "hash";
   static const String _ALGORITHM = "scrypt";
   static const int _KEY_LENGTH = 32;
   static const int _SCRYPT_N = 4096;
@@ -84,15 +84,15 @@ class SteelPassword implements Password {
 
   @override
   String serialize() {
-    String output = '{"salt":"' + _salt + '","hash":"' + _hash + '"}';
+    String output = '{"$_SALT_KEY":"$_salt","$_HASH_KEY":"$_hash"}';
     return output;
   }
 
   static Password unserialize(String serialized) {
     Map map = jsonDecode(serialized);
     SteelPassword password = new SteelPassword();
-    password._salt = map[_SERIALIZED_SALT];
-    password._hash = map[_SERIALIZED_HASH];
+    password._salt = map[_SALT_KEY];
+    password._hash = map[_HASH_KEY];
     return password;
   }
 
