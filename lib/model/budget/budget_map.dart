@@ -5,10 +5,11 @@ import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
 class BudgetMap implements Serializable {
+  static const String _CATEGORY_KEY = 'category', _AMOUNT_KEY = 'amount';
+
   Map<Category, double> _map = new Map();
   String _serialization = "";
   CategoryList _categories;
-  static Map _decoded;
 
   BudgetMap() {
     _categories = CategoryList();
@@ -47,15 +48,25 @@ class BudgetMap implements Serializable {
   }
 
   String _makeSerializable(Category c) {
-    return '{"category":' + c.serialize() + ',"amount":"' + _map[c].toString() + '"}';
+    String serializedCategory = c.serialize();
+    double amount = _map[c];
+    String output = '{';
+    output += '"$_CATEGORY_KEY":$serializedCategory,';
+    output += '"$_AMOUNT_KEY":"$amount"';
+    output += '}';
+    return output;
   }
 
   static BudgetMap unserialize(String serialized) {
     BudgetMap unserialized = new BudgetMap();
-    _decoded = jsonDecode(serialized);
-    // Key is the double, value is the category
-    _decoded.forEach((key, value) {
-      unserialized.addTo(Category.unserializeMap(value["category"]), double.parse(value["amount"]));
+    Map decoded = jsonDecode(serialized);
+    // key is a unique integer
+    // value is a map from the pattern in _makeSerializable
+    // value has two keys, _CATEGORY_KEY and _AMOUNT_KEY
+    decoded.forEach((key, value) {
+      Category c = Category.unserializeMap(value[_CATEGORY_KEY]);
+      double amount = double.parse(value[_AMOUNT_KEY]);
+      unserialized.addTo(c, amount);
     });
     return unserialized;
   }
