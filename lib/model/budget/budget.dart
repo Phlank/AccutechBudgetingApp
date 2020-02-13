@@ -158,6 +158,12 @@ class Budget {
   }
 
   double get netWeek {
-    return null;
+    double net = 0.0;
+    _transactions.forEach((t) {
+      if (t.datetime.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
+        net += t.delta;
+      }
+    });
+    return net;
   }
 }
