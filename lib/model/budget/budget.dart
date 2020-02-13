@@ -148,4 +148,16 @@ class Budget {
   void setType(BudgetType type) {
     this._type = type;
   }
+
+  double get netMonth {
+    double net = 0.0;
+    _transactions.forEach((t) {
+      net += t.delta;
+    });
+    return net;
+  }
+
+  double get netWeek {
+    return null;
+  }
 }
