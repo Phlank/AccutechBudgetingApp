@@ -3,10 +3,10 @@ import 'dart:core';
 import 'package:geolocator/geolocator.dart';
 
  class Location{
-   double StartingLatitude;
-   double StartingLongitude;
-   double LastKnownLatitude;
-   double LastKnownLongitude;
+   double startingLatitude;
+   double startingLongitude;
+   double lastKnownLatitude;
+   double lastKnownLongitude;
    Future<double> distanceTraveled;
    GeolocationStatus locationStatus;
    Position currentPosition;
@@ -27,8 +27,8 @@ import 'package:geolocator/geolocator.dart';
   Future getLocation() async{
     if (locationStatusPlaceholder == true){
     currentPosition = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    StartingLatitude = currentPosition.latitude;
-    StartingLongitude = currentPosition.longitude;
+    startingLatitude = currentPosition.latitude;
+    startingLongitude = currentPosition.longitude;
     }
     else{
 
@@ -38,8 +38,8 @@ import 'package:geolocator/geolocator.dart';
   Future getLastKnownLocation() async{
     if (locationStatusPlaceholder == true){
     lastKnownPosition = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
-    LastKnownLatitude = lastKnownPosition.latitude;
-    LastKnownLongitude = lastKnownPosition.longitude;
+    lastKnownLatitude = lastKnownPosition.latitude;
+    lastKnownLongitude = lastKnownPosition.longitude;
     }
     else{
 
@@ -47,6 +47,6 @@ import 'package:geolocator/geolocator.dart';
   }
 
   void DistanceTraveled(){
-    distanceTraveled = Geolocator().distanceBetween(StartingLatitude, StartingLongitude, LastKnownLatitude, LastKnownLongitude);
+    distanceTraveled = Geolocator().distanceBetween(startingLatitude, startingLongitude, lastKnownLatitude, lastKnownLongitude);
   }
 }
