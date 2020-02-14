@@ -29,7 +29,7 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   # Used for encryption
-  steel_crypt: ^1.5.3
+  steel_crypt: ^1.6.1
 
   # File IO
   path_provider: ^1.5.1

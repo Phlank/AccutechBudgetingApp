@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'priority.dart';
 
 class Category {
+  static const _NAME_KEY = 'name';
+  static const _PRIORITY_KEY = 'priority';
+
   final String name;
   final Priority priority;
 
@@ -42,8 +45,8 @@ class Category {
 
   String serialize() {
     String output = '{';
-    output += '"name":"' + name + '",';
-    output += '"priority":"' + priority.name + '"';
+    output += '"$_NAME_KEY":"$name",';
+    output += '"$_PRIORITY_KEY":"' + priority.name + '"';
     output += '}';
     return output;
   }
@@ -54,8 +57,6 @@ class Category {
   }
 
   static Category unserializeMap(Map map) {
-    return new Category(map['name'], Priority(map['priority']));
+    return new Category(map[_NAME_KEY], Priority(map[_PRIORITY_KEY]));
   }
 }
-
-

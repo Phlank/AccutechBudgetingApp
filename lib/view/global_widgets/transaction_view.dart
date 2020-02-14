@@ -47,7 +47,7 @@ class TransactionListView extends StatelessWidget {
                 fontSize: _topRowFontSize, color:Format.deltaColor(t.delta)))
       ]),
       TableRow(children: [
-        Text(Format.dateFormat(t.datetime),
+        Text(Format.dateFormat(t.time),
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: _bottomRowFontSize)),
         Text(t.category.name,

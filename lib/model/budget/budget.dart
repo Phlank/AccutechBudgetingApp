@@ -148,4 +148,22 @@ class Budget {
   void setType(BudgetType type) {
     this._type = type;
   }
+
+  double get netMonth {
+    double net = 0.0;
+    _transactions.forEach((t) {
+      net += t.delta;
+    });
+    return net;
+  }
+
+  double get netWeek {
+    double net = 0.0;
+    _transactions.forEach((t) {
+      if (t.time.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
+        net += t.delta;
+      }
+    });
+    return net;
+  }
 }

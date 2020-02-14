@@ -75,7 +75,7 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> passwordIsValid(String secret) async {
-    _password = await SteelPassword.load();
+    _password = await Password.load();
     return _password.verify(secret);
   }
 
@@ -117,8 +117,8 @@ class BudgetControl implements Control {
   }
 
   @override
-  void setPassword(String newSecret) {
-    _password = Password.fromSecret(newSecret);
+  Future setPassword(String newSecret) async {
+    _password = await Password.fromSecret(newSecret);
     crypter = new SteelCrypter(_password);
   }
 

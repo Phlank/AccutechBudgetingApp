@@ -2,7 +2,6 @@ import 'package:budgetflow/model/crypt/crypter.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/crypt/password.dart';
 import 'package:budgetflow/model/crypt/steel_crypter.dart';
-import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const String _SECRET_1 = "password1";
@@ -11,14 +10,17 @@ const String _MESSAGE_1 = "The quick brown fox jumps over the lazy dog.";
 const String _MESSAGE_2 =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-Password _pw1 = Password.fromSecret(_SECRET_1);
-Password _pw2 = Password.fromSecret(_SECRET_2);
-Crypter _c1 = new SteelCrypter(_pw1);
-Crypter _c2 = new SteelCrypter(_pw2);
+Password _pw1, _pw2;
+Crypter _c1, _c2;
 
-void main() {
+Future<void> main() async {
+  _pw1 = await Password.fromSecret(_SECRET_1);
+  _pw2 = await Password.fromSecret(_SECRET_2);
   group("SteelCrypter tests", () {
-    setUp(() {});
+    setUp(() {
+      _c1 = new SteelCrypter(_pw1);
+      _c2 = new SteelCrypter(_pw2);
+    });
     test("Cipher is different than plaintext", () {
       Encrypted e = _c1.encrypt(_MESSAGE_1);
       expect(_MESSAGE_1, isNot(e.cipher));

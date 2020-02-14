@@ -178,12 +178,13 @@ class _SetupPageState extends State<SetupPage> {
     pinInput = TextFormField(
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-          hintText: 'any four numbers', labelText: 'Create a PIN'),
+          hintText: 'Any four numbers', labelText: 'Create a PIN'),
       validator: (value) {
-        if (value.isEmpty) return 'please do not leave blank';
-        if (!InputValidator.pin(value)) return 'please use only numbers';
+        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+        if (!InputValidator.pin(value)) return InputValidator.PIN_MESSAGE;
         return null;
       },
+      obscureText: true,
     );
   }
 
@@ -192,12 +193,12 @@ class _SetupPageState extends State<SetupPage> {
       keyboardType: TextInputType.number,
       decoration: InputDecoration(labelText: 'Confirm PIN'),
       validator: (value) {
-        if (value.isEmpty) return 'please do not leave blank';
-        if (!InputValidator.pin(value)) return 'please use only numbers';
-        if (value.length != 4) return 'only four numbers please';
+        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+        if (!InputValidator.pin(value)) return InputValidator.PIN_MESSAGE;
         BudgetingApp.userController.setPassword(value);
         return null;
       },
+      obscureText: true,
     );
   }
 
