@@ -1,4 +1,3 @@
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/global_widgets/page_cards.dart';
@@ -13,7 +12,7 @@ import 'package:flutter/material.dart';
 
 
 class AccountDisplay extends StatefulWidget{
-
+  static const ACCOUNT_ROUTE = '/account';
   @override
   _AccountDisplay createState() => _AccountDisplay();
 }
@@ -29,7 +28,9 @@ class  _AccountDisplay extends State<AccountDisplay>{
       body: Column(
         children: <Widget>[
           GlobalCards.cashFlowCard(),
-          new TransactionListView()
+          new TransactionListView(
+              BudgetingApp.userController.getLoadedTransactions().length
+          ),
         ],
       ),
     );

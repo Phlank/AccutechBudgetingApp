@@ -1,6 +1,7 @@
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/global_widgets/page_cards.dart';
+import 'package:budgetflow/view/global_widgets/transaction_view.dart';
 import 'package:charts_flutter/flutter.dart' as chart;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,12 @@ class _UserPageState extends State<UserPage> {
         children: <Widget>[
           barChartView(),
           GlobalCards.cashFlowCard(),
-          //transaction section
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, BudgetingApp.userController.routeMap['accounts']);
+            },
+            child:TransactionListView(3),
+          ),
         ],
       ),
     );
