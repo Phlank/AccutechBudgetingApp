@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
@@ -8,9 +9,9 @@ import 'package:flutter/widgets.dart';
 
 class GeneralCategory extends StatefulWidget {
   String section;
-  static final String NEEDS_ROUTE = '/needs';
-  static final String WANTS_ROUTE = '/wants';
-  static final String SAVINGS_ROUTE = '/savings';
+  static const String NEEDS_ROUTE = '/needs';
+  static const String WANTS_ROUTE = '/wants';
+  static const String SAVINGS_ROUTE = '/savings';
 
   GeneralCategory(String section) {
     this.section = section;
@@ -21,8 +22,6 @@ class GeneralCategory extends StatefulWidget {
 }
 
 class _GeneralCategoryState extends State<GeneralCategory> {
-  // todo figure out why sliders don't slide and make them slide
-
   BudgetControl userController;
   MockBudget playBudget;
   String section;
@@ -30,10 +29,12 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   double allotedForSection;
   double beginningAlotttments;
 
+
   _GeneralCategoryState(String section) {
     this.userController = BudgetingApp.userController;
     this.playBudget = new MockBudget(userController.getBudget());
     this.section = section;
+    this.beginningAlotttments = playBudget.getNewTotalAllotted(section);
   }
 
   Card unbudgetedCard() {
@@ -61,7 +62,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
     );
   }
 
-  Slider sectionSlider(String category) {
+  Slider sectionSlider(Category category) {
     return Slider(
       activeColor: Colors.lightGreen,
       value: allotedForCategory,
@@ -70,19 +71,19 @@ class _GeneralCategoryState extends State<GeneralCategory> {
           allotedForCategory = value;
         });
         playBudget.setCategory(
-            userController.categoryMap[category], allotedForCategory);
+            category, allotedForCategory);
       },
       min: 0,
       max: userController.sectionBudget(section),
-      label: category,
+      label: category.name,
     );
   }
 
-  ListTile categoryTile(String category) {
+  ListTile categoryTile(Category category) {
     allotedForCategory =
-    (playBudget.budget.allotted[userController.categoryMap[category]]);
+    (playBudget.budget.allotted[category]);
     return ListTile(
-      title: Text(category + '\t' + Format.dollarFormat(allotedForCategory)),
+      title: Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
       subtitle: sectionSlider(category),
     );
   }
@@ -104,7 +105,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
 
   Scaffold generalDisplay() {
     //todo init the fluctuating allotments
-    beginningAlotttments = playBudget.getNewTotalAllotted(section);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Change ' + section + ' alotments'),
