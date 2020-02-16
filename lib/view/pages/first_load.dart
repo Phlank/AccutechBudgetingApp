@@ -1,5 +1,5 @@
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/user_page.dart';
+import 'package:budgetflow/view/pages/new_user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

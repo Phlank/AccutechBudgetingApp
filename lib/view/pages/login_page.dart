@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';

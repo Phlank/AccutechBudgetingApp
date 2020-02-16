@@ -5,7 +5,6 @@ import 'package:budgetflow/model/control.dart';
 import 'package:budgetflow/model/crypt/crypter.dart';
 import 'package:budgetflow/model/crypt/password.dart';
 import 'package:budgetflow/model/crypt/steel_crypter.dart';
-import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
@@ -53,7 +52,7 @@ class BudgetControl implements Control {
     'wants': '/wants',
     'savings': '/savings',
     'home': '/knownUser',
-    'accounts':'/accounts'
+    'accounts':'/account'
   };
 
   BudgetControl() {
