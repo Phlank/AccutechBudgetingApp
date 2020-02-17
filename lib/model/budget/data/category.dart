@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/budget/data/map_keys.dart';
 import 'package:budgetflow/model/budget/data/priority.dart';
+import 'package:budgetflow/model/budget/data/serializer.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
 class Category implements Serializable {
@@ -47,11 +48,10 @@ class Category implements Serializable {
   int get hashCode => name.hashCode ^ priority.hashCode;
 
   String get serialize {
-    String output = '{';
-    output += '"$KEY_NAME":"' + name + '",';
-    output += '"$KEY_PRIORITY":"' + priority.serialize + '"';
-    output += '}';
-    return output;
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_NAME, name);
+    serializer.addPair(KEY_PRIORITY, priority);
+    return serializer.serialize;
   }
 
   static Category unserialize(String serialized) {

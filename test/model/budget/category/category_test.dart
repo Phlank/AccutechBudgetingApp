@@ -58,5 +58,12 @@ void main() {
       Category fromSerialized = Category.unserialize('{"name":"2","priority":"Need"}');
       expect(fromSerialized == cNeed2, true);
     });
+    test('Serialization sanity', () {
+      Category fromSerialized = Category.unserialize(
+          '{"name":"1","priority":"Need"}');
+      String serialized = fromSerialized.serialize;
+      Category copyFS = Category.unserialize(serialized);
+      expect(fromSerialized == copyFS, isTrue);
+    });
   });
 }

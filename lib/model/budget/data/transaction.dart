@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/budget/data/category.dart';
 import 'package:budgetflow/model/budget/data/map_keys.dart';
+import 'package:budgetflow/model/budget/data/serializer.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
 class Transaction implements Serializable {
@@ -39,13 +40,12 @@ class Transaction implements Serializable {
   }
 
   String get serialize {
-    String output = '{';
-    output += '"$KEY_TIME":"' + time.millisecondsSinceEpoch.toString() + '",';
-    output += '"$KEY_VENDOR":"' + vendor + '",';
-    output += '"$KEY_METHOD":"' + method + '",';
-    output += '"$KEY_AMOUNT":"' + amount.toString() + '",';
-    output += '"$KEY_CATEGORY":' + category.serialize;
-    output += '}';
-    return output;
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_TIME, time.millisecondsSinceEpoch);
+    serializer.addPair(KEY_VENDOR, vendor);
+    serializer.addPair(KEY_METHOD, method);
+    serializer.addPair(KEY_AMOUNT, amount);
+    serializer.addPair(KEY_CATEGORY, category);
+    return serializer.serialize;
   }
 }

@@ -1,21 +1,27 @@
-class Serializer {
-  Map<String, String> pairs;
+import 'package:budgetflow/model/file_io/serializable.dart';
+
+class Serializer implements Serializable {
+  Map<dynamic, dynamic> pairs;
 
   Serializer() {
     pairs = new Map();
   }
 
-  void addPair(String key, String value) {
+  void addPair(dynamic key, dynamic value) {
     pairs[key] = value;
   }
 
-  String serialize() {
+  String get serialize {
     String output = '{';
-    pairs.forEach((String key, String value) {
-      key = _padIfNeeded(key);
-      value = _padIfNeeded(value);
-      output += '"$key":$value';
-      if (key != pairs.keys.last) {
+    int i = 0;
+    pairs.forEach((dynamic key, dynamic value) {
+      String resolvedKey = _resolve(key);
+      String resolvedValue = _resolve(value);
+      String paddedKey = _padIfNeeded(resolvedKey);
+      String paddedValue = _padIfNeeded(resolvedValue);
+      output += '$paddedKey:$paddedValue';
+      i++;
+      if (i != pairs.length) {
         output += ',';
       }
     });
@@ -23,8 +29,15 @@ class Serializer {
     return output;
   }
 
+  static String _resolve(dynamic input) {
+    if (input is String) return input;
+    if (input is Serializable) return input.serialize;
+    return input.toString();
+  }
+
   static String _padIfNeeded(String value) {
-    if (!value.contains('{') || !value.contains('"')) {
+    bool needsPadding = !(value.contains('{') || value.contains('"'));
+    if (needsPadding) {
       return '"$value"';
     }
     return value;

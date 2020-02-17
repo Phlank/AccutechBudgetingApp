@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:budgetflow/model/budget/data/serializer.dart';
 import 'package:budgetflow/model/budget/data/transaction.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
@@ -33,16 +34,11 @@ class TransactionList implements Serializable {
   }
 
   String get serialize {
-    String output = '{';
+    Serializer serializer = Serializer();
     for (int i = 0; i < _transactions.length; i++) {
-      output += '"' + i.toString() + '":';
-      output += _transactions[i].serialize;
-      if (i != _transactions.length - 1) {
-        output += ',';
-      }
+      serializer.addPair(i, _transactions[i]);
     }
-    output += '}';
-    return output;
+    return serializer.serialize;
   }
 
   static TransactionList unserialize(String serialized) {

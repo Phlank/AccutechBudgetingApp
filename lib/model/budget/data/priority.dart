@@ -1,4 +1,6 @@
-class Priority {
+import 'package:budgetflow/model/file_io/serializable.dart';
+
+class Priority implements Serializable {
   final String name;
 
   static const required = Priority("Required");
@@ -32,7 +34,7 @@ class Priority {
   }
 
   String get serialize {
-    return '"$name"';
+    return name;
   }
 
   bool operator ==(Object o) => o is Priority && name == o.name;
