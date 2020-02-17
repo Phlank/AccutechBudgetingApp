@@ -2,6 +2,7 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
+import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
@@ -14,7 +15,7 @@ BudgetBuilder _builder = new BudgetBuilder();
 Transaction _t;
 Month _month;
 MonthBuilder _monthBuilder = new MonthBuilder();
-MonthTime _monthTime = new MonthTime(1998,4);
+MonthTime _monthTime = new MonthTime(1998, 4);
 BudgetControl bc = new BudgetControl();
 Budget b;
 
@@ -31,7 +32,7 @@ void main() {
       _builtBudget = _builder.build();
       _t = new Transaction("KFC", "Cash", -5.4, Category.miscellaneous);
     });
-    group("Testing Built Budget", (){
+    group("Testing Built Budget", () {
       test("Built budget has no null fields", () {
         expect(_builtBudget.actual, isNot(null));
         expect(_builtBudget.allotted, isNot(null));
@@ -50,26 +51,26 @@ void main() {
         expect(_builtBudget.actual[Category.miscellaneous], 5.4);
       });
     });
-    group("Testing fromOldBudget",(){
-      test("test for correct income", (){
+    group("Testing fromOldBudget", () {
+      test("test for correct income", () {
         Budget b = new Budget.fromOldBudget(_builtBudget);
         expect(b.income, equals(300));
       });
-      test("test for correct type", (){
+      test("test for correct type", () {
         Budget b = new Budget.fromOldBudget(_builtBudget);
         expect(b.type, equals(BudgetType.savingDepletion));
       });
-      test("test for correct transactions logic", (){
+      test("test for correct transactions logic", () {
         Budget b = new Budget.fromOldBudget(_builtBudget);
         expect(b.transactions, isNot(null));
       });
-      test("test for correct allotted and actual spending logic", (){
+      test("test for correct allotted and actual spending logic", () {
         Budget b = new Budget.fromOldBudget(_builtBudget);
         expect(b.allotted, isNot(null));
         expect(b.actual, isNot(null));
       });
     });
-    group("Testing fromMonth", (){
+    group("Testing fromMonth", () {
       test("Test for income", () async {
         b = await Budget.fromMonth(_month);
         expect(b.income, equals(300));
@@ -86,6 +87,44 @@ void main() {
         b = await Budget.fromMonth(_month);
         expect(b.allotted, new BudgetMap());
         expect(b.actual, new BudgetMap());
+      });
+    });
+    group('Budget functionality', () {
+      setUp(() {
+        BudgetBuilder builder = new BudgetBuilder();
+        List<Transaction> tl = <Transaction>[
+          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
+              DateTime(2020, 2, 13)),
+          new Transaction.withTime('BSU', 'Credit', -10.00, Category.education,
+              DateTime(2020, 2, 13)),
+          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
+              DateTime(2020, 2, 10)),
+          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
+              DateTime(2020, 2, 9)),
+          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
+              DateTime(2020, 2, 8)),
+          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
+              DateTime(2020, 2, 7)),
+          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
+              DateTime(2020, 2, 4)),
+          new Transaction.withTime(
+              'BSU', 'Credit', -10.00, Category.groceries, DateTime(2020, 2, 4))
+        ];
+        TransactionList transactions = new TransactionList();
+        tl.forEach((Transaction t) {
+          transactions.add(t);
+        });
+        builder.setIncome(1200);
+        builder.setTransactions(transactions);
+        builder.setType(BudgetType.savingGrowth);
+        builder.setCategories(new CategoryList());
+        _builtBudget = builder.build();
+      });
+      test('Month net is -80.00', () {
+        expect(_builtBudget.netMonth, -80.00);
+      });
+      test('Week net is -60.00', () {
+        expect(_builtBudget.netWeek, -60.00);
       });
     });
   });
