@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/budget/data/category.dart';
 import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
 

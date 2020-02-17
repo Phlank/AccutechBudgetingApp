@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/category/category_list.dart';
+import 'package:budgetflow/model/budget/data/category.dart';
+import 'package:budgetflow/model/budget/data/category_list.dart';
+import 'package:budgetflow/model/budget/data/map_keys.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
 
 class BudgetMap implements Serializable {
@@ -35,7 +36,7 @@ class BudgetMap implements Serializable {
     _map.forEach(action);
   }
 
-  String serialize() {
+  String get serialize {
     _serialization = '{';
     int i = 0;
     for (Category key in _map.keys) {
@@ -48,11 +49,10 @@ class BudgetMap implements Serializable {
   }
 
   String _makeSerializable(Category c) {
-    String serializedCategory = c.serialize();
     double amount = _map[c];
     String output = '{';
-    output += '"$_CATEGORY_KEY":$serializedCategory,';
-    output += '"$_AMOUNT_KEY":"$amount"';
+    output += '"$KEY_CATEGORY":' + c.serialize + ',';
+    output += '"$KEY_AMOUNT":"' + amount.toString() + '"';
     output += '}';
     return output;
   }

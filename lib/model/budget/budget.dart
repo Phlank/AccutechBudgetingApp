@@ -1,9 +1,9 @@
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/category/category_list.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/budget/data/budget_map.dart';
+import 'package:budgetflow/model/budget/data/category.dart';
+import 'package:budgetflow/model/budget/data/category_list.dart';
+import 'package:budgetflow/model/budget/data/transaction.dart';
+import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 
 class BudgetBuilder {
@@ -139,9 +139,9 @@ class Budget {
   void addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actual.addTo(transaction.category, -transaction.delta);
+      _actual.addTo(transaction.category, -transaction.amount);
     } else {
-      _actual.addTo(Category.miscellaneous, -transaction.delta);
+      _actual.addTo(Category.miscellaneous, -transaction.amount);
     }
   }
 
@@ -152,7 +152,7 @@ class Budget {
   double get netMonth {
     double net = 0.0;
     _transactions.forEach((t) {
-      net += t.delta;
+      net += t.amount;
     });
     return net;
   }
@@ -161,7 +161,7 @@ class Budget {
     double net = 0.0;
     _transactions.forEach((t) {
       if (t.time.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
-        net += t.delta;
+        net += t.amount;
       }
     });
     return net;

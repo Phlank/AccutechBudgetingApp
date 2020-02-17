@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/budget/data/category.dart';
+import 'package:budgetflow/model/budget/data/priority.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Category cHousing,
@@ -45,10 +45,10 @@ void main() {
       expect(cNeed1.compareTo(cNeed3), -1);
     });
     test('Test cNeed1.serialize', () {
-      expect(cNeed1.serialize(), '{"name":"1","priority":"Need"}');
+      expect(cNeed1.serialize, '{"name":"1","priority":"Need"}');
     });
     test('Test cNeed2.serialize', () {
-      expect(cNeed2.serialize(), '{"name":"2","priority":"Need"}');
+      expect(cNeed2.serialize, '{"name":"2","priority":"Need"}');
     });
     test('Test unserialize cNeed1', () {
       Category fromSerialized = Category.unserialize('{"name":"1","priority":"Need"}');

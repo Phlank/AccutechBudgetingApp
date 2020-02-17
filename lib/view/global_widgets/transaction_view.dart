@@ -1,6 +1,5 @@
-
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/budget/data/transaction.dart';
+import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
 
@@ -38,10 +37,10 @@ class TransactionListView extends StatelessWidget {
           textAlign: TextAlign.left,
           style: TextStyle(fontSize: _topRowFontSize),
         ),
-        Text(Format.dollarFormat(t.delta),
+        Text(Format.dollarFormat(t.amount),
             textAlign: TextAlign.right,
             style: TextStyle(
-                fontSize: _topRowFontSize, color:Format.deltaColor(t.delta)))
+                fontSize: _topRowFontSize, color: Format.deltaColor(t.amount)))
       ]),
       TableRow(children: [
         Text(Format.dateFormat(t.time),

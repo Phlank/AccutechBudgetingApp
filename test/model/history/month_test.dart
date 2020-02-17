@@ -26,10 +26,10 @@ void main() {
       expect(m.monthTime, new MonthTime(2020, 01));
     });
     test("Serialization of new Month", () {
-      expect(m.serialize(), mSerialization);
+      expect(m.serialize, mSerialization);
     });
     test("Serialization is reversible", () async {
-      String ms = m.serialize();
+      String ms = m.serialize;
       Month msm = Month.unserialize(ms);
       await m.loadAllotted();
       await m.loadActual();

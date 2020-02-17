@@ -1,3 +1,3 @@
 abstract class Serializable {
-  String serialize();
+  String get serialize;
 }

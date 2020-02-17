@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/budget_map.dart';
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/budget/data/budget_map.dart';
+import 'package:budgetflow/model/budget/data/category.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 BudgetMap bm1, bm2;
@@ -22,20 +22,20 @@ void main() {
       bm2.addTo(Category.entertainment, -175.0);
     });
     test("New map serialization", () {
-      expect(bm1.serialize(), bm1Serialized);
+      expect(bm1.serialize, bm1Serialized);
     });
     test("New map serialization sanity", () {
-      BudgetMap bm1Copy = BudgetMap.unserialize(bm1.serialize());
+      BudgetMap bm1Copy = BudgetMap.unserialize(bm1.serialize);
       expect(bm1Copy, bm1);
     });
     test("bm2 serialization", () {
-      expect(bm2.serialize(), bm2Serialized);
+      expect(bm2.serialize, bm2Serialized);
     });
     test("addTo adds correct amount", () {
       expect(bm2[Category.housing], -200.0);
     });
     test("bm2 serialization sanity", () {
-      BudgetMap bm2Copy = BudgetMap.unserialize(bm2.serialize());
+      BudgetMap bm2Copy = BudgetMap.unserialize(bm2.serialize);
       expect(bm2Copy == bm2, isTrue);
     });
   });

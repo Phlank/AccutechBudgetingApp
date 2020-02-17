@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 
-class Encrypted {
+import 'package:budgetflow/model/file_io/serializable.dart';
+
+class Encrypted implements Serializable {
   static const String _IV_KEY = 'iv';
   static const String _CIPHER_KEY = 'cipher';
   final String iv, cipher;
@@ -15,7 +17,7 @@ class Encrypted {
     return new Encrypted(iv, cipher);
   }
 
-  String serialize() {
+  String get serialize {
     String output = '{"$_IV_KEY":"$iv","$_CIPHER_KEY":"$cipher"}';
     return output;
   }

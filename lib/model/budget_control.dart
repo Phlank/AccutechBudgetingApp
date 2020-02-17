@@ -1,18 +1,17 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/budget/data/transaction.dart';
+import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
 import 'package:budgetflow/model/crypt/crypter.dart';
 import 'package:budgetflow/model/crypt/password.dart';
 import 'package:budgetflow/model/crypt/steel_crypter.dart';
-import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter/material.dart';
 
-import 'budget/category/category.dart';
+import 'budget/data/category.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
@@ -113,7 +112,7 @@ class BudgetControl implements Control {
       _history.addMonth(builder.build());
     }
     _history.save(_budget);
-    fileIO.writeFile(_PASSWORD_PATH, _password.serialize());
+    fileIO.writeFile(_PASSWORD_PATH, _password.serialize);
   }
 
   @override
@@ -209,7 +208,9 @@ class BudgetControl implements Control {
   double expenseTotal() {
     double spent = 0.0;
     for (int i = 0; i < _loadedTransactions.length; i++) {
-      spent += _loadedTransactions.getAt(i).delta;
+      spent += _loadedTransactions
+          .getAt(i)
+          .amount;
     }
     return spent;
   }

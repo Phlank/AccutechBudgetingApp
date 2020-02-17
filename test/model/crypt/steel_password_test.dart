@@ -42,7 +42,7 @@ Future<void> main() async {
       expect(await p0.verify(_SECRET_1), true);
     });
     test("Serialization sanity", () async {
-      String _pw1s = _pw1.serialize();
+      String _pw1s = _pw1.serialize;
       Password _pw1u = SteelPassword.unserialize(_pw1s);
       expect(await _pw1u.verify(_SECRET_1), true);
     });

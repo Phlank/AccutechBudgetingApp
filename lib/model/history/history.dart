@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
-import 'package:budgetflow/model/budget/budget_map.dart';
+import 'package:budgetflow/model/budget/data/budget_map.dart';
+import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
@@ -28,8 +28,8 @@ class History implements Serializable {
     for (int i = 0; i < _months.length; i++) {
       _months[i].save();
     }
-    Encrypted e = BudgetControl.crypter.encrypt(serialize());
-    BudgetControl.fileIO.writeFile(HISTORY_PATH, e.serialize());
+    Encrypted e = BudgetControl.crypter.encrypt(serialize);
+    BudgetControl.fileIO.writeFile(HISTORY_PATH, e.serialize);
   }
 
   void _updateCurrentMonth(Budget budget) {
@@ -94,11 +94,11 @@ class History implements Serializable {
   }
 
   @override
-  String serialize() {
+  String get serialize {
     String output = '{';
     int i = 0;
     _months.forEach((Month m) {
-      output += '"' + i.toString() + '":' + m.serialize() + ',';
+      output += '"' + i.toString() + '":' + m.serialize + ',';
       i++;
     });
     output += '}';

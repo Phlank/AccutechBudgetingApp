@@ -1,0 +1,10 @@
+const String KEY_CATEGORY = 'category',
+    KEY_PRIORITY = 'priority',
+    KEY_TRANSACTION = 'transaction',
+    KEY_TIME = 'time',
+    KEY_VENDOR = 'vendor',
+    KEY_METHOD = 'method',
+    KEY_NAME = 'name',
+    KEY_AMOUNT = 'amount',
+    KEY_SALT = 'salt',
+    KEY_HASH = 'hash';

@@ -1,6 +1,6 @@
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/budget/data/category.dart';
+import 'package:budgetflow/model/budget/data/transaction.dart';
+import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 TransactionList tl1 = new TransactionList();
@@ -24,8 +24,10 @@ void main() {
       expect(tl1.contains(t3), true);
     });
     test("Serialization is reversible", () {
-        String tl1s = tl1.serialize();
-        String tl1cs = TransactionList.unserialize(tl1.serialize()).serialize();
+      String tl1s = tl1.serialize;
+      String tl1cs = TransactionList
+          .unserialize(tl1.serialize)
+          .serialize;
         expect(tl1s, equals(tl1cs));
     });
   });

@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/data/category.dart';
+import 'package:budgetflow/model/budget/data/transaction.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Transaction t1 = new Transaction(null, null, 0.0, null);
@@ -10,10 +10,12 @@ String t2s =
 
 void main() {
   test("Serialization of new transaction", () {
-    expect(t2.serialize(), isNot(null));
+    expect(t2.serialize, isNot(null));
   });
   test("Serialization sanity", () {
-    String t2s = t2.serialize();
-    expect(t2s, equals(Transaction.unserialize(t2s).serialize()));
+    String t2s = t2.serialize;
+    expect(t2s, equals(Transaction
+        .unserialize(t2s)
+        .serialize));
   });
 }

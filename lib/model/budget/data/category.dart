@@ -1,8 +1,11 @@
 import 'dart:convert';
 
-import 'priority.dart';
+import 'package:budgetflow/model/budget/data/map_keys.dart';
+import 'package:budgetflow/model/budget/data/priority.dart';
+import 'package:budgetflow/model/file_io/serializable.dart';
 
-class Category {
+class Category implements Serializable {
+  static const String MAP_KEY = 'category';
   static const _NAME_KEY = 'name';
   static const _PRIORITY_KEY = 'priority';
 
@@ -43,10 +46,10 @@ class Category {
 
   int get hashCode => name.hashCode ^ priority.hashCode;
 
-  String serialize() {
+  String get serialize {
     String output = '{';
-    output += '"$_NAME_KEY":"$name",';
-    output += '"$_PRIORITY_KEY":"' + priority.name + '"';
+    output += '"$KEY_NAME":"' + name + '",';
+    output += '"$KEY_PRIORITY":"' + priority.serialize + '"';
     output += '}';
     return output;
   }
@@ -56,7 +59,10 @@ class Category {
     return unserializeMap(map);
   }
 
-  static Category unserializeMap(Map map) {
-    return new Category(map[_NAME_KEY], Priority(map[_PRIORITY_KEY]));
+  static Category unserializeMap(dynamic value) {
+    if (value is Map) {
+      return new Category(value[KEY_NAME], Priority(value[KEY_PRIORITY]));
+    }
+    return null;
   }
 }

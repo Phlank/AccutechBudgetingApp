@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/budget/data/budget_map.dart';
+import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/file_io/serializable.dart';
@@ -163,33 +163,33 @@ class Month implements Serializable {
   }
 
   Future save() async {
-    await _saveAllottedSpending();
-    await _saveActualSpending();
-    await _saveTransactions();
+    if (_allotted != null) await _saveAllottedSpending();
+    if (_actual != null) await _saveActualSpending();
+    if (_transactions != null) await _saveTransactions();
   }
 
   Future _saveAllottedSpending() async {
     if (_allotted != null) {
-      String content = _allotted.serialize();
+      String content = _allotted.serialize;
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize());
+      await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize);
     }
   }
 
   Future _saveActualSpending() async {
     if (_actual != null) {
-      String content = _actual.serialize();
+      String content = _actual.serialize;
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize());
+      await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize);
     }
   }
 
   Future _saveTransactions() async {
     if (_transactions != null) {
-      String content = _transactions.serialize();
+      String content = _transactions.serialize;
       Encrypted e = BudgetControl.crypter.encrypt(content);
       await BudgetControl.fileIO.writeFile(
-          _transactionsFilepath, e.serialize());
+          _transactionsFilepath, e.serialize);
     }
   }
 
@@ -197,7 +197,7 @@ class Month implements Serializable {
 
   double getIncome() => _income;
 
-  String serialize() {
+  String get serialize {
     String output = "{";
     output += '"year":"' + _monthTime.year.toString() + "\",";
     output += '"month":"' + _monthTime.month.toString() + '",';
