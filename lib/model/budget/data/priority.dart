@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Priority implements Serializable {
   static const String NAME_REQUIRED = 'Required',
@@ -38,14 +42,17 @@ class Priority implements Serializable {
   }
 
   String get serialize {
-    return name;
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_NAME, name);
+    return serializer.serialize;
   }
 
-  static Priority unserialize(String input) {
-    if (input == NAME_REQUIRED) return required;
-    if (input == NAME_NEED) return need;
-    if (input == NAME_WANT) return want;
-    if (input == NAME_SAVINGS) return savings;
+  static Priority unserialize(dynamic input) {
+    if (input is String) input = jsonDecode(input);
+    if (input[KEY_NAME] == NAME_REQUIRED) return required;
+    if (input[KEY_NAME] == NAME_NEED) return need;
+    if (input[KEY_NAME] == NAME_WANT) return want;
+    if (input[KEY_NAME] == NAME_SAVINGS) return savings;
     return other;
   }
 
