@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:budgetflow/model/budget/data/map_keys.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:steel_crypt/PointyCastleN/api.dart';
 import 'package:steel_crypt/PointyCastleN/export.dart';
 
@@ -81,19 +82,15 @@ class SteelPassword implements Password {
   String get salt => _salt;
 
   String get serialize {
-    String output = '{';
-    output += '"$KEY_SALT":"' + _salt + '",';
-    output += '"$KEY_HASH":"' + _hash + '"';
-    output += '}';
-    return output;
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_SALT, _salt);
+    serializer.addPair(KEY_HASH, _hash);
+    return serializer.serialize;
   }
 
   static Password unserialize(String serialized) {
     Map map = jsonDecode(serialized);
-    SteelPassword password = new SteelPassword();
-    password._salt = map[KEY_SALT];
-    password._hash = map[KEY_HASH];
-    return password;
+    return SteelPassword.fromHashAndSalt(map[KEY_HASH], map[KEY_SALT]);
   }
 
   static Future<Password> load() async {

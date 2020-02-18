@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:budgetflow/model/budget/data/serializer.dart';
 import 'package:budgetflow/model/budget/data/transaction.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class TransactionList implements Serializable {
   List<Transaction> _transactions;

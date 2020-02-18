@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/budget/data/category.dart';
 import 'package:budgetflow/model/budget/data/category_list.dart';
-import 'package:budgetflow/model/budget/data/map_keys.dart';
-import 'package:budgetflow/model/budget/data/serializer.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class BudgetMap implements Serializable {
   static const String _CATEGORY_KEY = 'category', _AMOUNT_KEY = 'amount';

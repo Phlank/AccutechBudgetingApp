@@ -1,4 +1,6 @@
-import 'package:budgetflow/model/file_io/serializable.dart';
+import 'dart:convert';
+
+import 'package:budgetflow/model/serialize/serializable.dart';
 
 class Serializer implements Serializable {
   Map<dynamic, dynamic> pairs;
@@ -41,5 +43,17 @@ class Serializer implements Serializable {
       return '"$value"';
     }
     return value;
+  }
+
+  dynamic unserialize(dynamic input) {
+    if (input is String) {
+      if (input.contains('{')) {
+        input = jsonDecode(input);
+      }
+    }
+  }
+
+  static dynamic _unserializeDecoded(Map input) {
+    return null;
   }
 }

@@ -6,8 +6,10 @@ import 'package:budgetflow/model/budget/data/budget_map.dart';
 import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class MonthBuilder {
   MonthTime _monthTime;
@@ -198,13 +200,12 @@ class Month implements Serializable {
   double getIncome() => _income;
 
   String get serialize {
-    String output = "{";
-    output += '"year":"' + _monthTime.year.toString() + "\",";
-    output += '"month":"' + _monthTime.month.toString() + '",';
-    output += '"income":"' + _income.toString() + '",';
-    output += '"type":"' + budgetTypeJson[_type] + '"';
-    output += '}';
-    return output;
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_YEAR, _monthTime.year);
+    serializer.addPair(KEY_MONTH, _monthTime.month);
+    serializer.addPair(KEY_INCOME, _income);
+    serializer.addPair(KEY_TYPE, _type);
+    return serializer.serialize;
   }
 
   static unserialize(String serialization) {
@@ -215,10 +216,10 @@ class Month implements Serializable {
   static unserializeMap(Map map) {
     MonthBuilder builder = new MonthBuilder();
     MonthTime monthTime =
-        new MonthTime(int.parse(map["year"]), int.parse(map["month"]));
+    new MonthTime(int.parse(map[KEY_YEAR]), int.parse(map[KEY_MONTH]));
     builder.setMonthTime(monthTime);
-    builder.setIncome(double.parse(map["income"]));
-    builder.setType(jsonBudgetType[map["type"]]);
+    builder.setIncome(double.parse(map[KEY_INCOME]));
+    builder.setType(BudgetType.unserialize(map[KEY_TYPE]));
     return builder.build();
   }
 

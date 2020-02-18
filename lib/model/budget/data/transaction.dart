@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:budgetflow/model/budget/data/category.dart';
-import 'package:budgetflow/model/budget/data/map_keys.dart';
-import 'package:budgetflow/model/budget/data/serializer.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Transaction implements Serializable {
   DateTime time;

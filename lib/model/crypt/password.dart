@@ -1,6 +1,6 @@
 import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:budgetflow/model/file_io/saveable.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
 
 abstract class Password implements Serializable, Saveable {
   static Future<Password> fromSecret(String secret) async {

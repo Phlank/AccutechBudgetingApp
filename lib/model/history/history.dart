@@ -7,9 +7,9 @@ import 'package:budgetflow/model/budget/data/transaction_list.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
 
 class History implements Serializable {
   static const String HISTORY_PATH = "history";
