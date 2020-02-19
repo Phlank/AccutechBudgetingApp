@@ -12,13 +12,6 @@ class Encrypted implements Serializable {
 
   Encrypted(this.iv, this.cipher);
 
-  static Encrypted unserialize(String serialized) {
-    Map map = jsonDecode(serialized);
-    String iv = map[_IV_KEY];
-    String cipher = map[_CIPHER_KEY];
-    return new Encrypted(iv, cipher);
-  }
-
   String get serialize {
     Serializer serializer = Serializer();
     serializer.addPair(KEY_IV, iv);

@@ -10,6 +10,7 @@ import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/serialize/unserializer.dart';
 
 class MonthBuilder {
   MonthTime _monthTime;
@@ -109,7 +110,7 @@ class Month implements Serializable {
       _allotted = new BudgetMap();
     });
     if (cipher != null) {
-      e = Encrypted.unserialize(cipher);
+      e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _allotted = BudgetMap.unserialize(plaintext);
     }
@@ -130,7 +131,7 @@ class Month implements Serializable {
       _actual = new BudgetMap();
     });
     if (cipher != null) {
-      e = Encrypted.unserialize(cipher);
+      e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _actual = BudgetMap.unserialize(plaintext);
     }
@@ -151,7 +152,7 @@ class Month implements Serializable {
       _transactions = new TransactionList();
     });
     if (cipher != null) {
-      e = Encrypted.unserialize(cipher);
+      e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _transactions = TransactionList.unserialize(plaintext);
     }

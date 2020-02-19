@@ -9,7 +9,9 @@ import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/unserializer.dart';
 
 class History implements Serializable {
   static const String HISTORY_PATH = "history";
@@ -123,7 +125,7 @@ class History implements Serializable {
 
   static Future<History> load() async {
     String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);
-    Encrypted e = Encrypted.unserialize(cipher);
+    Encrypted e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
     String plaintext = BudgetControl.crypter.decrypt(e);
     History h = History.unserialize(plaintext);
     return h;
