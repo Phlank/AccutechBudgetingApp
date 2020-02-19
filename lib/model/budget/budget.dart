@@ -74,7 +74,9 @@ class Budget {
   BudgetType _type;
 
   Budget._new(this._allotted, this._actual, this._transactions, this._income,
-      this._type, this._categories);
+      this._type, this._categories) {
+    // TODO if there are transactions present and actual spending is empty, use transactions to update actual spending
+  }
 
   // Makes a new budget based on the allocations of an old budget
   Budget.fromOldBudget(Budget old) {

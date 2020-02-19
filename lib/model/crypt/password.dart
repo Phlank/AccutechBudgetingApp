@@ -1,6 +1,8 @@
 import 'package:budgetflow/model/crypt/steel_password.dart';
 import 'package:budgetflow/model/file_io/saveable.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/unserializer.dart';
 
 abstract class Password implements Serializable, Saveable {
   static Future<Password> fromSecret(String secret) async {
@@ -16,7 +18,7 @@ abstract class Password implements Serializable, Saveable {
   }
 
   static Password unserialize(String serialized) {
-    return SteelPassword.unserialize(serialized);
+    return Unserializer.unserialize(KEY_PASSWORD, serialized);
   }
 
   static Future<Password> load() {
