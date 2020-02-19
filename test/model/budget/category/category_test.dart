@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/priority.dart';
+import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Category cHousing,

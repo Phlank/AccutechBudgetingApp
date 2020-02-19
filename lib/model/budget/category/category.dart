@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:budgetflow/model/budget/priority.dart';
+import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';

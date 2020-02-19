@@ -1,8 +1,8 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/budget/factory/budget_factory.dart';
 
 class _NSW {
   double needs, savings, wants;
