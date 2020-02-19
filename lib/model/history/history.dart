@@ -4,7 +4,7 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
-import 'package:budgetflow/model/budget/transaction_list.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/history/month.dart';

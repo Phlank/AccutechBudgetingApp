@@ -3,7 +3,7 @@ import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/category.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
-import 'package:budgetflow/model/budget/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/transaction.dart';
-import 'package:budgetflow/model/budget/transaction_list.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/utils/output_formater.dart';
 import 'package:flutter/material.dart';
 

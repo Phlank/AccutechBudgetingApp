@@ -2,8 +2,8 @@ import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/category.dart';
 import 'package:budgetflow/model/budget/category_list.dart';
-import 'package:budgetflow/model/budget/transaction.dart';
-import 'package:budgetflow/model/budget/transaction_list.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 
 class BudgetBuilder {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:budgetflow/model/budget/transaction.dart';
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
