@@ -1,15 +1,11 @@
 import 'dart:convert';
 
-import 'package:budgetflow/model/budget/data/priority.dart';
+import 'package:budgetflow/model/budget/priority.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Category implements Serializable {
-  static const String MAP_KEY = 'category';
-  static const _NAME_KEY = 'name';
-  static const _PRIORITY_KEY = 'priority';
-
   final String name;
   final Priority priority;
 

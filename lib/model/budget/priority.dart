@@ -5,20 +5,20 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Priority implements Serializable {
-  static const String NAME_REQUIRED = 'Required',
-      NAME_NEED = 'Need',
-      NAME_WANT = 'Want',
-      NAME_SAVINGS = 'Savings',
-      NAME_OTHER = 'Other';
+  static const String _NAME_REQUIRED = 'Required',
+      _NAME_NEED = 'Need',
+      _NAME_WANT = 'Want',
+      _NAME_SAVINGS = 'Savings',
+      _NAME_OTHER = 'Other';
 
   final String name;
   final int value;
 
-  static const required = Priority(NAME_REQUIRED, 1);
-  static const need = Priority(NAME_NEED, 2);
-  static const want = Priority(NAME_WANT, 3);
-  static const savings = Priority(NAME_SAVINGS, 4);
-  static const other = Priority(NAME_OTHER, 5);
+  static const required = Priority(_NAME_REQUIRED, 1);
+  static const need = Priority(_NAME_NEED, 2);
+  static const want = Priority(_NAME_WANT, 3);
+  static const savings = Priority(_NAME_SAVINGS, 4);
+  static const other = Priority(_NAME_OTHER, 5);
 
   const Priority(this.name, this.value);
 
@@ -36,15 +36,15 @@ class Priority implements Serializable {
     if (input is String) input = jsonDecode(input);
     String inputName = input[KEY_NAME];
     switch (inputName) {
-      case NAME_REQUIRED:
+      case _NAME_REQUIRED:
         return required;
-      case NAME_NEED:
+      case _NAME_NEED:
         return need;
-      case NAME_WANT:
+      case _NAME_WANT:
         return want;
-      case NAME_SAVINGS:
+      case _NAME_SAVINGS:
         return savings;
-      case NAME_OTHER:
+      case _NAME_OTHER:
         return other;
       default:
         return other;

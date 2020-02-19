@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/data/budget_map.dart';
-import 'package:budgetflow/model/budget/data/category.dart';
+import 'package:budgetflow/model/budget/budget_map.dart';
+import 'package:budgetflow/model/budget/category.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 BudgetMap bm1, bm2;

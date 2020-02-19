@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/data/category.dart';
-import 'package:budgetflow/model/budget/data/transaction.dart';
+import 'package:budgetflow/model/budget/category.dart';
+import 'package:budgetflow/model/budget/transaction.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Transaction t1 = new Transaction(null, null, 0.0, null);

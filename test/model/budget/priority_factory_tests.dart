@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/data/category.dart';
+import 'package:budgetflow/model/budget/category.dart';
 import 'package:budgetflow/model/budget/priority_budget_factory.dart';
 import 'package:flutter_test/flutter_test.dart';
 

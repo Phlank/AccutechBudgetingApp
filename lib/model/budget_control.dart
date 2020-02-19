@@ -1,6 +1,6 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/data/transaction.dart';
-import 'package:budgetflow/model/budget/data/transaction_list.dart';
+import 'package:budgetflow/model/budget/transaction.dart';
+import 'package:budgetflow/model/budget/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
 import 'package:budgetflow/model/crypt/crypter.dart';
 import 'package:budgetflow/model/crypt/password.dart';
@@ -11,7 +11,7 @@ import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter/material.dart';
 
-import 'budget/data/category.dart';
+import 'budget/category.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
