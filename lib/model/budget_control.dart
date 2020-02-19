@@ -11,7 +11,7 @@ import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter/material.dart';
 
-import 'budget/category.dart';
+import 'budget/category/category.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {

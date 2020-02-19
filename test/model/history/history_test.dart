@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/category.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/history.dart';
