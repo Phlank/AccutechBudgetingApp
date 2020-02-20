@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/factory/budget_factory.dart';
@@ -11,7 +9,7 @@ import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
-import 'package:budgetflow/model/serialize/unserializer.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class History implements Serializable {
   static const String HISTORY_PATH = "history";
@@ -60,8 +58,7 @@ class History implements Serializable {
     return currentBudget;
   }
 
-  Month _buildCurrentMonth() {
-  }
+  Month _buildCurrentMonth() {}
 
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {
     return m.getMonthTime() == mt;
@@ -78,7 +75,6 @@ class History implements Serializable {
   }
 
   Future<TransactionList> getTransactionsFromMonthTime(MonthTime mt) async {
-    //todo look here
     Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
     return await m.transactions;
   }
@@ -97,37 +93,20 @@ class History implements Serializable {
 
   @override
   String get serialize {
-    String output = '{';
+    Serializer serializer = Serializer();
     int i = 0;
     _months.forEach((Month m) {
-      output += '"' + i.toString() + '":' + m.serialize + ',';
+      serializer.addPair(i, m);
       i++;
     });
-    output += '}';
-    output = output.replaceAll('},}', '}}');
-    return output;
+    return serializer.serialize;
   }
-
-  static History unserialize(String serialized) {
-    print(serialized);
-    History output = new History();
-    Map map = jsonDecode(serialized);
-    print(map);
-    map.forEach((dynamic s, dynamic d) async {
-      print("Building month: $s: $d");
-      output.addMonth(Month.unserializeMap(d));
-    });
-    return output;
-  }
-
-  static Future<String> getHistoryInfo() async =>
-      BudgetControl.fileIO.readFile(HISTORY_PATH);
 
   static Future<History> load() async {
     String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);
-    Encrypted e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
+    Encrypted e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
     String plaintext = BudgetControl.crypter.decrypt(e);
-    History h = History.unserialize(plaintext);
+    History h = Serializer.unserialize(KEY_HISTORY, plaintext);
     return h;
   }
 }

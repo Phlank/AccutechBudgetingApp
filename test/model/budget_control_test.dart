@@ -23,7 +23,7 @@ void main() {
     setUp(() {
       bc = new BudgetControl();
       bFactory = new PriorityBudgetFactory();
-      b = bFactory.newFromInfo(2500, 710, BudgetType.savingGrowth);
+      b = bFactory.newFromInfo(2500, 710, BudgetType.growth);
       bc.addNewBudget(b);
       bc.addTransaction(t1);
       bc.addTransaction(t2);

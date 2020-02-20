@@ -1,6 +1,6 @@
 import 'package:budgetflow/model/crypt/encrypted.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/unserializer.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 main() {
@@ -8,7 +8,7 @@ main() {
     Encrypted e =
         new Encrypted("udisabyfeb", "fuiea8932rui3buih8sd9fueHUIWHD&W");
     String es = e.serialize;
-    String escs = Unserializer
+    String escs = Serializer
         .unserialize(KEY_ENCRYPTED, es)
         .serialize;
     expect(es, equals(escs));

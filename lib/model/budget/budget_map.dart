@@ -7,8 +7,6 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class BudgetMap implements Serializable {
-  static const String _CATEGORY_KEY = 'category', _AMOUNT_KEY = 'amount';
-
   Map<Category, double> _map = new Map();
   String _serialization = "";
   CategoryList _categories;
@@ -57,8 +55,8 @@ class BudgetMap implements Serializable {
     // value is a map from the pattern in _makeSerializable
     // value has two keys, _CATEGORY_KEY and _AMOUNT_KEY
     decoded.forEach((key, value) {
-      Category c = Category.unserializeMap(value[_CATEGORY_KEY]);
-      double amount = double.parse(value[_AMOUNT_KEY]);
+      Category c = Serializer.unserialize(KEY_CATEGORY, value[KEY_CATEGORY]);
+      double amount = double.parse(value[KEY_AMOUNT]);
       unserialized.addTo(c, amount);
     });
     return unserialized;

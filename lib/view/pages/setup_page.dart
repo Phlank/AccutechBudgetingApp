@@ -132,7 +132,7 @@ class _SetupPageState extends State<SetupPage> {
       },
       onChanged: (value) {
         if (value.isNotEmpty) {
-          hold.setBudgetType(BudgetType.savingDepletion);
+          hold.setBudgetType(BudgetType.depletion);
         }
       },
     );
@@ -290,7 +290,7 @@ class _InformationHolding {
 
   BudgetType getBudgetType() {
     if (_budgetType != null) return _budgetType;
-    return BudgetType.savingGrowth;
+    return BudgetType.growth;
   }
 
   setBudgetType(BudgetType budgetType) {

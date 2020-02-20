@@ -1,4 +1,6 @@
+import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class BudgetType implements Serializable {
   static const String GROWTH_NAME = 'Growth';
@@ -6,17 +8,14 @@ class BudgetType implements Serializable {
 
   final String name;
 
-  static const BudgetType savingGrowth = BudgetType("Growth");
-  static const BudgetType savingDepletion = BudgetType("Depletion");
+  static const BudgetType growth = BudgetType("Growth");
+  static const BudgetType depletion = BudgetType("Depletion");
 
   const BudgetType(this.name);
 
-  String get serialize => name;
-
-  static BudgetType unserialize(String name) {
-    if (name == 'Growth')
-      return savingGrowth;
-    else
-      return savingDepletion;
+  String get serialize {
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_NAME, name);
+    return serializer.serialize;
   }
 }

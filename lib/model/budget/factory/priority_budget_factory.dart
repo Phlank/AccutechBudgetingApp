@@ -70,10 +70,10 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   void _decidePlan(BudgetType type) {
     switch (type) {
-      case BudgetType.savingDepletion:
+      case BudgetType.depletion:
         _setBudgetDepletionRatios();
         break;
-      case BudgetType.savingGrowth:
+      case BudgetType.growth:
         _setBudgetGrowthRatios();
         break;
     }

@@ -25,7 +25,7 @@ void main() {
 			tL.add(t1);
 			tL.add(t2);
 			tL.add(t3);
-			mb.setType(BudgetType.savingGrowth);
+      mb.setType(BudgetType.growth);
 			mb.setIncome(2500);
 			mb.setMonthTime(MonthTime.now());
 			mb.setTransactions(tL);

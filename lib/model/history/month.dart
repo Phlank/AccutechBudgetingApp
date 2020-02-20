@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
@@ -10,7 +8,6 @@ import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
-import 'package:budgetflow/model/serialize/unserializer.dart';
 
 class MonthBuilder {
   MonthTime _monthTime;
@@ -110,7 +107,7 @@ class Month implements Serializable {
       _allotted = new BudgetMap();
     });
     if (cipher != null) {
-      e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
+      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _allotted = BudgetMap.unserialize(plaintext);
     }
@@ -131,7 +128,7 @@ class Month implements Serializable {
       _actual = new BudgetMap();
     });
     if (cipher != null) {
-      e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
+      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _actual = BudgetMap.unserialize(plaintext);
     }
@@ -152,9 +149,9 @@ class Month implements Serializable {
       _transactions = new TransactionList();
     });
     if (cipher != null) {
-      e = Unserializer.unserialize(KEY_ENCRYPTED, cipher);
+      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      _transactions = TransactionList.unserialize(plaintext);
+      _transactions = Serializer.unserialize(KEY_TRANSACTION_LIST, plaintext);
     }
   }
 
@@ -207,21 +204,6 @@ class Month implements Serializable {
     serializer.addPair(KEY_INCOME, _income);
     serializer.addPair(KEY_TYPE, _type);
     return serializer.serialize;
-  }
-
-  static unserialize(String serialization) {
-    Map map = jsonDecode(serialization);
-    return unserializeMap(map);
-  }
-
-  static unserializeMap(Map map) {
-    MonthBuilder builder = new MonthBuilder();
-    MonthTime monthTime =
-    new MonthTime(int.parse(map[KEY_YEAR]), int.parse(map[KEY_MONTH]));
-    builder.setMonthTime(monthTime);
-    builder.setIncome(double.parse(map[KEY_INCOME]));
-    builder.setType(BudgetType.unserialize(map[KEY_TYPE]));
-    return builder.build();
   }
 
   bool operator ==(Object other) => other is Month && this._equals(other);

@@ -1,5 +1,7 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Transaction t1 = new Transaction(null, null, 0.0, null);
@@ -14,8 +16,9 @@ void main() {
   });
   test("Serialization sanity", () {
     String t2s = t2.serialize;
-    expect(t2s, equals(Transaction
-        .unserialize(t2s)
+    expect(
+        t2s, equals(Serializer
+        .unserialize(KEY_TRANSACTION, t2s)
         .serialize));
   });
 }

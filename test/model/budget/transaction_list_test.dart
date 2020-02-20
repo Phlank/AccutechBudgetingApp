@@ -1,6 +1,8 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 TransactionList tl1 = new TransactionList();
@@ -25,8 +27,8 @@ void main() {
     });
     test("Serialization is reversible", () {
       String tl1s = tl1.serialize;
-      String tl1cs = TransactionList
-          .unserialize(tl1.serialize)
+      String tl1cs = Serializer
+          .unserialize(KEY_TRANSACTION_LIST, tl1.serialize)
           .serialize;
         expect(tl1s, equals(tl1cs));
     });

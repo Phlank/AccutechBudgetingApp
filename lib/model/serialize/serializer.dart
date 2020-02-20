@@ -1,8 +1,29 @@
 import 'dart:convert';
 
+import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/unserialize/budget_type_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/category_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/encrypted_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/month_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/password_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/priority_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/transaction_list_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/transaction_strategy.dart';
+import 'package:budgetflow/model/serialize/unserializer.dart';
 
 class Serializer implements Serializable {
+  static Map<String, Unserializer> strategyMap = {
+    KEY_PASSWORD: PasswordStrategy(),
+    KEY_ENCRYPTED: EncryptedStrategy(),
+    KEY_TRANSACTION: TransactionStrategy(),
+    KEY_CATEGORY: CategoryStrategy(),
+    KEY_PRIORITY: PriorityStrategy(),
+    KEY_TRANSACTION_LIST: TransactionListStrategy(),
+    KEY_MONTH: MonthStrategy(),
+    KEY_TYPE: BudgetTypeStrategy()
+  };
+
   Map<dynamic, dynamic> pairs;
 
   Serializer() {
@@ -45,15 +66,14 @@ class Serializer implements Serializable {
     return value;
   }
 
-  dynamic unserialize(dynamic input) {
-    if (input is String) {
-      if (input.contains('{')) {
-        input = jsonDecode(input);
-      }
-    }
+  static dynamic unserialize(String key, dynamic value) {
+    _validate(key, value);
+    if (value is String) value = jsonDecode(value);
+    return strategyMap[key].unserializeValue(value);
   }
 
-  static dynamic _unserializeDecoded(Map input) {
-    return null;
+  static void _validate(String key, dynamic value) {
+    if (!(value is Map || value is String)) throw InvalidSerializedValueError();
+    if (!strategyMap.containsKey(key)) throw UnknownMapKeyError();
   }
 }

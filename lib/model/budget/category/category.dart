@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
@@ -48,18 +46,5 @@ class Category implements Serializable {
     serializer.addPair(KEY_NAME, name);
     serializer.addPair(KEY_PRIORITY, priority);
     return serializer.serialize;
-  }
-
-  static Category unserialize(String serialized) {
-    Map map = jsonDecode(serialized);
-    return unserializeMap(map);
-  }
-
-  static Category unserializeMap(dynamic value) {
-    if (value is Map) {
-      return new Category(
-          value[KEY_NAME], Priority.unserialize(value[KEY_PRIORITY]));
-    }
-    return null;
   }
 }

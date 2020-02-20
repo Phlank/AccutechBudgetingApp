@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
@@ -39,15 +37,6 @@ class TransactionList implements Serializable {
       serializer.addPair(i, _transactions[i]);
     }
     return serializer.serialize;
-  }
-
-  static TransactionList unserialize(String serialized) {
-    Map map = jsonDecode(serialized);
-    TransactionList t = new TransactionList();
-    map.forEach((dynamic s, dynamic d) {
-      t._transactions.add(Transaction.unserializeMap(d));
-    });
-    return t;
   }
 
   List<Transaction> getIterable() {

@@ -5,7 +5,6 @@ import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/password.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
-import 'package:budgetflow/model/serialize/unserializer.dart';
 import 'package:steel_crypt/PointyCastleN/api.dart';
 import 'package:steel_crypt/PointyCastleN/export.dart';
 
@@ -91,7 +90,7 @@ class SteelPassword implements Password {
 
   static Future<Password> load() async {
     String s = await BudgetControl.fileIO.readFile(PASSWORD_PATH);
-    return Unserializer.unserialize(KEY_PASSWORD, s);
+    return Serializer.unserialize(KEY_PASSWORD, s);
   }
 
   @override

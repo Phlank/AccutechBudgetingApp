@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
@@ -18,26 +16,6 @@ class Transaction implements Serializable {
 
   Transaction.withTime(this.vendor, this.method, this.amount, this.category,
       this.time);
-
-  static Transaction unserialize(String serialized) {
-    Map map = jsonDecode(serialized);
-    return unserializeMap(map);
-  }
-
-  static Transaction _emptyTransaction() {
-    Transaction t = new Transaction("", "", 0.0, Category.housing);
-    return t;
-  }
-
-  static Transaction unserializeMap(Map map) {
-    Transaction t = _emptyTransaction();
-    t.time = DateTime.fromMillisecondsSinceEpoch(int.parse(map[KEY_TIME]));
-    t.vendor = map[KEY_VENDOR];
-    t.method = map[KEY_METHOD];
-    t.amount = double.parse(map[KEY_AMOUNT]);
-    t.category = Category.unserializeMap(map[KEY_CATEGORY]);
-    return t;
-  }
 
   String get serialize {
     Serializer serializer = Serializer();

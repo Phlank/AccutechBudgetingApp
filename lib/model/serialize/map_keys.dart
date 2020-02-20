@@ -16,4 +16,5 @@ const String KEY_CATEGORY = 'category',
     KEY_CIPHER = 'cipher',
     KEY_ENCRYPTED = 'encrypted',
     KEY_PASSWORD = 'password',
-    KEY_HISTORY = 'history';
+    KEY_HISTORY = 'history',
+    KEY_TRANSACTION_LIST = 'transaction_list';

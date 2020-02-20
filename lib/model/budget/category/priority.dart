@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
@@ -22,20 +20,8 @@ class Priority implements Serializable {
 
   const Priority(this.name, this.value);
 
-  int compareTo(Priority other) {
-    return value.compareTo(other.value);
-  }
-
-  String get serialize {
-    Serializer serializer = Serializer();
-    serializer.addPair(KEY_NAME, name);
-    return serializer.serialize;
-  }
-
-  static Priority unserialize(dynamic input) {
-    if (input is String) input = jsonDecode(input);
-    String inputName = input[KEY_NAME];
-    switch (inputName) {
+  static Priority fromName(String name) {
+    switch (name) {
       case _NAME_REQUIRED:
         return required;
       case _NAME_NEED:
@@ -49,6 +35,16 @@ class Priority implements Serializable {
       default:
         return other;
     }
+  }
+
+  int compareTo(Priority other) {
+    return value.compareTo(other.value);
+  }
+
+  String get serialize {
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_NAME, name);
+    return serializer.serialize;
   }
 
   bool operator ==(Object o) => o is Priority && name == o.name;
