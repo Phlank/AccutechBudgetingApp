@@ -48,7 +48,6 @@ class History implements Serializable {
   }
 
   Future<Budget> _createNewMonthBudget() async {
-    //todo what if there is no month
     Month lastMonth = _months[_months.length - 1];
     currentMonth = _buildCurrentMonth();
     Budget lastBudget = await Budget.fromMonth(lastMonth);
@@ -58,7 +57,9 @@ class History implements Serializable {
     return currentBudget;
   }
 
-  Month _buildCurrentMonth() {}
+  Month _buildCurrentMonth() {
+    // TODO THIS
+  }
 
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {
     return m.getMonthTime() == mt;
