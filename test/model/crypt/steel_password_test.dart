@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/crypt/password.dart';
-import 'package:budgetflow/model/crypt/steel_password.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const String _SECRET_1 = "password1";
@@ -42,8 +43,8 @@ Future<void> main() async {
       expect(await p0.verify(_SECRET_1), true);
     });
     test("Serialization sanity", () async {
-      String _pw1s = _pw1.serialize();
-      Password _pw1u = SteelPassword.unserialize(_pw1s);
+      String _pw1s = _pw1.serialize;
+      Password _pw1u = Serializer.unserialize(KEY_PASSWORD, _pw1s);
       expect(await _pw1u.verify(_SECRET_1), true);
     });
     tearDown(() {

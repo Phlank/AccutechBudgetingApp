@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/category/category_list.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class BudgetMap implements Serializable {
-  static const String _CATEGORY_KEY = 'category', _AMOUNT_KEY = 'amount';
-
   Map<Category, double> _map = new Map();
   String _serialization = "";
   CategoryList _categories;
@@ -35,26 +35,17 @@ class BudgetMap implements Serializable {
     _map.forEach(action);
   }
 
-  String serialize() {
-    _serialization = '{';
+  String get serialize {
+    Serializer main = Serializer();
     int i = 0;
     for (Category key in _map.keys) {
-      _serialization += '"$i":' + _makeSerializable(key);
-      if (key != _map.keys.last) _serialization += ',';
+      Serializer keySerializer = Serializer();
+      keySerializer.addPair(KEY_CATEGORY, key);
+      keySerializer.addPair(KEY_AMOUNT, _map[key]);
+      main.addPair(i, keySerializer);
       i++;
     }
-    _serialization += '}';
-    return _serialization;
-  }
-
-  String _makeSerializable(Category c) {
-    String serializedCategory = c.serialize();
-    double amount = _map[c];
-    String output = '{';
-    output += '"$_CATEGORY_KEY":$serializedCategory,';
-    output += '"$_AMOUNT_KEY":"$amount"';
-    output += '}';
-    return output;
+    return main.serialize;
   }
 
   static BudgetMap unserialize(String serialized) {
@@ -64,8 +55,8 @@ class BudgetMap implements Serializable {
     // value is a map from the pattern in _makeSerializable
     // value has two keys, _CATEGORY_KEY and _AMOUNT_KEY
     decoded.forEach((key, value) {
-      Category c = Category.unserializeMap(value[_CATEGORY_KEY]);
-      double amount = double.parse(value[_AMOUNT_KEY]);
+      Category c = Serializer.unserialize(KEY_CATEGORY, value[KEY_CATEGORY]);
+      double amount = double.parse(value[KEY_AMOUNT]);
       unserialized.addTo(c, amount);
     });
     return unserialized;

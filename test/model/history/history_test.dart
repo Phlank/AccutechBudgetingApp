@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/history.dart';
@@ -25,7 +25,7 @@ void main() {
 			tL.add(t1);
 			tL.add(t2);
 			tL.add(t3);
-			mb.setType(BudgetType.savingGrowth);
+      mb.setType(BudgetType.growth);
 			mb.setIncome(2500);
 			mb.setMonthTime(MonthTime.now());
 			mb.setTransactions(tL);

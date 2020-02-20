@@ -1,13 +1,13 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
-import 'package:budgetflow/model/file_io/serializable.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 
 class MonthBuilder {
   MonthTime _monthTime;
@@ -107,7 +107,7 @@ class Month implements Serializable {
       _allotted = new BudgetMap();
     });
     if (cipher != null) {
-      e = Encrypted.unserialize(cipher);
+      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _allotted = BudgetMap.unserialize(plaintext);
     }
@@ -128,7 +128,7 @@ class Month implements Serializable {
       _actual = new BudgetMap();
     });
     if (cipher != null) {
-      e = Encrypted.unserialize(cipher);
+      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _actual = BudgetMap.unserialize(plaintext);
     }
@@ -149,9 +149,9 @@ class Month implements Serializable {
       _transactions = new TransactionList();
     });
     if (cipher != null) {
-      e = Encrypted.unserialize(cipher);
+      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      _transactions = TransactionList.unserialize(plaintext);
+      _transactions = Serializer.unserialize(KEY_TRANSACTION_LIST, plaintext);
     }
   }
 
@@ -163,33 +163,33 @@ class Month implements Serializable {
   }
 
   Future save() async {
-    await _saveAllottedSpending();
-    await _saveActualSpending();
-    await _saveTransactions();
+    if (_allotted != null) await _saveAllottedSpending();
+    if (_actual != null) await _saveActualSpending();
+    if (_transactions != null) await _saveTransactions();
   }
 
   Future _saveAllottedSpending() async {
     if (_allotted != null) {
-      String content = _allotted.serialize();
+      String content = _allotted.serialize;
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize());
+      await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize);
     }
   }
 
   Future _saveActualSpending() async {
     if (_actual != null) {
-      String content = _actual.serialize();
+      String content = _actual.serialize;
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize());
+      await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize);
     }
   }
 
   Future _saveTransactions() async {
     if (_transactions != null) {
-      String content = _transactions.serialize();
+      String content = _transactions.serialize;
       Encrypted e = BudgetControl.crypter.encrypt(content);
       await BudgetControl.fileIO.writeFile(
-          _transactionsFilepath, e.serialize());
+          _transactionsFilepath, e.serialize);
     }
   }
 
@@ -197,29 +197,13 @@ class Month implements Serializable {
 
   double getIncome() => _income;
 
-  String serialize() {
-    String output = "{";
-    output += '"year":"' + _monthTime.year.toString() + "\",";
-    output += '"month":"' + _monthTime.month.toString() + '",';
-    output += '"income":"' + _income.toString() + '",';
-    output += '"type":"' + budgetTypeJson[_type] + '"';
-    output += '}';
-    return output;
-  }
-
-  static unserialize(String serialization) {
-    Map map = jsonDecode(serialization);
-    return unserializeMap(map);
-  }
-
-  static unserializeMap(Map map) {
-    MonthBuilder builder = new MonthBuilder();
-    MonthTime monthTime =
-        new MonthTime(int.parse(map["year"]), int.parse(map["month"]));
-    builder.setMonthTime(monthTime);
-    builder.setIncome(double.parse(map["income"]));
-    builder.setType(jsonBudgetType[map["type"]]);
-    return builder.build();
+  String get serialize {
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_YEAR, _monthTime.year);
+    serializer.addPair(KEY_MONTH, _monthTime.month);
+    serializer.addPair(KEY_INCOME, _income);
+    serializer.addPair(KEY_TYPE, _type);
+    return serializer.serialize;
   }
 
   bool operator ==(Object other) => other is Month && this._equals(other);

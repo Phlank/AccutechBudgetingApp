@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_factory.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/priority_budget_factory.dart';
+import 'package:budgetflow/model/budget/factory/budget_factory.dart';
+import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +132,7 @@ class _SetupPageState extends State<SetupPage> {
       },
       onChanged: (value) {
         if (value.isNotEmpty) {
-          hold.setBudgetType(BudgetType.savingDepletion);
+          hold.setBudgetType(BudgetType.depletion);
         }
       },
     );
@@ -290,7 +290,7 @@ class _InformationHolding {
 
   BudgetType getBudgetType() {
     if (_budgetType != null) return _budgetType;
-    return BudgetType.savingGrowth;
+    return BudgetType.growth;
   }
 
   setBudgetType(BudgetType budgetType) {

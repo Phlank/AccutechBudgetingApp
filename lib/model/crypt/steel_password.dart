@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:steel_crypt/PointyCastleN/api.dart';
 import 'package:steel_crypt/PointyCastleN/export.dart';
 
@@ -11,8 +12,6 @@ import 'encrypted.dart';
 
 class SteelPassword implements Password {
   static const String PASSWORD_PATH = "password";
-  static const String _SALT_KEY = "salt";
-  static const String _HASH_KEY = "hash";
   static const String _ALGORITHM = "scrypt";
   static const int _KEY_LENGTH = 32;
   static const int _SCRYPT_N = 4096;
@@ -82,27 +81,20 @@ class SteelPassword implements Password {
 
   String get salt => _salt;
 
-  @override
-  String serialize() {
-    String output = '{"$_SALT_KEY":"$_salt","$_HASH_KEY":"$_hash"}';
-    return output;
-  }
-
-  static Password unserialize(String serialized) {
-    Map map = jsonDecode(serialized);
-    SteelPassword password = new SteelPassword();
-    password._salt = map[_SALT_KEY];
-    password._hash = map[_HASH_KEY];
-    return password;
+  String get serialize {
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_SALT, _salt);
+    serializer.addPair(KEY_HASH, _hash);
+    return serializer.serialize;
   }
 
   static Future<Password> load() async {
     String s = await BudgetControl.fileIO.readFile(PASSWORD_PATH);
-    return unserialize(s);
+    return Serializer.unserialize(KEY_PASSWORD, s);
   }
 
   @override
   void save() {
-    BudgetControl.fileIO.writeFile(PASSWORD_PATH, serialize());
+    BudgetControl.fileIO.writeFile(PASSWORD_PATH, serialize);
   }
 }
