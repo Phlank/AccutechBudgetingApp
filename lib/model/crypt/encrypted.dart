@@ -1,23 +1,22 @@
 import 'dart:convert';
 import 'dart:math';
 
-class Encrypted {
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
+
+class Encrypted implements Serializable {
   static const String _IV_KEY = 'iv';
   static const String _CIPHER_KEY = 'cipher';
   final String iv, cipher;
 
   Encrypted(this.iv, this.cipher);
 
-  static Encrypted unserialize(String serialized) {
-    Map map = jsonDecode(serialized);
-    String iv = map[_IV_KEY];
-    String cipher = map[_CIPHER_KEY];
-    return new Encrypted(iv, cipher);
-  }
-
-  String serialize() {
-    String output = '{"$_IV_KEY":"$iv","$_CIPHER_KEY":"$cipher"}';
-    return output;
+  String get serialize {
+    Serializer serializer = Serializer();
+    serializer.addPair(KEY_IV, iv);
+    serializer.addPair(KEY_CIPHER, cipher);
+    return serializer.serialize;
   }
 }
 

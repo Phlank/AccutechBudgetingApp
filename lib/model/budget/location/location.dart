@@ -1,52 +1,29 @@
 import 'dart:async';
 import 'dart:core';
+
 import 'package:geolocator/geolocator.dart';
 
- class Location{
-   double startingLatitude;
-   double startingLongitude;
-   double lastKnownLatitude;
-   double lastKnownLongitude;
-   Future<double> distanceTraveled;
-   GeolocationStatus locationStatus;
-   Position currentPosition;
-   Position lastKnownPosition;
-   bool locationStatusPlaceholder = true;
+class Location {
+  static bool permissionsEnabled;
+  double latitude, longitude;
 
-   // ignore: cancel_subscriptions
-   StreamSubscription<Position> positionStream = Geolocator().
-   getPositionStream(LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10)).
-   listen(
-           (Position position) {
-         print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
-       });
+  Location(this.latitude, this.longitude);
 
-  Future checkPermission() async {
-    locationStatus = await Geolocator().checkGeolocationPermissionStatus();
-  }
-  Future getLocation() async{
-    if (locationStatusPlaceholder == true){
-    currentPosition = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    startingLatitude = currentPosition.latitude;
-    startingLongitude = currentPosition.longitude;
+  static Future<bool> get permissionEnabled async {
+    var status = await Geolocator().checkGeolocationPermissionStatus();
+    if (status == GeolocationStatus.disabled ||
+        status == GeolocationStatus.denied) {
+      return false;
     }
-    else{
-
-    }
+    return true;
   }
 
-  Future getLastKnownLocation() async{
-    if (locationStatusPlaceholder == true){
-    lastKnownPosition = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
-    lastKnownLatitude = lastKnownPosition.latitude;
-    lastKnownLongitude = lastKnownPosition.longitude;
+  Future<Location> get current async {
+    if (await Location.permissionEnabled) {
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      return Location(position.latitude, position.longitude);
     }
-    else{
-
-    }
-  }
-
-  void DistanceTraveled(){
-    distanceTraveled = Geolocator().distanceBetween(startingLatitude, startingLongitude, lastKnownLatitude, lastKnownLongitude);
+    return null;
   }
 }

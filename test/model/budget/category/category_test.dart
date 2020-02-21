@@ -1,5 +1,7 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Category cHousing,
@@ -45,18 +47,27 @@ void main() {
       expect(cNeed1.compareTo(cNeed3), -1);
     });
     test('Test cNeed1.serialize', () {
-      expect(cNeed1.serialize(), '{"name":"1","priority":"Need"}');
+      expect(cNeed1.serialize, '{"name":"1","priority":{"name":"Need"}}');
     });
     test('Test cNeed2.serialize', () {
-      expect(cNeed2.serialize(), '{"name":"2","priority":"Need"}');
+      expect(cNeed2.serialize, '{"name":"2","priority":{"name":"Need"}}');
     });
     test('Test unserialize cNeed1', () {
-      Category fromSerialized = Category.unserialize('{"name":"1","priority":"Need"}');
+      Category fromSerialized = Serializer.unserialize(
+          KEY_CATEGORY, '{"name":"1","priority":{"name":"Need"}}');
       expect(fromSerialized == cNeed1, true);
     });
     test('Test unserialize cNeed2', () {
-      Category fromSerialized = Category.unserialize('{"name":"2","priority":"Need"}');
+      Category fromSerialized = Serializer.unserialize(
+          KEY_CATEGORY, '{"name":"2","priority":{"name":"Need"}}');
       expect(fromSerialized == cNeed2, true);
+    });
+    test('Serialization sanity', () {
+      Category fromSerialized = Serializer.unserialize(
+          KEY_CATEGORY, '{"name":"1","priority":{"name":"Need"}}');
+      String serialized = fromSerialized.serialize;
+      Category copyFS = Serializer.unserialize(KEY_CATEGORY, serialized);
+      expect(fromSerialized == copyFS, isTrue);
     });
   });
 }
