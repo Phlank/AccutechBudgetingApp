@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 
 class AccountDisplay extends StatefulWidget{
-
+  static const ACCOUNT_ROUTE = '/account';
   @override
   _AccountDisplay createState() => _AccountDisplay();
 }
@@ -28,7 +28,9 @@ class  _AccountDisplay extends State<AccountDisplay>{
       body: Column(
         children: <Widget>[
           GlobalCards.cashFlowCard(),
-          new TransactionListView()
+          new TransactionListView(
+              BudgetingApp.userController.getLoadedTransactions().length
+          ),
         ],
       ),
     );

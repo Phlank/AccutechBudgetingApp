@@ -58,7 +58,7 @@ class _UserPageState extends State<UserPage> {
                 },
               )
           ),
-          new TransactionListView()
+          new TransactionListView(BudgetingApp.userController.getLoadedTransactions().length)
         ],
       ),
       floatingActionButton: FloatingActionButton(

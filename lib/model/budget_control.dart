@@ -40,11 +40,11 @@ class BudgetControl implements Control {
     'miscellaneous': Category.miscellaneous
   };
 
-  final Map<String, List<String>> sectionMap = {
-    'needs': ['housing','utilities','groceries','health','transportation',
-      'education','kids'],
-    'wants': ['entertainment', 'pets', 'miscellaneous'],
-    'savings': ['savings']
+  final Map<String, List<Category>> sectionMap = {
+    'needs': [Category.housing, Category.utilities, Category.groceries,
+      Category.health, Category.transportation, Category.education,Category.kids],
+    'wants': [Category.entertainment, Category.pets, Category.miscellaneous],
+    'savings': [Category.savings]
   };
 
   final Map<String, String> routeMap = {
@@ -52,7 +52,7 @@ class BudgetControl implements Control {
     'wants': '/wants',
     'savings': '/savings',
     'home': '/knownUser',
-    'accounts':'/accounts'
+    'accounts':'/account'
   };
 
   BudgetControl() {
@@ -154,8 +154,8 @@ class BudgetControl implements Control {
 
   double sectionBudget(String section) {
     double secBudget = 0.0;
-    for (String category in sectionMap[section]) {
-      secBudget += _budget.allotted[categoryMap[category]];
+    for (Category category in sectionMap[section]) {
+      secBudget += _budget.allotted[category];
     }
     return secBudget;
   }
@@ -217,10 +217,10 @@ class BudgetControl implements Control {
 
   double expenseInSection(String section) {
     double spent = 0.0;
-    for(String cat in sectionMap[section]){
+    for(Category cat in sectionMap[section]){
       for(int i= 0; i<_loadedTransactions.length; i++){
         Category rel = _loadedTransactions.getAt(i).category;
-        if( rel == categoryMap[cat]){
+        if( rel == cat){
           spent += _budget.allotted[rel];
         }
       }

@@ -225,7 +225,7 @@ class _SetupPageState extends State<SetupPage> {
         onPressed: () {
           if (SetupPage.cardOrder > 0) {
             SetupPage.cardOrder--;
-            Navigator.pushNamed(context, '/newUser');
+            Navigator.pushNamed(context, '/setup');
           }
         },
       ),

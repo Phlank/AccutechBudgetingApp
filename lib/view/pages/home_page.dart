@@ -21,10 +21,8 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.hasData) {
             bool user = snapshot.data;
             if (user) {
-              BudgetingApp.newUser = false;
               return new LoginPage();
             } else {
-              BudgetingApp.newUser = true;
               return SetupPage();
             }
           } else if (snapshot.hasError) {
