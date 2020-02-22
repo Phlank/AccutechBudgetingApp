@@ -3,7 +3,7 @@ import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
-import 'package:budgetflow/view/utils/output_formater.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/material.dart';
 
 class TransactionDetailEdit extends StatefulWidget{
@@ -18,7 +18,7 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
   Transaction t;
   _TransactionDetailEditState(this.t);
   @override
-  Widget build(BuildContext context) => new TransactionDetail().editDetail(t);
+  Widget build(BuildContext context) => new TransactionDetail().editDetail(t,context);
 
 }
 
@@ -33,15 +33,16 @@ class _TransactionDetailViewState extends State<TransactionDetailView>{
   Transaction t;
   _TransactionDetailViewState(this.t);
   @override
-  Widget build(BuildContext context) =>new TransactionDetail().viewDetail(t);
+  Widget build(BuildContext context) =>new TransactionDetail().viewDetail(t,context);
 }
 
 class TransactionDetail{
 
    Map<String, String> transactionMap = new Map();
    Transaction tran;
+   BuildContext context;
 
-   TableRow genericTextField(dynamic initValue, String valueTitle){
+   TableRow _genericTextField(dynamic initValue, String valueTitle){
     Text title = Text(Format.titleFormat(valueTitle));
     TextFormField textInput = TextFormField(
       initialValue: Format.dynamicFormating(initValue),
@@ -55,7 +56,7 @@ class TransactionDetail{
     return TableRow(children: [title,textInput]);
   }
 
-   TableRow genericTextBox(dynamic value, String valueTitle){
+   TableRow _genericTextBox(dynamic value, String valueTitle){
     Text title = Text(Format.titleFormat(valueTitle));
     Text valueString =Text(Format.dynamicFormating(value));
     return TableRow(
@@ -65,14 +66,19 @@ class TransactionDetail{
 
    Transaction mapToTrans() {
 
-     return new Transaction.withTime(transactionMap['vendor'], transactionMap['method'], double.tryParse(transactionMap['amount']), Category.categoryFromString(transactionMap['category']), tran.time);
+     return new Transaction.withTime(transactionMap['vendor'], transactionMap['method'],
+         double.tryParse(transactionMap['amount']), Category.categoryFromString(transactionMap['category']), tran.time);
    }
 
-   onpressToEdit(){
-     Navigator.pushNamed(context, routeName);
+   _onpressToEdit(){
+     Navigator.push(context, MaterialPageRoute(
+       builder: (BuildContext context) {
+        return  new TransactionDetailEdit(tran);
+       }
+     ));
   }
 
-   onpressToSubmit(){
+   _onpressToSubmit(){
      Transaction t = mapToTrans();
      TransactionList tl = BudgetingApp.userController.getLoadedTransactions();
      for(int i=0; i<tl.length; i++){
@@ -81,16 +87,21 @@ class TransactionDetail{
           BudgetingApp.userController.getLoadedTransactions().getIterable().add(t);
        }
      }
+     Navigator.push(context, MaterialPageRoute(
+         builder: (BuildContext context) {
+           return  new TransactionDetailView(t);
+         }
+     ));
   }
 
    RaisedButton _navButton(String name){
     Function onPress;
     switch(name){
       case 'submit':
-        onPress = onpressToSubmit();
+        onPress = _onpressToSubmit();
         break;
       case 'edit':
-        onPress = onpressToEdit();
+        onPress = _onpressToEdit();
     }
 
     return RaisedButton(
@@ -99,13 +110,19 @@ class TransactionDetail{
     );
   }
 
-   Scaffold editDetail(Transaction t){
+  RaisedButton _returnToList(){
+     return RaisedButton();
+  }
+
+   Scaffold editDetail(Transaction t,BuildContext context){
      this.tran = t;
+     this.context = context;
     return Scaffold();
   }
 
-   Scaffold viewDetail(Transaction t){
+   Scaffold viewDetail(Transaction t,BuildContext context){
     this.tran=t;
+    this.context = context;
     return Scaffold();
   }
 
