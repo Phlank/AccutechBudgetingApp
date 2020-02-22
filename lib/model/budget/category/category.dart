@@ -22,7 +22,7 @@ class Category implements Serializable {
   final Priority priority;
 
   static const Category //
-      housing = Category("Housing", Priority.required),
+      housing = Category("Housing", Priority.need),
       utilities = Category("Utilities", Priority.need),
       groceries = Category("Groceries", Priority.need),
       savings = Category("Savings", Priority.savings),

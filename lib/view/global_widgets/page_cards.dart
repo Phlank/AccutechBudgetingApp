@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/view/utils/output_formater.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/material.dart';
 
 import '../budgeting_app.dart';

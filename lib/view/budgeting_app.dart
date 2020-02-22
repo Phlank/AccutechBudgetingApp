@@ -36,7 +36,7 @@ class BudgetingApp extends StatelessWidget {
             GeneralCategory('savings'),
         AddTransaction.ROUTE: (BuildContext context) => AddTransaction(),
         FirstLoad.ROUTE: (BuildContext context) => FirstLoad(),
-        AccountDisplay.ACCOUNT_ROUTE:(BuildContext context) => AccountDisplay(),
+        AccountDisplay.ROUTE:(BuildContext context) => AccountDisplay(),
       }, //Routes
     );
   }

@@ -5,6 +5,7 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/unserialize/budget_type_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/category_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/encrypted_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/history_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/month_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/password_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/priority_strategy.dart';
@@ -21,7 +22,8 @@ class Serializer implements Serializable {
     KEY_PRIORITY: PriorityStrategy(),
     KEY_TRANSACTION_LIST: TransactionListStrategy(),
     KEY_MONTH: MonthStrategy(),
-    KEY_TYPE: BudgetTypeStrategy()
+    KEY_TYPE: BudgetTypeStrategy(),
+    KEY_HISTORY: HistoryStrategy()
   };
 
   Map<dynamic, dynamic> pairs;

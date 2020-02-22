@@ -1,7 +1,7 @@
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/global_widgets/page_cards.dart';
-import 'package:budgetflow/view/global_widgets/transaction_view.dart';
+import 'package:budgetflow/view/widgets/transaction/transaction_view.dart';
 import 'package:flutter/material.dart';
 
 //todo get on to the side menu
@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 
 class AccountDisplay extends StatefulWidget{
-  static const ACCOUNT_ROUTE = '/account';
+  static const ROUTE = '/account';
   @override
   _AccountDisplay createState() => _AccountDisplay();
 }
@@ -22,7 +22,7 @@ class  _AccountDisplay extends State<AccountDisplay>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account Veiw'),
+        title: Text('Accounts and Transactions'),
       ),
       drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: Column(

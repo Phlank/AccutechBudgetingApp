@@ -258,7 +258,6 @@ class _SetupPageState extends State<SetupPage> {
                       hold.getHousingAmt(),
                       hold.getBudgetType());
                   BudgetingApp.userController.addNewBudget(userBudget);
-                  BudgetingApp.userController.save();
                   while (Navigator.canPop(context)) Navigator.pop(context);
                   Navigator.pushNamed(context, '/knownUser');
                 }

@@ -36,6 +36,12 @@ class Format {
     return dMy.format(dateTime) + ' ' + jm.format(dateTime);
   }
 
+  static String dateFormatLn(DateTime dateTime) {
+    DateFormat dMy = new DateFormat('LLLL d, y');
+    DateFormat jm = new DateFormat('jm');
+    return dMy.format(dateTime) + '\n' + jm.format(dateTime);
+  }
+
   static Color deltaColor(double delta) {
     if (delta < 0) {
       return Colors.red;
