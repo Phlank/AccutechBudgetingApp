@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/budget/category/category.dart' as cat;
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
@@ -17,37 +17,24 @@ class TransactionDetailEdit extends StatefulWidget{
 }
 
 class _TransactionDetailEditState extends State<TransactionDetailEdit>{
-  Transaction t;
-  _TransactionDetailEditState(this.t);
-  @override
-  Widget build(BuildContext context) => new TransactionDetail().editDetail(t,context);
+  Transaction tran;
+  Map<String, String> transactionMap = new Map();
+  TextStyle style = TextStyle(
+    color: Colors.black,
+    fontSize: 20,);
 
-}
+  _TransactionDetailEditState(this.tran);
 
-class TransactionDetailView extends StatefulWidget{
-  Transaction t;
-  TransactionDetailView(this.t);
-  @override
-  State<StatefulWidget> createState() => new _TransactionDetailViewState(t);
-}
+  Transaction _mapToTrans() {
+    String vendor = transactionMap['vendor'];
+    String method = transactionMap['method'];
+    cat.Category category = cat.Category.categoryFromString(transactionMap['category']);
+    double amount =double.tryParse(transactionMap['amount']==null?tran.amount.toString():transactionMap['amount']);
 
-class _TransactionDetailViewState extends State<TransactionDetailView>{
-  Transaction t;
-  _TransactionDetailViewState(this.t);
-  @override
-  Widget build(BuildContext context) =>new TransactionDetail().viewDetail(t,context);
-}
+    return new Transaction.withTime(vendor==null?tran.vendor:vendor, method==null?tran.method:method, amount==null?tran.amount:amount, category==null?tran.category:category, tran.time);
+  }
 
-class TransactionDetail{
-
-   Map<String, String> transactionMap = new Map();
-   Transaction tran;
-   BuildContext context;
-   TextStyle style = TextStyle(
-   color: Colors.black,
-   fontSize: 20,);
-
-   TableRow _genericTextField(dynamic initValue, String valueTitle){
+  TableRow _genericTextField(dynamic initValue, String valueTitle){
     Text title = Text(Format.titleFormat(valueTitle), style: style,);
     TextFormField textInput = TextFormField(
       initialValue: Format.dynamicFormating(initValue),
@@ -61,123 +48,52 @@ class TransactionDetail{
     return TableRow(children: [title,textInput]);
   }
 
-   TableRow _genericTextBox(dynamic value, String valueTitle){
-
-    Text title = Text(Format.titleFormat(valueTitle),
-    style: style,);
-    Text valueString =Text(Format.dynamicFormating(value),
-    style: style,);
-    return TableRow(
-      children: [title, valueString],
-    );
-  }
-
-   Transaction _mapToTrans() {
-     return new Transaction.withTime(transactionMap['vendor'], transactionMap['method'],
-         double.tryParse(transactionMap['amount']), Category.categoryFromString(transactionMap['category']), tran.time);
-   }
-
-   _onpressToEdit(){
-     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-        return  new TransactionDetailEdit(tran);
-       }
-     ));
-  }
-
-  _onpressToSubmit(){
-     Transaction t = _mapToTrans();
-     TransactionList tl = BudgetingApp.userController.getLoadedTransactions();
-     for(int i=0; i<tl.length; i++){
-       if(tran.time == tl.getAt(i).time){
-          BudgetingApp.userController.getLoadedTransactions().getIterable().removeAt(i);
-          BudgetingApp.userController.getLoadedTransactions().getIterable().add(t);
-       }
-     }
-     Navigator.push(context, MaterialPageRoute(
-         builder: (BuildContext context) {
-           return  new TransactionDetailView(t);
-         }
-     ));
-  }
-
-   RaisedButton _navButton(String name){
-    Function onPress;
-    switch(name){
-      case 'submit':
-        onPress = _onpressToSubmit();
-        break;
-      case 'edit':
-        onPress = _onpressToEdit();
-    }
-
+  RaisedButton _navButton(){
     return RaisedButton(
-      child: Text(name),
-      onPressed: onPress,
+      child: Text('submit'),
+      onPressed: (){
+        Transaction t = _mapToTrans();
+        TransactionList tl = BudgetingApp.userController.getLoadedTransactions();
+        print(tl.length);
+        for(int i =0; i<tl.length; i++){
+            print('contain');
+            BudgetingApp.userController.getLoadedTransactions().removeAt(i);
+            BudgetingApp.userController.getLoadedTransactions().add(t);
+        }
+        Navigator.pushNamed(context, AccountDisplay.ROUTE);
+      }
     );
   }
 
-  TableRow _buttonRow(String name){
-     return TableRow(
-       children:<RaisedButton>[
-         RaisedButton(
-           child: Text('return to list'),
-           onPressed: (){
-             Navigator.pushNamed(context, AccountDisplay.ROUTE);
-           },
-         ),
-         _navButton(name)
-       ],
-     );
-  }
-
-   Scaffold editDetail(Transaction t,BuildContext context){
-     this.tran = t;
-     this.context = context;
+  @override
+  Widget build(BuildContext context) {
+    cat.Category initCat = tran.category;
+    String initMethod = tran.method;
     return Scaffold(
-      appBar: AppBar(title: Text('Transatcion Detail'),),
-      drawer: SideMenu().sideMenu(BudgetingApp.userController),
-      body: Table(
-        children: <TableRow>[
-          _genericTextField(t.vendor, 'vendor'),
-          _genericTextField(t.amount, 'amount'),
-          TableRow(children:[Text('Category'),DropDowns().categoryDrop(Category.miscellaneous, (Category newCat){
-            transactionMap['category'] = newCat.name;
-          })],),
-          TableRow(children:[Text('Method'),DropDowns().methodDrop('cash', (String method){
-            transactionMap['method'] = method;
-          })],),
-         _buttonRow('submit')
-        ],
-      ),
-    );
-  }
-
-   Scaffold viewDetail(Transaction t,BuildContext context){
-    this.tran=t;
-    this.context = context;
-    return Scaffold(
-      appBar: AppBar(title: Text('Transatcion Detail'),),
-      drawer: SideMenu().sideMenu(BudgetingApp.userController),
-      body: Column(
-        children: <Widget>[
-          Table(
-              children:<TableRow>[
-                _genericTextBox(t.vendor,'vendor'),
-                _genericTextBox(t.amount, 'amount'),
-                _genericTextBox(t.category.name, 'category'),
-                _genericTextBox(t.method, 'method'),
-              ]
-          ),
-          RaisedButton(
-            child: Text('return to list'),
-            onPressed: (){
-              Navigator.pushNamed(context, AccountDisplay.ROUTE);
-            },
-          ),
-        ],
-      )
-
-    );
+    appBar: AppBar(title: Text('Transatcion Detail'),),
+    drawer: SideMenu().sideMenu(BudgetingApp.userController),
+    body: Column(
+        children:<Widget>[ Table(
+          children: <TableRow>[
+            _genericTextField(tran.vendor, 'vendor'),
+            _genericTextField(tran.amount, 'amount'),
+            TableRow(children:[Text('Category', style: style,),DropDowns().categoryDrop(initCat, (cat.Category newCat){
+              setState(() {
+                initCat = newCat;
+                transactionMap['category'] = newCat.name;
+                print(transactionMap['category']);
+              });
+            } )],),
+            TableRow(children:[Text('Method', style:style),DropDowns().methodDrop(initMethod, (String method){
+              transactionMap['method'] = method;
+              print(transactionMap['method']);
+            })],),
+          ],
+        ),
+          _navButton(),
+        ]
+    ),
+  );
   }
 
 }

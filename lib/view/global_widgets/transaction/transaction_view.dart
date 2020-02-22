@@ -37,7 +37,7 @@ class TransactionListView extends StatelessWidget {
       onTap: (){
         Navigator.push(context,MaterialPageRoute(
             builder:(BuildContext context){
-              return new TransactionDetailView(t);
+              return new TransactionDetailEdit(t);
             }));
       },
         child:new TransactionListItem(t));

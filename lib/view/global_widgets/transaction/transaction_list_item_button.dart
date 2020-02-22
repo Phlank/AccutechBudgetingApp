@@ -17,7 +17,7 @@ class TransactionListItemButton extends StatelessWidget {
       onPressed: () {
         Navigator.push(context,MaterialPageRoute(
         builder:(BuildContext context){
-            return new TransactionDetailView(transaction);
+            return new TransactionDetailEdit(transaction);
         }));
       },
     );
