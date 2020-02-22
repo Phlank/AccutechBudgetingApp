@@ -1,3 +1,5 @@
+import 'package:budgetflow/model/budget/category/category.dart';
+
 class InputValidator {
   static final Map<String, String> _regexMap = {
     'pin': r'\d\d\d\d',
@@ -5,6 +7,19 @@ class InputValidator {
     'name': r'\w+',
     'age': r'\d{2,3}'
   };
+
+  static bool dynamicValidation(Type d, String value){
+    switch(d){
+      case num:
+        return dollarAmount(value);
+      case String:
+        return required(value);
+      case Category:
+        return required(value);
+      default:
+        throw Exception('unrecognized type input');
+    }
+  }
 
   static bool required(String input) {
     return !(input.trim() == '');
