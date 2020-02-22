@@ -1,8 +1,8 @@
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/global_widgets/page_cards.dart';
-import 'package:budgetflow/view/global_widgets/transaction_view.dart';
-import 'package:budgetflow/view/utils/output_formater.dart';
+import 'package:budgetflow/view/widgets/transaction/transaction_view.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';

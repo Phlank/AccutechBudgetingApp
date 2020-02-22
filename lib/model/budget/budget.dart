@@ -6,6 +6,8 @@ import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 
+import 'category/priority.dart';
+
 class BudgetBuilder {
   CategoryList _categories;
   BudgetMap _allottedSpending, _actualSpending;
@@ -168,4 +170,25 @@ class Budget {
     });
     return net;
   }
+
+  double getAllottedPriority(Priority priority) {
+    double total = 0;
+    _allotted.forEach((category, amount) {
+      if (category.priority == priority) total += amount;
+    });
+    return total;
+  }
+
+  double getActualPriority(Priority priority) {
+    double total = 0;
+    _actual.forEach((category, amount) {
+      if (category.priority == priority) total += amount;
+    });
+    return total;
+  }
+
+  double getRemainingPriority(Priority priority) {
+    return getAllottedPriority(priority) - getActualPriority(priority);
+  }
+
 }

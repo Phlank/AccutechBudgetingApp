@@ -1,17 +1,18 @@
 import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
-import 'package:budgetflow/view/utils/output_formater.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class GeneralCategory extends StatefulWidget {
   String section;
-  static const String NEEDS_ROUTE = '/needs';
-  static const String WANTS_ROUTE = '/wants';
-  static const String SAVINGS_ROUTE = '/savings';
+  static final String NEEDS_ROUTE = '/' + Priority.need.name;
+  static final String WANTS_ROUTE = '/' + Priority.want.name;
+  static final String SAVINGS_ROUTE = '/' + Priority.savings.name;
 
   GeneralCategory(String section) {
     this.section = section;
@@ -28,7 +29,6 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   double allotedForCategory;
   double allotedForSection;
   double beginningAlotttments;
-
 
   _GeneralCategoryState(String section) {
     this.userController = BudgetingApp.userController;
@@ -49,8 +49,8 @@ class _GeneralCategoryState extends State<GeneralCategory> {
           children: <TextSpan>[
             TextSpan(
                 text: 'Unbudgeted in Section \t' +
-                    Format.dollarFormat(allotedForSection -
-                        beginningAlotttments))
+                    Format.dollarFormat(
+                        allotedForSection - beginningAlotttments))
           ],
           style: TextStyle(
             color: Colors.black,
@@ -70,8 +70,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
         setState(() {
           allotedForCategory = value;
         });
-        playBudget.setCategory(
-            category, allotedForCategory);
+        playBudget.setCategory(category, allotedForCategory);
       },
       min: 0,
       max: userController.sectionBudget(section),
@@ -80,10 +79,10 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   }
 
   ListTile categoryTile(Category category) {
-    allotedForCategory =
-    (playBudget.budget.allotted[category]);
+    allotedForCategory = (playBudget.budget.allotted[category]);
     return ListTile(
-      title: Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
+      title:
+          Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
       subtitle: sectionSlider(category),
     );
   }

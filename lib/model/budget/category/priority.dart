@@ -4,8 +4,8 @@ import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Priority implements Serializable {
   static const String _NAME_REQUIRED = 'Required',
-      _NAME_NEED = 'Need',
-      _NAME_WANT = 'Want',
+      _NAME_NEED = 'Needs',
+      _NAME_WANT = 'Wants',
       _NAME_SAVINGS = 'Savings',
       _NAME_OTHER = 'Other';
 
