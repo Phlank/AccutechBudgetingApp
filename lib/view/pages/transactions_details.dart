@@ -3,6 +3,7 @@ import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/drop_downs.dart';
+import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/sidebar/account_display.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
@@ -43,9 +44,12 @@ class TransactionDetail{
    Map<String, String> transactionMap = new Map();
    Transaction tran;
    BuildContext context;
+   TextStyle style = TextStyle(
+   color: Colors.black,
+   fontSize: 20,);
 
    TableRow _genericTextField(dynamic initValue, String valueTitle){
-    Text title = Text(Format.titleFormat(valueTitle));
+    Text title = Text(Format.titleFormat(valueTitle), style: style,);
     TextFormField textInput = TextFormField(
       initialValue: Format.dynamicFormating(initValue),
       validator:(value){
@@ -59,8 +63,11 @@ class TransactionDetail{
   }
 
    TableRow _genericTextBox(dynamic value, String valueTitle){
-    Text title = Text(Format.titleFormat(valueTitle));
-    Text valueString =Text(Format.dynamicFormating(value));
+
+    Text title = Text(Format.titleFormat(valueTitle),
+    style: style,);
+    Text valueString =Text(Format.dynamicFormating(value),
+    style: style,);
     return TableRow(
       children: [title, valueString],
     );
@@ -111,12 +118,17 @@ class TransactionDetail{
     );
   }
 
-  RaisedButton _returnToList(){
-     return RaisedButton(
-       child: Text('return to list'),
-       onPressed: (){
-         Navigator.pushNamed(context, AccountDisplay.ROUTE);
-       },
+  TableRow _buttonRow(String name){
+     return TableRow(
+       children:<RaisedButton>[
+         RaisedButton(
+           child: Text('return to list'),
+           onPressed: (){
+             Navigator.pushNamed(context, AccountDisplay.ROUTE);
+           },
+         ),
+         _navButton(name)
+       ],
      );
   }
 
@@ -124,6 +136,8 @@ class TransactionDetail{
      this.tran = t;
      this.context = context;
     return Scaffold(
+      appBar: AppBar(title: Text('Transatcion Detail'),),
+      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: Table(
         children: <TableRow>[
           _genericTextField(t.vendor, 'vendor'),
@@ -134,6 +148,7 @@ class TransactionDetail{
           TableRow(children:[Text('Method'),DropDowns().methodDrop('cash', (String method){
             transactionMap['method'] = method;
           })],),
+         _buttonRow('submit')
         ],
       ),
     );
@@ -143,14 +158,27 @@ class TransactionDetail{
     this.tran=t;
     this.context = context;
     return Scaffold(
-      body: Table(
-        children:<TableRow>[
-          _genericTextBox(t.vendor,'vendor'),
-          _genericTextBox(t.amount, 'amount'),
-          _genericTextBox(t.category.name, 'category'),
-          _genericTextBox(t.method, 'method'),
-        ]
+      appBar: AppBar(title: Text('Transatcion Detail'),),
+      drawer: SideMenu().sideMenu(BudgetingApp.userController),
+      body: Column(
+        children: <Widget>[
+          Table(
+              children:<TableRow>[
+                _genericTextBox(t.vendor,'vendor'),
+                _genericTextBox(t.amount, 'amount'),
+                _genericTextBox(t.category.name, 'category'),
+                _genericTextBox(t.method, 'method'),
+              ]
+          ),
+          RaisedButton(
+            child: Text('return to list'),
+            onPressed: (){
+              Navigator.pushNamed(context, AccountDisplay.ROUTE);
+            },
+          ),
+        ],
       )
+
     );
   }
 
