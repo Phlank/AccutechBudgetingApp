@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
@@ -32,7 +33,6 @@ class _TransactionDetailViewState extends State<TransactionDetailView>{
   Transaction t;
   _TransactionDetailViewState(this.t);
   @override
-  TransactionDetail td = ;
   Widget build(BuildContext context) =>new TransactionDetail().viewDetail(t);
 }
 
@@ -64,11 +64,12 @@ class TransactionDetail{
   }
 
    Transaction mapToTrans() {
-     return new Transaction.withTime(vendor, method, amount, category, tran.time);
+
+     return new Transaction.withTime(transactionMap['vendor'], transactionMap['method'], double.tryParse(transactionMap['amount']), Category.categoryFromString(transactionMap['category']), tran.time);
    }
 
    onpressToEdit(){
-    Navigator.pushNamed(context, routeName);
+     Navigator.pushNamed(context, routeName);
   }
 
    onpressToSubmit(){

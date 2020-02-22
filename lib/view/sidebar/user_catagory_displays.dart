@@ -125,9 +125,9 @@ class _GeneralCategoryState extends State<GeneralCategory> {
         RaisedButton(
           child: Text('submit'),
           onPressed: () {
-            for (String category in userController.categoryMap.keys.toList()) {
+            for (String category in Category.categoryMap.keys.toList()) {
               userController.changeAllotment(category,
-                  playBudget.getCategory(userController.categoryMap[category]));
+                  playBudget.getCategory(Category.categoryMap[category]));
             }
             print(allotedForSection);
             if (allotedForSection >= 0) {
