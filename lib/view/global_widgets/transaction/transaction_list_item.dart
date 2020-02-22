@@ -12,7 +12,7 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (transaction == null) return null;
+    if (transaction == null) return null; //this is bad
     return Padding(
       child: Table(children: [
         TableRow(children: [

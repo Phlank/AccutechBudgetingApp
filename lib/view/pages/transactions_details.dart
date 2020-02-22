@@ -64,7 +64,7 @@ class TransactionDetail{
     );
   }
 
-   Transaction mapToTrans() {
+   Transaction _mapToTrans() {
 
      return new Transaction.withTime(transactionMap['vendor'], transactionMap['method'],
          double.tryParse(transactionMap['amount']), Category.categoryFromString(transactionMap['category']), tran.time);
@@ -78,8 +78,8 @@ class TransactionDetail{
      ));
   }
 
-   _onpressToSubmit(){
-     Transaction t = mapToTrans();
+  _onpressToSubmit(){
+     Transaction t = _mapToTrans();
      TransactionList tl = BudgetingApp.userController.getLoadedTransactions();
      for(int i=0; i<tl.length; i++){
        if(tran.time == tl.getAt(i).time){
