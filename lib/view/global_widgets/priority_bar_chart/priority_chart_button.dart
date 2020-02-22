@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
-import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart.dart';
+import 'package:budgetflow/view/global_widgets/priority_bar_chart/priority_chart.dart';
 import 'package:flutter/material.dart';
 
 class PriorityChartButton extends StatelessWidget {

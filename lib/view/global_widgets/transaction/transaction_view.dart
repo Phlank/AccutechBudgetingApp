@@ -1,6 +1,5 @@
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
-import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/material.dart';
 
 import '../../budgeting_app.dart';

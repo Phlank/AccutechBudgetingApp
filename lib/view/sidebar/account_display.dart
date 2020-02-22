@@ -1,7 +1,7 @@
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/global_widgets/page_cards.dart';
-import 'package:budgetflow/view/widgets/transaction/transaction_view.dart';
+import 'package:budgetflow/view/global_widgets/transaction/transaction_view.dart';
 import 'package:flutter/material.dart';
 
 //todo get on to the side menu

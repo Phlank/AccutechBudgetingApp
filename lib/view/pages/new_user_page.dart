@@ -1,9 +1,8 @@
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/global_widgets/page_cards.dart';
-import 'package:budgetflow/view/widgets/transaction/transaction_list_card.dart';
-import 'package:budgetflow/view/widgets/transaction/transaction_view.dart';
-import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart_row.dart';
+import 'package:budgetflow/view/global_widgets/transaction/transaction_list_card.dart';
+import 'package:budgetflow/view/global_widgets/priority_bar_chart/priority_chart_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

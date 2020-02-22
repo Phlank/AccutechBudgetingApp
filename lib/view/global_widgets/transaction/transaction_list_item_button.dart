@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/view/widgets/transaction/transaction_list_item.dart';
+import 'package:budgetflow/view/global_widgets/transaction/transaction_list_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
