@@ -142,7 +142,16 @@ class TransactionDetail{
    Scaffold viewDetail(Transaction t,BuildContext context){
     this.tran=t;
     this.context = context;
-    return Scaffold();
+    return Scaffold(
+      body: Table(
+        children:<TableRow>[
+          _genericTextBox(t.vendor,'vendor'),
+          _genericTextBox(t.amount, 'amount'),
+          _genericTextBox(t.category.name, 'category'),
+          _genericTextBox(t.method, 'method'),
+        ]
+      )
+    );
   }
 
 }

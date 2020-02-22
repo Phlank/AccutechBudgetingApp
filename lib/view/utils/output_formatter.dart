@@ -6,7 +6,8 @@ class Format {
 
   static String dynamicFormating(dynamic d){
     switch(d.runtimeType){
-      case num:
+      case double:
+      case int:
         return dollarFormat(d);
       case DateTime:
         return dateFormat(d);
