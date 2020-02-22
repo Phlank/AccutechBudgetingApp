@@ -14,7 +14,6 @@ class TransactionDetailEdit extends StatefulWidget{
   TransactionDetailEdit(this.t);
   @override
   State<StatefulWidget> createState() => _TransactionDetailEditState(t);
-
 }
 
 class _TransactionDetailEditState extends State<TransactionDetailEdit>{
@@ -79,8 +78,7 @@ class TransactionDetail{
    }
 
    _onpressToEdit(){
-     Navigator.push(context, MaterialPageRoute(
-       builder: (BuildContext context) {
+     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
         return  new TransactionDetailEdit(tran);
        }
      ));

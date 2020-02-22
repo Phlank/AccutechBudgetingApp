@@ -33,6 +33,7 @@ doc/api/
 .pub/
 
 # Android related
+**/android/*
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
@@ -205,3 +206,6 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.gitignore.io/api/dart,flutter,androidstudio
+.gitignore
+./.idea/*
+./android/*
