@@ -77,10 +77,6 @@ class _AddTransactionState extends State<AddTransaction> {
             child: Text('submit'),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                print('Vendor: $vendorValue');
-                print('Method: $methodValue');
-                print('Amount: $amountValue');
-                print('Category: $categoryValue');
                 Transaction t = new Transaction(
                     vendorValue, methodValue, -double.parse(amountValue),
                     categoryValue);

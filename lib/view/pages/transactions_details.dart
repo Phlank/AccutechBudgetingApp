@@ -22,8 +22,13 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
   TextStyle style = TextStyle(
     color: Colors.black,
     fontSize: 20,);
+  cat.Category initCat;
+  String initMethod;
 
-  _TransactionDetailEditState(this.tran);
+  _TransactionDetailEditState(this.tran){
+    initCat = tran.category;
+    initMethod = tran.method;
+  }
 
   Transaction _mapToTrans() {
     String vendor = transactionMap['vendor'];
@@ -31,7 +36,12 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
     cat.Category category = cat.Category.categoryFromString(transactionMap['category']);
     double amount =double.tryParse(transactionMap['amount']==null?tran.amount.toString():transactionMap['amount']);
 
-    return new Transaction.withTime(vendor==null?tran.vendor:vendor, method==null?tran.method:method, amount==null?tran.amount:amount, category==null?tran.category:category, tran.time);
+    return new Transaction.withTime(
+        vendor==null?tran.vendor:vendor,
+        method==null?tran.method:method,
+        amount==null?tran.amount:amount,
+        category==null?tran.category:category,
+        tran.time);
   }
 
   TableRow _genericTextField(dynamic initValue, String valueTitle){
@@ -67,8 +77,7 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
 
   @override
   Widget build(BuildContext context) {
-    cat.Category initCat = tran.category;
-    String initMethod = tran.method;
+
     return Scaffold(
     appBar: AppBar(title: Text('Transatcion Detail'),),
     drawer: SideMenu().sideMenu(BudgetingApp.userController),
@@ -81,12 +90,13 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
               setState(() {
                 initCat = newCat;
                 transactionMap['category'] = newCat.name;
-                print(transactionMap['category']);
               });
             } )],),
             TableRow(children:[Text('Method', style:style),DropDowns().methodDrop(initMethod, (String method){
-              transactionMap['method'] = method;
-              print(transactionMap['method']);
+              setState(() {
+                initMethod = method;
+                transactionMap['method'] = method;
+              });
             })],),
           ],
         ),
