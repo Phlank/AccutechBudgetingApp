@@ -12,7 +12,7 @@ class InputValidator {
     switch(d){
       case double:
       case int:
-        return dollarAmount(value);
+        return dollarAmount(value.replaceAll(new RegExp(r'[$]'), ''));
       case String:
         return required(value);
       case Category:

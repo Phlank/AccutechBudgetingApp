@@ -55,6 +55,9 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
       validator:(value){
         if(value.isEmpty) return 'Must fill this in';
         if(!InputValidator.dynamicValidation(initValue.runtimeType, value)) return 'Please put in correct format';
+        if (value.contains(new RegExp(r'[$]'))){
+          value = value.replaceAll(new RegExp(r'[$]'), '');
+        }
         transactionMap[valueTitle] = value;
         return null;
       },
