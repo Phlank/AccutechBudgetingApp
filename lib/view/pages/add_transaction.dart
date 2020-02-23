@@ -2,6 +2,7 @@ import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:budgetflow/view/widgets/drop_downs.dart';
 import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
@@ -70,27 +71,26 @@ class _AddTransactionState extends State<AddTransaction> {
         ));
 
     return Scaffold(
-        appBar: AppBar(title: Text('New Transaction')),
-        drawer: SideMenu().sideMenu(BudgetingApp.userController),
-        body: Padding(
-          child: Column(
-            children: <Widget>[
-              addTransactionForm,
-              RaisedButton(
-                child: Text('submit'),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    Transaction t = new Transaction(vendorValue, methodValue,
-                        -double.parse(amountValue), categoryValue);
-                    BudgetingApp.userController.addTransaction(t);
-                    BudgetingApp.userController.save();
-                    Navigator.pushNamed(context, '/knownUser');
-                  }
-                },
-              )
-            ],
-          ),
-          padding: EdgeInsets.all(8.0),
-        ));
+      appBar: AppBar(title: Text('New Transaction')),
+      drawer: SideMenu().sideMenu(BudgetingApp.userController),
+      body: Column(
+        children: <Widget>[
+          addTransactionForm,
+          RaisedButton(
+            child: Text('submit'),
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                Transaction t = new Transaction(
+                    Format.titleFormat(vendorValue), methodValue, -double.parse(amountValue),
+                    categoryValue);
+                BudgetingApp.userController.addTransaction(t);
+                BudgetingApp.userController.save();
+                Navigator.pushNamed(context, '/knownUser');
+              }
+            },
+          )
+        ],
+      ),
+    );
   }
 }
