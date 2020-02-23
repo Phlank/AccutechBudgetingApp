@@ -17,16 +17,23 @@ class TransactionDetailEdit extends StatefulWidget{
 
 class _TransactionDetailEditState extends State<TransactionDetailEdit>{
   Transaction tran;
-  Map<String, String> transactionMap = new Map();
+  Map<String, String> transactionMap;
   TextStyle style = TextStyle(
     color: Colors.black,
     fontSize: 20,);
   cat.Category initCat;
   String initMethod;
+  final _formKey = GlobalKey<FormState>();
 
   _TransactionDetailEditState(this.tran){
     initCat = tran.category;
     initMethod = tran.method;
+    transactionMap = {
+      'vendor':tran.vendor,
+      'method':tran.method,
+      'category':tran.category.name,
+      'amount':tran.amount.toString()
+    };
   }
 
   Transaction _mapToTrans() {
@@ -61,11 +68,13 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
     return RaisedButton(
       child: Text('submit'),
       onPressed: (){
-        Transaction t = _mapToTrans();
-        BudgetingApp.userController.removeTransaction(tran);
-        BudgetingApp.userController.addTransaction(t);
-
-        Navigator.pushNamed(context, AccountDisplay.ROUTE);
+        if(_formKey.currentState.validate()) {
+          Transaction t = _mapToTrans();
+          BudgetingApp.userController.removeTransaction(tran);
+          BudgetingApp.userController.addTransaction(t);
+          BudgetingApp.userController.save();
+          Navigator.pushNamed(context, AccountDisplay.ROUTE);
+        }
       }
     );
   }
@@ -77,24 +86,26 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
     appBar: AppBar(title: Text('Transatcion Detail'),),
     drawer: SideMenu().sideMenu(BudgetingApp.userController),
     body: Column(
-        children:<Widget>[ Table(
-          children: <TableRow>[
-            _genericTextField(tran.vendor, 'vendor'),
-            _genericTextField(tran.amount, 'amount'),
-            TableRow(children:[Text('Category', style: style,),DropDowns().categoryDrop(initCat, (cat.Category newCat){
-              setState(() {
-                initCat = newCat;
-                transactionMap['category'] = newCat.name;
-              });
-            } )],),
-            TableRow(children:[Text('Method', style:style),DropDowns().methodDrop(initMethod, (String method){
-              setState(() {
-                initMethod = method;
-                transactionMap['method'] = method;
-              });
-            })],),
-          ],
-        ),
+        children:<Widget>[ Form(
+          key: _formKey,
+          child:Table(
+            children: <TableRow>[
+              _genericTextField(tran.vendor, 'vendor'),
+              _genericTextField(tran.amount, 'amount'),
+              TableRow(children:[Text('Category', style: style,),DropDowns().categoryDrop(initCat, (cat.Category newCat){
+                setState(() {
+                  initCat = newCat;
+                  transactionMap['category'] = newCat.name;
+                });
+              } )],),
+              TableRow(children:[Text('Method', style:style),DropDowns().methodDrop(initMethod, (String method){
+                setState(() {
+                  initMethod = method;
+                  transactionMap['method'] = method;
+                });
+              })],),
+            ],
+          )),
           _navButton(),
         ]
     ),

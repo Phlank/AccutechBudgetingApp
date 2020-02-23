@@ -4,6 +4,7 @@ import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/drop_downs.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -78,7 +79,7 @@ class _AddTransactionState extends State<AddTransaction> {
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 Transaction t = new Transaction(
-                    vendorValue, methodValue, -double.parse(amountValue),
+                    Format.titleFormat(vendorValue), methodValue, -double.parse(amountValue),
                     categoryValue);
                 BudgetingApp.userController.addTransaction(t);
                 BudgetingApp.userController.save();

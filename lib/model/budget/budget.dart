@@ -217,4 +217,6 @@ class Budget {
   double getRemainingPriority(Priority priority) {
     return getAllottedPriority(priority) - getActualPriority(priority);
   }
+
+  void removeTransactionAt(int i) {}
 }

@@ -10,7 +10,8 @@ class InputValidator {
 
   static bool dynamicValidation(Type d, String value){
     switch(d){
-      case num:
+      case double:
+      case int:
         return dollarAmount(value);
       case String:
         return required(value);

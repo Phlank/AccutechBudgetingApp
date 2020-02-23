@@ -34,9 +34,9 @@ class BudgetControl implements Control {
   };
 
   final Map<String, String> routeMap = {
-    'needs': '/needs',
-    'wants': '/wants',
-    'savings': '/savings',
+    'needs': '/Needs',
+    'wants': '/Wants',
+    'savings': '/Savings',
     'home': '/knownUser',
     'accounts':'/account'
   };
@@ -221,7 +221,9 @@ class BudgetControl implements Control {
   void removeTransaction(Transaction tran) {
     for(int i=0; i<_loadedTransactions.length; i++){
       if(tran.time == _loadedTransactions.getAt(i).time){
+        print('removed');
         _loadedTransactions.removeAt(i);
+        _budget.removeTransactionAt(i);
       }
     }
   }
