@@ -217,6 +217,14 @@ class BudgetControl implements Control {
   double remainingInSection(String section) {
     return sectionBudget(section) - expenseInSection(section);
   }
+
+  void removeTransaction(Transaction tran) {
+    for(int i=0; i<_loadedTransactions.length; i++){
+      if(tran.time == _loadedTransactions.getAt(i).time){
+        _loadedTransactions.removeAt(i);
+      }
+    }
+  }
 }
 
 class MockBudget {

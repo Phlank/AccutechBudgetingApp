@@ -1,6 +1,5 @@
 import 'package:budgetflow/model/budget/category/category.dart' as cat;
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/global_widgets/drop_downs.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
@@ -63,13 +62,9 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
       child: Text('submit'),
       onPressed: (){
         Transaction t = _mapToTrans();
-        TransactionList tl = BudgetingApp.userController.getLoadedTransactions();
-        print(tl.length);
-        for(int i =0; i<tl.length; i++){
-            print('contain');
-            BudgetingApp.userController.getLoadedTransactions().removeAt(i);
-            BudgetingApp.userController.getLoadedTransactions().add(t);
-        }
+        BudgetingApp.userController.removeTransaction(tran);
+        BudgetingApp.userController.addTransaction(t);
+
         Navigator.pushNamed(context, AccountDisplay.ROUTE);
       }
     );
