@@ -218,5 +218,7 @@ class Budget {
     return getAllottedPriority(priority) - getActualPriority(priority);
   }
 
-  void removeTransactionAt(int i) {}
+  void removeTransactionAt(int i) {
+    _transactions.removeAt(i);
+  }
 }
