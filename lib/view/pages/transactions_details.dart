@@ -1,8 +1,8 @@
 import 'package:budgetflow/model/budget/category/category.dart' as cat;
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/global_widgets/drop_downs.dart';
-import 'package:budgetflow/view/global_widgets/main_drawer.dart';
+import 'package:budgetflow/view/widgets/drop_downs.dart';
+import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:budgetflow/view/sidebar/account_display.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';

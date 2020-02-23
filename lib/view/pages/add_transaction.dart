@@ -1,8 +1,8 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/global_widgets/drop_downs.dart';
-import 'package:budgetflow/view/global_widgets/main_drawer.dart';
+import 'package:budgetflow/view/widgets/drop_downs.dart';
+import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
