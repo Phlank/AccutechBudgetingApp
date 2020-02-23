@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 import 'add_transaction.dart';
 
 class UserPage extends StatefulWidget {
+  static const ROUTE = '/knownUser';
   @override
   _UserPageState createState() => new _UserPageState();
 }

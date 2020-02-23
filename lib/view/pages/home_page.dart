@@ -1,7 +1,7 @@
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/error_page.dart';
 import 'package:budgetflow/view/pages/login_page.dart';
-import 'package:budgetflow/view/pages/setup_page.dart';
+import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
             if (user) {
               return new LoginPage();
             } else {
-              return SetupPage();
+              return WelcomePage();
             }
           } else if (snapshot.hasError) {
             return ErrorPage();

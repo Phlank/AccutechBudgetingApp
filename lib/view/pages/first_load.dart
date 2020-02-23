@@ -13,7 +13,6 @@ class FirstLoad extends StatefulWidget {
 class _FirstLoadState extends State<FirstLoad> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return FutureBuilder(
       future: BudgetingApp.userController.initialize(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {

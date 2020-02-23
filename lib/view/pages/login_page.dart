@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
@@ -41,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
         return null;
       },
       obscureText: true,
+      textAlign: TextAlign.center,
     );
   }
 
@@ -72,26 +74,27 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _initLoginPage() {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text('Please Login'),
-          Column(
+        appBar: AppBar(
+          title: Text('Login'),
+        ),
+        body: Padding(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Form(
-                key: _formKey,
-                child: pinLoginInput,
-              ),
-              loginButton
+              Text('Please Login'),
+              Column(
+                children: <Widget>[
+                  Form(
+                    key: _formKey,
+                    child: pinLoginInput,
+                  ),
+                  loginButton
+                ],
+              )
             ],
-          )
-        ],
-      ),
-    );
+          ),
+          padding: EdgeInsets.all(8.0),
+        ));
   }
 
   @override
