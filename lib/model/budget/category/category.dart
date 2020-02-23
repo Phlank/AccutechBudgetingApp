@@ -33,6 +33,7 @@ class Category implements Serializable {
       kids = Category("Kids", Priority.want),
       pets = Category("Pets", Priority.want),
       miscellaneous = Category("Miscellaneous", Priority.want),
+      income = Category("Income", Priority.other),
       uncategorized = Category("Uncategorized", Priority.other);
 
   const Category(this.name, this.priority);
