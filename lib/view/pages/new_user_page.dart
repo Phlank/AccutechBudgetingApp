@@ -28,7 +28,7 @@ class _UserPageState extends State<UserPage> {
         physics: ScrollPhysics(),
         children: <Widget>[
           PriorityChartRow(),
-          GlobalCards.cashFlowCard(),
+          GlobalCards.cashFlowBudgetCard(),
           TransactionListCard(BudgetingApp.userController.getBudget().transactions)
         ],
       ),

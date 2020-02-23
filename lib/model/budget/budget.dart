@@ -7,7 +7,6 @@ import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/util/dates.dart';
 import 'package:calendarro/date_utils.dart';
-
 import 'category/priority.dart';
 
 class BudgetBuilder {
