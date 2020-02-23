@@ -26,20 +26,6 @@ class BudgetControl implements Control {
   bool _oldUser;
   Color cashFlowColor;
 
-  final Map<String, Category> categoryMap = {
-    'housing': Category.housing,
-    'utilities': Category.utilities,
-    'groceries': Category.groceries,
-    'savings': Category.savings,
-    'health': Category.health,
-    'transportation': Category.transportation,
-    'education': Category.education,
-    'entertainment': Category.entertainment,
-    'kids': Category.kids,
-    'pets': Category.pets,
-    'miscellaneous': Category.miscellaneous
-  };
-
   final Map<String, List<Category>> sectionMap = {
     'needs': [Category.housing, Category.utilities, Category.groceries,
       Category.health, Category.transportation, Category.education,Category.kids],
@@ -48,9 +34,9 @@ class BudgetControl implements Control {
   };
 
   final Map<String, String> routeMap = {
-    'needs': '/needs',
-    'wants': '/wants',
-    'savings': '/savings',
+    'needs': '/Needs',
+    'wants': '/Wants',
+    'savings': '/Savings',
     'home': '/knownUser',
     'accounts':'/account'
   };
@@ -149,7 +135,7 @@ class BudgetControl implements Control {
   }
 
   void changeAllotment(String category, double newAmt) {
-    _budget.setAllotment(categoryMap[category], newAmt);
+    _budget.setAllotment(Category.categoryFromString(category), newAmt);
   }
 
   double sectionBudget(String section) {
@@ -230,6 +216,16 @@ class BudgetControl implements Control {
 
   double remainingInSection(String section) {
     return sectionBudget(section) - expenseInSection(section);
+  }
+
+  void removeTransaction(Transaction tran) {
+    for(int i=0; i<_loadedTransactions.length; i++){
+      if(tran.time == _loadedTransactions.getAt(i).time){
+        print('removed');
+        _loadedTransactions.removeAt(i);
+        _budget.removeTransactionAt(i);
+      }
+    }
   }
 }
 

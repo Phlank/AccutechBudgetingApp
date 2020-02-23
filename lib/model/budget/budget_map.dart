@@ -31,6 +31,11 @@ class BudgetMap implements Serializable {
     return _map[category];
   }
 
+  double subtractFrom(Category category,double amt){
+    _map[category] -= amt;
+    return _map[category];
+  }
+
   void forEach(void action(Category c, double d)) {
     _map.forEach(action);
   }

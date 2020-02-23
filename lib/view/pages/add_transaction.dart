@@ -1,8 +1,10 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/global_widgets/drop_downs.dart';
 import 'package:budgetflow/view/global_widgets/main_drawer.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -41,43 +43,17 @@ class _AddTransactionState extends State<AddTransaction> {
           return null;
         });
 
-    DropdownButton methodInput = DropdownButton<String>(
-      value: methodValue,
-      icon: Icon(Icons.arrow_drop_down),
-      iconSize: 24,
-      elevation: 16,
-      onChanged: (String newValue) {
-        setState(() {
-          methodValue = newValue;
-        });
-      },
-      items: <String>['Cash', 'Credit', 'Checking', 'Savings']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
+    DropdownButton methodInput =DropDowns().methodDrop(methodValue,
+            (String newValue) {
+              setState(() {
+                methodValue = newValue;
+              });});
 
-    DropdownButton categoryInput = DropdownButton<Category>(
-      value: categoryValue,
-      icon: Icon(Icons.arrow_drop_down),
-      iconSize: 24,
-      elevation: 16,
-      onChanged: (Category newValue) {
-        setState(() {
-          categoryValue = newValue;
-        });
-      },
-      items: BudgetingApp.userController.getBudget().categories
-          .map<DropdownMenuItem<Category>>((Category category) {
-        return DropdownMenuItem<Category>(
-          value: category,
-          child: Text(category.name),
-        );
-      }).toList(),
-    );
+    DropdownButton categoryInput = DropDowns().categoryDrop(categoryValue,
+            (Category newValue) {
+              setState(() {
+                categoryValue = newValue;
+              });});
 
     Form addTransactionForm = Form(
         key: _formKey,
@@ -102,12 +78,8 @@ class _AddTransactionState extends State<AddTransaction> {
             child: Text('submit'),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                print('Vendor: $vendorValue');
-                print('Method: $methodValue');
-                print('Amount: $amountValue');
-                print('Category: $categoryValue');
                 Transaction t = new Transaction(
-                    vendorValue, methodValue, -double.parse(amountValue),
+                    Format.titleFormat(vendorValue), methodValue, -double.parse(amountValue),
                     categoryValue);
                 BudgetingApp.userController.addTransaction(t);
                 BudgetingApp.userController.save();

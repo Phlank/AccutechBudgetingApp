@@ -5,7 +5,8 @@ import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
-
+import 'package:budgetflow/model/util/dates.dart';
+import 'package:calendarro/date_utils.dart';
 import 'category/priority.dart';
 
 class BudgetBuilder {
@@ -13,7 +14,7 @@ class BudgetBuilder {
   BudgetMap _allottedSpending, _actualSpending;
   BudgetType _type;
   TransactionList _transactions;
-  double _income;
+  double _expectedIncome;
 
   BudgetBuilder() {
     _categories = new CategoryList();
@@ -23,7 +24,7 @@ class BudgetBuilder {
   }
 
   BudgetBuilder setIncome(double income) {
-    _income = income;
+    _expectedIncome = income;
     return this;
   }
 
@@ -53,7 +54,7 @@ class BudgetBuilder {
   }
 
   Budget build() {
-    if (_income == null) throw new NullThrownError();
+    if (_expectedIncome == null) throw new NullThrownError();
     if (_type == null) throw new NullThrownError();
     if (_allottedSpending == null) throw new NullThrownError();
     if (_actualSpending == null) throw new NullThrownError();
@@ -62,7 +63,7 @@ class BudgetBuilder {
         _allottedSpending, //
         _actualSpending, //
         _transactions, //
-        _income, //
+        _expectedIncome, //
         _type, //
         _categories);
   }
@@ -171,6 +172,32 @@ class Budget {
     return net;
   }
 
+  double get balanceMonth => income - spent;
+
+  double get balanceWeek {
+    return _getWeeklyIncome() + _getWeeklySpending();
+  }
+
+  double _getWeeklyIncome() {
+    int numDaysInWeek =
+        Dates.getEndOfWeek().difference(Dates.getStartOfWeek()).inDays;
+    return income *
+        numDaysInWeek /
+        DateUtils.getLastDayOfCurrentMonth().day.toDouble();
+  }
+
+  double _getWeeklySpending() {
+    double weeklySpending = 0.0;
+    transactions.forEach((transaction) {
+      if (transaction.time.isBefore(Dates.getEndOfWeek()) &&
+          transaction.time.isAfter(Dates.getStartOfWeek())) {
+        if (transaction.category != Category.income)
+          weeklySpending += transaction.amount;
+      }
+    });
+    return weeklySpending;
+  }
+
   double getAllottedPriority(Priority priority) {
     double total = 0;
     _allotted.forEach((category, amount) {
@@ -191,4 +218,9 @@ class Budget {
     return getAllottedPriority(priority) - getActualPriority(priority);
   }
 
+  void removeTransactionAt(int i) {
+    Transaction t = _transactions.getAt(i);
+    _actual.subtractFrom(t.category, t.amount);
+    _transactions.removeAt(i);
+  }
 }

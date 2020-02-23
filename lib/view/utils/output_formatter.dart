@@ -1,10 +1,26 @@
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Format {
 
-  static String dollarFormat(double value) {
+  static String dynamicFormating(dynamic d){
+    switch(d.runtimeType){
+      case double:
+      case int:
+        return dollarFormat(d);
+      case DateTime:
+        return dateFormat(d);
+      case String:
+        return titleFormat(d);
+      case Category:
+        return titleFormat(d.value());
+      default:
+        return 'Error';
+    }
+  }
 
+  static String dollarFormat(double value) {
     if(value < 0){
       return '-\$'+(value.abs()).toStringAsFixed(value.truncateToDouble() == value ? 0 : 2);
     }

@@ -54,6 +54,7 @@ class TransactionList implements Serializable {
   }
 
   bool contains(Transaction t) => _transactions.contains(t);
+  void remove(Transaction t) => _transactions.remove(t);
 
   Transaction operator[](int i) => _transactions[i];
 

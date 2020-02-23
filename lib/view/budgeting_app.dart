@@ -12,13 +12,26 @@ import 'package:flutter/material.dart';
 
 class BudgetingApp extends StatelessWidget {
   static BudgetControl userController = new BudgetControl();
+  static int r=0,g=153,b=0;
+  Map<int,Color> colors = {
+    50:Color.fromRGBO(r,g,b, .1),
+    100:Color.fromRGBO(r,g,b, .2),
+    200:Color.fromRGBO(r,g,b, .3),
+    300:Color.fromRGBO(r,g,b, .4),
+    400:Color.fromRGBO(r,g,b, .5),
+    500:Color.fromRGBO(r,g,b, .6),
+    600:Color.fromRGBO(r,g,b, .7),
+    700:Color.fromRGBO(r,g,b, .8),
+    800:Color.fromRGBO(r,g,b, .9),
+    900:Color.fromRGBO(r,g,b, 1),
+  };
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Money Tree Financial Wellness',
       theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
+        primarySwatch: MaterialColor(0xff009900, colors),
         backgroundColor: Colors.black,
       ),
       home: HomePage(),

@@ -40,6 +40,9 @@ dependencies:
   # Location Based services.
   geolocator: ^5.2.1
 
+  # Day and month services.
+  calendarro: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
