@@ -192,6 +192,7 @@ class BudgetControl implements Control {
     _budget.addTransaction(t);
     _history.getMonth(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
+    save();
   }
 
   Future<bool> setup() async {
@@ -287,12 +288,8 @@ class BudgetControl implements Control {
   }
 
   void removeTransaction(Transaction tran) {
-    for (int i = 0; i < _loadedTransactions.length; i++) {
-      if (tran.time == _loadedTransactions.getAt(i).time) {
-        _loadedTransactions.removeAt(i);
-        _budget.removeTransactionAt(i);
-      }
-    }
+    _loadedTransactions.remove(tran);
+    _budget.removeTransaction(tran);
   }
 }
 

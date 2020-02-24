@@ -43,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       },
       obscureText: true,
       textAlign: TextAlign.center,
+      autofocus: true,
     );
   }
 

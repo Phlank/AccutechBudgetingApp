@@ -234,16 +234,16 @@ class Budget {
   List<Category> getCategoriesOfPriority(Priority priority) {
     List<Category> list = List();
     _allotted.forEach((category, double) {
-      print("Category: " + category.name + " has a priority of " +
-          category.priority.name);
-      print(priority.name + " == " + category.priority.name + " is " +
-          (category.priority == priority).toString());
+//      print("Category: " + category.name + " has a priority of " +
+//          category.priority.name);
+//      print(priority.name + " == " + category.priority.name + " is " +
+//          (category.priority == priority).toString());
       if (category.priority == priority) list.add(category);
     });
     return list;
   }
 
-  void removeTransactionAt(int i) {
-    _transactions.removeAt(i);
+  void removeTransaction(Transaction transaction) {
+    _transactions.remove(transaction);
   }
 }

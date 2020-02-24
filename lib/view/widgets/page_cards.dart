@@ -49,7 +49,7 @@ class GlobalCards {
             ),
           ],
         )),
-        padding: EdgeInsets.all(8.0));
+        padding: EdgeInsets.all(24.0));
   }
 
   static Card cashFlowCard() {

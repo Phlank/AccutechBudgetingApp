@@ -4,21 +4,20 @@ import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
-import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 
-class TransactionDetailEdit extends StatefulWidget {
+class TransactionDetailEditPage extends StatefulWidget {
   final Transaction transaction;
 
-  TransactionDetailEdit(this.transaction);
+  TransactionDetailEditPage(this.transaction);
 
   @override
   State<StatefulWidget> createState() =>
-      _TransactionDetailEditState(transaction);
+      _TransactionDetailEditPageState(transaction);
 }
 
-class _TransactionDetailEditState extends State<TransactionDetailEdit> {
+class _TransactionDetailEditPageState extends State<TransactionDetailEditPage> {
   Transaction transaction;
   String vendor, method;
   double amount;
@@ -28,7 +27,7 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit> {
 
   final _formKey = GlobalKey<FormState>();
 
-  _TransactionDetailEditState(this.transaction);
+  _TransactionDetailEditPageState(this.transaction);
 
   @override
   void initState() {
@@ -184,10 +183,12 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit> {
               vendor, method, amount, category, time, location);
           BudgetingApp.userController.addTransaction(newTransaction);
           BudgetingApp.userController.save();
-          print('Location: ' +
-              location.latitude.toString() +
-              ', ' +
-              location.longitude.toString());
+          if (location != null) {
+            print('Location: ' +
+                location.latitude.toString() +
+                ', ' +
+                location.longitude.toString());
+          }
         }
       },
       child: Text('Submit'),
@@ -201,11 +202,10 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit> {
         appBar: AppBar(
           title: Text('Edit Transaction'),
         ),
-        drawer: SideMenu().sideMenu(BudgetingApp.userController),
         body: Form(
           key: _formKey,
           child: Padding24(
-            child: Column(
+            child: ListView(
               children: <Widget>[
                 _buildVendorRow(),
                 _buildMethodRow(),
@@ -214,7 +214,7 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit> {
                 _buildLocationRow(),
                 _buildButton()
               ],
-              mainAxisAlignment: MainAxisAlignment.center,
+              shrinkWrap: true,
             ),
           ),
         ));

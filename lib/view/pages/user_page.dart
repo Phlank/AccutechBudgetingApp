@@ -1,5 +1,6 @@
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/widgets/main_drawer.dart';
+import 'package:budgetflow/view/pages/setup/welcome_page.dart';
+import 'package:budgetflow/view/utils/routes.dart';
 import 'package:budgetflow/view/widgets/page_cards.dart';
 import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart_row.dart';
 import 'package:budgetflow/view/widgets/transaction/transaction_list_card.dart';
@@ -21,8 +22,15 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Summary'),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.autorenew), onPressed: () {
+            while (Navigator.of(context).canPop()) Navigator.of(context).pop();
+            Navigator.of(context).push(
+                RouteUtil.routeWithSlideTransition(WelcomePage()));
+          },)
+        ],
       ),
-      drawer: SideMenu().sideMenu(BudgetingApp.userController),
+//      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: ListView(
         padding: EdgeInsets.all(8),
         shrinkWrap: true,
@@ -30,14 +38,16 @@ class _UserPageState extends State<UserPage> {
         children: <Widget>[
           PriorityChartRow(),
           GlobalCards.cashFlowBudgetCard(),
-          TransactionListCard(BudgetingApp.userController.getBudget().transactions)
+          TransactionListCard(
+              BudgetingApp.userController.getLoadedTransactions())
         ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add transaction',
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.pushNamed(context, AddTransaction.ROUTE);
+          Navigator.of(context).push(
+              RouteUtil.routeWithSlideTransition(AddTransactionPage()));
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

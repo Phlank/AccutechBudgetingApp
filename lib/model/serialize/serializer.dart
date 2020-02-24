@@ -63,11 +63,14 @@ class Serializer implements Serializable {
   }
 
   static String _padIfNeeded(String value) {
-    bool needsPadding = !(value.contains('{') || value.contains('"'));
-    if (needsPadding) {
-      return '"$value"';
+    if (value != null) {
+      bool needsPadding = !(value.contains('{') || value.contains('"'));
+      if (needsPadding) {
+        return '"$value"';
+      }
+      return value;
     }
-    return value;
+    return "null";
   }
 
   static dynamic unserialize(String key, dynamic value) {
@@ -77,7 +80,8 @@ class Serializer implements Serializable {
   }
 
   static void _validate(String key, dynamic value) {
-    if (!(value is Map || value is String)) throw InvalidSerializedValueError();
+    if (!(value is Map || value is String ||
+        value == null)) throw InvalidSerializedValueError();
     if (!strategyMap.containsKey(key)) throw UnknownMapKeyError();
   }
 }

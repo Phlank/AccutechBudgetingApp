@@ -1,5 +1,4 @@
 import 'package:budgetflow/model/budget_control.dart';
-import 'package:budgetflow/view/pages/add_transaction.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/login_page.dart';
@@ -46,7 +45,6 @@ class BudgetingApp extends StatelessWidget {
             GeneralCategory('wants'),
         GeneralCategory.SAVINGS_ROUTE: (BuildContext context) =>
             GeneralCategory('savings'),
-        AddTransaction.ROUTE: (BuildContext context) => AddTransaction(),
         FirstLoad.ROUTE: (BuildContext context) => FirstLoad(),
         AccountDisplay.ROUTE: (BuildContext context) => AccountDisplay(),
       }, //Routes

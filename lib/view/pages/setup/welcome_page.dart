@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/setup/personal_info_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
@@ -27,6 +28,7 @@ class WelcomePage extends StatelessWidget {
             RaisedButton(
               child: Text('Let\'s go!'),
               onPressed: () {
+                BudgetingApp.userController = BudgetControl();
                 Navigator.of(context).push(
                     RouteUtil.routeWithSlideTransition(PersonalInfoPage()));
               },

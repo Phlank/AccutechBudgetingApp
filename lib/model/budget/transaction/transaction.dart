@@ -21,6 +21,15 @@ class Transaction implements Serializable {
       this.vendor, this.method, this.amount, this.category, this.time,
       [this.location = const Location(0.0, 0.0)]);
 
+  Transaction.empty() {
+    time = DateTime.now();
+    vendor = '';
+    method = 'Cash';
+    amount = 0.0;
+    category = Category.uncategorized;
+    location = null;
+  }
+
   String get serialize {
     Serializer serializer = Serializer();
     serializer.addPair(KEY_TIME, time.millisecondsSinceEpoch);
