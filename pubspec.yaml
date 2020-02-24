@@ -43,6 +43,9 @@ dependencies:
   # Day and month services.
   calendarro: ^1.1.2
 
+  # Google maps
+  google_maps_flutter: ^0.5.24+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
