@@ -231,8 +231,8 @@ class Budget {
     return _allotted[category] - _actual[category];
   }
 
-  CategoryList getCategoriesOfPriority(Priority priority) {
-    CategoryList list = CategoryList.empty();
+  List<Category> getCategoriesOfPriority(Priority priority) {
+    List<Category> list = List();
     _allotted.forEach((category, double) {
       print("Category: " + category.name + " has a priority of " +
           category.priority.name);

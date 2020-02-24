@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
@@ -14,6 +15,7 @@ import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/setup_agent.dart';
+import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -35,7 +37,7 @@ class BudgetControl implements Control {
   StreamSubscription<Position> positionStream;
 
   final Map<String, List<Category>> sectionMap = {
-    'needs': [
+    'Needs': [
       Category.housing,
       Category.utilities,
       Category.groceries,
@@ -44,8 +46,8 @@ class BudgetControl implements Control {
       Category.education,
       Category.kids
     ],
-    'wants': [Category.entertainment, Category.pets, Category.miscellaneous],
-    'savings': [Category.savings]
+    'Wants': [Category.entertainment, Category.pets, Category.miscellaneous],
+    'Savings': [Category.savings]
   };
 
   final Map<String, String> routeMap = {
@@ -311,16 +313,12 @@ class MockBudget {
 
   double getNewTotalAllotted(String section) {
     Map<String, List<Category>> mockMap = {
-      'needs': [
-        Category.health,
-        Category.housing,
-        Category.utilities,
-        Category.groceries,
-        Category.transportation,
-        Category.kids
-      ],
-      'wants': [Category.pets, Category.miscellaneous, Category.entertainment],
-      'savings': [Category.savings]
+      Priority.need.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.need),
+      Priority.want.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.want),
+      Priority.savings.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.savings)
     };
     double total = 0.0;
     for (Category category in mockMap[section]) {

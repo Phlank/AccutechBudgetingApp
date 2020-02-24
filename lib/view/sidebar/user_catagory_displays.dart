@@ -2,8 +2,8 @@ import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
+import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -68,12 +68,17 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       value: allotedForCategory,
       onChanged: (value) {
         setState(() {
+          if (allotedForSection >
+              userController.getBudget().getAllottedPriority(category.priority))
+            return;
           allotedForCategory = value;
         });
         playBudget.setCategory(category, allotedForCategory);
       },
       min: 0,
-      max: userController.sectionBudget(section),
+      max: userController
+          .getBudget()
+          .getAllottedPriority(Priority.fromName(section)),
       label: category.name,
     );
   }
@@ -94,9 +99,14 @@ class _GeneralCategoryState extends State<GeneralCategory> {
         scrollDirection: Axis.vertical,
         physics: ClampingScrollPhysics(),
         shrinkWrap: true,
-        itemCount: userController.sectionMap[section].length,
+        itemCount: userController
+            .getBudget()
+            .getCategoriesOfPriority(Priority.fromName(section))
+            .length,
         itemBuilder: (context, int index) {
-          return categoryTile(userController.sectionMap[section][index]);
+          return categoryTile(userController
+              .getBudget()
+              .getCategoriesOfPriority(Priority.fromName(section))[index]);
         },
       ),
     );
