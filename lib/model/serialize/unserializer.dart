@@ -1,8 +1,4 @@
-
-
 abstract class Unserializer {
-
-
   dynamic unserializeValue(Map value);
 }
 

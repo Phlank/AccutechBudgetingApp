@@ -4,12 +4,13 @@ import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/sidebar/account_display.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
+import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/widgets/drop_downs.dart';
 import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
 class TransactionDetailEdit extends StatefulWidget{
-  Transaction t;
+  final Transaction t;
   TransactionDetailEdit(this.t);
   @override
   State<StatefulWidget> createState() => _TransactionDetailEditState(t);
@@ -85,7 +86,7 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
     return Scaffold(
     appBar: AppBar(title: Text('Transatcion Detail'),),
     drawer: SideMenu().sideMenu(BudgetingApp.userController),
-    body: Column(
+    body: Padding24(child: Column(
         children:<Widget>[ Form(
           key: _formKey,
           child:Table(
@@ -107,8 +108,9 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit>{
             ],
           )),
           _navButton(),
-        ]
-    ),
+        ],
+      mainAxisAlignment: MainAxisAlignment.center,
+    )),
   );
   }
 

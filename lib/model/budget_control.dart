@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
+import 'package:budgetflow/model/budget/location/location.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
@@ -27,6 +28,7 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
+  Map<Location, Category> locationMap = Map();
 
   final Map<String, List<Category>> sectionMap = {
     'needs': [
@@ -96,6 +98,11 @@ class BudgetControl implements Control {
     _history = await History.load();
     _budget = await _history.getLatestMonthBudget();
     _loadedTransactions = TransactionList.copy(_budget.transactions);
+    _loadedTransactions.forEach((transaction) {
+      if (transaction.location != null) {
+        locationMap[transaction.location] = transaction.category;
+      }
+    });
   }
 
   Future save() async {

@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:geolocator/geolocator.dart';
 
-class Location {
+class Location implements Serializable {
   static bool permissionsEnabled;
-  double latitude, longitude;
+  final double latitude, longitude;
 
-  Location(this.latitude, this.longitude);
+  const Location(this.latitude, this.longitude);
 
   static Future<bool> get permissionEnabled async {
     var status = await Geolocator().checkGeolocationPermissionStatus();
@@ -25,5 +28,11 @@ class Location {
       return Location(position.latitude, position.longitude);
     }
     return null;
+  }
+
+  String get serialize {
+    Serializer serializer = new Serializer();
+    serializer.addPair(KEY_LATITUDE, latitude);
+    serializer.addPair(KEY_LONGITUDE, longitude);
   }
 }
