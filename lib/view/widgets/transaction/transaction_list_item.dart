@@ -8,7 +8,9 @@ class TransactionListItem extends StatelessWidget {
 
   final Transaction transaction;
 
-  TransactionListItem(this.transaction);
+  TransactionListItem(this.transaction) {
+    assert(transaction != null);
+  }
 
   @override
   Widget build(BuildContext context) {

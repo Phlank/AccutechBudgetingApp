@@ -4,10 +4,8 @@ import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
-import 'package:intl/intl.dart';
 
 class AddTransactionPage extends StatefulWidget {
   AddTransactionPage();
@@ -41,9 +39,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   Widget _buildVendorField() {
     return TextFormField(
       initialValue: vendor,
-      onSaved: (value) {
-        vendor = value;
-      },
     );
   }
 
@@ -76,8 +71,13 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           return InputValidator.DOLLAR_MESSAGE;
         return null;
       },
+      onChanged: (value) {
+
+      },
       onSaved: (value) {
-        amount = double.parse(value);
+        setState(() {
+          amount = double.parse(value);
+        });
       },
     );
   }
@@ -173,47 +173,11 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     );
   }
 
-  Widget _buildTimeRow() {
-    final format = DateFormat("yyyy-MM-dd HH:mm");
-    return Row(children: <Widget>[
-      Text(
-        'Time',
-        style: TextStyle(fontSize: 16),
-      ),
-      Container(width: 24,),
-      Expanded(child: DateTimeField(
-        initialValue: time,
-        format: format,
-        onShowPicker: (context, currentValue) async {
-          final date = await showDatePicker(
-              context: context,
-              firstDate: DateTime(1900),
-              initialDate: currentValue ?? DateTime.now(),
-              lastDate: DateTime(2100));
-          if (date != null) {
-            final time = await showTimePicker(
-              context: context,
-              initialTime:
-              TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-            );
-            return DateTimeField.combine(date, time);
-          } else {
-            return currentValue;
-          }
-        },
-        onChanged: (value) {
-          setState(() {
-            time = value;
-          });
-        },
-      )),
-    ]);
-  }
-
   Widget _buildButton() {
     return RaisedButton(
       onPressed: () {
         if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
           Navigator.pop(context);
           Transaction newTransaction = Transaction.withTime(
               vendor, method, amount, category, time, location);
@@ -248,7 +212,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                 _buildAmountRow(),
                 _buildCategoryRow(),
                 _buildLocationRow(),
-                _buildTimeRow(),
                 _buildButton()
               ],
               shrinkWrap: true,
