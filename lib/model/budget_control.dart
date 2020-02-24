@@ -114,7 +114,8 @@ class BudgetControl implements Control {
   void _initLocationMap() {
     locationMap = Map<Location, Category>();
     _loadedTransactions.forEach((transaction) {
-      if (!locationMap.containsKey(transaction.location)) {
+      if (transaction.location != null &&
+          !locationMap.containsKey(transaction.location)) {
         locationMap[transaction.location] = transaction.category;
       }
     });
@@ -162,6 +163,16 @@ class BudgetControl implements Control {
   @override
   TransactionList getLoadedTransactions() {
     return _loadedTransactions;
+  }
+
+  TransactionList getTransactionsInCategory(Category category) {
+    TransactionList transactions = TransactionList();
+    _loadedTransactions.forEach((transaction) {
+      if (transaction.category == category) {
+        transactions.add(transaction);
+      }
+    });
+    return transactions;
   }
 
   @override

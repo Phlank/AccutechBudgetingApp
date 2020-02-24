@@ -27,7 +27,7 @@ class _AccountDisplay extends State<AccountDisplay> {
       drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: Column(
         children: <Widget>[
-          GlobalCards.cashFlowCard(),
+          GlobalCards.cashFlowBudgetCard(),
           TransactionListView(
               BudgetingApp.userController.getLoadedTransactions()),
         ],

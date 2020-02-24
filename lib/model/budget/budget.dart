@@ -7,6 +7,7 @@ import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/util/dates.dart';
 import 'package:calendarro/date_utils.dart';
+
 import 'category/priority.dart';
 
 class BudgetBuilder {
@@ -216,6 +217,30 @@ class Budget {
 
   double getRemainingPriority(Priority priority) {
     return getAllottedPriority(priority) - getActualPriority(priority);
+  }
+
+  double getAllottedCategory(Category category) {
+    return _allotted[category];
+  }
+
+  double getActualCategory(Category category) {
+    return _actual[category];
+  }
+
+  double getRemainingCategory(Category category) {
+    return _allotted[category] - _actual[category];
+  }
+
+  CategoryList getCategoriesOfPriority(Priority priority) {
+    CategoryList list = CategoryList.empty();
+    _allotted.forEach((category, double) {
+      print("Category: " + category.name + " has a priority of " +
+          category.priority.name);
+      print(priority.name + " == " + category.priority.name + " is " +
+          (category.priority == priority).toString());
+      if (category.priority == priority) list.add(category);
+    });
+    return list;
   }
 
   void removeTransactionAt(int i) {

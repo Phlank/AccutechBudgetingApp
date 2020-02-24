@@ -40,15 +40,6 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit> {
     location = transaction.location;
   }
 
-  Transaction _mapToTrans() {
-    return new Transaction.withTime(
-        vendor == null ? transaction.vendor : vendor,
-        method == null ? transaction.method : method,
-        amount == null ? transaction.amount : amount,
-        category == null ? transaction.category : category,
-        transaction.time);
-  }
-
   Widget _buildVendorField() {
     return TextFormField(
       initialValue: transaction.vendor,

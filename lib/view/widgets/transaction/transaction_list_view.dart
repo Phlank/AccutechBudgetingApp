@@ -13,8 +13,9 @@ class TransactionListView extends StatelessWidget {
     transactions.forEach((transaction) {
       items.add(TransactionListItemButton(transaction));
     });
-    return Column(
+    return ListView(
       children: items,
+      shrinkWrap: true,
     );
   }
 }

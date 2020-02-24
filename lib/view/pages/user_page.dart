@@ -1,8 +1,8 @@
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:budgetflow/view/widgets/page_cards.dart';
-import 'package:budgetflow/view/widgets/transaction/transaction_list_card.dart';
 import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart_row.dart';
+import 'package:budgetflow/view/widgets/transaction/transaction_list_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -20,7 +20,7 @@ class _UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Page'),
+        title: Text('Summary'),
       ),
       drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: ListView(
@@ -34,7 +34,7 @@ class _UserPageState extends State<UserPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'add transaction',
+        tooltip: 'Add transaction',
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.pushNamed(context, AddTransaction.ROUTE);
