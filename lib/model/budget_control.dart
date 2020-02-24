@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
@@ -13,6 +15,7 @@ import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'budget/category/category.dart';
 import 'history/month.dart';
@@ -29,6 +32,7 @@ class BudgetControl implements Control {
   bool _oldUser;
   Color cashFlowColor;
   Map<Location, Category> locationMap = Map();
+  StreamSubscription<Position> positionStream;
 
   final Map<String, List<Category>> sectionMap = {
     'needs': [
@@ -103,6 +107,33 @@ class BudgetControl implements Control {
         locationMap[transaction.location] = transaction.category;
       }
     });
+    _initLocationMap();
+    _initLocationListener();
+  }
+
+  void _initLocationMap() {
+    locationMap = Map<Location, Category>();
+    _loadedTransactions.forEach((transaction) {
+      if (!locationMap.containsKey(transaction.location)) {
+        locationMap[transaction.location] = transaction.category;
+      }
+    });
+  }
+
+  void _initLocationListener() {
+    positionStream = Geolocator()
+        .getPositionStream(LocationOptions(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+        timeInterval: 10))
+        .listen((position) {
+      Location streamLocation = Location.fromGeolocatorPosition(position);
+      locationMap.forEach((location, category) async {
+        if (await streamLocation.distanceTo(location) < 10) {
+
+        }
+      });
+    });
   }
 
   Future save() async {
@@ -137,7 +168,7 @@ class BudgetControl implements Control {
   Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
     TransactionList transactions =
-        await _history.getTransactionsFromMonthTime(MonthTime.now());
+    await _history.getTransactionsFromMonthTime(MonthTime.now());
     transactions.forEach((Transaction t) {
       _loadedTransactions.add(t);
     });

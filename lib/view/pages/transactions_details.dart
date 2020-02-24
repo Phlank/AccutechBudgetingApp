@@ -193,11 +193,14 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit> {
               vendor, method, amount, category, time, location);
           BudgetingApp.userController.addTransaction(newTransaction);
           BudgetingApp.userController.save();
-          print('Location: ' + location.latitude.toString() + ', ' +
+          print('Location: ' +
+              location.latitude.toString() +
+              ', ' +
               location.longitude.toString());
         }
       },
       child: Text('Submit'),
+      textTheme: ButtonTextTheme.primary,
     );
   }
 
@@ -206,7 +209,6 @@ class _TransactionDetailEditState extends State<TransactionDetailEdit> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Edit Transaction'),
-
         ),
         drawer: SideMenu().sideMenu(BudgetingApp.userController),
         body: Form(

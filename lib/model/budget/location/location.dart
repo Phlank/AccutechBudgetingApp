@@ -30,6 +30,15 @@ class Location implements Serializable {
     return null;
   }
 
+  static Location fromGeolocatorPosition(Position position) {
+    return Location(position.latitude, position.longitude);
+  }
+
+  Future<double> distanceTo(Location other) async {
+    return await Geolocator()
+        .distanceBetween(latitude, longitude, other.latitude, other.longitude);
+  }
+
   String get serialize {
     Serializer serializer = new Serializer();
     serializer.addPair(KEY_LATITUDE, latitude);
