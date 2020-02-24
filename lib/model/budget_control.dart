@@ -50,14 +50,6 @@ class BudgetControl implements Control {
     'Savings': [Category.savings]
   };
 
-  final Map<String, String> routeMap = {
-    'needs': '/Needs',
-    'wants': '/Wants',
-    'savings': '/Savings',
-    'home': '/knownUser',
-    'accounts': '/account'
-  };
-
   BudgetControl() {
     fileIO = new DartFileIO();
     _updateMonthTimes();

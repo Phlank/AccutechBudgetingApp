@@ -1,5 +1,4 @@
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:budgetflow/view/widgets/page_cards.dart';
 import 'package:budgetflow/view/widgets/transaction/transaction_list_view.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,6 @@ class _AccountDisplay extends State<AccountDisplay> {
       appBar: AppBar(
         title: Text('Accounts and Transactions'),
       ),
-      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: Column(
         children: <Widget>[
           GlobalCards.cashFlowBudgetCard(),

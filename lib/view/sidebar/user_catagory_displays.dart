@@ -3,7 +3,6 @@ import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
-import 'package:budgetflow/view/widgets/main_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -119,7 +118,6 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       appBar: AppBar(
         title: Text('Change ' + section + ' alotments'),
       ),
-      drawer: SideMenu().sideMenu(userController),
       body: Column(
         verticalDirection: VerticalDirection.down,
         mainAxisAlignment: MainAxisAlignment.center,
