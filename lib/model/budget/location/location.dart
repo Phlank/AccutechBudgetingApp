@@ -21,7 +21,7 @@ class Location implements Serializable {
     return true;
   }
 
-  Future<Location> get current async {
+  static Future<Location> get current async {
     if (await Location.permissionEnabled) {
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
