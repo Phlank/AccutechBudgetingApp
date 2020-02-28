@@ -12,9 +12,9 @@ class CategoryChart extends StatelessWidget {
 
   CategoryChart({@required this.category}) {
     _allottedAmount =
-        BudgetingApp.userController.getBudget().getAllottedCategory(category);
+        BudgetingApp.userController.getBudget().allotted[category];
     _actualAmount =
-        BudgetingApp.userController.getBudget().getActualCategory(category);
+        BudgetingApp.userController.getBudget().getRemainingCategory(category);
     _allottedSeries = _makeAllottedSeries();
     _actualSeries = _makeActualSeries();
     data = [_allottedSeries, _actualSeries];
@@ -23,7 +23,7 @@ class CategoryChart extends StatelessWidget {
   CategorySeries _makeAllottedSeries() {
     String name = 'Allotted';
     double amount =
-        BudgetingApp.userController.getBudget().getAllottedCategory(category);
+        BudgetingApp.userController.getBudget().allotted[category];
     charts.Color barColor = charts.ColorUtil.fromDartColor(Colors.blue);
     return CategorySeries(name: name, amount: amount, barColor: barColor);
   }
@@ -31,7 +31,7 @@ class CategoryChart extends StatelessWidget {
   CategorySeries _makeActualSeries() {
     String name = 'Actual';
     double amount =
-        BudgetingApp.userController.getBudget().getActualCategory(category);
+        BudgetingApp.userController.getBudget().getRemainingCategory(category);
     charts.Color barColor;
     if (_allottedAmount < _actualAmount) {
       barColor = charts.ColorUtil.fromDartColor(Colors.red);

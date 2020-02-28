@@ -88,4 +88,6 @@ class CategoryList {
   }
 
   int get hashCode => _categories.hashCode;
+
+  Category getAt(int index) => _categories[index];
 }

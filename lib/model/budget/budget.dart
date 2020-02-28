@@ -223,4 +223,35 @@ class Budget {
     _actual.subtractFrom(t.category, t.amount);
     _transactions.removeAt(i);
   }
+
+  void removeTransaction(Transaction transaction){
+    for(int i = 0; i<_transactions.length; i++){
+      if(transaction.time == _transactions.getAt(i).time){
+        removeTransactionAt(i);
+      }
+    }
+  }
+
+  List<Category> getCategoriesOfPriority(Priority priority) {
+    List<Category> catList = List();
+    for(int i = 0; i<_categories.length; i++){
+      if(_categories.getAt(i).priority == priority)
+        catList.add(_categories.getAt(i));
+    }
+    return catList;
+  }
+
+  double getRemainingCategory(Category category) {
+    double catSpent = 0.0;
+    for (int i = 0; i < _transactions.length; i++) {
+      if (category == _transactions
+          .getAt(i)
+          .category) {
+        catSpent += _transactions
+            .getAt(i)
+            .amount;
+      }
+    }
+    return _allotted[category] - catSpent;
+  }
 }
