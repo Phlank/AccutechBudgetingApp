@@ -301,6 +301,7 @@ class MockBudget {
   }
 
   double getNewTotalAllotted(String section) {
+    print(section);
     Map<String, List<Category>> mockMap = {
       Priority.need.name: BudgetingApp.userController.getBudget()
           .getCategoriesOfPriority(Priority.need),
@@ -311,7 +312,8 @@ class MockBudget {
     };
     double total = 0.0;
     for (Category category in mockMap[section]) {
-      total += budget.allotted[category];
+      if(category !=null)
+        total += budget.allotted[category];
     }
     return total;
   }
