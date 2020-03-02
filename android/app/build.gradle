@@ -25,6 +25,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def googleMapApiKey = localProperties.getProperty('google.map.key')
+if (googleMapApiKey == null) {
+    logger.warn('You have not set up a Google Maps API key for the android version of the app, or if you have, it is not set up correctly.')
+}
+
 android {
     compileSdkVersion 28
 

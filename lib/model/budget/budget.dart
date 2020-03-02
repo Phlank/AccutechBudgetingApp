@@ -147,7 +147,7 @@ class Budget {
       _transactions.add(transaction);
       _actual.addTo(transaction.category, -transaction.amount);
     } else {
-      _actual.addTo(Category.miscellaneous, -transaction.amount);
+      _actual.addTo(Category.uncategorized, -transaction.amount);
     }
   }
 
@@ -176,7 +176,7 @@ class Budget {
   double get balanceMonth => income - spent;
 
   double get balanceWeek {
-    return _getWeeklyIncome() + _getWeeklySpending();
+    return _getWeeklyIncome() - _getWeeklySpending();
   }
 
   double _getWeeklyIncome() {

@@ -6,19 +6,8 @@ import 'package:flutter/material.dart';
 
 class PriorityChart extends StatelessWidget {
   final Priority priority;
-  double _allottedAmount, _actualAmount;
-  PrioritySeries _allottedSeries, _actualSeries;
-  List<PrioritySeries> data;
 
-  PriorityChart({@required this.priority}) {
-    _allottedAmount =
-        BudgetingApp.userController.getBudget().getAllottedPriority(priority);
-    _actualAmount =
-        BudgetingApp.userController.getBudget().getActualPriority(priority);
-    _allottedSeries = _makeAllottedSeries();
-    _actualSeries = _makeActualSeries();
-    data = [_allottedSeries, _actualSeries];
-  }
+  PriorityChart({@required this.priority});
 
   PrioritySeries _makeAllottedSeries() {
     String name = 'Allotted';
@@ -29,20 +18,26 @@ class PriorityChart extends StatelessWidget {
   }
 
   PrioritySeries _makeActualSeries() {
+    double allotted =
+    BudgetingApp.userController.getBudget().getAllottedPriority(priority);
+    double actual =
+    BudgetingApp.userController.getBudget().getActualPriority(priority);
     String name = 'Actual';
-    double amount =
-        BudgetingApp.userController.getBudget().getActualPriority(priority);
     charts.Color barColor;
-    if (_allottedAmount < _actualAmount) {
+    if (allotted < actual) {
       barColor = charts.ColorUtil.fromDartColor(Colors.red);
     } else {
       barColor = charts.ColorUtil.fromDartColor(Colors.green);
     }
-    return PrioritySeries(name: name, amount: amount, barColor: barColor);
+    return PrioritySeries(name: name, amount: actual, barColor: barColor);
   }
 
   @override
   Widget build(BuildContext context) {
+    PrioritySeries _allottedSeries, _actualSeries;
+    _allottedSeries = _makeAllottedSeries();
+    _actualSeries = _makeActualSeries();
+    final data = [_allottedSeries, _actualSeries];
     List<charts.Series<PrioritySeries, String>> series = [
       charts.Series(
           id: priority.name,
@@ -61,7 +56,7 @@ class PriorityChart extends StatelessWidget {
           series,
           animate: true,
           primaryMeasureAxis:
-              new charts.NumericAxisSpec(renderSpec: charts.NoneRenderSpec()),
+          new charts.NumericAxisSpec(renderSpec: charts.GridlineRendererSpec()),
           domainAxis: charts.OrdinalAxisSpec(
             showAxisLine: true,
             renderSpec: charts.NoneRenderSpec(),

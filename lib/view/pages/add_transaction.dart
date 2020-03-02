@@ -180,7 +180,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           _formKey.currentState.save();
           Navigator.pop(context);
           Transaction newTransaction = Transaction.withTime(
-              vendor, method, amount, category, time, location);
+              vendor, method, -amount, category, time, location);
           BudgetingApp.userController.addTransaction(newTransaction);
           BudgetingApp.userController.save();
           if (location != null) {

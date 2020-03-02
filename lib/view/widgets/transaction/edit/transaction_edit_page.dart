@@ -1,3 +1,4 @@
+import 'package:budgetflow/keys.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
@@ -7,18 +8,28 @@ import 'package:budgetflow/view/utils/padding.dart';
 import 'package:flutter/material.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 
-class TransactionDetailEditPage extends StatefulWidget {
-  final Transaction transaction;
-
-  TransactionDetailEditPage(this.transaction);
-
-  @override
-  State<StatefulWidget> createState() =>
-      _TransactionDetailEditPageState(transaction);
+Future<Transaction> showTransactionEditor(
+    Transaction toEdit, BuildContext context) async {
+  final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (BuildContext context) => TransactionEditPage(toEdit)));
+  return result;
 }
 
-class _TransactionDetailEditPageState extends State<TransactionDetailEditPage> {
-  Transaction transaction;
+class TransactionEditPage extends StatefulWidget {
+  final Transaction transaction;
+
+  TransactionEditPage(this.transaction);
+
+  @override
+  State<StatefulWidget> createState() => _TransactionEditPageState(transaction);
+}
+
+class _TransactionEditPageState extends State<TransactionEditPage> {
+  final Transaction initialTransaction;
+
+  Transaction transactionResult;
   String vendor, method;
   double amount;
   Category category;
@@ -27,21 +38,22 @@ class _TransactionDetailEditPageState extends State<TransactionDetailEditPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  _TransactionDetailEditPageState(this.transaction);
+  _TransactionEditPageState(this.initialTransaction);
 
   @override
   void initState() {
-    vendor = transaction.vendor;
-    method = transaction.method;
-    amount = transaction.amount;
-    category = transaction.category;
-    time = transaction.time;
-    location = transaction.location;
+    super.initState();
+    vendor = transactionResult.vendor;
+    method = transactionResult.method;
+    amount = transactionResult.amount;
+    category = transactionResult.category;
+    time = transactionResult.time;
+    location = transactionResult.location;
   }
 
   Widget _buildVendorField() {
     return TextFormField(
-      initialValue: transaction.vendor,
+      initialValue: transactionResult.vendor,
       onSaved: (value) {
         vendor = value;
       },
@@ -69,7 +81,7 @@ class _TransactionDetailEditPageState extends State<TransactionDetailEditPage> {
 
   Widget _buildAmountField() {
     return TextFormField(
-      initialValue: transaction.amount.toString(),
+      initialValue: transactionResult.amount.toString(),
       validator: (value) {
         if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
         if (!InputValidator.dollarAmount(value))
@@ -154,8 +166,8 @@ class _TransactionDetailEditPageState extends State<TransactionDetailEditPage> {
         child: Text('Select location'),
         onPressed: () async {
           // Load google maps interface
-          LocationResult result = await showLocationPicker(
-              context, 'AIzaSyC9dgd11yj7j86a_PXNIoU_4ykrBh1Qa7I');
+          LocationResult result =
+              await showLocationPicker(context, googleMapsAPIKey);
           location = Location(result.latLng.latitude, result.latLng.longitude);
         },
       )
@@ -181,7 +193,7 @@ class _TransactionDetailEditPageState extends State<TransactionDetailEditPage> {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           Navigator.pop(context);
-          BudgetingApp.userController.removeTransaction(transaction);
+          BudgetingApp.userController.removeTransaction(transactionResult);
           Transaction newTransaction = Transaction.withTime(
               vendor, method, amount, category, time, location);
           BudgetingApp.userController.addTransaction(newTransaction);
