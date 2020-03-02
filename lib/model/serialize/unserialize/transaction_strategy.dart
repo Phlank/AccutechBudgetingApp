@@ -11,10 +11,14 @@ class TransactionStrategy implements Unserializer {
     var method = value[KEY_METHOD];
     var amount = double.parse(value[KEY_AMOUNT]);
     var category = Serializer.unserialize(KEY_CATEGORY, value[KEY_CATEGORY]);
-    var location;
-    if (value.containsKey(KEY_LOCATION) && value[KEY_LOCATION] != 'null')
-      location = Serializer.unserialize(KEY_LOCATION, value[KEY_LOCATION]);
-    else location = null;
-    return Transaction.withTime(vendor, method, amount, category, time, location);
+    var location = Serializer.unserialize(KEY_LOCATION, value[KEY_LOCATION]);
+    return Transaction(
+        time: time,
+        vendor: vendor,
+        method: method,
+        amount: amount,
+        category: category,
+        location: location
+    );
   }
 }

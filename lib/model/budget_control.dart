@@ -279,7 +279,7 @@ class BudgetControl implements Control {
     return sectionBudget(section) - expenseInSection(section);
   }
 
-  void removeTransaction(Transaction tran) {
+  void removeTransactionIfPresent(Transaction tran) {
     _loadedTransactions.remove(tran);
     _budget.removeTransaction(tran);
   }
