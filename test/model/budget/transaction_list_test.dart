@@ -1,36 +1,43 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
-import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 TransactionList tl1 = new TransactionList();
-Transaction t1 =
-    new Transaction("Walmart", "Credit card", -21.29, Category.groceries);
-Transaction t2 =
-    new Transaction("Walmart", "Credit card", -41.29, Category.groceries);
-Transaction t3 =
-    new Transaction("KFC", "Credit card", -5.40, Category.miscellaneous);
+
+class MockTransaction extends Mock implements Transaction {}
+
+MockTransaction t1, t2, t3;
+
+void setUpTransactions() {
+  t1 = MockTransaction();
+  when(t1.vendor).thenReturn('Walmart');
+  when(t1.method).thenReturn('Credit card');
+  when(t1.amount).thenReturn(-21.29);
+  when(t1.category).thenReturn(Category.groceries);
+
+  t2 = MockTransaction();
+  when(t2.vendor).thenReturn('Walmart');
+  when(t2.method).thenReturn('Credit card');
+  when(t2.amount).thenReturn(-41.29);
+  when(t2.category).thenReturn(Category.groceries);
+
+  t3 = MockTransaction();
+  when(t3.vendor).thenReturn('KFC');
+  when(t3.method).thenReturn('Credit card');
+  when(t3.amount).thenReturn(-5.40);
+  when(t3.category).thenReturn(Category.miscellaneous);
+}
 
 void main() {
   group("TransactionList tests", () {
     setUp(() {
-        tl1.add(t1);
-        tl1.add(t2);
-        tl1.add(t3);
+      setUpTransactions();
     });
     test("Added transactions are in TransactionList", () {
+      tl1.add(t1);
       expect(tl1.contains(t1), true);
-      expect(tl1.contains(t2), true);
-      expect(tl1.contains(t3), true);
-    });
-    test("Serialization is reversible", () {
-      String tl1s = tl1.serialize;
-      String tl1cs = Serializer
-          .unserialize(KEY_TRANSACTION_LIST, tl1.serialize)
-          .serialize;
-        expect(tl1s, equals(tl1cs));
     });
   });
 }

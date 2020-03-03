@@ -33,7 +33,13 @@ void main() {
       _builder.setIncome(300.0);
       _builder.setType(BudgetType.depletion);
       _builtBudget = _builder.build();
-      _t = new Transaction("KFC", "Cash", -5.4, Category.miscellaneous);
+      _t = new Transaction(
+        vendor: "KFC",
+        method: "Cash",
+        amount: -5.4,
+        category: Category.miscellaneous,
+        time: DateTime.now(),
+      );
     });
     group("Testing Built Budget", () {
       test("Built budget has no null fields", () {
@@ -95,8 +101,10 @@ void main() {
     group('Budget functionality', () {
       setUp(() {
         _builder = new BudgetBuilder();
-        _builder.setType(BudgetType.growth).setIncome(2000).setCategories(
-            CategoryList());
+        _builder
+            .setType(BudgetType.growth)
+            .setIncome(2000)
+            .setCategories(CategoryList());
         _builtBudget = _builder.build();
       });
       test('Add transaction makes spending positive', () {

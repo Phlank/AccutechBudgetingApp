@@ -14,18 +14,21 @@ class Transaction implements Serializable {
   final Location location;
 
   static final empty = Transaction(
-      vendor: "",
-      method: "Cash",
-      amount: 0.0,
-      category: Category.uncategorized,
-      time: DateTime.now());
+    vendor: "",
+    method: "Cash",
+    amount: 0.0,
+    category: Category.uncategorized,
+    time: DateTime.now(),
+  );
 
-  Transaction({@required this.vendor,
+  Transaction({
+    @required this.vendor,
     @required this.method,
     @required this.amount,
     @required this.category,
     @required this.time,
-    this.location = const Location(0.0, 0.0)});
+    this.location = const Location(0.0, 0.0),
+  });
 
   String get serialize {
     Serializer serializer = Serializer();

@@ -1,4 +1,3 @@
-import 'package:budgetflow/keys.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
@@ -7,8 +6,8 @@ import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/widgets/datetime/date_form_field.dart';
 import 'package:budgetflow/view/widgets/datetime/time_form_field.dart';
+import 'package:budgetflow/view/widgets/location_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:google_map_location_picker/google_map_location_picker.dart';
 
 class TransactionEditPage extends StatefulWidget {
   final Transaction transaction;
@@ -176,9 +175,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
         child: Text('Select location'),
         onPressed: () async {
           // Load google maps interface
-          LocationResult result =
-              await showLocationPicker(context, googleMapsAPIKey);
-          location = Location(result.latLng.latitude, result.latLng.longitude);
+          Location result = await LocationPicker.show(
+              context, await Location.current);
         },
       )
     ]);

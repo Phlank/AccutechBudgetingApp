@@ -96,11 +96,6 @@ class BudgetControl implements Control {
     _history = await History.load();
     _budget = await _history.getLatestMonthBudget();
     _loadedTransactions = TransactionList.copy(_budget.transactions);
-    _loadedTransactions.forEach((transaction) {
-      if (transaction.location != null) {
-        locationMap[transaction.location] = transaction.category;
-      }
-    });
     _initLocationMap();
     _initLocationListener();
   }
@@ -125,7 +120,9 @@ class BudgetControl implements Control {
       Location streamLocation = Location.fromGeolocatorPosition(position);
       locationMap.forEach((location, category) async {
         if (await streamLocation.distanceTo(location) < 10) {
-
+          // TODO Trigger notification
+          print('In range of location ' + location.latitude.toString() + ', ' +
+              location.longitude.toString() + ' for category ' + category.name);
         }
       });
     });

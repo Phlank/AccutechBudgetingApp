@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/widgets/priority_bar_chart/priority_series.dart';
@@ -12,7 +14,7 @@ class PriorityChart extends StatelessWidget {
   PrioritySeries _makeAllottedSeries() {
     String name = 'Allotted';
     double amount =
-        BudgetingApp.userController.getBudget().getAllottedPriority(priority);
+    BudgetingApp.userController.getBudget().getAllottedPriority(priority);
     charts.Color barColor = charts.ColorUtil.fromDartColor(Colors.blue);
     return PrioritySeries(name: name, amount: amount, barColor: barColor);
   }
@@ -47,20 +49,38 @@ class PriorityChart extends StatelessWidget {
           colorFn: (PrioritySeries series, _) => series.barColor)
     ];
     return ConstrainedBox(
-        constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width * 0.29,
-            minHeight: MediaQuery.of(context).size.height * 0.3,
-            maxWidth: MediaQuery.of(context).size.width * 0.29,
-            maxHeight: MediaQuery.of(context).size.height * 0.3),
-        child: charts.BarChart(
-          series,
-          animate: true,
-          primaryMeasureAxis:
-          new charts.NumericAxisSpec(renderSpec: charts.GridlineRendererSpec()),
-          domainAxis: charts.OrdinalAxisSpec(
-            showAxisLine: true,
-            renderSpec: charts.NoneRenderSpec(),
+      constraints: BoxConstraints(
+          minWidth: MediaQuery
+              .of(context)
+              .size
+              .width * 0.29,
+          minHeight: MediaQuery
+              .of(context)
+              .size
+              .height * 0.3,
+          maxWidth: MediaQuery
+              .of(context)
+              .size
+              .width * 0.29,
+          maxHeight: MediaQuery
+              .of(context)
+              .size
+              .height * 0.3),
+      child: charts.BarChart(
+        series,
+        animate: true,
+        primaryMeasureAxis: new charts.NumericAxisSpec(
+          renderSpec: charts.NoneRenderSpec(),
+          viewport: new charts.NumericExtents(
+            0,
+            max(_allottedSeries.amount, _actualSeries.amount),
           ),
-        ));
+        ),
+        domainAxis: charts.OrdinalAxisSpec(
+          showAxisLine: true,
+          renderSpec: charts.NoneRenderSpec(),
+        ),
+      ),
+    );
   }
 }
