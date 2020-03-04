@@ -86,7 +86,7 @@ class Budget {
   Budget.fromOldBudget(Budget old) {
     _income = old._income;
     _type = old._type;
-    _allotted = BudgetMap.copyOf(old._allotted);
+    _allotted = BudgetMap.from(old._allotted);
     _actual = new BudgetMap();
     _transactions = new TransactionList();
   }
@@ -145,9 +145,9 @@ class Budget {
   void addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actual.addTo(transaction.category, -transaction.amount);
+      _actual[transaction.category] += -transaction.amount;
     } else {
-      _actual.addTo(Category.miscellaneous, -transaction.amount);
+      _actual[Category.miscellaneous] += -transaction.amount;
     }
   }
 
