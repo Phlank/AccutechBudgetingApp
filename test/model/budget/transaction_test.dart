@@ -22,7 +22,7 @@ void main() {
   test("Serialization sanity", () {
     String t2s = t2.serialize;
     expect(t2s, equals(Serializer
-        .unserialize(KEY_TRANSACTION, t2s)
+        .unserialize(transactionKey, t2s)
         .serialize));
   });
 }

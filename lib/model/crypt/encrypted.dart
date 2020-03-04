@@ -6,16 +6,14 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Encrypted implements Serializable {
-  static const String _IV_KEY = 'iv';
-  static const String _CIPHER_KEY = 'cipher';
   final String iv, cipher;
 
   Encrypted(this.iv, this.cipher);
 
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(KEY_IV, iv);
-    serializer.addPair(KEY_CIPHER, cipher);
+    serializer.addPair(ivKey, iv);
+    serializer.addPair(cipherKey, cipher);
     return serializer.serialize;
   }
 }

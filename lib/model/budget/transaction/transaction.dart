@@ -32,12 +32,12 @@ class Transaction implements Serializable {
 
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(KEY_TIME, time.millisecondsSinceEpoch);
-    serializer.addPair(KEY_VENDOR, vendor);
-    serializer.addPair(KEY_METHOD, method);
-    serializer.addPair(KEY_AMOUNT, amount);
-    serializer.addPair(KEY_CATEGORY, category);
-    serializer.addPair(KEY_LOCATION, location);
+    serializer.addPair(timeKey, time.millisecondsSinceEpoch);
+    serializer.addPair(vendorKey, vendor);
+    serializer.addPair(methodKey, method);
+    serializer.addPair(amountKey, amount);
+    serializer.addPair(categoryKey, category);
+    serializer.addPair(locationKey, location);
     return serializer.serialize;
   }
 }

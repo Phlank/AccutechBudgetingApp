@@ -5,7 +5,7 @@ import 'package:budgetflow/model/serialize/unserializer.dart';
 class PriorityStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
-    var name = value[KEY_NAME];
+    var name = value[nameKey];
     return Priority.fromName(name);
   }
 }

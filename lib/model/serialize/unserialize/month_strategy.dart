@@ -8,10 +8,10 @@ class MonthStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
     MonthBuilder builder = MonthBuilder();
-    builder.setIncome(double.parse(value[KEY_INCOME]));
+    builder.setIncome(double.parse(value[incomeKey]));
     builder.setMonthTime(
-        MonthTime(int.parse(value[KEY_YEAR]), int.parse(value[KEY_MONTH])));
-    builder.setType(Serializer.unserialize(KEY_TYPE, value[KEY_TYPE]));
+        MonthTime(int.parse(value[yearKey]), int.parse(value[monthKey])));
+    builder.setType(Serializer.unserialize(typeKey, value[typeKey]));
     return builder.build();
   }
 }

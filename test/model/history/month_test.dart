@@ -33,7 +33,7 @@ void main() {
     });
     test("Serialization is reversible", () async {
       String ms = m.serialize;
-      Month msm = Serializer.unserialize(KEY_MONTH, ms);
+      Month msm = Serializer.unserialize(monthKey, ms);
       await m.loadAllotted();
       await m.loadActual();
       await m.loadTransactions();

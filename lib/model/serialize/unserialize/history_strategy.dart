@@ -8,7 +8,7 @@ class HistoryStrategy implements Unserializer {
   unserializeValue(Map value) {
     History output = History();
     value.forEach((key, value) {
-      output.addMonth(Serializer.unserialize(KEY_MONTH, value));
+      output.addMonth(Serializer.unserialize(monthKey, value));
     });
     return output;
   }

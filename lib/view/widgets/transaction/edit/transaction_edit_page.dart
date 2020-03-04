@@ -88,9 +88,9 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     return TextFormField(
       initialValue: initialTransaction.amount.toString(),
       validator: (value) {
-        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+        if (value.isEmpty) return InputValidator.requiredMessage;
         if (!InputValidator.dollarAmount(value))
-          return InputValidator.DOLLAR_MESSAGE;
+          return InputValidator.dollarMessage;
         return null;
       },
       onSaved: (value) {

@@ -1,6 +1,5 @@
-import 'package:budgetflow/view/pages/setup/housing_info_page.dart';
 import 'package:budgetflow/model/setup_agent.dart';
-import 'package:budgetflow/view/pages/setup/pin_info_page.dart';
+import 'package:budgetflow/view/pages/setup/housing_info_page.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/utils/routes.dart';
@@ -61,9 +60,9 @@ class _SavingsDepletionInfoPageState extends State<SavingsDepletionInfoPage> {
       decoration: InputDecoration(labelText: 'Savings spent each month'),
       keyboardType: TextInputType.number,
       validator: (value) {
-        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+        if (value.isEmpty) return InputValidator.requiredMessage;
         if (!InputValidator.dollarAmount(value))
-          return InputValidator.DOLLAR_MESSAGE;
+          return InputValidator.dollarMessage;
         return null;
       },
       onSaved: (String value) {

@@ -6,8 +6,8 @@ class LocationStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
     if (value == null) return null;
-    if (value.containsKey(KEY_LATITUDE) && value.containsKey(KEY_LONGITUDE))
-      return Location(value[KEY_LATITUDE], value[KEY_LONGITUDE]);
+    if (value.containsKey(latitudeKey) && value.containsKey(longitudeKey))
+      return Location(value[latitudeKey], value[longitudeKey]);
     return null;
   }
 }

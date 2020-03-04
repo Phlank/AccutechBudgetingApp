@@ -5,8 +5,8 @@ import 'package:budgetflow/model/serialize/unserializer.dart';
 class PasswordStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
-    String hash = value[KEY_HASH];
-    String salt = value[KEY_SALT];
+    String hash = value[hashKey];
+    String salt = value[saltKey];
     return Password.fromHashAndSalt(hash, salt);
   }
 }

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Format {
-
-  static String dynamicFormating(dynamic d){
-    switch(d.runtimeType){
+  static String dynamicFormatting(dynamic d) {
+    switch (d.runtimeType) {
       case double:
       case int:
         return dollarFormat(d);
@@ -21,10 +20,13 @@ class Format {
   }
 
   static String dollarFormat(double value) {
-    if(value < 0){
-      return '-\$'+(value.abs()).toStringAsFixed(value.truncateToDouble() == value ? 0 : 2);
+    if (value < 0) {
+      return '-\$' +
+          (value.abs())
+              .toStringAsFixed(value.truncateToDouble() == value ? 0 : 2);
     }
-    return '\$' + value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 2);
+    return '\$' +
+        value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 2);
   }
 
   static String titleFormat(String title) {
