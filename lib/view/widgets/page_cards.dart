@@ -53,7 +53,9 @@ class GlobalCards {
   }
 
   static Card cashFlowCard() {
-    double income = BudgetingApp.userController.getBudget().income -
+    double income = BudgetingApp.userController
+        .getBudget()
+        .expectedIncome -
         BudgetingApp.userController.getBudget().allotted[Category.housing];
     double spent = BudgetingApp.userController.expenseTotal();
     double remaining = BudgetingApp.userController.getCashFlow();

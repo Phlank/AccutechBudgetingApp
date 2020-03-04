@@ -20,4 +20,5 @@ const String categoryKey = 'category',
     transactionListKey = 'transaction_list',
     locationKey = 'location',
     latitudeKey = 'latitude',
-    longitudeKey = 'longitude';
+    longitudeKey = 'longitude',
+    budgetMapKey = 'budgetmap';

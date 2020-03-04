@@ -72,7 +72,7 @@ class Month implements Serializable {
 
   Month.fromBudget(Budget b) {
     _monthTime = MonthTime.now();
-    _income = b.income;
+    _income = b.expectedIncome;
     _type = b.type;
     _allotted = b.allotted;
     _actual = b.actual;
@@ -102,14 +102,15 @@ class Month implements Serializable {
   Future loadAllotted() async {
     String cipher, plaintext;
     Encrypted e;
-    cipher = await BudgetControl.fileIO.readFile(_allottedFilepath)
+    cipher = await BudgetControl.fileIO
+        .readFile(_allottedFilepath)
         .catchError((Object error) {
       _allotted = new BudgetMap();
     });
     if (cipher != null) {
       e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      _allotted = BudgetMap.unserialize(plaintext);
+      _allotted = Serializer.unserialize(budgetMapKey, plaintext);
     }
   }
 
@@ -123,14 +124,15 @@ class Month implements Serializable {
   Future loadActual() async {
     String cipher, plaintext;
     Encrypted e;
-    cipher = await BudgetControl.fileIO.readFile(_actualFilepath)
+    cipher = await BudgetControl.fileIO
+        .readFile(_actualFilepath)
         .catchError((Object error) {
       _actual = new BudgetMap();
     });
     if (cipher != null) {
       e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      _actual = BudgetMap.unserialize(plaintext);
+      _actual = Serializer.unserialize(budgetMapKey, plaintext);
     }
   }
 
@@ -144,7 +146,8 @@ class Month implements Serializable {
   Future loadTransactions() async {
     String cipher, plaintext;
     Encrypted e;
-    cipher = await BudgetControl.fileIO.readFile(_transactionsFilepath)
+    cipher = await BudgetControl.fileIO
+        .readFile(_transactionsFilepath)
         .catchError((Object error) {
       _transactions = new TransactionList();
     });
@@ -188,8 +191,7 @@ class Month implements Serializable {
     if (_transactions != null) {
       String content = _transactions.serialize;
       Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(
-          _transactionsFilepath, e.serialize);
+      await BudgetControl.fileIO.writeFile(_transactionsFilepath, e.serialize);
     }
   }
 

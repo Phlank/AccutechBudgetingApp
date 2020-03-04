@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../budgeting_app.dart';
 
-class DropDowns{
-
+class DropDowns {
   DropdownButton categoryDrop(Category categoryValue, Function onChanged) {
     return DropdownButton<Category>(
       value: categoryValue,
@@ -14,7 +13,8 @@ class DropDowns{
       onChanged: onChanged,
       items: BudgetingApp.userController
           .getBudget()
-          .categories
+          .allotted
+          .keys
           .map<DropdownMenuItem<Category>>((Category category) {
         return DropdownMenuItem<Category>(
           value: category,
@@ -24,7 +24,7 @@ class DropDowns{
     );
   }
 
-  DropdownButton methodDrop(String methodValue, Function onChange){
+  DropdownButton methodDrop(String methodValue, Function onChange) {
     return DropdownButton<String>(
       value: methodValue,
       icon: Icon(Icons.arrow_drop_down),

@@ -9,18 +9,16 @@ import 'package:flutter/material.dart';
     => if nothing will have empty list
    */
 
-class HistoryDisplay extends StatefulWidget{
+class HistoryDisplay extends StatefulWidget {
   HistoryDisplay();
 
   @override
   _HistoryDisplay createState() => _HistoryDisplay();
 }
 
-class  _HistoryDisplay extends State<HistoryDisplay>{
+class _HistoryDisplay extends State<HistoryDisplay> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-    );
+    return Scaffold();
   }
 }

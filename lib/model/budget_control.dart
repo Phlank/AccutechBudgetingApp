@@ -120,8 +120,12 @@ class BudgetControl implements Control {
       locationMap.forEach((location, category) async {
         if (await streamLocation.distanceTo(location) < 10) {
           // TODO Trigger notification
-          print('In range of location ' + location.latitude.toString() + ', ' +
-              location.longitude.toString() + ' for category ' + category.name);
+          print('In range of location ' +
+              location.latitude.toString() +
+              ', ' +
+              location.longitude.toString() +
+              ' for category ' +
+              category.name);
         }
       });
     });
@@ -131,7 +135,7 @@ class BudgetControl implements Control {
     if (_history.getMonth(MonthTime.now()) == null) {
       MonthBuilder builder = new MonthBuilder();
       builder.setMonthTime(MonthTime.now());
-      builder.setIncome(_budget.income);
+      builder.setIncome(_budget.expectedIncome);
       builder.setType(_budget.type);
       _history.addMonth(builder.build());
     }
@@ -208,7 +212,7 @@ class BudgetControl implements Control {
   }
 
   double getCashFlow() {
-    double amt = _budget.getMonthlyIncome() -
+    double amt = _budget.expectedIncome -
         _budget.allotted[Category.housing] +
         expenseTotal();
     if (amt > 0) {
@@ -298,11 +302,14 @@ class MockBudget {
 
   double getNewTotalAllotted(String section) {
     Map<String, List<Category>> mockMap = {
-      Priority.needs.name: BudgetingApp.userController.getBudget()
+      Priority.needs.name: BudgetingApp.userController
+          .getBudget()
           .getCategoriesOfPriority(Priority.needs),
-      Priority.wants.name: BudgetingApp.userController.getBudget()
+      Priority.wants.name: BudgetingApp.userController
+          .getBudget()
           .getCategoriesOfPriority(Priority.wants),
-      Priority.savings.name: BudgetingApp.userController.getBudget()
+      Priority.savings.name: BudgetingApp.userController
+          .getBudget()
           .getCategoriesOfPriority(Priority.savings)
     };
     double total = 0.0;

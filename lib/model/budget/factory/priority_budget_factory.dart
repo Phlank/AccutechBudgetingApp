@@ -52,29 +52,25 @@ class PriorityBudgetFactory implements BudgetFactory {
       _oldActualRatios = new BudgetMap(),
       _spendingDiffs = new BudgetMap(),
       _newAllotmentRatios = new BudgetMap(),
-      _allottedSpending = new BudgetMap();
-  BudgetBuilder _builder = new BudgetBuilder();
+      _allottedSpending = new BudgetMap(),
+      _targetSpending = new BudgetMap();
 
   PriorityBudgetFactory();
 
   @override
   Budget newFromInfo(double income, double housing, bool depletion,
       double savingsPull, bool kids, bool pets) {
-    _builder.setIncome(income);
     var type;
     if (depletion)
       type = BudgetType.depletion;
     else
       type = BudgetType.growth;
-    _builder.setType(type);
     _currentDistribution = new _NSW(0.0, 0.0, 0.0);
     _targetDistribution = new _NSW(0.0, 0.0, 0.0);
     _housingRatio = housing / income;
     _income = income;
     _decidePlan(type);
     _setAllotments(housing);
-    _builder.setAllottedSpending(_allottedSpending);
-    return _builder.build();
   }
 
   void _decidePlan(BudgetType type) {
@@ -121,7 +117,10 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   void _setAllotments(double housing) {
+    // Allocate housing before anything else
     _allottedSpending[Category.housing] = housing;
+    // Get number of categories in needs and wants
+    // TODO finish
     _needsRatio = _currentDistribution.needs - _housingRatio;
     _wantsRatio = _currentDistribution.wants;
     _savingsRatio = _currentDistribution.savings;
@@ -142,22 +141,25 @@ class PriorityBudgetFactory implements BudgetFactory {
   @override
   Budget newFromBudget(Budget old) {
     _oldBudget = old;
-    _income = old.getMonthlyIncome();
+    _income = old.expectedIncome;
     _oldAllotmentRatios = old.allotted.divide(_income);
     _oldActualRatios = old.actual.divide(_income);
     if (_userExceededBudget()) {
       // Return the same budget as last month
-      return Budget.fromOldBudget(old);
+      return Budget.from(old);
     }
     // Look at spending, see what fields were over and what were under
     _findSpendingDiffs();
     // Reorganize funds between over and under fields, put the rest into savings
     _reallocate();
     _setAllotmentsForNextMonth();
-    _builder.setType(old.type);
-    _builder.setIncome(old.income);
-    _builder.setAllottedSpending(_allottedSpending);
-    return _builder.build();
+    return Budget(
+      expectedIncome: old.expectedIncome,
+      type: old.type,
+      // TODO update target based on old budget
+      target: old.target,
+      allotted: _allottedSpending,
+    );
   }
 
   bool _userExceededBudget() {
@@ -208,7 +210,7 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   void _setAllotmentsForNextMonth() {
-    _oldBudget.categories.forEach((Category c) {
+    _oldBudget.allotted.keys.forEach((Category c) {
       _allottedSpending[c] = _newAllotmentRatios[c] * _income;
     });
   }

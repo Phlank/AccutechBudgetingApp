@@ -118,7 +118,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
       },
       items: BudgetingApp.userController
           .getBudget()
-          .categories
+          .allotted
+          .keys
           .map<DropdownMenuItem<Category>>((Category category) {
         return DropdownMenuItem<Category>(
           value: category,
@@ -175,8 +176,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
         child: Text('Select location'),
         onPressed: () async {
           // Load google maps interface
-          Location result = await LocationPicker.show(
-              context, await Location.current);
+          Location result =
+          await LocationPicker.show(context, await Location.current);
         },
       )
     ]);

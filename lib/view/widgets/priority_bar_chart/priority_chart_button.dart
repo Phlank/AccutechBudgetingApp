@@ -24,8 +24,7 @@ class PriorityChartButton extends StatelessWidget {
                     .getRemainingPriority(priority)))
           ]),
           onTap: () {
-            Navigator.of(context)
-                .push(
+            Navigator.of(context).push(
                 RouteUtil.routeWithSlideTransition(PriorityPage(priority)));
           }),
     );

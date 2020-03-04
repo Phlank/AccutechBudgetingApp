@@ -8,13 +8,19 @@ class PriorityChartRow extends StatelessWidget {
     return Row(
       children: <Widget>[
         Expanded(
-          child: PriorityChartButton(priority: Priority.needs), flex: 1,),
+          child: PriorityChartButton(priority: Priority.needs),
+          flex: 1,
+        ),
         Expanded(
-          child: PriorityChartButton(priority: Priority.wants), flex: 1,),
-        Expanded(child: PriorityChartButton(priority: Priority.savings), flex: 1,),
+          child: PriorityChartButton(priority: Priority.wants),
+          flex: 1,
+        ),
+        Expanded(
+          child: PriorityChartButton(priority: Priority.savings),
+          flex: 1,
+        ),
       ],
       mainAxisAlignment: MainAxisAlignment.center,
     );
   }
-
 }
