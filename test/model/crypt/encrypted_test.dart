@@ -9,7 +9,7 @@ main() {
         new Encrypted("udisabyfeb", "fuiea8932rui3buih8sd9fueHUIWHD&W");
     String es = e.serialize;
     String escs = Serializer
-        .unserialize(KEY_ENCRYPTED, es)
+        .unserialize(encryptedKey, es)
         .serialize;
     expect(es, equals(escs));
   });

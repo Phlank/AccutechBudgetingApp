@@ -9,8 +9,8 @@ import 'package:flutter/widgets.dart';
 
 class GeneralCategory extends StatefulWidget {
   String section;
-  static final String NEEDS_ROUTE = '/' + Priority.need.name;
-  static final String WANTS_ROUTE = '/' + Priority.want.name;
+  static final String NEEDS_ROUTE = '/' + Priority.needs.name;
+  static final String WANTS_ROUTE = '/' + Priority.wants.name;
   static final String SAVINGS_ROUTE = '/' + Priority.savings.name;
 
   GeneralCategory(String section) {

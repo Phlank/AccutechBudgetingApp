@@ -105,9 +105,9 @@ class History implements Serializable {
 
   static Future<History> load() async {
     String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);
-    Encrypted e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
+    Encrypted e = Serializer.unserialize(encryptedKey, cipher);
     String plaintext = BudgetControl.crypter.decrypt(e);
-    History h = Serializer.unserialize(KEY_HISTORY, plaintext);
+    History h = Serializer.unserialize(historyKey, plaintext);
     return h;
   }
 }

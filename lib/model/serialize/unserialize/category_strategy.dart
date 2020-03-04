@@ -6,8 +6,8 @@ import 'package:budgetflow/model/serialize/unserializer.dart';
 class CategoryStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
-    var name = value[KEY_NAME];
-    var priority = Serializer.unserialize(KEY_PRIORITY, value[KEY_PRIORITY]);
+    var name = value[nameKey];
+    var priority = Serializer.unserialize(priorityKey, value[priorityKey]);
     return Category(name, priority);
   }
 }

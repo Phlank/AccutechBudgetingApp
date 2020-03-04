@@ -3,19 +3,19 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class BudgetType implements Serializable {
-  static const String GROWTH_NAME = 'Growth';
-  static const String DEPLETION_NAME = 'Depletion';
+  static const String growthName = 'Growth';
+  static const String depletionName = 'Depletion';
 
   final String name;
 
-  static const BudgetType growth = BudgetType("Growth");
-  static const BudgetType depletion = BudgetType("Depletion");
+  static const BudgetType growth = BudgetType(growthName);
+  static const BudgetType depletion = BudgetType(depletionName);
 
   const BudgetType(this.name);
 
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(KEY_NAME, name);
+    serializer.addPair(nameKey, name);
     return serializer.serialize;
   }
 }

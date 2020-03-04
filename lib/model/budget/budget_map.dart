@@ -32,8 +32,8 @@ class BudgetMap extends DelegatingMap<Category, double>
     int i = 0;
     _map.forEach((category, amount) {
       Serializer keySerializer = Serializer();
-      keySerializer.addPair(KEY_CATEGORY, category);
-      keySerializer.addPair(KEY_AMOUNT, amount);
+      keySerializer.addPair(categoryKey, category);
+      keySerializer.addPair(amountKey, amount);
       main.addPair(i, keySerializer);
       i++;
     });
@@ -48,8 +48,8 @@ class BudgetMap extends DelegatingMap<Category, double>
     // value is a map from the pattern in _makeSerializable
     // value has two keys, _CATEGORY_KEY and _AMOUNT_KEY
     decoded.forEach((key, value) {
-      Category c = Serializer.unserialize(KEY_CATEGORY, value[KEY_CATEGORY]);
-      double amount = double.parse(value[KEY_AMOUNT]);
+      Category c = Serializer.unserialize(categoryKey, value[categoryKey]);
+      double amount = double.parse(value[amountKey]);
       unserialized[c] += amount;
     });
     return unserialized;

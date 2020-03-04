@@ -11,12 +11,11 @@ import 'package:steel_crypt/PointyCastleN/export.dart';
 import 'encrypted.dart';
 
 class SteelPassword implements Password {
-  static const String PASSWORD_PATH = "password";
-  static const String _ALGORITHM = "scrypt";
-  static const int _KEY_LENGTH = 32;
-  static const int _SCRYPT_N = 4096;
-  static const int _SCRYPT_r = 16;
-  static const int _SCRYPT_p = 1;
+  static const String _algorithm = "scrypt";
+  static const int _keyLength = 32;
+  static const int _scryptN = 4096;
+  static const int _scryptR = 16;
+  static const int _scryptP = 1;
 
   String _secret;
   String _hash;
@@ -27,7 +26,7 @@ class SteelPassword implements Password {
     _secret = "";
     _hash = "";
     _salt = "";
-    _keyDerivator = KeyDerivator(_ALGORITHM);
+    _keyDerivator = KeyDerivator(_algorithm);
   }
 
   SteelPassword.fromSecret(String secret) {
@@ -38,15 +37,15 @@ class SteelPassword implements Password {
   }
 
   static String _generateSalt(String secret) {
-    int diff = _KEY_LENGTH - secret.length;
+    int diff = _keyLength - secret.length;
     return generateRandom(diff);
   }
 
   static KeyDerivator _generateKeyDerivator(String salt) {
     Uint8List saltBytes = Uint8List.fromList(salt.codeUnits);
     ScryptParameters params = ScryptParameters(
-        _SCRYPT_N, _SCRYPT_r, _SCRYPT_p, _KEY_LENGTH, saltBytes);
-    KeyDerivator output = KeyDerivator(_ALGORITHM);
+        _scryptN, _scryptR, _scryptP, _keyLength, saltBytes);
+    KeyDerivator output = KeyDerivator(_algorithm);
     output.init(params);
     return output;
   }
@@ -59,7 +58,7 @@ class SteelPassword implements Password {
   SteelPassword.fromHashAndSalt(String hash, String salt) {
     _hash = hash;
     _salt = salt;
-    _keyDerivator = KeyDerivator(_ALGORITHM);
+    _keyDerivator = KeyDerivator(_algorithm);
   }
 
   @override
@@ -86,18 +85,18 @@ class SteelPassword implements Password {
 
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(KEY_SALT, _salt);
-    serializer.addPair(KEY_HASH, _hash);
+    serializer.addPair(saltKey, _salt);
+    serializer.addPair(hashKey, _hash);
     return serializer.serialize;
   }
 
   static Future<Password> load() async {
-    String s = await BudgetControl.fileIO.readFile(PASSWORD_PATH);
-    return Serializer.unserialize(KEY_PASSWORD, s);
+    String s = await BudgetControl.fileIO.readFile(Password.path);
+    return Serializer.unserialize(passwordKey, s);
   }
 
   @override
   void save() {
-    BudgetControl.fileIO.writeFile(PASSWORD_PATH, serialize);
+    BudgetControl.fileIO.writeFile(Password.path, serialize);
   }
 }

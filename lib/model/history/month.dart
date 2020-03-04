@@ -107,7 +107,7 @@ class Month implements Serializable {
       _allotted = new BudgetMap();
     });
     if (cipher != null) {
-      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
+      e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _allotted = BudgetMap.unserialize(plaintext);
     }
@@ -128,7 +128,7 @@ class Month implements Serializable {
       _actual = new BudgetMap();
     });
     if (cipher != null) {
-      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
+      e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
       _actual = BudgetMap.unserialize(plaintext);
     }
@@ -149,9 +149,9 @@ class Month implements Serializable {
       _transactions = new TransactionList();
     });
     if (cipher != null) {
-      e = Serializer.unserialize(KEY_ENCRYPTED, cipher);
+      e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      _transactions = Serializer.unserialize(KEY_TRANSACTION_LIST, plaintext);
+      _transactions = Serializer.unserialize(transactionListKey, plaintext);
     }
   }
 
@@ -199,10 +199,10 @@ class Month implements Serializable {
 
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(KEY_YEAR, _monthTime.year);
-    serializer.addPair(KEY_MONTH, _monthTime.month);
-    serializer.addPair(KEY_INCOME, _income);
-    serializer.addPair(KEY_TYPE, _type);
+    serializer.addPair(yearKey, _monthTime.year);
+    serializer.addPair(monthKey, _monthTime.month);
+    serializer.addPair(incomeKey, _income);
+    serializer.addPair(typeKey, _type);
     return serializer.serialize;
   }
 

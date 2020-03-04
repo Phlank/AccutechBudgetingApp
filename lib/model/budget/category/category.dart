@@ -22,17 +22,17 @@ class Category implements Serializable {
   final Priority priority;
 
   static const Category //
-      housing = Category("Housing", Priority.need),
-      utilities = Category("Utilities", Priority.need),
-      groceries = Category("Groceries", Priority.need),
+  housing = Category("Housing", Priority.needs),
+      utilities = Category("Utilities", Priority.needs),
+      groceries = Category("Groceries", Priority.needs),
       savings = Category("Savings", Priority.savings),
-      health = Category("Health", Priority.need),
-      transportation = Category("Transportation", Priority.need),
-      education = Category("Education", Priority.want),
-      entertainment = Category("Entertainment", Priority.want),
-      kids = Category("Kids", Priority.want),
-      pets = Category("Pets", Priority.want),
-      miscellaneous = Category("Miscellaneous", Priority.want),
+      health = Category("Health", Priority.needs),
+      transportation = Category("Transportation", Priority.needs),
+      education = Category("Education", Priority.wants),
+      entertainment = Category("Entertainment", Priority.wants),
+      kids = Category("Kids", Priority.wants),
+      pets = Category("Pets", Priority.wants),
+      miscellaneous = Category("Miscellaneous", Priority.wants),
       income = Category("Income", Priority.other),
       uncategorized = Category("Uncategorized", Priority.other);
 
@@ -58,8 +58,8 @@ class Category implements Serializable {
 
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(KEY_NAME, name);
-    serializer.addPair(KEY_PRIORITY, priority);
+    serializer.addPair(nameKey, name);
+    serializer.addPair(priorityKey, priority);
     return serializer.serialize;
   }
 

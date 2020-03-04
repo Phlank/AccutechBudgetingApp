@@ -39,7 +39,7 @@ Future<void> main() async {
     });
     test("Serialization sanity", () async {
       String _pw1s = _pw1.serialize;
-      Password _pw1u = Serializer.unserialize(KEY_PASSWORD, _pw1s);
+      Password _pw1u = Serializer.unserialize(passwordKey, _pw1s);
       expect(await _pw1u.verify(_SECRET_1), true);
     });
   });

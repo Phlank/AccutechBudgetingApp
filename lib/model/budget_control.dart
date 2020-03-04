@@ -23,7 +23,6 @@ import 'budget/category/category.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
-  static const String _PASSWORD_PATH = "password";
   static FileIO fileIO = new DartFileIO();
   static Password _password;
   static Crypter crypter;
@@ -137,7 +136,7 @@ class BudgetControl implements Control {
       _history.addMonth(builder.build());
     }
     _history.save(_budget);
-    fileIO.writeFile(_PASSWORD_PATH, _password.serialize);
+    fileIO.writeFile(Password.path, _password.serialize);
   }
 
   @override
@@ -299,10 +298,10 @@ class MockBudget {
 
   double getNewTotalAllotted(String section) {
     Map<String, List<Category>> mockMap = {
-      Priority.need.name: BudgetingApp.userController.getBudget()
-          .getCategoriesOfPriority(Priority.need),
-      Priority.want.name: BudgetingApp.userController.getBudget()
-          .getCategoriesOfPriority(Priority.want),
+      Priority.needs.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.needs),
+      Priority.wants.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.wants),
       Priority.savings.name: BudgetingApp.userController.getBudget()
           .getCategoriesOfPriority(Priority.savings)
     };

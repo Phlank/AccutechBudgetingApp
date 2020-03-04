@@ -41,7 +41,8 @@ class Location implements Serializable {
 
   String get serialize {
     Serializer serializer = new Serializer();
-    serializer.addPair(KEY_LATITUDE, latitude);
-    serializer.addPair(KEY_LONGITUDE, longitude);
+    serializer.addPair(latitudeKey, latitude);
+    serializer.addPair(longitudeKey, longitude);
+    return serializer.serialize;
   }
 }
