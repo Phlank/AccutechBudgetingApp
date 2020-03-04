@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
-import 'package:budgetflow/view/global_widgets/transaction/transaction_list_item_button.dart';
+import 'package:budgetflow/view/widgets/transaction/transaction_list_item_button.dart';
 import 'package:flutter/material.dart';
 
 class TransactionListView extends StatelessWidget {
@@ -13,8 +13,9 @@ class TransactionListView extends StatelessWidget {
     transactions.forEach((transaction) {
       items.add(TransactionListItemButton(transaction));
     });
-    return Column(
+    return ListView(
       children: items,
+      shrinkWrap: true,
     );
   }
 }

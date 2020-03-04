@@ -72,6 +72,9 @@ class SteelPassword implements Password {
     success.then((bool verified) {
       if (verified) _secret = secret;
     });
+    success.catchError((error) {
+      return false;
+    });
     return success;
   }
 

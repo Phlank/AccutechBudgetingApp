@@ -27,6 +27,10 @@ class CategoryList {
 
   CategoryList.fromCategories(this._categories);
 
+  CategoryList.empty() {
+    _categories = List();
+  }
+
   int get length => _categories.length;
 
   bool contains(Category category) => _categories.contains(category);

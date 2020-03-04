@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/budget/category/priority.dart';
-import 'package:budgetflow/view/global_widgets/priority_bar_chart/priority_chart_button.dart';
+import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart_button.dart';
 import 'package:flutter/cupertino.dart';
 
 class PriorityChartRow extends StatelessWidget {

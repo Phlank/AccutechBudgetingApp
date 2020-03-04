@@ -14,7 +14,7 @@ description: Accutech budgeting app for iOS and Android.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -35,13 +35,27 @@ dependencies:
   path_provider: ^1.5.1
 
   # Date formatting
-  intl: ^0.16.1
+  intl: 0.16.0
 
   # Location Based services.
   geolocator: ^5.2.1
 
   # Day and month services.
   calendarro: ^1.1.2
+
+  # Google maps
+  google_maps_flutter: ^0.5.24+1
+  place_picker: ^0.9.11
+
+  # Picking dates and times
+  datetime_picker_formfield: ^1.0.0
+
+  # Mocking for unit tests
+  mockito: ^4.1.1
+
+  # Extending lists
+  # Must stay at 2.0.5, used by flutter_test
+  quiver: 2.0.5
 
 dev_dependencies:
   flutter_test:

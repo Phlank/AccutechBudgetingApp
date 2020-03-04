@@ -7,6 +7,7 @@ import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/util/dates.dart';
 import 'package:calendarro/date_utils.dart';
+
 import 'category/priority.dart';
 
 class BudgetBuilder {
@@ -85,7 +86,7 @@ class Budget {
   Budget.fromOldBudget(Budget old) {
     _income = old._income;
     _type = old._type;
-    _allotted = BudgetMap.copyOf(old._allotted);
+    _allotted = BudgetMap.from(old._allotted);
     _actual = new BudgetMap();
     _transactions = new TransactionList();
   }
@@ -144,9 +145,9 @@ class Budget {
   void addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actual.addTo(transaction.category, -transaction.amount);
+      _actual[transaction.category] += -transaction.amount;
     } else {
-      _actual.addTo(Category.miscellaneous, -transaction.amount);
+      _actual[Category.miscellaneous] += -transaction.amount;
     }
   }
 
@@ -218,9 +219,31 @@ class Budget {
     return getAllottedPriority(priority) - getActualPriority(priority);
   }
 
-  void removeTransactionAt(int i) {
-    Transaction t = _transactions.getAt(i);
-    _actual.subtractFrom(t.category, t.amount);
-    _transactions.removeAt(i);
+  double getAllottedCategory(Category category) {
+    return _allotted[category];
+  }
+
+  double getActualCategory(Category category) {
+    return _actual[category];
+  }
+
+  double getRemainingCategory(Category category) {
+    return _allotted[category] - _actual[category];
+  }
+
+  List<Category> getCategoriesOfPriority(Priority priority) {
+    List<Category> list = List();
+    _allotted.forEach((category, double) {
+//      print("Category: " + category.name + " has a priority of " +
+//          category.priority.name);
+//      print(priority.name + " == " + category.priority.name + " is " +
+//          (category.priority == priority).toString());
+      if (category.priority == priority) list.add(category);
+    });
+    return list;
+  }
+
+  void removeTransaction(Transaction transaction) {
+    _transactions.remove(transaction);
   }
 }

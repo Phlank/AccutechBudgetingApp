@@ -6,6 +6,7 @@ import 'package:budgetflow/model/serialize/unserialize/budget_type_strategy.dart
 import 'package:budgetflow/model/serialize/unserialize/category_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/encrypted_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/history_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/location_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/month_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/password_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/priority_strategy.dart';
@@ -23,7 +24,8 @@ class Serializer implements Serializable {
     KEY_TRANSACTION_LIST: TransactionListStrategy(),
     KEY_MONTH: MonthStrategy(),
     KEY_TYPE: BudgetTypeStrategy(),
-    KEY_HISTORY: HistoryStrategy()
+    KEY_HISTORY: HistoryStrategy(),
+    KEY_LOCATION: LocationStrategy()
   };
 
   Map<dynamic, dynamic> pairs;
@@ -61,11 +63,14 @@ class Serializer implements Serializable {
   }
 
   static String _padIfNeeded(String value) {
-    bool needsPadding = !(value.contains('{') || value.contains('"'));
-    if (needsPadding) {
-      return '"$value"';
+    if (value != "null" && value != null) {
+      bool needsPadding = !(value.contains('{') || value.contains('"'));
+      if (needsPadding) {
+        return '"$value"';
+      }
+      return value;
     }
-    return value;
+    return "null";
   }
 
   static dynamic unserialize(String key, dynamic value) {
@@ -75,7 +80,8 @@ class Serializer implements Serializable {
   }
 
   static void _validate(String key, dynamic value) {
-    if (!(value is Map || value is String)) throw InvalidSerializedValueError();
+    if (!(value is Map || value is String ||
+        value == null)) throw InvalidSerializedValueError();
     if (!strategyMap.containsKey(key)) throw UnknownMapKeyError();
   }
 }

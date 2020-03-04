@@ -41,7 +41,10 @@ class PriorityBudgetFactory implements BudgetFactory {
   static const _STAGE_3_BOUND = .8;
   static const _STAGE_4_BOUND = 1.0;
 
-  double _housingRatio = 0.0, _income = 0.0, _underspending = 0.0, _overspending = 0.0;
+  double _housingRatio = 0.0,
+      _income = 0.0,
+      _underspending = 0.0,
+      _overspending = 0.0;
   _NSW _currentDistribution, _targetDistribution;
   double _wantsRatio, _needsRatio, _savingsRatio;
   Budget _oldBudget;
@@ -55,8 +58,14 @@ class PriorityBudgetFactory implements BudgetFactory {
   PriorityBudgetFactory();
 
   @override
-  Budget newFromInfo(double income, double housing, BudgetType type) {
+  Budget newFromInfo(double income, double housing, bool depletion,
+      double savingsPull, bool kids, bool pets) {
     _builder.setIncome(income);
+    var type;
+    if (depletion)
+      type = BudgetType.depletion;
+    else
+      type = BudgetType.growth;
     _builder.setType(type);
     _currentDistribution = new _NSW(0.0, 0.0, 0.0);
     _targetDistribution = new _NSW(0.0, 0.0, 0.0);

@@ -1,5 +1,5 @@
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/new_user_page.dart';
+import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -13,7 +13,6 @@ class FirstLoad extends StatefulWidget {
 class _FirstLoadState extends State<FirstLoad> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return FutureBuilder(
       future: BudgetingApp.userController.initialize(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {

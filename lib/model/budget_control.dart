@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
+import 'package:budgetflow/model/budget/location/location.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
@@ -9,7 +14,10 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/setup_agent.dart';
+import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'budget/category/category.dart';
 import 'history/month.dart';
@@ -25,20 +33,21 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
+  Map<Location, Category> locationMap = Map();
+  StreamSubscription<Position> positionStream;
 
   final Map<String, List<Category>> sectionMap = {
-    'needs': [Category.housing, Category.utilities, Category.groceries,
-      Category.health, Category.transportation, Category.education,Category.kids],
-    'wants': [Category.entertainment, Category.pets, Category.miscellaneous],
-    'savings': [Category.savings]
-  };
-
-  final Map<String, String> routeMap = {
-    'needs': '/Needs',
-    'wants': '/Wants',
-    'savings': '/Savings',
-    'home': '/knownUser',
-    'accounts':'/account'
+    'Needs': [
+      Category.housing,
+      Category.utilities,
+      Category.groceries,
+      Category.health,
+      Category.transportation,
+      Category.education,
+      Category.kids
+    ],
+    'Wants': [Category.entertainment, Category.pets, Category.miscellaneous],
+    'Savings': [Category.savings]
   };
 
   BudgetControl() {
@@ -87,6 +96,36 @@ class BudgetControl implements Control {
     _history = await History.load();
     _budget = await _history.getLatestMonthBudget();
     _loadedTransactions = TransactionList.copy(_budget.transactions);
+    _initLocationMap();
+    _initLocationListener();
+  }
+
+  void _initLocationMap() {
+    locationMap = Map<Location, Category>();
+    _loadedTransactions.forEach((transaction) {
+      if (transaction.location != null &&
+          !locationMap.containsKey(transaction.location)) {
+        locationMap[transaction.location] = transaction.category;
+      }
+    });
+  }
+
+  void _initLocationListener() {
+    positionStream = Geolocator()
+        .getPositionStream(LocationOptions(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+        timeInterval: 10))
+        .listen((position) {
+      Location streamLocation = Location.fromGeolocatorPosition(position);
+      locationMap.forEach((location, category) async {
+        if (await streamLocation.distanceTo(location) < 10) {
+          // TODO Trigger notification
+          print('In range of location ' + location.latitude.toString() + ', ' +
+              location.longitude.toString() + ' for category ' + category.name);
+        }
+      });
+    });
   }
 
   Future save() async {
@@ -117,6 +156,16 @@ class BudgetControl implements Control {
     return _loadedTransactions;
   }
 
+  TransactionList getTransactionsInCategory(Category category) {
+    TransactionList transactions = TransactionList();
+    _loadedTransactions.forEach((transaction) {
+      if (transaction.category == category) {
+        transactions.add(transaction);
+      }
+    });
+    return transactions;
+  }
+
   @override
   Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
@@ -132,6 +181,19 @@ class BudgetControl implements Control {
     _budget.addTransaction(t);
     _history.getMonth(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
+    save();
+  }
+
+  Future<bool> setup() async {
+    await setPassword(SetupAgent.pin);
+    addNewBudget(PriorityBudgetFactory().newFromInfo(
+        SetupAgent.income,
+        SetupAgent.housing,
+        SetupAgent.depletion,
+        SetupAgent.savingsPull,
+        SetupAgent.kids,
+        SetupAgent.pets));
+    return true;
   }
 
   void changeAllotment(String category, double newAmt) {
@@ -167,21 +229,19 @@ class BudgetControl implements Control {
     _history.addMonth(m);
     _loadedTransactions = new TransactionList.copy(b.transactions);
     _budget = b;
+    save();
   }
 
   Map<String, double> buildBudgetMap() {
     Map<String, double> map = new Map();
     map.putIfAbsent('housing', () => _budget.allotted[Category.housing]);
-    map.putIfAbsent(
-        'utilities', () => _budget.allotted[Category.utilities]);
-    map.putIfAbsent(
-        'groceries', () => _budget.allotted[Category.groceries]);
+    map.putIfAbsent('utilities', () => _budget.allotted[Category.utilities]);
+    map.putIfAbsent('groceries', () => _budget.allotted[Category.groceries]);
     map.putIfAbsent('savings', () => _budget.allotted[Category.savings]);
     map.putIfAbsent('helath', () => _budget.allotted[Category.health]);
-    map.putIfAbsent('transportation',
-            () => _budget.allotted[Category.transportation]);
     map.putIfAbsent(
-        'education', () => _budget.allotted[Category.education]);
+        'transportation', () => _budget.allotted[Category.transportation]);
+    map.putIfAbsent('education', () => _budget.allotted[Category.education]);
     map.putIfAbsent(
         'entertainment', () => _budget.allotted[Category.entertainment]);
     map.putIfAbsent('kids', () => _budget.allotted[Category.kids]);
@@ -194,19 +254,17 @@ class BudgetControl implements Control {
   double expenseTotal() {
     double spent = 0.0;
     for (int i = 0; i < _loadedTransactions.length; i++) {
-      spent += _loadedTransactions
-          .getAt(i)
-          .amount;
+      spent += _loadedTransactions.getAt(i).amount;
     }
     return spent;
   }
 
   double expenseInSection(String section) {
     double spent = 0.0;
-    for(Category cat in sectionMap[section]){
-      for(int i= 0; i<_loadedTransactions.length; i++){
+    for (Category cat in sectionMap[section]) {
+      for (int i = 0; i < _loadedTransactions.length; i++) {
         Category rel = _loadedTransactions.getAt(i).category;
-        if( rel == cat){
+        if (rel == cat) {
           spent += _budget.allotted[rel];
         }
       }
@@ -218,14 +276,9 @@ class BudgetControl implements Control {
     return sectionBudget(section) - expenseInSection(section);
   }
 
-  void removeTransaction(Transaction tran) {
-    for(int i=0; i<_loadedTransactions.length; i++){
-      if(tran.time == _loadedTransactions.getAt(i).time){
-        print('removed');
-        _loadedTransactions.removeAt(i);
-        _budget.removeTransactionAt(i);
-      }
-    }
+  void removeTransactionIfPresent(Transaction tran) {
+    _loadedTransactions.remove(tran);
+    _budget.removeTransaction(tran);
   }
 }
 
@@ -246,20 +299,12 @@ class MockBudget {
 
   double getNewTotalAllotted(String section) {
     Map<String, List<Category>> mockMap = {
-      'needs': [
-        Category.health,
-        Category.housing,
-        Category.utilities,
-        Category.groceries,
-        Category.transportation,
-        Category.kids
-      ],
-      'wants': [
-        Category.pets,
-        Category.miscellaneous,
-        Category.entertainment
-      ],
-      'savings': [Category.savings]
+      Priority.need.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.need),
+      Priority.want.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.want),
+      Priority.savings.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.savings)
     };
     double total = 0.0;
     for (Category category in mockMap[section]) {
