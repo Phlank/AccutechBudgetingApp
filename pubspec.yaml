@@ -14,7 +14,7 @@ description: Accutech budgeting app for iOS and Android.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -52,6 +52,10 @@ dependencies:
 
   # Mocking for unit tests
   mockito: ^4.1.1
+
+  # Extending lists
+  # Must stay at 2.0.5, used by flutter_test
+  quiver: 2.0.5
 
 dev_dependencies:
   flutter_test:

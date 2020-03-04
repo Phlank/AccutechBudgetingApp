@@ -77,6 +77,7 @@ class Budget {
   double _income;
   BudgetType _type;
 
+  // TODO turn this into a constructor with named arguments rather than using a builder
   Budget._new(this._allotted, this._actual, this._transactions, this._income,
       this._type, this._categories) {
     // TODO if there are transactions present and actual spending is empty, use transactions to update actual spending
@@ -86,7 +87,7 @@ class Budget {
   Budget.fromOldBudget(Budget old) {
     _income = old._income;
     _type = old._type;
-    _allotted = BudgetMap.copyOf(old._allotted);
+    _allotted = Map.from(old._allotted);
     _actual = new BudgetMap();
     _transactions = new TransactionList();
   }
@@ -145,9 +146,9 @@ class Budget {
   void addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actual.addTo(transaction.category, -transaction.amount);
+      _actual[transaction.category] -= transaction.amount;
     } else {
-      _actual.addTo(Category.uncategorized, -transaction.amount);
+      _actual[Category.uncategorized] -= transaction.amount;
     }
   }
 
