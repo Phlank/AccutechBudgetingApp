@@ -8,10 +8,10 @@ class BudgetType implements Serializable {
 
   final String name;
 
-  static const BudgetType growth = BudgetType(growthName);
-  static const BudgetType depletion = BudgetType(depletionName);
+  static const BudgetType growth = BudgetType._(growthName);
+  static const BudgetType depletion = BudgetType._(depletionName);
 
-  const BudgetType(this.name);
+  const BudgetType._(this.name);
 
   String get serialize {
     Serializer serializer = Serializer();
