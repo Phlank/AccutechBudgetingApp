@@ -47,24 +47,24 @@ void main() {
       expect(cNeed1.compareTo(cNeed3), -1);
     });
     test('Test cNeed1.serialize', () {
-      expect(cNeed1.serialize, '{"name":"1","priority":{"name":"Need"}}');
+      expect(cNeed1.serialize, '{"name":"1","priority":{"name":"Needs"}}');
     });
     test('Test cNeed2.serialize', () {
-      expect(cNeed2.serialize, '{"name":"2","priority":{"name":"Need"}}');
+      expect(cNeed2.serialize, '{"name":"2","priority":{"name":"Needs"}}');
     });
     test('Test unserialize cNeed1', () {
       Category fromSerialized = Serializer.unserialize(
-          KEY_CATEGORY, '{"name":"1","priority":{"name":"Need"}}');
+          KEY_CATEGORY, '{"name":"1","priority":{"name":"Needs"}}');
       expect(fromSerialized == cNeed1, true);
     });
     test('Test unserialize cNeed2', () {
       Category fromSerialized = Serializer.unserialize(
-          KEY_CATEGORY, '{"name":"2","priority":{"name":"Need"}}');
+          KEY_CATEGORY, '{"name":"2","priority":{"name":"Needs"}}');
       expect(fromSerialized == cNeed2, true);
     });
     test('Serialization sanity', () {
       Category fromSerialized = Serializer.unserialize(
-          KEY_CATEGORY, '{"name":"1","priority":{"name":"Need"}}');
+          KEY_CATEGORY, '{"name":"1","priority":{"name":"Needs"}}');
       String serialized = fromSerialized.serialize;
       Category copyFS = Serializer.unserialize(KEY_CATEGORY, serialized);
       expect(fromSerialized == copyFS, isTrue);

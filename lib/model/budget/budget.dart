@@ -87,7 +87,7 @@ class Budget {
   Budget.fromOldBudget(Budget old) {
     _income = old._income;
     _type = old._type;
-    _allotted = Map.from(old._allotted);
+    _allotted = BudgetMap.from(old._allotted) as BudgetMap;
     _actual = new BudgetMap();
     _transactions = new TransactionList();
   }

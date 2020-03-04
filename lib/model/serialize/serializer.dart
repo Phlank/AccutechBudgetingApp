@@ -63,7 +63,7 @@ class Serializer implements Serializable {
   }
 
   static String _padIfNeeded(String value) {
-    if (value != null) {
+    if (value != "null" && value != null) {
       bool needsPadding = !(value.contains('{') || value.contains('"'));
       if (needsPadding) {
         return '"$value"';

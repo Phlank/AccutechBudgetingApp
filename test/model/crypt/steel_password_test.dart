@@ -8,15 +8,10 @@ const String _SECRET_2 = "password2";
 
 Password _pw1, _pw2;
 
-DateTime start, end;
-
 Future<void> main() async {
   _pw1 = await Password.fromSecret(_SECRET_1);
   _pw2 = await Password.fromSecret(_SECRET_2);
   group("SteelPassword tests", () {
-    setUp(() {
-      start = DateTime.now();
-    });
     test("Secret and hash do not match", () {
       expect("password1", isNot(_pw1.hash));
     });
@@ -46,11 +41,6 @@ Future<void> main() async {
       String _pw1s = _pw1.serialize;
       Password _pw1u = Serializer.unserialize(KEY_PASSWORD, _pw1s);
       expect(await _pw1u.verify(_SECRET_1), true);
-    });
-    tearDown(() {
-      end = DateTime.now();
-      int elapsed = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
-      print("Ms elapsed: $elapsed");
     });
   });
 }

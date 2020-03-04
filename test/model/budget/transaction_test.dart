@@ -13,7 +13,7 @@ Transaction t2 = new Transaction(
   time: DateTime.fromMillisecondsSinceEpoch(1578881628138),
 );
 String t2s =
-    "{\"datetime\":\"1578881628138\",\"vendor\":\"Walmart\",\"method\":\"Credit Card\",\"delta\":\"0.0\",\"category\":\"Groceries\"}";
+    '{"time":"1578881628138","vendor":"Walmart","method":"Credit","amount":"0.0","category":{"name":"Groceries","priority":{"name":"Needs"}},"location":null}';
 
 void main() {
   test("Serialization of new transaction", () {

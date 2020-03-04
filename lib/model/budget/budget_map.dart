@@ -23,6 +23,10 @@ class BudgetMap extends DelegatingMap<Category, double>
     });
   }
 
+  BudgetMap.from(BudgetMap other) {
+    _map = Map.from(other._map);
+  }
+
   String get serialize {
     Serializer main = Serializer();
     int i = 0;
@@ -57,5 +61,17 @@ class BudgetMap extends DelegatingMap<Category, double>
       newBudgetMap[bc] = d / n;
     });
     return newBudgetMap;
+  }
+
+  bool operator ==(Object other) => other is BudgetMap && this._equals(other);
+
+  bool _equals(BudgetMap other) {
+    bool output = true;
+    this.forEach((category, amount) {
+      if (this[category] != other[category]) {
+        output = false;
+      }
+    });
+    return output;
   }
 }
