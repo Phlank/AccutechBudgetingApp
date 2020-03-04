@@ -29,4 +29,7 @@ void main() {
   test('Test input 1.23. is not dollarAmount', () {
     expect(InputValidator.dollarAmount('1.23.'), false);
   });
+  test('dynamic recognizes value with \$ in it', (){
+    expect(InputValidator.dynamicValidation(double, '-\$2300'), true);
+  });
 }
