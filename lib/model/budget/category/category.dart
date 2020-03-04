@@ -4,7 +4,6 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Category implements Serializable {
-
   static Map<String, Category> categoryMap = {
     'housing': Category.housing,
     'utilities': Category.utilities,
@@ -63,11 +62,11 @@ class Category implements Serializable {
     return serializer.serialize;
   }
 
-  static void addCatagory(Category c){
-    categoryMap.putIfAbsent(c.name, ()=>c);
+  static void addCategory(Category c) {
+    categoryMap.putIfAbsent(c.name, () => c);
   }
 
-  static Category categoryFromString(String catString){
-    return  categoryMap[catString];
+  static Category categoryFromString(String catString) {
+    return categoryMap[catString];
   }
 }
