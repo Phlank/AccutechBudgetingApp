@@ -7,11 +7,11 @@ import 'package:budgetflow/model/serialize/unserializer.dart';
 class MonthStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
-    MonthBuilder builder = MonthBuilder();
-    builder.setIncome(double.parse(value[incomeKey]));
-    builder.setMonthTime(
-        MonthTime(int.parse(value[yearKey]), int.parse(value[monthKey])));
-    builder.setType(Serializer.unserialize(typeKey, value[typeKey]));
-    return builder.build();
+    return Month(
+      type: Serializer.unserialize(typeKey, value[typeKey]),
+      income: double.parse(value[incomeKey]),
+      monthTime:
+      MonthTime(int.parse(value[yearKey]), int.parse(value[monthKey])),
+    );
   }
 }

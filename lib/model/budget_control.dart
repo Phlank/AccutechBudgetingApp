@@ -133,11 +133,11 @@ class BudgetControl implements Control {
 
   Future save() async {
     if (_history.getMonth(MonthTime.now()) == null) {
-      MonthBuilder builder = new MonthBuilder();
-      builder.setMonthTime(MonthTime.now());
-      builder.setIncome(_budget.expectedIncome);
-      builder.setType(_budget.type);
-      _history.addMonth(builder.build());
+      _history.addMonth(Month(
+        monthTime: MonthTime.now(),
+        income: _budget.expectedIncome,
+        type: _budget.type,
+      ));
     }
     _history.save(_budget);
     fileIO.writeFile(Password.path, _password.serialize);

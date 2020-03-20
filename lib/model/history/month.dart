@@ -2,167 +2,79 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
-import 'package:budgetflow/model/budget_control.dart';
-import 'package:budgetflow/model/crypt/encrypted.dart';
+import 'package:budgetflow/model/history/month_io.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
-
-class MonthBuilder {
-  MonthTime _monthTime;
-  double _income;
-  BudgetType _type;
-  BudgetMap _allotted, _actual;
-  TransactionList _transactions;
-
-  MonthBuilder();
-
-  void setMonthTime(MonthTime monthTime) {
-    _monthTime = monthTime;
-  }
-
-  void setIncome(double income) {
-    _income = income;
-  }
-
-  void setType(BudgetType type) {
-    _type = type;
-  }
-
-  void setAllotted(BudgetMap allotted) {
-    _allotted = allotted;
-  }
-
-  void setActual(BudgetMap actual) {
-    _actual = actual;
-  }
-
-  void setTransactions(TransactionList transactions) {
-    _transactions = transactions;
-  }
-
-  Month build() {
-    if (_monthTime == null) throw new NullThrownError();
-    if (_income == null) throw new NullThrownError();
-    if (_type == null) throw new NullThrownError();
-    // Don't need to check if BudgetMaps are null because if they are they can be loaded.
-    return new Month._new(
-        _monthTime, //
-        _income, //
-        _type, //
-        _allotted, //
-        _actual, //
-        _transactions);
-  }
-}
+import 'package:flutter/widgets.dart';
 
 class Month implements Serializable {
-  String _allottedFilepath, _actualFilepath, _transactionsFilepath;
-  BudgetMap _allotted, _actual;
+  MonthIO io;
+  BudgetMap _allotted, _actual, _target;
   TransactionList _transactions;
-  MonthTime _monthTime;
-  double _income;
-  BudgetType _type;
+  MonthTime monthTime;
+  double income;
+  BudgetType type;
 
-  Month._new(this._monthTime, this._income, this._type, this._allotted,
-      this._actual, this._transactions) {
-    _createFilePaths();
+  Month({
+    @required this.monthTime,
+    @required this.income,
+    @required this.type,
+    BudgetMap allotted,
+    BudgetMap actual,
+    BudgetMap target,
+    TransactionList transactions,
+  }) {
+    if (allotted != null) _allotted = allotted;
+    if (actual != null) _actual = actual;
+    if (target != null) _target = target;
+    if (transactions != null) _transactions = transactions;
   }
 
   Month.fromBudget(Budget b) {
-    _monthTime = MonthTime.now();
-    _income = b.expectedIncome;
-    _type = b.type;
+    monthTime = MonthTime.now();
+    income = b.expectedIncome;
+    type = b.type;
     _allotted = b.allotted;
     _actual = b.actual;
     _transactions = b.transactions;
-    _createFilePaths();
+    io = MonthIO(this);
   }
-
-  void _createFilePaths() {
-    _allottedFilepath = _monthTime.getFilePathString() + "_allotted";
-    _actualFilepath = _monthTime.getFilePathString() + "_actual";
-    _transactionsFilepath = _monthTime.getFilePathString() + "_transactions";
-  }
-
-  MonthTime get monthTime => _monthTime;
-
-  double get income => _income;
-
-  BudgetType get type => _type;
 
   Future<BudgetMap> get allotted async {
     if (_allotted == null) {
-      await loadAllotted();
+      _allotted = await io.loadAllotted();
     }
     return _allotted;
   }
 
-  Future loadAllotted() async {
-    String cipher, plaintext;
-    Encrypted e;
-    cipher = await BudgetControl.fileIO
-        .readFile(_allottedFilepath)
-        .catchError((Object error) {
-      _allotted = new BudgetMap();
-    });
-    if (cipher != null) {
-      e = Serializer.unserialize(encryptedKey, cipher);
-      plaintext = BudgetControl.crypter.decrypt(e);
-      _allotted = Serializer.unserialize(budgetMapKey, plaintext);
-    }
-  }
-
   Future<BudgetMap> get actual async {
     if (_actual == null) {
-      await loadActual();
+      _actual = await io.loadActual();
     }
     return _actual;
   }
 
-  Future loadActual() async {
-    String cipher, plaintext;
-    Encrypted e;
-    cipher = await BudgetControl.fileIO
-        .readFile(_actualFilepath)
-        .catchError((Object error) {
-      _actual = new BudgetMap();
-    });
-    if (cipher != null) {
-      e = Serializer.unserialize(encryptedKey, cipher);
-      plaintext = BudgetControl.crypter.decrypt(e);
-      _actual = Serializer.unserialize(budgetMapKey, plaintext);
+  Future<BudgetMap> get target async {
+    if (_target == null) {
+      _target = await io.loadTarget();
     }
+    return _target;
   }
 
   Future<TransactionList> get transactions async {
     if (_transactions == null) {
-      await loadTransactions();
+      _transactions = await io.loadTransactions();
     }
     return _transactions;
-  }
-
-  Future loadTransactions() async {
-    String cipher, plaintext;
-    Encrypted e;
-    cipher = await BudgetControl.fileIO
-        .readFile(_transactionsFilepath)
-        .catchError((Object error) {
-      _transactions = new TransactionList();
-    });
-    if (cipher != null) {
-      e = Serializer.unserialize(encryptedKey, cipher);
-      plaintext = BudgetControl.crypter.decrypt(e);
-      _transactions = Serializer.unserialize(transactionListKey, plaintext);
-    }
   }
 
   void updateMonthData(Budget budget) {
     _allotted = budget.allotted;
     _actual = budget.actual;
     _transactions = budget.transactions;
-    _type = budget.type;
+    type = budget.type;
   }
 
   Future save() async {
@@ -173,38 +85,32 @@ class Month implements Serializable {
 
   Future _saveAllottedSpending() async {
     if (_allotted != null) {
-      String content = _allotted.serialize;
-      Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize);
+      io.saveAllotted(_allotted);
     }
   }
 
   Future _saveActualSpending() async {
     if (_actual != null) {
-      String content = _actual.serialize;
-      Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize);
+      io.saveActual(_actual);
     }
   }
 
   Future _saveTransactions() async {
     if (_transactions != null) {
-      String content = _transactions.serialize;
-      Encrypted e = BudgetControl.crypter.encrypt(content);
-      await BudgetControl.fileIO.writeFile(_transactionsFilepath, e.serialize);
+      io.saveTransactions(_transactions);
     }
   }
 
-  MonthTime getMonthTime() => _monthTime;
+  MonthTime getMonthTime() => monthTime;
 
-  double getIncome() => _income;
+  double getIncome() => income;
 
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(yearKey, _monthTime.year);
-    serializer.addPair(monthKey, _monthTime.month);
-    serializer.addPair(incomeKey, _income);
-    serializer.addPair(typeKey, _type);
+    serializer.addPair(yearKey, monthTime.year);
+    serializer.addPair(monthKey, monthTime.month);
+    serializer.addPair(incomeKey, income);
+    serializer.addPair(typeKey, type);
     return serializer.serialize;
   }
 
