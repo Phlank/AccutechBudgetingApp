@@ -20,8 +20,7 @@ class Category implements Serializable {
   final String name;
   final Priority priority;
 
-  static const Category //
-  housing = Category("Housing", Priority.needs),
+  static const Category housing = Category("Housing", Priority.needs),
       utilities = Category("Utilities", Priority.needs),
       groceries = Category("Groceries", Priority.needs),
       savings = Category("Savings", Priority.savings),
@@ -32,7 +31,7 @@ class Category implements Serializable {
       kids = Category("Kids", Priority.wants),
       pets = Category("Pets", Priority.wants),
       miscellaneous = Category("Miscellaneous", Priority.wants),
-      income = Category("Income", Priority.other),
+      income = Category("Income", Priority.income),
       uncategorized = Category("Uncategorized", Priority.other);
 
   const Category(this.name, this.priority);

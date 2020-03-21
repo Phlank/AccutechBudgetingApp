@@ -7,7 +7,8 @@ class Priority implements Serializable {
       _needsName = 'Needs',
       _wantsName = 'Wants',
       _savingsName = 'Savings',
-      _otherName = 'Other';
+      _otherName = 'Other',
+      _incomeName = 'Income';
 
   final String name;
   final int value;
@@ -17,6 +18,7 @@ class Priority implements Serializable {
   static const wants = Priority._(_wantsName, 3);
   static const savings = Priority._(_savingsName, 4);
   static const other = Priority._(_otherName, 5);
+  static const income = Priority._(_incomeName, 6);
 
   const Priority._(this.name, this.value);
 

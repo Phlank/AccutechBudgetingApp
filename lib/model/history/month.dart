@@ -1,5 +1,5 @@
+import 'package:budgetflow/model/budget/allocation_list.dart';
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/history/month_io.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/widgets.dart';
 
 class Month implements Serializable {
   MonthIO io;
-  BudgetMap _allotted, _actual, _target;
+  AllocationList _allotted, _actual, _target;
   TransactionList _transactions;
   MonthTime monthTime;
   double income;
@@ -21,9 +21,9 @@ class Month implements Serializable {
     @required this.monthTime,
     @required this.income,
     @required this.type,
-    BudgetMap allotted,
-    BudgetMap actual,
-    BudgetMap target,
+    AllocationList allotted,
+    AllocationList actual,
+    AllocationList target,
     TransactionList transactions,
   }) {
     if (allotted != null) _allotted = allotted;
@@ -42,21 +42,21 @@ class Month implements Serializable {
     io = MonthIO(this);
   }
 
-  Future<BudgetMap> get allotted async {
+  Future<AllocationList> get allotted async {
     if (_allotted == null) {
       _allotted = await io.loadAllotted();
     }
     return _allotted;
   }
 
-  Future<BudgetMap> get actual async {
+  Future<AllocationList> get actual async {
     if (_actual == null) {
       _actual = await io.loadActual();
     }
     return _actual;
   }
 
-  Future<BudgetMap> get target async {
+  Future<AllocationList> get target async {
     if (_target == null) {
       _target = await io.loadTarget();
     }
@@ -80,6 +80,7 @@ class Month implements Serializable {
   Future save() async {
     if (_allotted != null) await _saveAllottedSpending();
     if (_actual != null) await _saveActualSpending();
+    if (_target != null) await _saveTargetSpending();
     if (_transactions != null) await _saveTransactions();
   }
 
@@ -92,6 +93,12 @@ class Month implements Serializable {
   Future _saveActualSpending() async {
     if (_actual != null) {
       io.saveActual(_actual);
+    }
+  }
+
+  Future _saveTargetSpending() async {
+    if (_target != null) {
+      io.saveTarget(_target);
     }
   }
 

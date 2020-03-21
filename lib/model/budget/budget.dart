@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget_map.dart';
+import 'package:budgetflow/model/budget/allocation_list.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/category/category_list.dart';
@@ -12,7 +12,7 @@ import 'package:flutter/widgets.dart';
 import 'category/priority.dart';
 
 class Budget {
-  BudgetMap allotted, actual, target;
+  AllocationList allotted, actual, target;
   TransactionList transactions;
   double expectedIncome, actualIncome;
   BudgetType type;
@@ -30,7 +30,7 @@ class Budget {
   }
 
   void _resolveOptionalParameters() {
-    if (actual == null) actual = BudgetMap.withCategoriesOf(allotted);
+    if (actual == null) actual = AllocationList.withCategoriesOf(allotted);
     if (transactions == null) transactions = TransactionList();
   }
 
@@ -38,9 +38,9 @@ class Budget {
   Budget.from(Budget old) {
     expectedIncome = old.expectedIncome;
     type = old.type;
-    allotted = BudgetMap.from(old.allotted);
-    target = BudgetMap.from(old.target);
-    actual = BudgetMap.withCategoriesOf(allotted);
+    allotted = AllocationList.from(old.allotted);
+    target = AllocationList.from(old.target);
+    actual = AllocationList.withCategoriesOf(allotted);
     transactions = TransactionList();
   }
 
@@ -50,8 +50,7 @@ class Budget {
     return Budget(
       allotted: await month.allotted,
       actual: await month.actual,
-      // TODO actually do something with this
-      target: BudgetMap(),
+      target: AllocationList(),
       transactions: await month.transactions,
       expectedIncome: month.income,
       actualIncome: 0.0,

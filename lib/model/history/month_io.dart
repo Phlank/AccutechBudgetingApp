@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget_map.dart';
+import 'package:budgetflow/model/budget/allocation_list.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/crypt/encrypted.dart';
@@ -21,54 +21,54 @@ class MonthIO {
         _month.getMonthTime().getFilePathString() + "_transactions";
   }
 
-  Future<BudgetMap> loadAllotted() async {
+  Future<AllocationList> loadAllotted() async {
     String cipher, plaintext;
     Encrypted e;
     cipher = await BudgetControl.fileIO
         .readFile(_allottedFilepath)
         .catchError((Object error) {
-      return BudgetMap();
+      return AllocationList();
     });
     if (cipher != null) {
       e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      return Serializer.unserialize(budgetMapKey, plaintext);
+      return Serializer.unserialize(allocationListKey, plaintext);
     } else {
-      return BudgetMap();
+      return AllocationList();
     }
   }
 
-  Future<BudgetMap> loadActual() async {
+  Future<AllocationList> loadActual() async {
     String cipher, plaintext;
     Encrypted e;
     cipher = await BudgetControl.fileIO
         .readFile(_actualFilepath)
         .catchError((Object error) {
-      return BudgetMap();
+      return AllocationList();
     });
     if (cipher != null) {
       e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      return Serializer.unserialize(budgetMapKey, plaintext);
+      return Serializer.unserialize(allocationListKey, plaintext);
     } else {
-      return BudgetMap();
+      return AllocationList();
     }
   }
 
-  Future<BudgetMap> loadTarget() async {
+  Future<AllocationList> loadTarget() async {
     String cipher, plaintext;
     Encrypted e;
     cipher = await BudgetControl.fileIO
         .readFile(_targetFilepath)
         .catchError((Object error) {
-      return BudgetMap();
+      return AllocationList();
     });
     if (cipher != null) {
       e = Serializer.unserialize(encryptedKey, cipher);
       plaintext = BudgetControl.crypter.decrypt(e);
-      return Serializer.unserialize(budgetMapKey, plaintext);
+      return Serializer.unserialize(allocationListKey, plaintext);
     } else {
-      return BudgetMap();
+      return AllocationList();
     }
   }
 
@@ -89,16 +89,22 @@ class MonthIO {
     }
   }
 
-  Future saveAllotted(BudgetMap allotted) async {
+  Future saveAllotted(AllocationList allotted) async {
     String content = allotted.serialize;
     Encrypted e = BudgetControl.crypter.encrypt(content);
     await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize);
   }
 
-  Future saveActual(BudgetMap actual) async {
+  Future saveActual(AllocationList actual) async {
     String content = actual.serialize;
     Encrypted e = BudgetControl.crypter.encrypt(content);
     await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize);
+  }
+
+  Future saveTarget(AllocationList target) async {
+    String content = target.serialize;
+    Encrypted e = BudgetControl.crypter.encrypt(content);
+    await BudgetControl.fileIO.writeFile(_targetFilepath, e.serialize);
   }
 
   Future saveTransactions(TransactionList transactions) async {

@@ -21,4 +21,6 @@ const String categoryKey = 'category',
     locationKey = 'location',
     latitudeKey = 'latitude',
     longitudeKey = 'longitude',
-    budgetMapKey = 'budgetmap';
+    budgetMapKey = 'budgetmap',
+    allocationKey = 'allocation',
+    allocationListKey = 'allocation_list';
