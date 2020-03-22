@@ -246,6 +246,7 @@ class Budget {
     Transaction t = _transactions.getAt(i);
     _actual.subtractFrom(t.category, t.amount);
     _transactions.removeAt(i);
+  }
 
   void removeTransaction(Transaction transaction) {
     _transactions.remove(transaction);
