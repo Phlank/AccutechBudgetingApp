@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget/allocation.dart';
 import 'package:budgetflow/model/budget/allocation_list.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
@@ -58,19 +59,9 @@ class Budget {
     );
   }
 
-  double get spent {
-    double spent = 0.0;
-    for (Category category in CategoryList.defaultCategories) {
-      spent += actual[category];
-    }
-    return spent;
-  }
-
-  double get remaining => expectedIncome - spent;
-
   double setAllotment(Category category, double amount) {
-    allotted[category] = amount;
-    return amount;
+    allotted
+    .
   }
 
   void setIncome(double income) {

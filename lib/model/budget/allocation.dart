@@ -15,4 +15,12 @@ class Allocation implements Serializable {
     serializer.addPair(amountKey, value);
     return serializer.serialize;
   }
+
+  bool operator ==(Object other) => other is Allocation && this._equals(other);
+
+  bool _equals(Allocation other) {
+    return this.category == other.category;
+  }
+
+  int get hashCode => category.hashCode;
 }

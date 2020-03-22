@@ -1,4 +1,5 @@
 import 'package:budgetflow/model/budget/allocation.dart';
+import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
@@ -13,11 +14,12 @@ class AllocationList extends DelegatingList<Allocation>
   AllocationList([List<Allocation> allocations]) {
     if (allocations != null)
       _list = allocations;
-    else {
-      CategoryList.defaultCategories.forEach((category) {
-        _list.add(Allocation(category, 0.0));
-      });
-    }
+  }
+
+  AllocationList.defaultCategories() {
+    CategoryList.defaultCategories.forEach((category) {
+      _list.add(Allocation(category, 0.0));
+    });
   }
 
   AllocationList.from(AllocationList other) {
@@ -30,12 +32,48 @@ class AllocationList extends DelegatingList<Allocation>
     });
   }
 
+  void add(Allocation value) {
+    if (!_list.contains(value)) {
+      _list.add(value);
+    }
+  }
+
+  AllocationList get spendingAllocations {
+    AllocationList spending = AllocationList([]);
+    _list.forEach((allocation) {
+      if (allocation.category.isSpending) spending.add(allocation);
+    });
+    return spending;
+  }
+
+  AllocationList get savingAllocations {
+    AllocationList saving = AllocationList([]);
+    _list.forEach((allocation) {
+      if (allocation.category.isSaving) saving.add(allocation);
+    });
+    return saving;
+  }
+
+  AllocationList get incomeAllocations {
+    AllocationList income = AllocationList([]);
+    _list.forEach((allocation) {
+      if (allocation.category.isIncome) income.add(allocation);
+    });
+    return income;
+  }
+
   String get serialize {
     Serializer serializer = Serializer();
     for (int i = 0; i < _list.length; i++) {
       serializer.addPair("$i", _list[i].serialize);
     }
     return serializer.serialize;
+  }
+
+  Allocation get(Category category) {
+    return _list.firstWhere((element) {
+      return element.category == category;
+    });
   }
 
   bool operator ==(Object other) =>

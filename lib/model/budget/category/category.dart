@@ -36,6 +36,21 @@ class Category implements Serializable {
 
   const Category(this.name, this.priority);
 
+  bool get isSpending {
+    return priority == Priority.needs ||
+        priority == Priority.wants ||
+        priority == Priority.other ||
+        priority == Priority.required;
+  }
+
+  bool get isSaving {
+    return priority == Priority.savings;
+  }
+
+  bool get isIncome {
+    return priority == Priority.income;
+  }
+
   int compareTo(Category other) {
     if (this.priority.compareTo(other.priority) == 1) {
       return 1;
