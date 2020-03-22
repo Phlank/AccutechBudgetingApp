@@ -14,16 +14,16 @@ class PriorityChart extends StatelessWidget {
   PrioritySeries _makeAllottedSeries() {
     String name = 'Allotted';
     double amount =
-    BudgetingApp.userController.getBudget().getAllottedPriority(priority);
+    BudgetingApp.control.accountant.getAllottedPriority(priority);
     charts.Color barColor = charts.ColorUtil.fromDartColor(Colors.blue);
     return PrioritySeries(name: name, amount: amount, barColor: barColor);
   }
 
   PrioritySeries _makeActualSeries() {
     double allotted =
-    BudgetingApp.userController.getBudget().getAllottedPriority(priority);
+    BudgetingApp.control.accountant.getAllottedPriority(priority);
     double actual =
-    BudgetingApp.userController.getBudget().getActualPriority(priority);
+    BudgetingApp.control.accountant.getActualPriority(priority);
     String name = 'Actual';
     charts.Color barColor;
     if (allotted < actual) {

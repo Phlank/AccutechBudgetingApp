@@ -11,7 +11,7 @@ class CategoryListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> categories = List();
-    BudgetingApp.userController
+    BudgetingApp.control
         .getBudget()
         .getCategoriesOfPriority(priority)
         .forEach((category) {

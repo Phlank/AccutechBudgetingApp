@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/budget/budget_accountant.dart';
 import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
@@ -34,6 +35,7 @@ class BudgetControl implements Control {
   Color cashFlowColor;
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
+  BudgetAccountant accountant;
 
   final Map<String, List<Category>> sectionMap = {
     'Needs': [
@@ -94,6 +96,7 @@ class BudgetControl implements Control {
   Future _load() async {
     _history = await History.load();
     _budget = await _history.getLatestMonthBudget();
+    accountant = BudgetAccountant(_budget);
     _loadedTransactions = TransactionList.copy(_budget.transactions);
     _initLocationMap();
     _initLocationListener();
@@ -206,14 +209,18 @@ class BudgetControl implements Control {
   double sectionBudget(String section) {
     double secBudget = 0.0;
     for (Category category in sectionMap[section]) {
-      secBudget += _budget.allotted[category];
+      secBudget += _budget.allotted
+          .getCategory(category)
+          .value;
     }
     return secBudget;
   }
 
   double getCashFlow() {
     double amt = _budget.expectedIncome -
-        _budget.allotted[Category.housing] +
+        _budget.allotted
+            .getCategory(Category.housing)
+            .value +
         expenseTotal();
     if (amt > 0) {
       cashFlowColor = Colors.green;
@@ -232,26 +239,8 @@ class BudgetControl implements Control {
     _history.addMonth(m);
     _loadedTransactions = new TransactionList.copy(b.transactions);
     _budget = b;
+    accountant = BudgetAccountant(_budget);
     save();
-  }
-
-  Map<String, double> buildBudgetMap() {
-    Map<String, double> map = new Map();
-    map.putIfAbsent('housing', () => _budget.allotted[Category.housing]);
-    map.putIfAbsent('utilities', () => _budget.allotted[Category.utilities]);
-    map.putIfAbsent('groceries', () => _budget.allotted[Category.groceries]);
-    map.putIfAbsent('savings', () => _budget.allotted[Category.savings]);
-    map.putIfAbsent('helath', () => _budget.allotted[Category.health]);
-    map.putIfAbsent(
-        'transportation', () => _budget.allotted[Category.transportation]);
-    map.putIfAbsent('education', () => _budget.allotted[Category.education]);
-    map.putIfAbsent(
-        'entertainment', () => _budget.allotted[Category.entertainment]);
-    map.putIfAbsent('kids', () => _budget.allotted[Category.kids]);
-    map.putIfAbsent('pets', () => _budget.allotted[Category.pets]);
-    map.putIfAbsent(
-        'miscellaneous', () => _budget.allotted[Category.miscellaneous]);
-    return map;
   }
 
   double expenseTotal() {
@@ -268,7 +257,9 @@ class BudgetControl implements Control {
       for (int i = 0; i < _loadedTransactions.length; i++) {
         Category rel = _loadedTransactions.getAt(i).category;
         if (rel == cat) {
-          spent += _budget.allotted[rel];
+          spent += _budget.allotted
+              .getCategory(rel)
+              .value;
         }
       }
     }
@@ -297,24 +288,28 @@ class MockBudget {
   }
 
   double getCategory(Category category) {
-    return budget.allotted[category];
+    return budget.allotted
+        .getCategory(category)
+        .value;
   }
 
   double getNewTotalAllotted(String section) {
     Map<String, List<Category>> mockMap = {
-      Priority.needs.name: BudgetingApp.userController
+      Priority.needs.name: BudgetingApp.control
           .getBudget()
           .getCategoriesOfPriority(Priority.needs),
-      Priority.wants.name: BudgetingApp.userController
+      Priority.wants.name: BudgetingApp.control
           .getBudget()
           .getCategoriesOfPriority(Priority.wants),
-      Priority.savings.name: BudgetingApp.userController
+      Priority.savings.name: BudgetingApp.control
           .getBudget()
           .getCategoriesOfPriority(Priority.savings)
     };
     double total = 0.0;
     for (Category category in mockMap[section]) {
-      total += budget.allotted[category];
+      total += budget.allotted
+          .getCategory(category)
+          .value;
     }
     return total;
   }

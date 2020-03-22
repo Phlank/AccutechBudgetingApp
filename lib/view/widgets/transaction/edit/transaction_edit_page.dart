@@ -116,14 +116,13 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
           category = value;
         });
       },
-      items: BudgetingApp.userController
+      items: BudgetingApp.control
           .getBudget()
           .allotted
-          .keys
-          .map<DropdownMenuItem<Category>>((Category category) {
+          .map<DropdownMenuItem<Category>>((allocation) {
         return DropdownMenuItem<Category>(
-          value: category,
-          child: Text(category.name),
+          value: allocation.category,
+          child: Text(allocation.category.name),
         );
       }).toList(),
     );
@@ -210,7 +209,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          BudgetingApp.userController
+          BudgetingApp.control
               .removeTransactionIfPresent(transactionResult);
           Transaction newTransaction = Transaction(
               amount: -amount,
@@ -219,8 +218,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
               time: time,
               vendor: vendor,
               location: location);
-          BudgetingApp.userController.addTransaction(newTransaction);
-          BudgetingApp.userController.save();
+          BudgetingApp.control.addTransaction(newTransaction);
+          BudgetingApp.control.save();
           Navigator.of(context).pop(newTransaction);
         }
       },

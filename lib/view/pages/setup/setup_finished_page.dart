@@ -17,7 +17,7 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
   @override
   void initState() {
     super.initState();
-    setup = BudgetingApp.userController.setup();
+    setup = BudgetingApp.control.setup();
   }
 
   Widget _buildConstrainedIndicator() {

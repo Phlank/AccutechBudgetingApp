@@ -11,14 +11,13 @@ class DropDowns {
       iconSize: 24,
       elevation: 16,
       onChanged: onChanged,
-      items: BudgetingApp.userController
+      items: BudgetingApp.control
           .getBudget()
           .allotted
-          .keys
-          .map<DropdownMenuItem<Category>>((Category category) {
+          .map<DropdownMenuItem<Category>>((allocation) {
         return DropdownMenuItem<Category>(
-          value: category,
-          child: Text(category.name),
+          value: allocation.category,
+          child: Text(allocation.category.name),
         );
       }).toList(),
     );

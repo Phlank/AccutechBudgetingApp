@@ -10,8 +10,8 @@ class GlobalCards {
       fontSize: 20,
       color: Colors.black,
     );
-    var weekly = BudgetingApp.userController.getBudget().balanceWeek;
-    var monthly = BudgetingApp.userController.getBudget().balanceMonth;
+    var weekly = BudgetingApp.control.accountant.balanceWeek;
+    var monthly = BudgetingApp.control.accountant.balanceMonth;
     return Padding(
         child: Card(
             child: Column(
@@ -53,12 +53,16 @@ class GlobalCards {
   }
 
   static Card cashFlowCard() {
-    double income = BudgetingApp.userController
+    double income = BudgetingApp.control
         .getBudget()
         .expectedIncome -
-        BudgetingApp.userController.getBudget().allotted[Category.housing];
-    double spent = BudgetingApp.userController.expenseTotal();
-    double remaining = BudgetingApp.userController.getCashFlow();
+        BudgetingApp.control
+            .getBudget()
+            .allotted
+            .getCategory(Category.housing)
+            .value;
+    double spent = BudgetingApp.control.expenseTotal();
+    double remaining = BudgetingApp.control.getCashFlow();
     return Card(
         child: RichText(
             textAlign: TextAlign.center,

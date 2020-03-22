@@ -1,5 +1,5 @@
+import 'package:budgetflow/model/budget/allocation_list.dart';
 import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/factory/budget_factory.dart';
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
@@ -65,12 +65,12 @@ class History implements Serializable {
     return m.getMonthTime() == mt;
   }
 
-  Future<BudgetMap> getAllottedSpendingFromMonthTime(MonthTime mt) async {
+  Future<AllocationList> getAllottedSpendingFromMonthTime(MonthTime mt) async {
     Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
     return await m.allotted;
   }
 
-  Future<BudgetMap> getActualSpendingFromMonthTime(MonthTime mt) async {
+  Future<AllocationList> getActualSpendingFromMonthTime(MonthTime mt) async {
     Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
     return await m.actual;
   }

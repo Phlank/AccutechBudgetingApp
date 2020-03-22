@@ -70,10 +70,26 @@ class AllocationList extends DelegatingList<Allocation>
     return serializer.serialize;
   }
 
-  Allocation get(Category category) {
+  Allocation get(Allocation allocation) {
+    return _list.firstWhere((element) {
+      return element.category == allocation.category;
+    });
+  }
+
+  Allocation getCategory(Category category) {
     return _list.firstWhere((element) {
       return element.category == category;
     });
+  }
+
+  AllocationList divide(double n) {
+    AllocationList output = AllocationList.from(this);
+    output.forEach((allocation) {
+      allocation.value = this
+          .getCategory(allocation.category)
+          .value / n;
+    });
+    return output;
   }
 
   bool operator ==(Object other) =>

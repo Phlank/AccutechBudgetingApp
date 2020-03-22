@@ -57,7 +57,7 @@ class Budget {
 
   double setAllotment(Category category, double amount) {
     allotted
-        .get(category)
+        .getCategory(category)
         .value = amount;
   }
 
@@ -69,17 +69,17 @@ class Budget {
     transactions.add(transaction);
     if (transaction.category == null) {
       actual
-          .get(transaction.category)
+          .getCategory(transaction.category)
           .value += -transaction.amount;
     }
     if (transaction.category == Category.income) {
       actualIncome += transaction.amount;
       actual
-          .get(transaction.category)
+          .getCategory(transaction.category)
           .value += transaction.amount;
     } else {
       actual
-          .get(transaction.category)
+          .getCategory(transaction.category)
           .value += -transaction.amount;
     }
   }
@@ -101,7 +101,7 @@ class Budget {
     }
     // update actual of the category
     actual
-        .get(transaction.category)
+        .getCategory(transaction.category)
         .value -= transaction.amount;
   }
 }

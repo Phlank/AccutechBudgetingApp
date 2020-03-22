@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future validatePassword(value) async {
-    if (await BudgetingApp.userController.passwordIsValid(value)) {
+    if (await BudgetingApp.control.passwordIsValid(value)) {
       valid = true;
       print("Valid");
       Navigator.pop(context);
