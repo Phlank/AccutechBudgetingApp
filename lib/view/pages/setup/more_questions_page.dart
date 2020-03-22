@@ -15,7 +15,7 @@ class MoreQuestionsPage extends StatelessWidget {
     return RaisedButton(
       child: Text('Take me to my budget!'),
       onPressed: () {
-        BudgetingApp.userController.addNewBudget(PriorityBudgetFactory()
+        BudgetingApp.control.addNewBudget(PriorityBudgetFactory()
             .newFromInfo(
                 SetupAgent.income,
                 SetupAgent.housing,

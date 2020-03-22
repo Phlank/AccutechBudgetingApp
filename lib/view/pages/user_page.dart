@@ -44,7 +44,7 @@ class _UserPageState extends State<UserPage> {
           PriorityChartRow(),
           GlobalCards.cashFlowBudgetCard(),
           TransactionListCard(
-              BudgetingApp.userController.getLoadedTransactions())
+              BudgetingApp.control.getLoadedTransactions())
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -53,7 +53,7 @@ class _UserPageState extends State<UserPage> {
         onPressed: () async {
           Transaction transaction =
           await TransactionEditPage.show(Transaction.empty, context);
-          BudgetingApp.userController.addTransaction(transaction);
+          BudgetingApp.control.addTransaction(transaction);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

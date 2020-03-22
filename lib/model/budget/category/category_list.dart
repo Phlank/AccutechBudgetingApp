@@ -13,7 +13,8 @@ class CategoryList {
     Category.kids,
     Category.pets,
     Category.miscellaneous,
-    Category.uncategorized
+    Category.income,
+    Category.uncategorized,
   ];
 
   List<Category> _categories;

@@ -14,7 +14,7 @@ class _FirstLoadState extends State<FirstLoad> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: BudgetingApp.userController.initialize(),
+      future: BudgetingApp.control.initialize(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
           print("Snapshot has data: " + snapshot.data.toString());

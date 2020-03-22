@@ -1,4 +1,3 @@
-import 'package:budgetflow/view/pages/setup/housing_info_page.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/utils/routes.dart';

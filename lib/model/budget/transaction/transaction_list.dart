@@ -54,9 +54,10 @@ class TransactionList implements Serializable {
   }
 
   bool contains(Transaction t) => _transactions.contains(t);
+
   void remove(Transaction t) => _transactions.remove(t);
 
-  Transaction operator[](int i) => _transactions[i];
+  Transaction operator [](int i) => _transactions[i];
 
   bool operator ==(Object other) =>
       other is TransactionList && this._equals(other);
@@ -64,7 +65,7 @@ class TransactionList implements Serializable {
   bool _equals(TransactionList other) {
     if (this.length != other.length) return false;
     for (int i = 0; i < this.length; i++) {
-      if (this[i]!= other[i]) return false;
+      if (this[i] != other[i]) return false;
     }
     return true;
   }

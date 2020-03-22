@@ -27,7 +27,7 @@ class _AccountDisplay extends State<AccountDisplay> {
         children: <Widget>[
           GlobalCards.cashFlowBudgetCard(),
           TransactionListView(
-              BudgetingApp.userController.getLoadedTransactions()),
+              BudgetingApp.control.getLoadedTransactions()),
         ],
       ),
     );

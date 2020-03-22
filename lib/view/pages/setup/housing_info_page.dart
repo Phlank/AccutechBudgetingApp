@@ -41,8 +41,8 @@ class _HousingInfoPageState extends State<HousingInfoPage> {
         onPressed: () {
           if (_formKey.currentState.validate()) {
             _formKey.currentState.save();
-            Navigator.of(context).push(
-                RouteUtil.routeWithSlideTransition(PinInfoPage()));
+            Navigator.of(context)
+                .push(RouteUtil.routeWithSlideTransition(PinInfoPage()));
           }
         });
   }

@@ -28,7 +28,7 @@ class WelcomePage extends StatelessWidget {
             RaisedButton(
               child: Text('Let\'s go!'),
               onPressed: () {
-                BudgetingApp.userController = BudgetControl();
+                BudgetingApp.control = BudgetControl();
                 Navigator.of(context).push(
                     RouteUtil.routeWithSlideTransition(PersonalInfoPage()));
               },

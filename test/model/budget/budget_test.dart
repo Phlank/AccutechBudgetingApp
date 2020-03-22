@@ -2,7 +2,6 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_map.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/budget_control.dart';
@@ -11,8 +10,7 @@ import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-Budget _builtBudget;
-BudgetBuilder _builder = new BudgetBuilder();
+Budget _budget;
 Transaction _t;
 Month _month;
 MonthBuilder _monthBuilder = new MonthBuilder();
@@ -30,9 +28,12 @@ void main() {
       _monthBuilder.setType(BudgetType.depletion);
       _monthBuilder.setMonthTime(_monthTime);
       _month = _monthBuilder.build();
-      _builder.setIncome(300.0);
-      _builder.setType(BudgetType.depletion);
-      _builtBudget = _builder.build();
+      _budget = Budget(
+        expectedIncome: 300.0,
+        type: BudgetType.depletion,
+        target: BudgetMap(),
+        allotted: BudgetMap(),
+      );
       _t = new Transaction(
         vendor: "KFC",
         method: "Cash",
@@ -43,38 +44,38 @@ void main() {
     });
     group("Testing Built Budget", () {
       test("Built budget has no null fields", () {
-        expect(_builtBudget.actual, isNot(null));
-        expect(_builtBudget.allotted, isNot(null));
-        expect(_builtBudget.transactions, isNot(null));
-        expect(_builtBudget.income, isNot(null));
-        expect(_builtBudget.type, isNot(null));
+        expect(_budget.actual, isNot(null));
+        expect(_budget.allotted, isNot(null));
+        expect(_budget.transactions, isNot(null));
+        expect(_budget.expectedIncome, isNot(null));
+        expect(_budget.type, isNot(null));
       });
       test("Built budget has correct income", () {
-        expect(_builtBudget.income, 300.0);
+        expect(_budget.expectedIncome, 300.0);
       });
       test("Built budget has correct type", () {
-        expect(_builtBudget.type, BudgetType.depletion);
+        expect(_budget.type, BudgetType.depletion);
       });
       test("Built budget can have transaction added", () {
-        _builtBudget.addTransaction(_t);
-        expect(_builtBudget.actual[Category.miscellaneous], 5.4);
+        _budget.addTransaction(_t);
+        expect(_budget.actual[Category.miscellaneous], 5.4);
       });
     });
     group("Testing fromOldBudget", () {
       test("test for correct income", () {
-        Budget b = new Budget.fromOldBudget(_builtBudget);
-        expect(b.income, equals(300));
+        Budget b = new Budget.from(_budget);
+        expect(b.expectedIncome, equals(300));
       });
       test("test for correct type", () {
-        Budget b = new Budget.fromOldBudget(_builtBudget);
+        Budget b = new Budget.from(_budget);
         expect(b.type, equals(BudgetType.depletion));
       });
       test("test for correct transactions logic", () {
-        Budget b = new Budget.fromOldBudget(_builtBudget);
+        Budget b = new Budget.from(_budget);
         expect(b.transactions, isNot(null));
       });
       test("test for correct allotted and actual spending logic", () {
-        Budget b = new Budget.fromOldBudget(_builtBudget);
+        Budget b = new Budget.from(_budget);
         expect(b.allotted, isNot(null));
         expect(b.actual, isNot(null));
       });
@@ -82,7 +83,7 @@ void main() {
     group("Testing fromMonth", () {
       test("Test for income", () async {
         b = await Budget.fromMonth(_month);
-        expect(b.income, equals(300));
+        expect(b.expectedIncome, equals(300));
       });
       test("Test for type", () async {
         b = await Budget.fromMonth(_month);
@@ -100,19 +101,17 @@ void main() {
     });
     group('Budget functionality', () {
       setUp(() {
-        _builder = new BudgetBuilder();
-        _builder
-            .setType(BudgetType.growth)
-            .setIncome(2000)
-            .setCategories(CategoryList());
-        _builtBudget = _builder.build();
+        _budget = Budget(expectedIncome: 2000,
+            type: BudgetType.growth,
+            target: BudgetMap(),
+            allotted: BudgetMap());
       });
       test('Add transaction makes spending positive', () {
         MockTransaction transaction = MockTransaction();
         when(transaction.category).thenReturn(Category.groceries);
         when(transaction.amount).thenReturn(-100);
-        _builtBudget.addTransaction(transaction);
-        expect(_builtBudget.spent, 100);
+        _budget.addTransaction(transaction);
+        expect(_budget.spent, 100);
       });
     });
   });
