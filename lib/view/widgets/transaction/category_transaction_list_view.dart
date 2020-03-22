@@ -12,7 +12,7 @@ class CategoryTransactionListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TransactionList transactions =
-        BudgetingApp.userController.getTransactionsInCategory(category);
+    BudgetingApp.control.getTransactionsInCategory(category);
     TransactionListView view = TransactionListView(transactions);
     return view;
   }

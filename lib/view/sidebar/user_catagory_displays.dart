@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget/budget_accountant.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
@@ -22,6 +23,8 @@ class GeneralCategory extends StatefulWidget {
 }
 
 class _GeneralCategoryState extends State<GeneralCategory> {
+  BudgetAccountant accountant = BudgetAccountant(
+      BudgetingApp.control.getBudget());
   BudgetControl userController;
   MockBudget playBudget;
   String section;
@@ -30,7 +33,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   double beginningAlotttments;
 
   _GeneralCategoryState(String section) {
-    this.userController = BudgetingApp.userController;
+    this.userController = BudgetingApp.control;
     this.playBudget = new MockBudget(userController.getBudget());
     this.section = section;
     this.beginningAlotttments = playBudget.getNewTotalAllotted(section);
@@ -68,25 +71,26 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       onChanged: (value) {
         setState(() {
           if (allotedForSection >
-              userController.getBudget().getAllottedPriority(category.priority))
+              accountant.getAllottedPriority(category.priority))
             return;
           allotedForCategory = value;
         });
         playBudget.setCategory(category, allotedForCategory);
       },
       min: 0,
-      max: userController
-          .getBudget()
+      max: accountant
           .getAllottedPriority(Priority.fromName(section)),
       label: category.name,
     );
   }
 
   ListTile categoryTile(Category category) {
-    allotedForCategory = (playBudget.budget.allotted[category]);
+    allotedForCategory = playBudget.budget.allotted
+        .getCategory(category)
+        .value;
     return ListTile(
       title:
-          Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
+      Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
       subtitle: sectionSlider(category),
     );
   }

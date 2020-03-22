@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class BudgetingApp extends StatelessWidget {
   static const NAME = 'Budgetflow';
-  static BudgetControl userController = new BudgetControl();
+  static BudgetControl control = new BudgetControl();
   static int r = 0, g = 153, b = 0;
   Map<int, Color> colors = {
     50: Color.fromRGBO(r, g, b, .1),
@@ -39,7 +39,7 @@ class BudgetingApp extends StatelessWidget {
         LoginPage.ROUTE: (BuildContext context) => LoginPage(),
         UserPage.ROUTE: (BuildContext context) => UserPage(),
         '/edit': (BuildContext context) =>
-            EditInformationDirectory(userController.getBudget()),
+            EditInformationDirectory(control.getBudget()),
         GeneralCategory.NEEDS_ROUTE: (BuildContext context) =>
             GeneralCategory('needs'),
         GeneralCategory.WANTS_ROUTE: (BuildContext context) =>

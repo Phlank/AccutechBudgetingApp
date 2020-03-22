@@ -13,7 +13,8 @@ class CategoryList {
     Category.kids,
     Category.pets,
     Category.miscellaneous,
-    Category.uncategorized
+    Category.income,
+    Category.uncategorized,
   ];
 
   List<Category> _categories;
@@ -88,6 +89,4 @@ class CategoryList {
   }
 
   int get hashCode => _categories.hashCode;
-
-  Category getAt(int index) => _categories[index];
 }

@@ -4,7 +4,6 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Category implements Serializable {
-
   static Map<String, Category> categoryMap = {
     'housing': Category.housing,
     'utilities': Category.utilities,
@@ -21,8 +20,7 @@ class Category implements Serializable {
   final String name;
   final Priority priority;
 
-  static const Category //
-  housing = Category("Housing", Priority.needs),
+  static const Category housing = Category("Housing", Priority.needs),
       utilities = Category("Utilities", Priority.needs),
       groceries = Category("Groceries", Priority.needs),
       savings = Category("Savings", Priority.savings),
@@ -33,10 +31,25 @@ class Category implements Serializable {
       kids = Category("Kids", Priority.wants),
       pets = Category("Pets", Priority.wants),
       miscellaneous = Category("Miscellaneous", Priority.wants),
-      income = Category("Income", Priority.other),
+      income = Category("Income", Priority.income),
       uncategorized = Category("Uncategorized", Priority.other);
 
   const Category(this.name, this.priority);
+
+  bool get isSpending {
+    return priority == Priority.needs ||
+        priority == Priority.wants ||
+        priority == Priority.other ||
+        priority == Priority.required;
+  }
+
+  bool get isSaving {
+    return priority == Priority.savings;
+  }
+
+  bool get isIncome {
+    return priority == Priority.income;
+  }
 
   int compareTo(Category other) {
     if (this.priority.compareTo(other.priority) == 1) {
@@ -63,11 +76,11 @@ class Category implements Serializable {
     return serializer.serialize;
   }
 
-  static void addCatagory(Category c){
-    categoryMap.putIfAbsent(c.name, ()=>c);
+  static void addCategory(Category c) {
+    categoryMap.putIfAbsent(c.name, () => c);
   }
 
-  static Category categoryFromString(String catString){
-    return  categoryMap[catString];
+  static Category categoryFromString(String catString) {
+    return categoryMap[catString];
   }
 }

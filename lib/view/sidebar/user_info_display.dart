@@ -6,8 +6,7 @@ import 'package:flutter/widgets.dart';
 
 //todo implement with sliders
 
-
-class EditInformationDirectory extends StatefulWidget{
+class EditInformationDirectory extends StatefulWidget {
   EditInformationDirectory(Budget userBudget);
 
   @override
@@ -15,10 +14,9 @@ class EditInformationDirectory extends StatefulWidget{
     // TODO: implement createState
     return null;
   }
-
 }
 
-class UserInformationEdit extends StatefulWidget{
+class UserInformationEdit extends StatefulWidget {
   UserInformationEdit(Budget userBudget);
 
   @override
@@ -26,7 +24,7 @@ class UserInformationEdit extends StatefulWidget{
     // TODO: implement createState
     return null;
   }
-  /*
+/*
   * -this will be the way they record changes to personal information
   * password, name, email and what not
   * income will be able to changed here
@@ -37,7 +35,7 @@ class UserInformationEdit extends StatefulWidget{
 
 }
 
-class HousingInformationEdit extends StatefulWidget{
+class HousingInformationEdit extends StatefulWidget {
   HousingInformationEdit(Budget userBudget);
 
   @override
@@ -45,13 +43,13 @@ class HousingInformationEdit extends StatefulWidget{
     // TODO: implement createState
     return null;
   }
-  /*
+/*
   * the changes here will be housing type
   * payment information
   */
 }
 
-class CategoryInformationEdit extends StatefulWidget{
+class CategoryInformationEdit extends StatefulWidget {
   CategoryInformationEdit(Budget userBudget);
 
   @override
@@ -59,7 +57,7 @@ class CategoryInformationEdit extends StatefulWidget{
     // TODO: implement createState
     return null;
   }
-  /*
+/*
   * -this will be the manual edit of budget
   * get information for the category
   * name: field(hintText = amnt);

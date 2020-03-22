@@ -18,7 +18,6 @@ class TransactionStrategy implements Unserializer {
         method: method,
         amount: amount,
         category: category,
-        location: location
-    );
+        location: location);
   }
 }

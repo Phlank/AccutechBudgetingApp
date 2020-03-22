@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../budgeting_app.dart';
 
-class DropDowns{
-
+class DropDowns {
   DropdownButton categoryDrop(Category categoryValue, Function onChanged) {
     return DropdownButton<Category>(
       value: categoryValue,
@@ -12,19 +11,19 @@ class DropDowns{
       iconSize: 24,
       elevation: 16,
       onChanged: onChanged,
-      items: BudgetingApp.userController
+      items: BudgetingApp.control
           .getBudget()
-          .categories
-          .map<DropdownMenuItem<Category>>((Category category) {
+          .allotted
+          .map<DropdownMenuItem<Category>>((allocation) {
         return DropdownMenuItem<Category>(
-          value: category,
-          child: Text(category.name),
+          value: allocation.category,
+          child: Text(allocation.category.name),
         );
       }).toList(),
     );
   }
 
-  DropdownButton methodDrop(String methodValue, Function onChange){
+  DropdownButton methodDrop(String methodValue, Function onChange) {
     return DropdownButton<String>(
       value: methodValue,
       icon: Icon(Icons.arrow_drop_down),

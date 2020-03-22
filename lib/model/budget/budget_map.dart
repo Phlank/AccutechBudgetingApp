@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/category/category_list.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
@@ -13,18 +11,21 @@ class BudgetMap extends DelegatingMap<Category, double>
 
   Map<Category, double> get delegate => _map;
 
-  String _serialization = "";
-  CategoryList _categories;
-
+  // Creates a new BudgetMap with the default categories
   BudgetMap() {
-    _categories = CategoryList();
-    _categories.forEach((Category c) {
-      _map[c] = 0;
+    CategoryList.defaultCategories.forEach((category) {
+      _map[category] = 0.0;
     });
   }
 
   BudgetMap.from(BudgetMap other) {
     _map = Map.from(other._map);
+  }
+
+  BudgetMap.withCategoriesOf(BudgetMap other) {
+    other.forEach((category, double) {
+      _map[category] = 0.0;
+    });
   }
 
   String get serialize {
@@ -38,21 +39,6 @@ class BudgetMap extends DelegatingMap<Category, double>
       i++;
     });
     return main.serialize;
-  }
-
-  // TODO move to an unserializer strategy
-  static BudgetMap unserialize(String serialized) {
-    BudgetMap unserialized = new BudgetMap();
-    Map decoded = jsonDecode(serialized);
-    // key is a unique integer
-    // value is a map from the pattern in _makeSerializable
-    // value has two keys, _CATEGORY_KEY and _AMOUNT_KEY
-    decoded.forEach((key, value) {
-      Category c = Serializer.unserialize(categoryKey, value[categoryKey]);
-      double amount = double.parse(value[amountKey]);
-      unserialized[c] += amount;
-    });
-    return unserialized;
   }
 
   BudgetMap divide(double n) {
@@ -74,4 +60,6 @@ class BudgetMap extends DelegatingMap<Category, double>
     });
     return output;
   }
+
+  int get hashCode => _map.hashCode;
 }

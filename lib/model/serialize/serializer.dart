@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/unserialize/budget_map_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/budget_type_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/category_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/encrypted_strategy.dart';
@@ -25,7 +26,8 @@ class Serializer implements Serializable {
     monthKey: MonthStrategy(),
     typeKey: BudgetTypeStrategy(),
     historyKey: HistoryStrategy(),
-    locationKey: LocationStrategy()
+    locationKey: LocationStrategy(),
+    budgetMapKey: BudgetMapStrategy(),
   };
 
   Map<dynamic, dynamic> pairs;
@@ -80,8 +82,8 @@ class Serializer implements Serializable {
   }
 
   static void _validate(String key, dynamic value) {
-    if (!(value is Map || value is String ||
-        value == null)) throw InvalidSerializedValueError();
+    if (!(value is Map || value is String || value == null))
+      throw InvalidSerializedValueError();
     if (!strategyMap.containsKey(key)) throw UnknownMapKeyError();
   }
 }
