@@ -1,5 +1,5 @@
-import 'package:budgetflow/view/pages/setup/financial_info_page.dart';
 import 'package:budgetflow/model/setup_agent.dart';
+import 'package:budgetflow/view/pages/setup/financial_info_page.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/utils/routes.dart';
@@ -25,7 +25,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       decoration: InputDecoration(labelText: 'Name'),
       keyboardType: TextInputType.text,
       validator: (value) {
-        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+        if (value.isEmpty) return InputValidator.requiredMessage;
         if (!InputValidator.name(value)) return 'Must be a valid name';
         return null;
       },
@@ -39,7 +39,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       decoration: InputDecoration(labelText: 'Age'),
       keyboardType: TextInputType.number,
       validator: (value) {
-        if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
+        if (value.isEmpty) return InputValidator.requiredMessage;
         if (!InputValidator.age(value)) return 'Must be a valid number';
         return null;
       },

@@ -85,7 +85,7 @@ class Budget {
   Budget.fromOldBudget(Budget old) {
     _income = old._income;
     _type = old._type;
-    _allotted = BudgetMap.copyOf(old._allotted);
+    _allotted = BudgetMap.from(old._allotted);
     _actual = new BudgetMap();
     _transactions = new TransactionList();
   }
@@ -144,9 +144,9 @@ class Budget {
   void addTransaction(Transaction transaction) {
     if (transaction.category != null) {
       _transactions.add(transaction);
-      _actual.addTo(transaction.category, -transaction.amount);
+      _actual[transaction.category] += -transaction.amount;
     } else {
-      _actual.addTo(Category.miscellaneous, -transaction.amount);
+      _actual[Category.miscellaneous] += -transaction.amount;
     }
   }
 
@@ -218,40 +218,36 @@ class Budget {
     return getAllottedPriority(priority) - getActualPriority(priority);
   }
 
+  double getAllottedCategory(Category category) {
+    return _allotted[category];
+  }
+
+  double getActualCategory(Category category) {
+    return _actual[category];
+  }
+
+  double getRemainingCategory(Category category) {
+    return _allotted[category] - _actual[category];
+  }
+
+  List<Category> getCategoriesOfPriority(Priority priority) {
+    List<Category> list = List();
+    _allotted.forEach((category, double) {
+//      print("Category: " + category.name + " has a priority of " +
+//          category.priority.name);
+//      print(priority.name + " == " + category.priority.name + " is " +
+//          (category.priority == priority).toString());
+      if (category.priority == priority) list.add(category);
+    });
+    return list;
+  }
+
   void removeTransactionAt(int i) {
     Transaction t = _transactions.getAt(i);
     _actual.subtractFrom(t.category, t.amount);
     _transactions.removeAt(i);
-  }
 
-  void removeTransaction(Transaction transaction){
-    for(int i = 0; i<_transactions.length; i++){
-      if(transaction.time == _transactions.getAt(i).time){
-        removeTransactionAt(i);
-      }
-    }
-  }
-
-  List<Category> getCategoriesOfPriority(Priority priority) {
-    List<Category> catList = List();
-    for(int i = 0; i<_categories.length; i++){
-      if(_categories.getAt(i).priority == priority)
-        catList.add(_categories.getAt(i));
-    }
-    return catList;
-  }
-
-  double getRemainingCategory(Category category) {
-    double catSpent = 0.0;
-    for (int i = 0; i < _transactions.length; i++) {
-      if (category == _transactions
-          .getAt(i)
-          .category) {
-        catSpent += _transactions
-            .getAt(i)
-            .amount;
-      }
-    }
-    return _allotted[category] - catSpent;
+  void removeTransaction(Transaction transaction) {
+    _transactions.remove(transaction);
   }
 }

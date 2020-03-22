@@ -9,6 +9,7 @@ import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 Budget _builtBudget;
 BudgetBuilder _builder = new BudgetBuilder();
@@ -18,6 +19,8 @@ MonthBuilder _monthBuilder = new MonthBuilder();
 MonthTime _monthTime = new MonthTime(1998, 4);
 BudgetControl bc = new BudgetControl();
 Budget b;
+
+class MockTransaction extends Mock implements Transaction {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +33,13 @@ void main() {
       _builder.setIncome(300.0);
       _builder.setType(BudgetType.depletion);
       _builtBudget = _builder.build();
-      _t = new Transaction("KFC", "Cash", -5.4, Category.miscellaneous);
+      _t = new Transaction(
+        vendor: "KFC",
+        method: "Cash",
+        amount: -5.4,
+        category: Category.miscellaneous,
+        time: DateTime.now(),
+      );
     });
     group("Testing Built Budget", () {
       test("Built budget has no null fields", () {
@@ -91,41 +100,20 @@ void main() {
     });
     group('Budget functionality', () {
       setUp(() {
-        BudgetBuilder builder = new BudgetBuilder();
-        List<Transaction> tl = <Transaction>[
-          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
-              DateTime(2020, 2, 13)),
-          new Transaction.withTime('BSU', 'Credit', -10.00, Category.education,
-              DateTime(2020, 2, 13)),
-          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
-              DateTime(2020, 2, 10)),
-          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
-              DateTime(2020, 2, 9)),
-          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
-              DateTime(2020, 2, 8)),
-          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
-              DateTime(2020, 2, 7)),
-          new Transaction.withTime('BSU', 'Credit', -10.00, Category.groceries,
-              DateTime(2020, 2, 4)),
-          new Transaction.withTime(
-              'BSU', 'Credit', -10.00, Category.groceries, DateTime(2020, 2, 4))
-        ];
-        TransactionList transactions = new TransactionList();
-        tl.forEach((Transaction t) {
-          transactions.add(t);
-        });
-        builder.setIncome(1200);
-        builder.setTransactions(transactions);
-        builder.setType(BudgetType.growth);
-        builder.setCategories(new CategoryList());
-        _builtBudget = builder.build();
+        _builder = new BudgetBuilder();
+        _builder
+            .setType(BudgetType.growth)
+            .setIncome(2000)
+            .setCategories(CategoryList());
+        _builtBudget = _builder.build();
       });
-//      test('Month net is -80.00', () {
-//        expect(_builtBudget.netMonth, -80.00);
-//      });
-//      test('Week net is -60.00', () {
-//        expect(_builtBudget.netWeek, -60.00);
-//      });
+      test('Add transaction makes spending positive', () {
+        MockTransaction transaction = MockTransaction();
+        when(transaction.category).thenReturn(Category.groceries);
+        when(transaction.amount).thenReturn(-100);
+        _builtBudget.addTransaction(transaction);
+        expect(_builtBudget.spent, 100);
+      });
     });
   });
 }

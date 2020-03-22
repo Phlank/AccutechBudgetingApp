@@ -5,8 +5,8 @@ import 'package:budgetflow/model/serialize/unserializer.dart';
 class EncryptedStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
-    String iv = value[KEY_IV];
-    String cipher = value[KEY_CIPHER];
+    String iv = value[ivKey];
+    String cipher = value[cipherKey];
     return Encrypted(iv, cipher);
   }
 }

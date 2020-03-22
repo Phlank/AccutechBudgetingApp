@@ -25,8 +25,8 @@ class _PinInfoPageState extends State<PinInfoPage> {
             InputDecoration(labelText: 'Desired PIN', hintText: 'Four digits'),
         keyboardType: TextInputType.number,
         validator: (value) {
-          if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
-          if (!InputValidator.pin(value)) return InputValidator.PIN_MESSAGE;
+          if (value.isEmpty) return InputValidator.requiredMessage;
+          if (!InputValidator.pin(value)) return InputValidator.pinMessage;
           pin = value;
           return null;
         },
@@ -42,8 +42,8 @@ class _PinInfoPageState extends State<PinInfoPage> {
         decoration: InputDecoration(labelText: 'Confirm PIN'),
         keyboardType: TextInputType.number,
         validator: (value) {
-          if (value.isEmpty) return InputValidator.REQUIRED_MESSAGE;
-          if (!InputValidator.pin(value)) return InputValidator.PIN_MESSAGE;
+          if (value.isEmpty) return InputValidator.requiredMessage;
+          if (!InputValidator.pin(value)) return InputValidator.pinMessage;
           if (value != pin) return 'Must match above PIN';
           return null;
         },

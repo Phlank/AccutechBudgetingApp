@@ -1,17 +1,18 @@
+import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:budgetflow/view/utils/routes.dart';
 import 'package:budgetflow/view/widgets/page_cards.dart';
 import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart_row.dart';
+import 'package:budgetflow/view/widgets/transaction/edit/transaction_edit_page.dart';
 import 'package:budgetflow/view/widgets/transaction/transaction_list_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'add_transaction.dart';
-
 class UserPage extends StatefulWidget {
   static const ROUTE = '/knownUser';
+
   @override
   _UserPageState createState() => new _UserPageState();
 }
@@ -23,11 +24,15 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         title: Text('Summary'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.autorenew), onPressed: () {
-            while (Navigator.of(context).canPop()) Navigator.of(context).pop();
-            Navigator.of(context).push(
-                RouteUtil.routeWithSlideTransition(WelcomePage()));
-          },)
+          IconButton(
+            icon: Icon(Icons.autorenew),
+            onPressed: () {
+              while (Navigator.of(context).canPop())
+                Navigator.of(context).pop();
+              Navigator.of(context)
+                  .push(RouteUtil.routeWithSlideTransition(WelcomePage()));
+            },
+          )
         ],
       ),
 //      drawer: SideMenu().sideMenu(BudgetingApp.userController),
@@ -45,9 +50,10 @@ class _UserPageState extends State<UserPage> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add transaction',
         child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context).push(
-              RouteUtil.routeWithSlideTransition(AddTransactionPage()));
+        onPressed: () async {
+          Transaction transaction =
+          await TransactionEditPage.show(Transaction.empty, context);
+          BudgetingApp.userController.addTransaction(transaction);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

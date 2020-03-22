@@ -23,7 +23,6 @@ import 'budget/category/category.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
-  static const String _PASSWORD_PATH = "password";
   static FileIO fileIO = new DartFileIO();
   static Password _password;
   static Crypter crypter;
@@ -96,11 +95,6 @@ class BudgetControl implements Control {
     _history = await History.load();
     _budget = await _history.getLatestMonthBudget();
     _loadedTransactions = TransactionList.copy(_budget.transactions);
-    _loadedTransactions.forEach((transaction) {
-      if (transaction.location != null) {
-        locationMap[transaction.location] = transaction.category;
-      }
-    });
     _initLocationMap();
     _initLocationListener();
   }
@@ -125,7 +119,9 @@ class BudgetControl implements Control {
       Location streamLocation = Location.fromGeolocatorPosition(position);
       locationMap.forEach((location, category) async {
         if (await streamLocation.distanceTo(location) < 10) {
-
+          // TODO Trigger notification
+          print('In range of location ' + location.latitude.toString() + ', ' +
+              location.longitude.toString() + ' for category ' + category.name);
         }
       });
     });
@@ -140,7 +136,7 @@ class BudgetControl implements Control {
       _history.addMonth(builder.build());
     }
     _history.save(_budget);
-    fileIO.writeFile(_PASSWORD_PATH, _password.serialize);
+    fileIO.writeFile(Password.path, _password.serialize);
   }
 
   @override
@@ -279,7 +275,7 @@ class BudgetControl implements Control {
     return sectionBudget(section) - expenseInSection(section);
   }
 
-  void removeTransaction(Transaction tran) {
+  void removeTransactionIfPresent(Transaction tran) {
     _loadedTransactions.remove(tran);
     _budget.removeTransaction(tran);
   }
@@ -303,10 +299,10 @@ class MockBudget {
   double getNewTotalAllotted(String section) {
     print(section);
     Map<String, List<Category>> mockMap = {
-      Priority.need.name: BudgetingApp.userController.getBudget()
-          .getCategoriesOfPriority(Priority.need),
-      Priority.want.name: BudgetingApp.userController.getBudget()
-          .getCategoriesOfPriority(Priority.want),
+      Priority.needs.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.needs),
+      Priority.wants.name: BudgetingApp.userController.getBudget()
+          .getCategoriesOfPriority(Priority.wants),
       Priority.savings.name: BudgetingApp.userController.getBudget()
           .getCategoriesOfPriority(Priority.savings)
     };

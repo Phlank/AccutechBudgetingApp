@@ -4,21 +4,25 @@ import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Transaction t1 = new Transaction(null, null, 0.0, null);
-Transaction t2 =
-    new Transaction("Walmart", "Credit Card", 0.0, Category.groceries);
+Transaction t1 = Transaction.empty;
+Transaction t2 = new Transaction(
+  vendor: "Walmart",
+  method: "Credit",
+  amount: 0.0,
+  category: Category.groceries,
+  time: DateTime.fromMillisecondsSinceEpoch(1578881628138),
+);
 String t2s =
-    "{\"datetime\":\"1578881628138\",\"vendor\":\"Walmart\",\"method\":\"Credit Card\",\"delta\":\"0.0\",\"category\":\"Groceries\"}";
+    '{"time":"1578881628138","vendor":"Walmart","method":"Credit","amount":"0.0","category":{"name":"Groceries","priority":{"name":"Needs"}},"location":{"latitude":"0.0","longitude":"0.0"}}';
 
 void main() {
   test("Serialization of new transaction", () {
-    expect(t2.serialize, isNot(null));
+    expect(t2.serialize, t2s);
   });
   test("Serialization sanity", () {
     String t2s = t2.serialize;
-    expect(
-        t2s, equals(Serializer
-        .unserialize(KEY_TRANSACTION, t2s)
+    expect(t2s, equals(Serializer
+        .unserialize(transactionKey, t2s)
         .serialize));
   });
 }

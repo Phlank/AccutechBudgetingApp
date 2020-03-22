@@ -16,16 +16,16 @@ import 'package:budgetflow/model/serialize/unserializer.dart';
 
 class Serializer implements Serializable {
   static Map<String, Unserializer> strategyMap = {
-    KEY_PASSWORD: PasswordStrategy(),
-    KEY_ENCRYPTED: EncryptedStrategy(),
-    KEY_TRANSACTION: TransactionStrategy(),
-    KEY_CATEGORY: CategoryStrategy(),
-    KEY_PRIORITY: PriorityStrategy(),
-    KEY_TRANSACTION_LIST: TransactionListStrategy(),
-    KEY_MONTH: MonthStrategy(),
-    KEY_TYPE: BudgetTypeStrategy(),
-    KEY_HISTORY: HistoryStrategy(),
-    KEY_LOCATION: LocationStrategy()
+    passwordKey: PasswordStrategy(),
+    encryptedKey: EncryptedStrategy(),
+    transactionKey: TransactionStrategy(),
+    categoryKey: CategoryStrategy(),
+    priorityKey: PriorityStrategy(),
+    transactionListKey: TransactionListStrategy(),
+    monthKey: MonthStrategy(),
+    typeKey: BudgetTypeStrategy(),
+    historyKey: HistoryStrategy(),
+    locationKey: LocationStrategy()
   };
 
   Map<dynamic, dynamic> pairs;
@@ -63,7 +63,7 @@ class Serializer implements Serializable {
   }
 
   static String _padIfNeeded(String value) {
-    if (value != null) {
+    if (value != "null" && value != null) {
       bool needsPadding = !(value.contains('{') || value.contains('"'));
       if (needsPadding) {
         return '"$value"';
