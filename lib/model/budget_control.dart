@@ -82,6 +82,15 @@ class BudgetControl implements Control {
     crypter = new SteelCrypter(_password);
     if (_oldUser) {
       await _load();
+      for(Achievement a in earnedAchievements){
+        if(a.name == 'returning for seconds'){
+          break;
+        }
+        earnedAchievements.add(new Achievement(
+            name: 'returning for seconds',
+            description: 'you have returned to us fro a second time start of a promising relationship, we hope',
+            icon: Icon(Icons.exposure_plus_2)));
+      }
       return true;
     } else {
       earnedAchievements.add(new Achievement(

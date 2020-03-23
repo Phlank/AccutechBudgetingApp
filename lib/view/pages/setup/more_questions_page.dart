@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/setup/kids_pets_info_page.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
@@ -25,6 +26,10 @@ class MoreQuestionsPage extends StatelessWidget {
                 SetupAgent.pets));
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
+        BudgetingApp.control.earnedAchievements.add(new Achievement(
+            name: 'Got to go fast',
+            description: 'couldn\'t wait to see what your budget was looking like',
+            icon: Icon(null)));
       },
     );
   }
