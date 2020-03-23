@@ -17,6 +17,7 @@ import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -36,6 +37,7 @@ class BudgetControl implements Control {
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
+  List<Achievement> earnedAchievements;
 
   final Map<String, List<Category>> sectionMap = {
     'Needs': [
@@ -76,15 +78,17 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> initialize() async {
-    print("Initializing BudgetControl");
     _updateMonthTimes();
-    print("MonthTimes updated");
     crypter = new SteelCrypter(_password);
-    print("Crypter created");
     if (_oldUser) {
       await _load();
       return true;
     } else {
+      earnedAchievements.add(new Achievement(
+          name: 'First Time',
+          description: 'welcome to your new budgeting app, we hope to bring you'
+              +' finacial support for the duration of your use',
+          icon:Icon(Icons.new_releases)));
       return false;
     }
   }
