@@ -1,3 +1,6 @@
+import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -52,7 +55,8 @@ class _AchievementPageState extends State<AchievementsPage>{
 
 }
 
-class Achievement{
+class Achievement extends Serializable{
+  //todo make icons for achievements
   String name;
   Icon icon;
   Function action;
@@ -64,4 +68,13 @@ class Achievement{
       @required this.icon,
       this.action}
       );
+
+  @override
+  String get serialize {
+    Serializer seal = new Serializer();
+    seal.addPair(achievementNameKey, name);
+    seal.addPair(achievementDescripKey, description);
+    return seal.serialize;
+  }
+
 }

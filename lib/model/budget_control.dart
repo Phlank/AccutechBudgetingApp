@@ -89,7 +89,7 @@ class BudgetControl implements Control {
         earnedAchievements.add(new Achievement(
             name: 'returning for seconds',
             description: 'you have returned to us fro a second time start of a promising relationship, we hope',
-            icon: Icon(Icons.exposure_plus_2)));
+            icon: Icon(null)));
       }
       return true;
     } else {
@@ -97,7 +97,7 @@ class BudgetControl implements Control {
           name: 'First Time',
           description: 'welcome to your new budgeting app, we hope to bring you'
               +' finacial support for the duration of your use',
-          icon:Icon(Icons.new_releases)));
+          icon:Icon(null)));
       return false;
     }
   }

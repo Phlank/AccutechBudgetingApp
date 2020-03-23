@@ -37,7 +37,6 @@ class Interaction extends Serializable{
   }
 
   @override
-  // TODO: implement serialize
   String  get serialize {
     Serializer seal = new Serializer();
     seal.addPair(interactionNameKey, name);
