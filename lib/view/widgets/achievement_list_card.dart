@@ -6,12 +6,12 @@ class AchievementListCard extends StatelessWidget{
   List<Achievement> earnedAchievements;
   int show;
   AchievementListCard({@required this.earnedAchievements, this.show = 1000}); // arbitrary large number
-  List<AchievementCard> showing;
+  List<AchievementListItem> showing;
 
   getListViewVersion(){
     int count =0;
     for(Achievement a in earnedAchievements.reversed){
-      showing.add(new AchievementCard(a));
+      showing.add(new AchievementListItem(a));
       count ++;
       if(count>=show)
         break;
@@ -46,10 +46,10 @@ class AchievementListCard extends StatelessWidget{
   }
 }
 
-class AchievementCard extends StatelessWidget{
+class AchievementListItem extends StatelessWidget{
 
   Achievement achievement;
-  AchievementCard(this.achievement);
+  AchievementListItem(this.achievement);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class AchievementCard extends StatelessWidget{
         color: Colors.black
     );
 
-    return Card(
+    return Padding(
         child: Table(
           children: <TableRow>[
             TableRow(
@@ -76,6 +76,7 @@ class AchievementCard extends StatelessWidget{
             )
           ],
         ),
+      padding: EdgeInsets.all(8.0),
       );
   }
 

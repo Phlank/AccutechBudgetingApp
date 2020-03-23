@@ -20,7 +20,6 @@ class _AchievementPageState extends State<AchievementsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-
         body: AchievementListCard(earnedAchievements: BudgetingApp.control.earnedAchievements ).getListViewVersion()
     );
   }
