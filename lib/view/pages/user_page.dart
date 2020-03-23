@@ -1,7 +1,9 @@
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:budgetflow/view/utils/routes.dart';
+import 'package:budgetflow/view/widgets/achievement_list_card.dart';
 import 'package:budgetflow/view/widgets/page_cards.dart';
 import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart_row.dart';
 import 'package:budgetflow/view/widgets/transaction/edit/transaction_edit_page.dart';
@@ -44,7 +46,9 @@ class _UserPageState extends State<UserPage> {
           PriorityChartRow(),
           GlobalCards.cashFlowBudgetCard(),
           TransactionListCard(
-              BudgetingApp.control.getLoadedTransactions())
+              BudgetingApp.control.getLoadedTransactions()),
+          AchievementListCard(
+          show:3, earnedAchievements:BudgetingApp.control.earnedAchievements)
         ],
       ),
       floatingActionButton: FloatingActionButton(

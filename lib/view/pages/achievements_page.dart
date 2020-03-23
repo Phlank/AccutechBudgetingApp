@@ -2,57 +2,28 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/widgets/achievement_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AchievementsPage extends StatefulWidget{
+  static  const String ROUTE = '/trophyRoom';
+
   @override
   _AchievementPageState createState() => _AchievementPageState();
 
 }
 
-class _AchievementPageState extends State<AchievementsPage>{
+class _AchievementPageState extends State<AchievementsPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body:ListView.builder(
-        itemCount: BudgetingApp.control.earnedAchievements.length,
-        itemBuilder:(BuildContext context, int index){
-          return achievementCard(BudgetingApp.control.earnedAchievements[index]);
-        },
+        appBar: AppBar(),
 
-      )
+        body: AchievementListCard(earnedAchievements: BudgetingApp.control.earnedAchievements ).getListViewVersion()
     );
   }
-
-  Card achievementCard(Achievement achievement) {
-    TextStyle style = TextStyle(
-      fontSize: 20,
-      color: Colors.black
-    );
-
-    return Card(
-      child: Table(
-        children: <TableRow>[
-          TableRow(
-            children: <TableCell>[
-              TableCell(child: Text(achievement.name, style: style, textAlign: TextAlign.left,)),
-              TableCell(child: achievement.icon)
-            ]
-          ),
-          TableRow(
-            children: <TableCell>[
-              TableCell(child: Text(achievement.description, style: style, textAlign: TextAlign.left,)),
-              TableCell(child: Text(''))
-            ]
-          )
-        ],
-      ),
-    );
-  }
-
 }
 
 class Achievement extends Serializable{
