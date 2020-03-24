@@ -26,6 +26,10 @@ class MonthTime {
     return new MonthTime(now.year, now.month);
   }
 
+  static MonthTime fromDateTime(DateTime time) {
+    return MonthTime(time.year, time.month);
+  }
+
   @override
   bool operator ==(Object o) => o is MonthTime && this._equals(o);
 

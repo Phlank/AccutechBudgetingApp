@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:budgetflow/model/account.dart';
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_accountant.dart';
 import 'package:budgetflow/model/budget/category/priority.dart';
@@ -15,6 +16,7 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/payment_method.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,8 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
+  List<PaymentMethod> paymentMethods;
+  List<Account> accounts;
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
@@ -190,6 +194,13 @@ class BudgetControl implements Control {
     save();
   }
 
+  void removeTransaction(Transaction transaction) {
+    _budget.removeTransaction(transaction);
+    _history.getMonth(MonthTime.now()).updateMonthData(_budget);
+    _loadedTransactions.remove(transaction);
+    save();
+  }
+
   Future<bool> setup() async {
     await setPassword(SetupAgent.pin);
     addNewBudget(PriorityBudgetFactory().newFromInfo(
@@ -273,6 +284,16 @@ class BudgetControl implements Control {
   void removeTransactionIfPresent(Transaction tran) {
     _loadedTransactions.remove(tran);
     _budget.removeTransaction(tran);
+  }
+
+  void addAccount(Account account) {
+    accounts.add(account);
+    paymentMethods.add(account);
+  }
+
+  void removeAccount(Account account) {
+    accounts.remove(account);
+    paymentMethods.remove(account);
   }
 }
 

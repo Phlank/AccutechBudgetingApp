@@ -1,16 +1,18 @@
-import 'package:budgetflow/model/account/payment_method.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/payment_method.dart';
 import 'package:flutter/foundation.dart';
 
 class Account extends PaymentMethod {
   String accountName;
   TransactionList accountTransactions;
+  DateTime beginning;
 
   Account({
     @required String methodName,
     @required String accountName,
     this.accountTransactions,
+    this.beginning,
   }) : super(methodName) {
     if (accountTransactions == null) accountTransactions = TransactionList();
   }
