@@ -85,6 +85,12 @@ class BudgetControl implements Control {
     print("MonthTimes updated");
     crypter = new SteelCrypter(_password);
     print("Crypter created");
+    Account dummy = Account(
+      accountName: "Chase Checking ****",
+      methodName: "Chase Checking",
+    );
+    paymentMethods.add(dummy);
+    accounts.add(dummy);
     if (_oldUser) {
       await _load();
       return true;
@@ -217,16 +223,6 @@ class BudgetControl implements Control {
     _budget.setAllotment(Category.categoryFromString(category), newAmt);
   }
 
-  double sectionBudget(String section) {
-    double secBudget = 0.0;
-    for (Category category in sectionMap[section]) {
-      secBudget += _budget.allotted
-          .getCategory(category)
-          .value;
-    }
-    return secBudget;
-  }
-
   double getCashFlow() {
     double amt = _budget.expectedIncome -
         _budget.allotted
@@ -275,10 +271,6 @@ class BudgetControl implements Control {
       }
     }
     return spent;
-  }
-
-  double remainingInSection(String section) {
-    return sectionBudget(section) - expenseInSection(section);
   }
 
   void removeTransactionIfPresent(Transaction tran) {
