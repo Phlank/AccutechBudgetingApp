@@ -14,8 +14,18 @@ class Account extends PaymentMethod {
     @required String accountName,
     this.accountTransactions,
     this.beginning,
+    this.amount,
   }) : super(methodName) {
     if (accountTransactions == null) accountTransactions = TransactionList();
+    if (beginning == null) beginning = DateTime.now();
+    if (amount == null) amount = 0.0;
+  }
+
+  Account.empty() : super('') {
+    accountName = '';
+    accountTransactions = TransactionList();
+    beginning = DateTime.now();
+    amount = 0.0;
   }
 
   void addTransaction(Transaction t) {
