@@ -13,7 +13,9 @@ class AccountPage extends StatelessWidget {
       appBar: AppBar(title: Text('Account Info'), actions: <Widget>[
         IconButton(
           icon: Icon(Icons.delete),
-          onPressed: () {},
+          onPressed: () {
+            // TODO display a continue/cancel dialog and respond to delete button press
+          },
         )
       ]),
       body: Padding24(

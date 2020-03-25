@@ -43,8 +43,7 @@ class _UserPageState extends State<UserPage> {
         children: <Widget>[
           PriorityChartRow(),
           GlobalCards.cashFlowBudgetCard(),
-          TransactionListCard(
-              BudgetingApp.control.getLoadedTransactions())
+          TransactionListCard(BudgetingApp.control.getLoadedTransactions())
         ],
       ),
       floatingActionButton: FloatingActionButton(
