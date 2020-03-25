@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/pages/home_page.dart';
