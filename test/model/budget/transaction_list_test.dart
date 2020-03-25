@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -13,19 +14,19 @@ MockTransaction t1, t2, t3;
 void setUpTransactions() {
   t1 = MockTransaction();
   when(t1.vendor).thenReturn('Walmart');
-  when(t1.method).thenReturn('Credit card');
+  when(t1.method).thenReturn(PaymentMethod('Credit card'));
   when(t1.amount).thenReturn(-21.29);
   when(t1.category).thenReturn(Category.groceries);
 
   t2 = MockTransaction();
   when(t2.vendor).thenReturn('Walmart');
-  when(t2.method).thenReturn('Credit card');
+  when(t2.method).thenReturn(PaymentMethod('Credit card'));
   when(t2.amount).thenReturn(-41.29);
   when(t2.category).thenReturn(Category.groceries);
 
   t3 = MockTransaction();
   when(t3.vendor).thenReturn('KFC');
-  when(t3.method).thenReturn('Credit card');
+  when(t3.method).thenReturn(PaymentMethod('Credit card'));
   when(t3.amount).thenReturn(-5.40);
   when(t3.category).thenReturn(Category.miscellaneous);
 }
