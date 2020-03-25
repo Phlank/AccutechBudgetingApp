@@ -52,7 +52,7 @@ class PriorityBudgetFactory implements BudgetFactory {
       _oldActualRatios = AllocationList(),
       _spendingDiffs = AllocationList(),
       _newAllotmentRatios = AllocationList(),
-      _allottedSpending = AllocationList(),
+      _allottedSpending = AllocationList.defaultCategories(),
       _targetSpending = AllocationList();
 
   PriorityBudgetFactory();
@@ -71,6 +71,12 @@ class PriorityBudgetFactory implements BudgetFactory {
     _income = income;
     _decidePlan(type);
     _setAllotments(housing);
+    return Budget(
+      expectedIncome: income,
+      type: type,
+      target: _allottedSpending,
+      allotted: _allottedSpending,
+    );
   }
 
   void _decidePlan(BudgetType type) {

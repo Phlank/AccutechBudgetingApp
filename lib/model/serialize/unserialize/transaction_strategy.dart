@@ -8,7 +8,7 @@ class TransactionStrategy implements Unserializer {
   unserializeValue(Map value) {
     var time = DateTime.fromMillisecondsSinceEpoch(int.parse(value[timeKey]));
     var vendor = value[vendorKey];
-    var method = value[methodKey];
+    var method = Serializer.unserialize(methodKey, value[methodKey]);
     var amount = double.parse(value[amountKey]);
     var category = Serializer.unserialize(categoryKey, value[categoryKey]);
     var location = Serializer.unserialize(locationKey, value[locationKey]);

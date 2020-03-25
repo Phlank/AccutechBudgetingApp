@@ -8,7 +8,7 @@ class TransactionListStrategy implements Unserializer {
   unserializeValue(Map value) {
     TransactionList list = new TransactionList();
     value.values.forEach((subValue) {
-      list.add(Serializer.unserialize((transactionKey), subValue));
+      list.add(Serializer.unserialize(transactionKey, subValue));
     });
     return list;
   }

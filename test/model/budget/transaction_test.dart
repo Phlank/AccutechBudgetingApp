@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 Transaction t1 = Transaction.empty;
 Transaction t2 = new Transaction(
   vendor: "Walmart",
-  method: "Credit",
+  method: PaymentMethod("Credit"),
   amount: 0.0,
   category: Category.groceries,
   time: DateTime.fromMillisecondsSinceEpoch(1578881628138),

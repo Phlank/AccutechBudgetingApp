@@ -1,11 +1,11 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/widgets/datetime/date_form_field.dart';
-import 'package:budgetflow/view/widgets/datetime/time_form_field.dart';
 import 'package:budgetflow/view/widgets/location_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +33,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   final Transaction initialTransaction;
 
   Transaction transactionResult;
-  String vendor, method;
+  String vendor;
+  PaymentMethod method;
   double amount;
   Category category;
   DateTime time;
@@ -52,6 +53,13 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     category = initialTransaction.category;
     time = initialTransaction.time;
     location = initialTransaction.location;
+    BudgetingApp.control.paymentMethods.forEach((method) {
+      if (method != null) {
+        print('method: ' + method.methodName);
+      } else {
+        print('passing null method');
+      }
+    });
   }
 
   Widget _buildVendorField() {
@@ -66,7 +74,12 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   }
 
   Widget _buildMethodField() {
-    return DropdownButton<String>(
+    List<PaymentMethod> items = [];
+    BudgetingApp.control.paymentMethods.forEach((method) {
+      items.add(method);
+    });
+    print(items.length);
+    return DropdownButton<PaymentMethod>(
       value: initialTransaction.method,
       icon: Icon(Icons.arrow_drop_down),
       onChanged: (value) {
@@ -74,11 +87,10 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
           method = value;
         });
       },
-      items: <String>['Cash', 'Credit', 'Checking', 'Savings']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: items.map<DropdownMenuItem<PaymentMethod>>((value) {
+        return DropdownMenuItem<PaymentMethod>(
           value: value,
-          child: Text(value),
+          child: Text(value.methodName),
         );
       }).toList(),
     );
@@ -107,7 +119,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
 
   Widget _buildCategoryField() {
     return DropdownButton<Category>(
-      value: initialTransaction.category,
+      value: category,
       icon: Icon(Icons.arrow_drop_down),
       iconSize: 24,
       elevation: 16,
@@ -199,8 +211,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     return Row(children: <Widget>[
       Text('Time', style: TextStyle(fontSize: 16)),
       Container(width: 24),
-      Expanded(child: DateFormField(initialTransaction.time)),
-      Expanded(child: TimeFormField(initialTransaction.time))
+      Expanded(child: BasicDateTimeField()),
     ]);
   }
 
@@ -209,8 +220,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          BudgetingApp.control
-              .removeTransactionIfPresent(transactionResult);
+          BudgetingApp.control.removeTransactionIfPresent(initialTransaction);
           Transaction newTransaction = Transaction(
               amount: -amount,
               category: category,

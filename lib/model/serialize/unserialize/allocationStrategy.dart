@@ -8,7 +8,7 @@ class AllocationStrategy implements Unserializer {
   unserializeValue(Map value) {
     return Allocation(
       Serializer.unserialize(categoryKey, value[categoryKey]),
-      double.parse(amountKey),
+      double.parse(value[amountKey].replaceAll('"', '')),
     );
   }
 }
