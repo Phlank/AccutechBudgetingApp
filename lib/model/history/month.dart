@@ -30,6 +30,7 @@ class Month implements Serializable {
     if (actual != null) _actual = actual;
     if (target != null) _target = target;
     if (transactions != null) _transactions = transactions;
+    io = MonthIO(this);
   }
 
   Month.fromBudget(Budget b) {

@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/account.dart';
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
@@ -7,7 +8,7 @@ abstract class Control {
 
   Future<bool> passwordIsValid(String secret);
 
-  void initialize();
+  Future<bool> initialize();
 
   void setPassword(String newSecret);
 
@@ -22,4 +23,12 @@ abstract class Control {
   void addTransaction(Transaction t);
 
   void addNewBudget(Budget b);
+
+  Future setup();
+
+  void addAccount(Account account);
+
+  void removeAccount(Account account);
+
+  void removeTransaction(Transaction transaction);
 }

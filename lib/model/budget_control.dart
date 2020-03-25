@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:budgetflow/model/account.dart';
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_accountant.dart';
 import 'package:budgetflow/model/budget/category/priority.dart';
@@ -15,6 +16,9 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
@@ -22,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'budget/category/category.dart';
+import 'crypt/encrypted.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
@@ -34,6 +39,8 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
+  List<PaymentMethod> paymentMethods = [PaymentMethod.cash];
+  List<Account> accounts = List();
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
@@ -111,8 +118,19 @@ class BudgetControl implements Control {
     _budget = await _history.getLatestMonthBudget();
     accountant = BudgetAccountant(_budget);
     _loadedTransactions = TransactionList.copy(_budget.transactions);
+    await _loadPaymentMethods();
     _initLocationMap();
     _initLocationListener();
+  }
+
+  void _loadPaymentMethods() async {
+    String cipher = await fileIO.readFile(Account.accountsPath);
+    Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
+    String plaintext = crypter.decrypt(encrypted);
+    paymentMethods = Serializer.unserialize(methodListKey, plaintext);
+    paymentMethods.forEach((method) {
+      if (method is Account) accounts.add(method);
+    });
   }
 
   void _initLocationMap() {
@@ -157,6 +175,20 @@ class BudgetControl implements Control {
     }
     _history.save(_budget);
     fileIO.writeFile(Password.path, _password.serialize);
+    _savePaymentMethods();
+  }
+
+  void _savePaymentMethods() {
+    Serializer serializer = Serializer();
+    int i = 0;
+    paymentMethods.forEach((method) {
+      serializer.addPair(i, method);
+      i++;
+    });
+    String cipher = crypter
+        .encrypt(serializer.serialize)
+        .serialize;
+    fileIO.writeFile(Account.accountsPath, cipher);
   }
 
   @override
@@ -203,6 +235,13 @@ class BudgetControl implements Control {
     save();
   }
 
+  void removeTransaction(Transaction transaction) {
+    _budget.removeTransaction(transaction);
+    _history.getMonth(MonthTime.now()).updateMonthData(_budget);
+    _loadedTransactions.remove(transaction);
+    save();
+  }
+
   Future<bool> setup() async {
     await setPassword(SetupAgent.pin);
     addNewBudget(PriorityBudgetFactory().newFromInfo(
@@ -217,16 +256,6 @@ class BudgetControl implements Control {
 
   void changeAllotment(String category, double newAmt) {
     _budget.setAllotment(Category.categoryFromString(category), newAmt);
-  }
-
-  double sectionBudget(String section) {
-    double secBudget = 0.0;
-    for (Category category in sectionMap[section]) {
-      secBudget += _budget.allotted
-          .getCategory(category)
-          .value;
-    }
-    return secBudget;
   }
 
   double getCashFlow() {
@@ -279,13 +308,18 @@ class BudgetControl implements Control {
     return spent;
   }
 
-  double remainingInSection(String section) {
-    return sectionBudget(section) - expenseInSection(section);
+  void removeTransactionIfPresent(Transaction tran) {
+    _budget.removeTransaction(tran);
   }
 
-  void removeTransactionIfPresent(Transaction tran) {
-    _loadedTransactions.remove(tran);
-    _budget.removeTransaction(tran);
+  void addAccount(Account account) {
+    accounts.add(account);
+    paymentMethods.add(account);
+  }
+
+  void removeAccount(Account account) {
+    accounts.remove(account);
+    paymentMethods.remove(account);
   }
 }
 

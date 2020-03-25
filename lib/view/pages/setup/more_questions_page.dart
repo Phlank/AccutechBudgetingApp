@@ -1,7 +1,6 @@
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/setup/kids_pets_info_page.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
@@ -16,14 +15,6 @@ class MoreQuestionsPage extends StatelessWidget {
     return RaisedButton(
       child: Text('Take me to my budget!'),
       onPressed: () {
-        BudgetingApp.control.addNewBudget(PriorityBudgetFactory()
-            .newFromInfo(
-                SetupAgent.income,
-                SetupAgent.housing,
-                SetupAgent.depletion,
-                SetupAgent.savingsPull,
-                SetupAgent.kids,
-                SetupAgent.pets));
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
         BudgetingApp.control.earnedAchievements.add(new Achievement(

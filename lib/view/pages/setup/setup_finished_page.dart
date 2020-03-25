@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
@@ -17,6 +18,9 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
   @override
   void initState() {
     super.initState();
+    if (!BudgetingApp.control.paymentMethods.contains(PaymentMethod.cash)) {
+      BudgetingApp.control.paymentMethods.add(PaymentMethod.cash);
+    }
     setup = BudgetingApp.control.setup();
   }
 

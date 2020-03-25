@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
@@ -8,14 +9,14 @@ import 'package:flutter/widgets.dart';
 class Transaction implements Serializable {
   final DateTime time;
   final String vendor;
-  final String method;
+  final PaymentMethod method;
   final double amount;
   final Category category;
   final Location location;
 
   static final empty = Transaction(
     vendor: "",
-    method: "Cash",
+    method: PaymentMethod.cash,
     amount: 0.0,
     category: Category.uncategorized,
     time: DateTime.now(),
@@ -40,4 +41,21 @@ class Transaction implements Serializable {
     serializer.addPair(locationKey, location);
     return serializer.serialize;
   }
+
+  bool operator ==(Object other) => other is Transaction && _equals(other);
+
+  bool _equals(Transaction other) {
+    return time == other.time &&
+        vendor == other.vendor &&
+        method == other.method &&
+        amount == other.amount &&
+        category == other.category;
+  }
+
+  int get hashCode =>
+      time.hashCode ^
+      vendor.hashCode ^
+      method.hashCode ^
+      amount.hashCode ^
+      category.hashCode;
 }

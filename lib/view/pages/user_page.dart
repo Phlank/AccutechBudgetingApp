@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
+import 'package:budgetflow/view/pages/accounts_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:budgetflow/view/utils/routes.dart';
 import 'package:budgetflow/view/widgets/achievement_list_card.dart';
@@ -45,8 +46,18 @@ class _UserPageState extends State<UserPage> {
         children: <Widget>[
           PriorityChartRow(),
           GlobalCards.cashFlowBudgetCard(),
-          TransactionListCard(
-              BudgetingApp.control.getLoadedTransactions()),
+          TransactionListCard(BudgetingApp.control.getLoadedTransactions()),
+          ButtonBar(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(RouteUtil.routeWithSlideTransition(AccountsPage()));
+                },
+                child: Text('Accounts'),
+              ),
+            ],
+          ),
           AchievementListCard(
           show:3, earnedAchievements:BudgetingApp.control.earnedAchievements)
         ],
@@ -55,9 +66,7 @@ class _UserPageState extends State<UserPage> {
         tooltip: 'Add transaction',
         child: Icon(Icons.add),
         onPressed: () async {
-          Transaction transaction =
           await TransactionEditPage.show(Transaction.empty, context);
-          BudgetingApp.control.addTransaction(transaction);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
