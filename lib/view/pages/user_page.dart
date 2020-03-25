@@ -1,6 +1,5 @@
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/accounts_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:budgetflow/view/utils/routes.dart';
@@ -58,11 +57,10 @@ class _UserPageState extends State<UserPage> {
               ),
             ],
             alignment: MainAxisAlignment.center,
-
-          )
           ),
           AchievementListCard(
-          show:3, earnedAchievements:BudgetingApp.control.earnedAchievements)
+              show: 3,
+              earnedAchievements: BudgetingApp.control.earnedAchievements),
         ],
       ),
       floatingActionButton: FloatingActionButton(
