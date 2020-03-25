@@ -19,7 +19,7 @@ class TransactionListCard extends StatelessWidget {
       return _buildAmount(_MAX_NUMBER, context);
   }
 
-  Widget _buildAmount(int n, BuildContext context) {
+  Card _buildAmount(int n, BuildContext context) {
     // Start at the back of the list
     List<TransactionListItem> items = new List();
     int index = transactions.length - 1;
