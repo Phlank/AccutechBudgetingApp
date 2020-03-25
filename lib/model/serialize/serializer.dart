@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/unserialize/allocationListStrategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/allocationStrategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/budget_map_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/budget_type_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/category_strategy.dart';
@@ -28,6 +30,8 @@ class Serializer implements Serializable {
     historyKey: HistoryStrategy(),
     locationKey: LocationStrategy(),
     budgetMapKey: BudgetMapStrategy(),
+    allocationListKey: AllocationListStrategy(),
+    allocationKey: AllocationStrategy(),
   };
 
   Map<dynamic, dynamic> pairs;

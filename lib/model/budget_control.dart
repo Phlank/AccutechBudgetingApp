@@ -35,8 +35,8 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
-  List<PaymentMethod> paymentMethods;
-  List<Account> accounts;
+  List<PaymentMethod> paymentMethods = List();
+  List<Account> accounts = List();
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
@@ -85,12 +85,7 @@ class BudgetControl implements Control {
     print("MonthTimes updated");
     crypter = new SteelCrypter(_password);
     print("Crypter created");
-    Account dummy = Account(
-      accountName: "Chase Checking ****",
-      methodName: "Chase Checking",
-    );
-    paymentMethods.add(dummy);
-    accounts.add(dummy);
+    print('Added dummy account');
     if (_oldUser) {
       await _load();
       return true;
@@ -274,7 +269,6 @@ class BudgetControl implements Control {
   }
 
   void removeTransactionIfPresent(Transaction tran) {
-    _loadedTransactions.remove(tran);
     _budget.removeTransaction(tran);
   }
 

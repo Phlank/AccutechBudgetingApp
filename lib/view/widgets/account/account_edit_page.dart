@@ -91,11 +91,14 @@ class _AccountEditPageState extends State<AccountEditPage> {
             methodName: methodName,
             accountName: accountName,
           );
-          BudgetingApp.control.accounts.remove(initialAccount);
-          BudgetingApp.control.paymentMethods.remove(initialAccount);
-          BudgetingApp.control.accounts.add(result);
-          BudgetingApp.control.paymentMethods.add(result);
+          if (initialAccount != Account.empty()) {
+            BudgetingApp.control.removeAccount(initialAccount);
+            BudgetingApp.control.addAccount(result);
+          } else {
+            Navigator.of(context).pop(result);
+          }
           BudgetingApp.control.save();
+          Navigator.of(context).pop();
         }
       },
     );

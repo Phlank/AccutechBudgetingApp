@@ -16,6 +16,7 @@ class Account extends PaymentMethod {
     this.beginning,
     this.amount,
   }) : super(methodName) {
+    this.accountName = accountName;
     if (accountTransactions == null) accountTransactions = TransactionList();
     if (beginning == null) beginning = DateTime.now();
     if (amount == null) amount = 0.0;

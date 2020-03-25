@@ -107,7 +107,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
 
   Widget _buildCategoryField() {
     return DropdownButton<Category>(
-      value: initialTransaction.category,
+      value: category,
       icon: Icon(Icons.arrow_drop_down),
       iconSize: 24,
       elevation: 16,
@@ -210,7 +210,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           BudgetingApp.control
-              .removeTransactionIfPresent(transactionResult);
+              .removeTransactionIfPresent(initialTransaction);
           Transaction newTransaction = Transaction(
               amount: -amount,
               category: category,

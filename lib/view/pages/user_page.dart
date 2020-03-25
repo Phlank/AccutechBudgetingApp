@@ -62,9 +62,7 @@ class _UserPageState extends State<UserPage> {
         tooltip: 'Add transaction',
         child: Icon(Icons.add),
         onPressed: () async {
-          Transaction transaction =
           await TransactionEditPage.show(Transaction.empty, context);
-          BudgetingApp.control.addTransaction(transaction);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

@@ -20,7 +20,7 @@ class _FinancialInfoPageState extends State<FinancialInfoPage> {
   Widget _buildIncomeInput() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Monthly Income'),
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       validator: (value) {
         if (value.isEmpty) return InputValidator.requiredMessage;
         if (!InputValidator.dollarAmount(value))

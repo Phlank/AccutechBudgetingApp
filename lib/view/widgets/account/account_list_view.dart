@@ -9,8 +9,9 @@ class AccountListView extends StatelessWidget {
   AccountListView(this.accounts);
 
   Widget build(BuildContext context) {
-    List<Widget> items;
+    List<Widget> items = [];
     BudgetingApp.control.accounts.forEach((account) {
+      print(account.toString());
       items.add(AccountListViewItem(account));
     });
     return ListView(
