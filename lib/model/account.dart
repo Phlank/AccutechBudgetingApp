@@ -1,9 +1,13 @@
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
-import 'package:budgetflow/model/payment_method.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter/foundation.dart';
 
 class Account extends PaymentMethod {
+  static final String accountsPath = 'accounts';
+
   String accountName;
   TransactionList accountTransactions;
   DateTime beginning;
@@ -84,5 +88,15 @@ class Account extends PaymentMethod {
       }
     });
     return total;
+  }
+
+  String get serialize {
+    Serializer serializer = Serializer();
+    serializer.addPair(methodNameKey, methodName);
+    serializer.addPair(accountNameKey, accountName);
+    serializer.addPair(transactionListKey, accountTransactions);
+    serializer.addPair(beginningKey, beginning.millisecondsSinceEpoch);
+    serializer.addPair(amountKey, amount);
+    return serializer.serialize;
   }
 }

@@ -16,13 +16,16 @@ import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
-import 'package:budgetflow/model/payment_method.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
+import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'budget/category/category.dart';
+import 'crypt/encrypted.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
@@ -35,7 +38,7 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
-  List<PaymentMethod> paymentMethods = List();
+  List<PaymentMethod> paymentMethods = [PaymentMethod.cash];
   List<Account> accounts = List();
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
@@ -103,8 +106,19 @@ class BudgetControl implements Control {
     _budget = await _history.getLatestMonthBudget();
     accountant = BudgetAccountant(_budget);
     _loadedTransactions = TransactionList.copy(_budget.transactions);
+    await _loadPaymentMethods();
     _initLocationMap();
     _initLocationListener();
+  }
+
+  void _loadPaymentMethods() async {
+    String cipher = await fileIO.readFile(Account.accountsPath);
+    Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
+    String plaintext = crypter.decrypt(encrypted);
+    paymentMethods = Serializer.unserialize(methodListKey, plaintext);
+    paymentMethods.forEach((method) {
+      if (method is Account) accounts.add(method);
+    });
   }
 
   void _initLocationMap() {

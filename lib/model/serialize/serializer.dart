@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/unserialize/account_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/allocationListStrategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/allocationStrategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/budget_map_strategy.dart';
@@ -10,6 +11,8 @@ import 'package:budgetflow/model/serialize/unserialize/category_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/encrypted_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/history_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/location_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/method_list_strategy.dart';
+import 'package:budgetflow/model/serialize/unserialize/method_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/month_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/password_strategy.dart';
 import 'package:budgetflow/model/serialize/unserialize/priority_strategy.dart';
@@ -32,6 +35,9 @@ class Serializer implements Serializable {
     budgetMapKey: BudgetMapStrategy(),
     allocationListKey: AllocationListStrategy(),
     allocationKey: AllocationStrategy(),
+    methodKey: MethodStrategy(),
+    accountKey: AccountStrategy(),
+    methodListKey: MethodListStrategy(),
   };
 
   Map<dynamic, dynamic> pairs;

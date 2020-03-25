@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/location/location.dart';
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
@@ -33,7 +34,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   final Transaction initialTransaction;
 
   Transaction transactionResult;
-  String vendor, method;
+  String vendor;
+  PaymentMethod method;
   double amount;
   Category category;
   DateTime time;
@@ -66,7 +68,11 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   }
 
   Widget _buildMethodField() {
-    return DropdownButton<String>(
+    List<PaymentMethod> items = [];
+    BudgetingApp.control.paymentMethods.forEach((method) {
+      items.add(method);
+    });
+    return DropdownButton<PaymentMethod>(
       value: initialTransaction.method,
       icon: Icon(Icons.arrow_drop_down),
       onChanged: (value) {
@@ -74,11 +80,11 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
           method = value;
         });
       },
-      items: <String>['Cash', 'Credit', 'Checking', 'Savings']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: items
+          .map<DropdownMenuItem<PaymentMethod>>((value) {
+        return DropdownMenuItem<PaymentMethod>(
           value: value,
-          child: Text(value),
+          child: Text(value.methodName),
         );
       }).toList(),
     );
