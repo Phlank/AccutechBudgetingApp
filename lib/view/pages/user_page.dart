@@ -55,6 +55,8 @@ class _UserPageState extends State<UserPage> {
                 child: Text('Accounts'),
               ),
             ],
+            alignment: MainAxisAlignment.center,
+
           )
         ],
       ),

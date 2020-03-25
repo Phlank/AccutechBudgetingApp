@@ -89,7 +89,7 @@ class BudgetAccountant {
   }
 
   double getRemainingPriority(Priority priority) {
-    return getAllottedPriority(priority).abs() -
+    return getAllottedPriority(priority) -
         getActualPriority(priority).abs();
   }
 
@@ -106,6 +106,6 @@ class BudgetAccountant {
   }
 
   double getRemainingCategory(Category category) {
-    return getAllottedCategory(category) - getActualCategory(category);
+    return getAllottedCategory(category) - getActualCategory(category).abs();
   }
 }
