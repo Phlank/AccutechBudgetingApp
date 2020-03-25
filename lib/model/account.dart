@@ -7,6 +7,7 @@ class Account extends PaymentMethod {
   String accountName;
   TransactionList accountTransactions;
   DateTime beginning;
+  double amount;
 
   Account({
     @required String methodName,
