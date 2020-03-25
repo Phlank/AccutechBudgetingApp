@@ -15,6 +15,7 @@ class AccountsPage extends StatelessWidget {
           onPressed: () async {
             BudgetingApp.control.addAccount(
                 await AccountEditPage.show(Account.empty(), context));
+            this.build(context);
           },
         )
       ]),

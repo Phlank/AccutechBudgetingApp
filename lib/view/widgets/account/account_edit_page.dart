@@ -84,6 +84,7 @@ class _AccountEditPageState extends State<AccountEditPage> {
 
   Widget _buildButton() {
     return RaisedButton(
+      child: Text('Submit'),
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();

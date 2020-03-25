@@ -11,12 +11,15 @@ class AccountListView extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> items = [];
     BudgetingApp.control.accounts.forEach((account) {
-      print(account.toString());
-      items.add(AccountListViewItem(account));
+      if (account != null) {
+        print(account.toString());
+        items.add(AccountListViewItem(account));
+      }
     });
     return ListView(
       children: items,
       shrinkWrap: true,
+      physics: ScrollPhysics(),
     );
   }
 }
