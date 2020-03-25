@@ -41,4 +41,21 @@ class Transaction implements Serializable {
     serializer.addPair(locationKey, location);
     return serializer.serialize;
   }
+
+  bool operator ==(Object other) => other is Transaction && _equals(other);
+
+  bool _equals(Transaction other) {
+    return time == other.time &&
+        vendor == other.vendor &&
+        method == other.method &&
+        amount == other.amount &&
+        category == other.category;
+  }
+
+  int get hashCode =>
+      time.hashCode ^
+      vendor.hashCode ^
+      method.hashCode ^
+      amount.hashCode ^
+      category.hashCode;
 }

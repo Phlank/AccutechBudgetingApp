@@ -6,7 +6,6 @@ import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/widgets/datetime/date_form_field.dart';
-import 'package:budgetflow/view/widgets/datetime/time_form_field.dart';
 import 'package:budgetflow/view/widgets/location_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +53,13 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     category = initialTransaction.category;
     time = initialTransaction.time;
     location = initialTransaction.location;
+    BudgetingApp.control.paymentMethods.forEach((method) {
+      if (method != null) {
+        print('method: ' + method.methodName);
+      } else {
+        print('passing null method');
+      }
+    });
   }
 
   Widget _buildVendorField() {
@@ -72,6 +78,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     BudgetingApp.control.paymentMethods.forEach((method) {
       items.add(method);
     });
+    print(items.length);
     return DropdownButton<PaymentMethod>(
       value: initialTransaction.method,
       icon: Icon(Icons.arrow_drop_down),
@@ -80,8 +87,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
           method = value;
         });
       },
-      items: items
-          .map<DropdownMenuItem<PaymentMethod>>((value) {
+      items: items.map<DropdownMenuItem<PaymentMethod>>((value) {
         return DropdownMenuItem<PaymentMethod>(
           value: value,
           child: Text(value.methodName),
@@ -205,8 +211,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     return Row(children: <Widget>[
       Text('Time', style: TextStyle(fontSize: 16)),
       Container(width: 24),
-      Expanded(child: DateFormField(initialTransaction.time)),
-      Expanded(child: TimeFormField(initialTransaction.time))
+      Expanded(child: BasicDateTimeField()),
     ]);
   }
 
@@ -215,8 +220,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          BudgetingApp.control
-              .removeTransactionIfPresent(initialTransaction);
+          BudgetingApp.control.removeTransactionIfPresent(initialTransaction);
           Transaction newTransaction = Transaction(
               amount: -amount,
               category: category,

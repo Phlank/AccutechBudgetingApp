@@ -163,6 +163,20 @@ class BudgetControl implements Control {
     }
     _history.save(_budget);
     fileIO.writeFile(Password.path, _password.serialize);
+    _savePaymentMethods();
+  }
+
+  void _savePaymentMethods() {
+    Serializer serializer = Serializer();
+    int i = 0;
+    paymentMethods.forEach((method) {
+      serializer.addPair(i, method);
+      i++;
+    });
+    String cipher = crypter
+        .encrypt(serializer.serialize)
+        .serialize;
+    fileIO.writeFile(Account.accountsPath, cipher);
   }
 
   @override

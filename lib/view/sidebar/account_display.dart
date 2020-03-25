@@ -23,12 +23,13 @@ class _AccountDisplay extends State<AccountDisplay> {
       appBar: AppBar(
         title: Text('Accounts and Transactions'),
       ),
-      body: Column(
+      body: ListView(
         children: <Widget>[
           GlobalCards.cashFlowBudgetCard(),
           TransactionListView(
               BudgetingApp.control.getLoadedTransactions()),
         ],
+        shrinkWrap: true,
       ),
     );
   }

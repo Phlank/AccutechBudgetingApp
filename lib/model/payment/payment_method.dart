@@ -16,4 +16,10 @@ class PaymentMethod implements Serializable {
     serializer.addPair(methodNameKey, methodName);
     return serializer.serialize;
   }
+
+  bool operator ==(Object other) => other is PaymentMethod && _equals(other);
+
+  bool _equals(PaymentMethod other) {
+    return methodName == other.methodName;
+  }
 }

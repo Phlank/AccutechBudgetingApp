@@ -18,7 +18,9 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
   @override
   void initState() {
     super.initState();
-    BudgetingApp.control.paymentMethods.add(PaymentMethod.cash);
+    if (!BudgetingApp.control.paymentMethods.contains(PaymentMethod.cash)) {
+      BudgetingApp.control.paymentMethods.add(PaymentMethod.cash);
+    }
     setup = BudgetingApp.control.setup();
   }
 

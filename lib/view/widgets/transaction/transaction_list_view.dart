@@ -16,6 +16,7 @@ class TransactionListView extends StatelessWidget {
     return ListView(
       children: items,
       shrinkWrap: true,
+      physics: ScrollPhysics(),
     );
   }
 }
