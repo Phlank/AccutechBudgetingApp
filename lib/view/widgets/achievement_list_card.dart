@@ -25,7 +25,11 @@ class AchievementListCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-
+    if(earnedAchievements.isEmpty){
+      return Card(
+        child: Text("Youre Achievements will apear here"),
+      );
+    }
     return Card(
         child: Column(
             children: <Widget>[

@@ -44,7 +44,7 @@ class BudgetControl implements Control {
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
-  List<Achievement> earnedAchievements;
+  List<Achievement> earnedAchievements = List();
 
   final Map<String, List<Category>> sectionMap = {
     'Needs': [
