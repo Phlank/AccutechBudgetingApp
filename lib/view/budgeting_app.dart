@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
+import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/login_page.dart';
@@ -38,8 +39,6 @@ class BudgetingApp extends StatelessWidget {
       routes: {
         LoginPage.ROUTE: (BuildContext context) => LoginPage(),
         UserPage.ROUTE: (BuildContext context) => UserPage(),
-        '/edit': (BuildContext context) =>
-            EditInformationDirectory(control.getBudget()),
         GeneralCategory.NEEDS_ROUTE: (BuildContext context) =>
             GeneralCategory('needs'),
         GeneralCategory.WANTS_ROUTE: (BuildContext context) =>
@@ -48,6 +47,7 @@ class BudgetingApp extends StatelessWidget {
             GeneralCategory('savings'),
         FirstLoad.ROUTE: (BuildContext context) => FirstLoad(),
         AccountDisplay.ROUTE: (BuildContext context) => AccountDisplay(),
+        AchievementsPage.ROUTE: (BuildContext context) => AchievementsPage(),
       }, //Routes
     );
   }

@@ -21,6 +21,7 @@ import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -43,6 +44,7 @@ class BudgetControl implements Control {
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
+  List<Achievement> earnedAchievements;
 
   final Map<String, List<Category>> sectionMap = {
     'Needs': [
@@ -83,16 +85,26 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> initialize() async {
-    print("Initializing BudgetControl");
     _updateMonthTimes();
-    print("MonthTimes updated");
     crypter = new SteelCrypter(_password);
-    print("Crypter created");
-    print('Added dummy account');
     if (_oldUser) {
       await _load();
+      for(Achievement a in earnedAchievements){
+        if(a.name == 'returning for seconds'){
+          break;
+        }
+        earnedAchievements.add(new Achievement(
+            name: 'returning for seconds',
+            description: 'you have returned to us fro a second time start of a promising relationship, we hope',
+            icon: Icon(null)));
+      }
       return true;
     } else {
+      earnedAchievements.add(new Achievement(
+          name: 'First Time',
+          description: 'welcome to your new budgeting app, we hope to bring you'
+              +' finacial support for the duration of your use',
+          icon:Icon(null)));
       return false;
     }
   }
