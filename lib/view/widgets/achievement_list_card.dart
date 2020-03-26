@@ -30,9 +30,8 @@ class AchievementListCard extends StatelessWidget {
             ),
             padding: EdgeInsets.all(8.0),
           ),
-          ListView(
+          Column(
             children: showing,
-            shrinkWrap: true,
           ),
           ButtonBar(
             alignment: MainAxisAlignment.center,

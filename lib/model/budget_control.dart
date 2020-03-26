@@ -89,22 +89,27 @@ class BudgetControl implements Control {
     crypter = new SteelCrypter(_password);
     if (_oldUser) {
       await _load();
-      for(Achievement a in earnedAchievements){
-        if(a.name == 'returning for seconds'){
-          break;
+      bool seconds = true;
+      for (Achievement a in earnedAchievements) {
+        if (a.name == 'returning for seconds') {
+          seconds = false;
         }
+      }
+      if (seconds) {
         earnedAchievements.add(new Achievement(
-            name: 'returning for seconds',
-            description: 'you have returned to us fro a second time start of a promising relationship, we hope',
-            icon: Icon(null)));
+            name: 'First Open',
+            description:
+            '\nWelcome to the app! We hope this is the start of a helpful relationship.',
+            icon: Icon(Icons.check)));
       }
       return true;
     } else {
       earnedAchievements.add(new Achievement(
           name: 'First Time',
-          description: 'welcome to your new budgeting app, we hope to bring you'
-              +' finacial support for the duration of your use',
-          icon:Icon(null)));
+          description:
+          'welcome to your new budgeting app, we hope to bring you' +
+              ' finacial support for the duration of your use',
+          icon: Icon(null)));
       return false;
     }
   }
@@ -123,7 +128,7 @@ class BudgetControl implements Control {
     _initLocationListener();
   }
 
-  void _loadPaymentMethods() async {
+  Future _loadPaymentMethods() async {
     String cipher = await fileIO.readFile(Account.accountsPath);
     Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
     String plaintext = crypter.decrypt(encrypted);
@@ -131,6 +136,7 @@ class BudgetControl implements Control {
     paymentMethods.forEach((method) {
       if (method is Account) accounts.add(method);
     });
+    return;
   }
 
   void _initLocationMap() {
@@ -232,6 +238,7 @@ class BudgetControl implements Control {
     _budget.addTransaction(t);
     _history.getMonth(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
+    _initLocationListener();
     save();
   }
 
