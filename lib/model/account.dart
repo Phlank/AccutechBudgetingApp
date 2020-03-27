@@ -15,11 +15,12 @@ class Account extends PaymentMethod {
 
   Account({
     @required String methodName,
-    @required String accountName,
+    @required this.accountName,
     this.accountTransactions,
     this.beginning,
     this.amount,
   }) : super(methodName) {
+    this.methodName = methodName;
     this.accountName = accountName;
     if (accountTransactions == null) accountTransactions = TransactionList();
     if (beginning == null) beginning = DateTime.now();

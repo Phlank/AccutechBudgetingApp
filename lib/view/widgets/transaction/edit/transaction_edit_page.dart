@@ -74,13 +74,9 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   }
 
   Widget _buildMethodField() {
-    List<PaymentMethod> items = [];
-    BudgetingApp.control.paymentMethods.forEach((method) {
-      items.add(method);
-    });
-    print(items.length);
+    List<PaymentMethod> items = BudgetingApp.control.paymentMethods;
     return DropdownButton<PaymentMethod>(
-      value: initialTransaction.method,
+      value: method,
       icon: Icon(Icons.arrow_drop_down),
       onChanged: (value) {
         setState(() {

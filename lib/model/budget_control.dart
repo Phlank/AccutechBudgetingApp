@@ -39,7 +39,7 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
-  List<PaymentMethod> paymentMethods = [PaymentMethod.cash];
+  List<PaymentMethod> paymentMethods;
   List<Account> accounts = List();
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
@@ -64,6 +64,7 @@ class BudgetControl implements Control {
     fileIO = new DartFileIO();
     _updateMonthTimes();
     _loadedTransactions = new TransactionList();
+    paymentMethods = [PaymentMethod.cash];
   }
 
   @override
@@ -123,7 +124,7 @@ class BudgetControl implements Control {
     _budget = await _history.getLatestMonthBudget();
     accountant = BudgetAccountant(_budget);
     _loadedTransactions = TransactionList.copy(_budget.transactions);
-    await _loadPaymentMethods();
+//    await _loadPaymentMethods();
     _initLocationMap();
     _initLocationListener();
   }
