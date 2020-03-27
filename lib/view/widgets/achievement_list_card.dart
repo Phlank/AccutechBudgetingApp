@@ -50,7 +50,7 @@ class AchievementListCard extends StatelessWidget {
 }
 
 class AchievementListItem extends StatelessWidget {
-  Achievement achievement;
+  final Achievement achievement;
 
   AchievementListItem(this.achievement);
 
