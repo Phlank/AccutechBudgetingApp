@@ -3,6 +3,7 @@ import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
 import 'package:budgetflow/model/budget/category/category.dart';
 import 'package:budgetflow/model/budget/factory/budget_factory.dart';
+import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 
 class _NSW {
   double needs, savings, wants;
@@ -151,6 +152,7 @@ class PriorityBudgetFactory implements BudgetFactory {
     _income = old.expectedIncome;
     _oldAllotmentRatios = old.allotted.divide(_income);
     _oldActualRatios = old.actual.divide(_income);
+    _allottedSpending = AllocationList.withCategoriesOf(old.allotted);
     if (_userExceededBudget()) {
       // Return the same budget as last month
       return Budget.from(old);
@@ -165,7 +167,10 @@ class PriorityBudgetFactory implements BudgetFactory {
       type: old.type,
       // TODO update target based on old budget
       target: old.target,
+      // This is wrong
       allotted: _allottedSpending,
+      actual: AllocationList.withCategoriesOf(old.allotted),
+      transactions: TransactionList(),
     );
   }
 
@@ -178,19 +183,22 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   void _findSpendingDiffs() {
-    _spendingDiffs = AllocationList();
+    _spendingDiffs = AllocationList.withCategoriesOf(_oldBudget.allotted);
     _oldAllotmentRatios.forEach((allocation) {
-      double allotted = allocation.value;
-      double spent = _oldAllotmentRatios.getCategory(allocation.category).value;
+      double allotted = allocation.value.abs();
+      double spent = _oldAllotmentRatios
+          .getCategory(allocation.category)
+          .value
+          .abs();
       if (_oldActualRatios.get(allocation).value != allocation.value) {
         _spendingDiffs.getCategory(allocation.category).value =
-            spent - allotted;
+            spent.abs() - allotted.abs();
       }
     });
   }
 
   void _reallocate() {
-    _newAllotmentRatios = AllocationList();
+    _newAllotmentRatios = AllocationList.withCategoriesOf(_oldBudget.allotted);
     _spendingDiffs.forEach((allocation) {
       if (allocation.category != Category.savings) {
         if (allocation.value < 0.0) _underspending += allocation.value;
@@ -223,7 +231,10 @@ class PriorityBudgetFactory implements BudgetFactory {
   void _setAllotmentsForNextMonth() {
     _oldBudget.allotted.forEach((allocation) {
       _allottedSpending.get(allocation).value =
-          _newAllotmentRatios.get(allocation).value * _income;
+          _newAllotmentRatios
+              .get(allocation)
+              .value
+              .abs() * _income;
     });
   }
 }

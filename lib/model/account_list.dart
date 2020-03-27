@@ -1,5 +1,6 @@
 import 'package:budgetflow/model/account.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:quiver/collection.dart';
 
 class AccountList extends DelegatingList<Account> implements Serializable {
@@ -7,7 +8,13 @@ class AccountList extends DelegatingList<Account> implements Serializable {
 
   List<Account> get delegate => _list;
 
-  String get serialize => null;
+  String get serialize {
+    Serializer serializer = Serializer();
+    for (int i = 0; i < length; i++) {
+      serializer.addPair('$i', this[i]);
+    }
+    return null;
+  }
 
   bool operator ==(Object other) => other is AccountList && _equals(other);
 

@@ -323,6 +323,12 @@ class BudgetControl implements Control {
     accounts.remove(account);
     paymentMethods.remove(account);
   }
+
+  void forceNextMonthTransition() {
+    _budget = PriorityBudgetFactory().newFromBudget(_budget);
+    _loadedTransactions = _budget.transactions;
+    accountant = BudgetAccountant(_budget);
+  }
 }
 
 class MockBudget {

@@ -34,7 +34,13 @@ class _UserPageState extends State<UserPage> {
               Navigator.of(context)
                   .push(RouteUtil.routeWithSlideTransition(WelcomePage()));
             },
-          )
+          ),
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {
+              BudgetingApp.control.forceNextMonthTransition();
+            },
+          ),
         ],
       ),
 //      drawer: SideMenu().sideMenu(BudgetingApp.userController),

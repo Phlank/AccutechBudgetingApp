@@ -76,9 +76,10 @@ class AllocationList extends DelegatingList<Allocation>
   }
 
   Allocation getCategory(Category category) {
-    return _list.firstWhere((element) {
+    Allocation output = _list.firstWhere((element) {
       return element.category == category;
     });
+    return output;
   }
 
   AllocationList divide(double n) {

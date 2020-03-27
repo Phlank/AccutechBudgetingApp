@@ -55,7 +55,7 @@ class Budget {
     );
   }
 
-  double setAllotment(Category category, double amount) {
+  void setAllotment(Category category, double amount) {
     allotted.getCategory(category).value = amount;
   }
 
@@ -66,13 +66,17 @@ class Budget {
   void addTransaction(Transaction transaction) {
     transactions.add(transaction);
     if (transaction.category == null) {
-      actual.getCategory(transaction.category).value += -transaction.amount;
+      actual
+          .getCategory(transaction.category)
+          .value += transaction.amount.abs();
     }
     if (transaction.category == Category.income) {
       actualIncome += transaction.amount;
       actual.getCategory(transaction.category).value += transaction.amount;
     } else {
-      actual.getCategory(transaction.category).value += -transaction.amount;
+      actual
+          .getCategory(transaction.category)
+          .value += transaction.amount.abs();
     }
   }
 
