@@ -124,9 +124,7 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   void _setAllotments(double housing) {
     // Allocate housing before anything else
-    _allottedSpending
-        .getCategory(Category.housing)
-        .value = housing;
+    _allottedSpending.getCategory(Category.housing).value = housing;
     // Get number of categories in needs and wants
     // TODO finish
     _needsRatio = _currentDistribution.needs - _housingRatio;
@@ -134,36 +132,16 @@ class PriorityBudgetFactory implements BudgetFactory {
     _savingsRatio = _currentDistribution.savings;
     double dNeedsRatio = _income * _needsRatio / 4.0;
     double dWantsRatio = _income * _wantsRatio / 5.0;
-    _allottedSpending
-        .getCategory(Category.utilities)
-        .value = dNeedsRatio;
-    _allottedSpending
-        .getCategory(Category.groceries)
-        .value = dNeedsRatio;
-    _allottedSpending
-        .getCategory(Category.health)
-        .value = dNeedsRatio;
-    _allottedSpending
-        .getCategory(Category.transportation)
-        .value = dNeedsRatio;
-    _allottedSpending
-        .getCategory(Category.education)
-        .value = dWantsRatio;
-    _allottedSpending
-        .getCategory(Category.entertainment)
-        .value = dWantsRatio;
-    _allottedSpending
-        .getCategory(Category.kids)
-        .value = dWantsRatio;
-    _allottedSpending
-        .getCategory(Category.pets)
-        .value = dWantsRatio;
-    _allottedSpending
-        .getCategory(Category.miscellaneous)
-        .value = dWantsRatio;
-    _allottedSpending
-        .getCategory(Category.savings)
-        .value =
+    _allottedSpending.getCategory(Category.utilities).value = dNeedsRatio;
+    _allottedSpending.getCategory(Category.groceries).value = dNeedsRatio;
+    _allottedSpending.getCategory(Category.health).value = dNeedsRatio;
+    _allottedSpending.getCategory(Category.transportation).value = dNeedsRatio;
+    _allottedSpending.getCategory(Category.education).value = dWantsRatio;
+    _allottedSpending.getCategory(Category.entertainment).value = dWantsRatio;
+    _allottedSpending.getCategory(Category.kids).value = dWantsRatio;
+    _allottedSpending.getCategory(Category.pets).value = dWantsRatio;
+    _allottedSpending.getCategory(Category.miscellaneous).value = dWantsRatio;
+    _allottedSpending.getCategory(Category.savings).value =
         _savingsRatio * _income;
   }
 
@@ -203,15 +181,9 @@ class PriorityBudgetFactory implements BudgetFactory {
     _spendingDiffs = AllocationList();
     _oldAllotmentRatios.forEach((allocation) {
       double allotted = allocation.value;
-      double spent = _oldAllotmentRatios
-          .getCategory(allocation.category)
-          .value;
-      if (_oldActualRatios
-          .get(allocation)
-          .value != allocation.value) {
-        _spendingDiffs
-            .getCategory(allocation.category)
-            .value =
+      double spent = _oldAllotmentRatios.getCategory(allocation.category).value;
+      if (_oldActualRatios.get(allocation).value != allocation.value) {
+        _spendingDiffs.getCategory(allocation.category).value =
             spent - allotted;
       }
     });
@@ -232,42 +204,26 @@ class PriorityBudgetFactory implements BudgetFactory {
       }
     });
     double leftover = -_underspending;
-    _newAllotmentRatios
-        .getCategory(Category.savings)
-        .value =
-        _oldAllotmentRatios
-            .getCategory(Category.savings)
-            .value + leftover;
+    _newAllotmentRatios.getCategory(Category.savings).value =
+        _oldAllotmentRatios.getCategory(Category.savings).value + leftover;
   }
 
   void _reallocateCategory(Category c, double d) {
     if (d < 0.0) {
-      _newAllotmentRatios
-          .getCategory(c)
-          .value =
-          _oldAllotmentRatios
-              .getCategory(c)
-              .value + d / _overspending;
+      _newAllotmentRatios.getCategory(c).value =
+          _oldAllotmentRatios.getCategory(c).value + d / _overspending;
       _underspending -= d / _overspending;
     }
     if (d >= 0.0) {
-      _newAllotmentRatios
-          .getCategory(c)
-          .value =
-          _oldActualRatios
-              .getCategory(c)
-              .value;
+      _newAllotmentRatios.getCategory(c).value =
+          _oldActualRatios.getCategory(c).value;
     }
   }
 
   void _setAllotmentsForNextMonth() {
     _oldBudget.allotted.forEach((allocation) {
-      _allottedSpending
-          .get(allocation)
-          .value =
-          _newAllotmentRatios
-              .get(allocation)
-              .value * _income;
+      _allottedSpending.get(allocation).value =
+          _newAllotmentRatios.get(allocation).value * _income;
     });
   }
 }

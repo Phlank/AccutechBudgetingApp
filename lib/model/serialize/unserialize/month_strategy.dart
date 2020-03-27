@@ -11,7 +11,7 @@ class MonthStrategy implements Unserializer {
       type: Serializer.unserialize(typeKey, value[typeKey]),
       income: double.parse(value[incomeKey]),
       monthTime:
-      MonthTime(int.parse(value[yearKey]), int.parse(value[monthKey])),
+          MonthTime(int.parse(value[yearKey]), int.parse(value[monthKey])),
     );
   }
 }

@@ -19,7 +19,7 @@ class _AchievementPageState extends State<AchievementsPage> {
     return Scaffold(
         appBar: AppBar(),
         body: AchievementListCard(
-            earnedAchievements: BudgetingApp.control.earnedAchievements)
+                earnedAchievements: BudgetingApp.control.earnedAchievements)
             .getListViewVersion());
   }
 }
@@ -31,10 +31,11 @@ class Achievement extends Serializable {
   Function action;
   String description;
 
-  Achievement({@required this.name,
-    @required this.description,
-    @required this.icon,
-    this.action});
+  Achievement(
+      {@required this.name,
+      @required this.description,
+      @required this.icon,
+      this.action});
 
   @override
   String get serialize {

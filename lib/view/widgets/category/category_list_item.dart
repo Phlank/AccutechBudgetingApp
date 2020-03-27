@@ -19,7 +19,7 @@ class CategoryListItem extends StatelessWidget {
 
   Widget _buildCategoryRemainingAmount(Category category) {
     double remaining =
-    BudgetingApp.control.accountant.getRemainingCategory(category);
+        BudgetingApp.control.accountant.getRemainingCategory(category);
     String formattedRemaining = Format.dollarFormat(remaining);
     Color color;
     if (remaining < 0)

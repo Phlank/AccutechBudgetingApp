@@ -6,8 +6,9 @@ class AchievementListCard extends StatelessWidget {
   final List<Achievement> earnedAchievements;
   final int show;
 
-  AchievementListCard({@required this.earnedAchievements,
-    this.show = 1000}); // arbitrary large number
+  AchievementListCard(
+      {@required this.earnedAchievements,
+      this.show = 1000}); // arbitrary large number
 
   getListViewVersion() {}
 
@@ -23,29 +24,29 @@ class AchievementListCard extends StatelessWidget {
     }
     return Card(
         child: Column(children: <Widget>[
-          Padding(
-            child: Text(
-              'Earned Achievements',
-              style: TextStyle(fontSize: 20),
-            ),
-            padding: EdgeInsets.all(8.0),
-          ),
-          Column(
-            children: showing,
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FlatButton(
-                child: Text('View more'),
-                onPressed: (() {
-                  Navigator.pushNamed(context, AchievementsPage.ROUTE);
-                }),
-                materialTapTargetSize: MaterialTapTargetSize.padded,
-              )
-            ],
-          ),
-        ]));
+      Padding(
+        child: Text(
+          'Earned Achievements',
+          style: TextStyle(fontSize: 20),
+        ),
+        padding: EdgeInsets.all(8.0),
+      ),
+      Column(
+        children: showing,
+      ),
+      ButtonBar(
+        alignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FlatButton(
+            child: Text('View more'),
+            onPressed: (() {
+              Navigator.pushNamed(context, AchievementsPage.ROUTE);
+            }),
+            materialTapTargetSize: MaterialTapTargetSize.padded,
+          )
+        ],
+      ),
+    ]));
   }
 }
 
@@ -64,19 +65,19 @@ class AchievementListItem extends StatelessWidget {
           TableRow(children: <TableCell>[
             TableCell(
                 child: Text(
-                  achievement.name,
-                  style: style,
-                  textAlign: TextAlign.left,
-                )),
+              achievement.name,
+              style: style,
+              textAlign: TextAlign.left,
+            )),
             TableCell(child: achievement.icon)
           ]),
           TableRow(children: <TableCell>[
             TableCell(
                 child: Text(
-                  achievement.description,
-                  style: style,
-                  textAlign: TextAlign.left,
-                )),
+              achievement.description,
+              style: style,
+              textAlign: TextAlign.left,
+            )),
             TableCell(child: Text(''))
           ])
         ],

@@ -14,16 +14,16 @@ class PriorityChart extends StatelessWidget {
   PrioritySeries _makeAllottedSeries() {
     String name = 'Allotted';
     double amount =
-    BudgetingApp.control.accountant.getAllottedPriority(priority).abs();
+        BudgetingApp.control.accountant.getAllottedPriority(priority).abs();
     charts.Color barColor = charts.ColorUtil.fromDartColor(Colors.blue);
     return PrioritySeries(name: name, amount: amount, barColor: barColor);
   }
 
   PrioritySeries _makeActualSeries() {
     double allotted =
-    BudgetingApp.control.accountant.getAllottedPriority(priority).abs();
+        BudgetingApp.control.accountant.getAllottedPriority(priority).abs();
     double actual =
-    BudgetingApp.control.accountant.getActualPriority(priority).abs();
+        BudgetingApp.control.accountant.getActualPriority(priority).abs();
     String name = 'Actual';
     charts.Color barColor;
     if (allotted < actual) {
@@ -50,22 +50,10 @@ class PriorityChart extends StatelessWidget {
     ];
     return ConstrainedBox(
       constraints: BoxConstraints(
-          minWidth: MediaQuery
-              .of(context)
-              .size
-              .width * 0.29,
-          minHeight: MediaQuery
-              .of(context)
-              .size
-              .height * 0.3,
-          maxWidth: MediaQuery
-              .of(context)
-              .size
-              .width * 0.29,
-          maxHeight: MediaQuery
-              .of(context)
-              .size
-              .height * 0.3),
+          minWidth: MediaQuery.of(context).size.width * 0.29,
+          minHeight: MediaQuery.of(context).size.height * 0.3,
+          maxWidth: MediaQuery.of(context).size.width * 0.29,
+          maxHeight: MediaQuery.of(context).size.height * 0.3),
       child: charts.BarChart(
         series,
         animate: true,

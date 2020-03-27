@@ -99,7 +99,7 @@ class BudgetControl implements Control {
         earnedAchievements.add(new Achievement(
             name: 'First Open',
             description:
-            '\nWelcome to the app! We hope this is the start of a helpful relationship.',
+                '\nWelcome to the app! We hope this is the start of a helpful relationship.',
             icon: Icon(Icons.check)));
       }
       return true;
@@ -107,8 +107,8 @@ class BudgetControl implements Control {
       earnedAchievements.add(new Achievement(
           name: 'First Time',
           description:
-          'welcome to your new budgeting app, we hope to bring you' +
-              ' finacial support for the duration of your use',
+              'welcome to your new budgeting app, we hope to bring you' +
+                  ' finacial support for the duration of your use',
           icon: Icon(null)));
       return false;
     }
@@ -152,9 +152,9 @@ class BudgetControl implements Control {
   void _initLocationListener() {
     positionStream = Geolocator()
         .getPositionStream(LocationOptions(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
-        timeInterval: 10))
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 10,
+            timeInterval: 10))
         .listen((position) {
       Location streamLocation = Location.fromGeolocatorPosition(position);
       locationMap.forEach((location, category) async {
@@ -191,9 +191,7 @@ class BudgetControl implements Control {
       serializer.addPair(i, method);
       i++;
     });
-    String cipher = crypter
-        .encrypt(serializer.serialize)
-        .serialize;
+    String cipher = crypter.encrypt(serializer.serialize).serialize;
     fileIO.writeFile(Account.accountsPath, cipher);
   }
 
@@ -227,7 +225,7 @@ class BudgetControl implements Control {
   Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
     TransactionList transactions =
-    await _history.getTransactionsFromMonthTime(MonthTime.now());
+        await _history.getTransactionsFromMonthTime(MonthTime.now());
     transactions.forEach((Transaction t) {
       _loadedTransactions.add(t);
     });
@@ -267,9 +265,7 @@ class BudgetControl implements Control {
 
   double getCashFlow() {
     double amt = _budget.expectedIncome -
-        _budget.allotted
-            .getCategory(Category.housing)
-            .value +
+        _budget.allotted.getCategory(Category.housing).value +
         expenseTotal();
     if (amt > 0) {
       cashFlowColor = Colors.green;
@@ -306,9 +302,7 @@ class BudgetControl implements Control {
       for (int i = 0; i < _loadedTransactions.length; i++) {
         Category rel = _loadedTransactions.getAt(i).category;
         if (rel == cat) {
-          spent += _budget.allotted
-              .getCategory(rel)
-              .value;
+          spent += _budget.allotted.getCategory(rel).value;
         }
       }
     }
@@ -342,9 +336,7 @@ class MockBudget {
   }
 
   double getCategory(Category category) {
-    return budget.allotted
-        .getCategory(category)
-        .value;
+    return budget.allotted.getCategory(category).value;
   }
 
   double getNewTotalAllotted(String section) {
@@ -361,9 +353,7 @@ class MockBudget {
     };
     double total = 0.0;
     for (Category category in mockMap[section]) {
-      total += budget.allotted
-          .getCategory(category)
-          .value;
+      total += budget.allotted.getCategory(category).value;
     }
     return total;
   }

@@ -25,8 +25,8 @@ class _FirstLoadState extends State<FirstLoad> {
           print(snap.stackTrace);
           return Scaffold(
               body: Center(
-                child: Text('Error ' + snapshot.error.toString()),
-              ));
+            child: Text('Error ' + snapshot.error.toString()),
+          ));
         } else {
           return CircularProgressIndicator();
         }

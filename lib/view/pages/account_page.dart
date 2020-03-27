@@ -15,7 +15,6 @@ class AccountPage extends StatelessWidget {
           icon: Icon(Icons.delete),
           onPressed: () {
             // TODO display a continue/cancel dialog and respond to delete button press
-
           },
         )
       ]),

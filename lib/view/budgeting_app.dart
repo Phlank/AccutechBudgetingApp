@@ -1,4 +1,3 @@
-import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
@@ -7,7 +6,6 @@ import 'package:budgetflow/view/pages/login_page.dart';
 import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:budgetflow/view/sidebar/account_display.dart';
 import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
-import 'package:budgetflow/view/sidebar/user_info_display.dart';
 import 'package:flutter/material.dart';
 
 class BudgetingApp extends StatelessWidget {

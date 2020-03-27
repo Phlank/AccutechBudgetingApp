@@ -56,9 +56,7 @@ class Budget {
   }
 
   double setAllotment(Category category, double amount) {
-    allotted
-        .getCategory(category)
-        .value = amount;
+    allotted.getCategory(category).value = amount;
   }
 
   void setIncome(double income) {
@@ -68,27 +66,21 @@ class Budget {
   void addTransaction(Transaction transaction) {
     transactions.add(transaction);
     if (transaction.category == null) {
-      actual
-          .getCategory(transaction.category)
-          .value += -transaction.amount;
+      actual.getCategory(transaction.category).value += -transaction.amount;
     }
     if (transaction.category == Category.income) {
       actualIncome += transaction.amount;
-      actual
-          .getCategory(transaction.category)
-          .value += transaction.amount;
+      actual.getCategory(transaction.category).value += transaction.amount;
     } else {
-      actual
-          .getCategory(transaction.category)
-          .value += -transaction.amount;
+      actual.getCategory(transaction.category).value += -transaction.amount;
     }
   }
 
   List<Category> getCategoriesOfPriority(Priority priority) {
     List<Category> list = List();
     allotted.forEach((allocation) {
-      if (allocation.category.priority == priority) list.add(
-          allocation.category);
+      if (allocation.category.priority == priority)
+        list.add(allocation.category);
     });
     return list;
   }
@@ -100,8 +92,6 @@ class Budget {
       actualIncome -= transaction.amount;
     }
     // update actual of the category
-    actual
-        .getCategory(transaction.category)
-        .value -= transaction.amount;
+    actual.getCategory(transaction.category).value -= transaction.amount;
   }
 }

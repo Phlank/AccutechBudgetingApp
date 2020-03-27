@@ -12,8 +12,7 @@ class AllocationList extends DelegatingList<Allocation>
   List<Allocation> get delegate => _list;
 
   AllocationList([List<Allocation> allocations]) {
-    if (allocations != null)
-      _list = allocations;
+    if (allocations != null) _list = allocations;
   }
 
   AllocationList.defaultCategories() {
@@ -85,9 +84,7 @@ class AllocationList extends DelegatingList<Allocation>
   AllocationList divide(double n) {
     AllocationList output = AllocationList.from(this);
     output.forEach((allocation) {
-      allocation.value = this
-          .getCategory(allocation.category)
-          .value / n;
+      allocation.value = this.getCategory(allocation.category).value / n;
     });
     return output;
   }

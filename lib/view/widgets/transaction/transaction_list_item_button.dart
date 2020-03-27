@@ -15,7 +15,7 @@ class TransactionListItemButton extends StatelessWidget {
         child: TransactionListItem(transaction),
         onPressed: () async {
           Transaction newTransaction =
-          await TransactionEditPage.show(transaction, context);
+              await TransactionEditPage.show(transaction, context);
           print('clicked the ' + transaction.toString() + ' button');
         });
   }

@@ -23,8 +23,8 @@ class GeneralCategory extends StatefulWidget {
 }
 
 class _GeneralCategoryState extends State<GeneralCategory> {
-  BudgetAccountant accountant = BudgetAccountant(
-      BudgetingApp.control.getBudget());
+  BudgetAccountant accountant =
+      BudgetAccountant(BudgetingApp.control.getBudget());
   BudgetControl userController;
   MockBudget playBudget;
   String section;
@@ -71,26 +71,22 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       onChanged: (value) {
         setState(() {
           if (allotedForSection >
-              accountant.getAllottedPriority(category.priority))
-            return;
+              accountant.getAllottedPriority(category.priority)) return;
           allotedForCategory = value;
         });
         playBudget.setCategory(category, allotedForCategory);
       },
       min: 0,
-      max: accountant
-          .getAllottedPriority(Priority.fromName(section)),
+      max: accountant.getAllottedPriority(Priority.fromName(section)),
       label: category.name,
     );
   }
 
   ListTile categoryTile(Category category) {
-    allotedForCategory = playBudget.budget.allotted
-        .getCategory(category)
-        .value;
+    allotedForCategory = playBudget.budget.allotted.getCategory(category).value;
     return ListTile(
       title:
-      Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
+          Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
       subtitle: sectionSlider(category),
     );
   }

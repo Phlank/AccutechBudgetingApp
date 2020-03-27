@@ -53,9 +53,7 @@ class GlobalCards {
   }
 
   static Card cashFlowCard() {
-    double income = BudgetingApp.control
-        .getBudget()
-        .expectedIncome -
+    double income = BudgetingApp.control.getBudget().expectedIncome -
         BudgetingApp.control
             .getBudget()
             .allotted
