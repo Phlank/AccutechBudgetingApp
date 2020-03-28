@@ -14,8 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  Widget build(BuildContext context) =>
-      FutureBuilder(
+  Widget build(BuildContext context) => FutureBuilder(
         future: BudgetingApp.control.isReturningUser(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 class BasicDateField extends StatelessWidget {
   final format = DateFormat("yyyy-MM-dd");
+
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
@@ -62,7 +63,7 @@ class BasicDateTimeField extends StatelessWidget {
             final time = await showTimePicker(
               context: context,
               initialTime:
-              TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                  TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
             );
             return DateTimeField.combine(date, time);
           } else {

@@ -38,7 +38,7 @@ class History implements Serializable {
 
   Future<Budget> getLatestMonthBudget() async {
     currentMonth = _months.firstWhere(
-            (Month m) => _monthMatchesMonthTime(m, MonthTime.now()),
+        (Month m) => _monthMatchesMonthTime(m, MonthTime.now()),
         orElse: () => null);
     if (currentMonth != null) {
       return Budget.fromMonth(currentMonth);

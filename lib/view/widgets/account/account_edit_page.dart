@@ -56,7 +56,7 @@ class _AccountEditPageState extends State<AccountEditPage> {
       initialValue: initialAccount.methodName,
       onSaved: (value) {
         setState(() {
-          accountName = value;
+          methodName = value;
         });
       },
     );

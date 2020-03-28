@@ -39,12 +39,12 @@ class BudgetControl implements Control {
   Budget _budget;
   bool _oldUser;
   Color cashFlowColor;
-  List<PaymentMethod> paymentMethods = [PaymentMethod.cash];
+  List<PaymentMethod> paymentMethods;
   List<Account> accounts = List();
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
-  List<Achievement> earnedAchievements = List();
+  List<Achievement> earnedAchievements = [];
 
   final Map<String, List<Category>> sectionMap = {
     'Needs': [
@@ -64,6 +64,7 @@ class BudgetControl implements Control {
     fileIO = new DartFileIO();
     _updateMonthTimes();
     _loadedTransactions = new TransactionList();
+    paymentMethods = [PaymentMethod.cash];
   }
 
   @override
@@ -89,22 +90,27 @@ class BudgetControl implements Control {
     crypter = new SteelCrypter(_password);
     if (_oldUser) {
       await _load();
-      for(Achievement a in earnedAchievements){
-        if(a.name == 'returning for seconds'){
-          break;
+      bool seconds = true;
+      for (Achievement a in earnedAchievements) {
+        if (a.name == 'returning for seconds') {
+          seconds = false;
         }
+      }
+      if (seconds) {
         earnedAchievements.add(new Achievement(
-            name: 'returning for seconds',
-            description: 'you have returned to us fro a second time start of a promising relationship, we hope',
-            icon: Icon(null)));
+            name: 'First Open',
+            description:
+                '\nWelcome to the app! We hope this is the start of a helpful relationship.',
+            icon: Icon(Icons.check)));
       }
       return true;
     } else {
       earnedAchievements.add(new Achievement(
           name: 'First Time',
-          description: 'welcome to your new budgeting app, we hope to bring you'
-              +' finacial support for the duration of your use',
-          icon:Icon(null)));
+          description:
+              'welcome to your new budgeting app, we hope to bring you' +
+                  ' finacial support for the duration of your use',
+          icon: Icon(null)));
       return false;
     }
   }
@@ -118,12 +124,12 @@ class BudgetControl implements Control {
     _budget = await _history.getLatestMonthBudget();
     accountant = BudgetAccountant(_budget);
     _loadedTransactions = TransactionList.copy(_budget.transactions);
-    await _loadPaymentMethods();
+//    await _loadPaymentMethods();
     _initLocationMap();
     _initLocationListener();
   }
 
-  void _loadPaymentMethods() async {
+  Future _loadPaymentMethods() async {
     String cipher = await fileIO.readFile(Account.accountsPath);
     Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
     String plaintext = crypter.decrypt(encrypted);
@@ -131,6 +137,7 @@ class BudgetControl implements Control {
     paymentMethods.forEach((method) {
       if (method is Account) accounts.add(method);
     });
+    return;
   }
 
   void _initLocationMap() {
@@ -146,9 +153,9 @@ class BudgetControl implements Control {
   void _initLocationListener() {
     positionStream = Geolocator()
         .getPositionStream(LocationOptions(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
-        timeInterval: 10))
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 10,
+            timeInterval: 10))
         .listen((position) {
       Location streamLocation = Location.fromGeolocatorPosition(position);
       locationMap.forEach((location, category) async {
@@ -185,9 +192,7 @@ class BudgetControl implements Control {
       serializer.addPair(i, method);
       i++;
     });
-    String cipher = crypter
-        .encrypt(serializer.serialize)
-        .serialize;
+    String cipher = crypter.encrypt(serializer.serialize).serialize;
     fileIO.writeFile(Account.accountsPath, cipher);
   }
 
@@ -221,7 +226,7 @@ class BudgetControl implements Control {
   Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
     TransactionList transactions =
-    await _history.getTransactionsFromMonthTime(MonthTime.now());
+        await _history.getTransactionsFromMonthTime(MonthTime.now());
     transactions.forEach((Transaction t) {
       _loadedTransactions.add(t);
     });
@@ -232,6 +237,7 @@ class BudgetControl implements Control {
     _budget.addTransaction(t);
     _history.getMonth(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
+    _initLocationListener();
     save();
   }
 
@@ -260,9 +266,7 @@ class BudgetControl implements Control {
 
   double getCashFlow() {
     double amt = _budget.expectedIncome -
-        _budget.allotted
-            .getCategory(Category.housing)
-            .value +
+        _budget.allotted.getCategory(Category.housing).value +
         expenseTotal();
     if (amt > 0) {
       cashFlowColor = Colors.green;
@@ -299,9 +303,7 @@ class BudgetControl implements Control {
       for (int i = 0; i < _loadedTransactions.length; i++) {
         Category rel = _loadedTransactions.getAt(i).category;
         if (rel == cat) {
-          spent += _budget.allotted
-              .getCategory(rel)
-              .value;
+          spent += _budget.allotted.getCategory(rel).value;
         }
       }
     }
@@ -321,6 +323,12 @@ class BudgetControl implements Control {
     accounts.remove(account);
     paymentMethods.remove(account);
   }
+
+  void forceNextMonthTransition() {
+    _budget = PriorityBudgetFactory().newFromBudget(_budget);
+    _loadedTransactions = _budget.transactions;
+    accountant = BudgetAccountant(_budget);
+  }
 }
 
 class MockBudget {
@@ -335,9 +343,7 @@ class MockBudget {
   }
 
   double getCategory(Category category) {
-    return budget.allotted
-        .getCategory(category)
-        .value;
+    return budget.allotted.getCategory(category).value;
   }
 
   double getNewTotalAllotted(String section) {
@@ -354,9 +360,7 @@ class MockBudget {
     };
     double total = 0.0;
     for (Category category in mockMap[section]) {
-      total += budget.allotted
-          .getCategory(category)
-          .value;
+      total += budget.allotted.getCategory(category).value;
     }
     return total;
   }

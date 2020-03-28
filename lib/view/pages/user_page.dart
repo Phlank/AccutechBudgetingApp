@@ -1,6 +1,5 @@
 import 'package:budgetflow/model/budget/transaction/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/accounts_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:budgetflow/view/utils/routes.dart';
@@ -35,7 +34,13 @@ class _UserPageState extends State<UserPage> {
               Navigator.of(context)
                   .push(RouteUtil.routeWithSlideTransition(WelcomePage()));
             },
-          )
+          ),
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {
+              BudgetingApp.control.forceNextMonthTransition();
+            },
+          ),
         ],
       ),
 //      drawer: SideMenu().sideMenu(BudgetingApp.userController),
@@ -57,9 +62,11 @@ class _UserPageState extends State<UserPage> {
                 child: Text('Accounts'),
               ),
             ],
+            alignment: MainAxisAlignment.center,
           ),
           AchievementListCard(
-          show:3, earnedAchievements:BudgetingApp.control.earnedAchievements)
+              show: 3,
+              earnedAchievements: BudgetingApp.control.earnedAchievements),
         ],
       ),
       floatingActionButton: FloatingActionButton(

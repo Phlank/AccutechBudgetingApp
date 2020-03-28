@@ -18,8 +18,8 @@ class TransactionEditPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _TransactionEditPageState(transaction);
 
-  static Future<Transaction> show(Transaction toEdit,
-      BuildContext context) async {
+  static Future<Transaction> show(
+      Transaction toEdit, BuildContext context) async {
     final result = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -74,13 +74,9 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   }
 
   Widget _buildMethodField() {
-    List<PaymentMethod> items = [];
-    BudgetingApp.control.paymentMethods.forEach((method) {
-      items.add(method);
-    });
-    print(items.length);
+    List<PaymentMethod> items = BudgetingApp.control.paymentMethods;
     return DropdownButton<PaymentMethod>(
-      value: initialTransaction.method,
+      value: method,
       icon: Icon(Icons.arrow_drop_down),
       onChanged: (value) {
         setState(() {
@@ -188,7 +184,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
         onPressed: () async {
           // Load google maps interface
           Location result =
-          await LocationPicker.show(context, await Location.current);
+              await LocationPicker.show(context, await Location.current);
         },
       )
     ]);

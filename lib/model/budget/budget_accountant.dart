@@ -47,16 +47,10 @@ class BudgetAccountant {
 
   double _getWeeklyIncome() {
     int numDaysInWeek =
-        Dates
-            .getEndOfWeek()
-            .difference((Dates.getStartOfWeek()))
-            .inDays;
+        Dates.getEndOfWeek().difference((Dates.getStartOfWeek())).inDays;
     return _budget.expectedIncome *
         numDaysInWeek /
-        DateUtils
-            .getLastDayOfCurrentMonth()
-            .day
-            .toDouble();
+        DateUtils.getLastDayOfCurrentMonth().day.toDouble();
   }
 
   double _getWeeklySpending() {
@@ -89,8 +83,7 @@ class BudgetAccountant {
   }
 
   double getRemainingPriority(Priority priority) {
-    return getAllottedPriority(priority).abs() -
-        getActualPriority(priority).abs();
+    return getAllottedPriority(priority) - getActualPriority(priority).abs();
   }
 
   double getAllottedCategory(Category category) {
@@ -106,6 +99,6 @@ class BudgetAccountant {
   }
 
   double getRemainingCategory(Category category) {
-    return getAllottedCategory(category) - getActualCategory(category);
+    return getAllottedCategory(category) - getActualCategory(category).abs();
   }
 }

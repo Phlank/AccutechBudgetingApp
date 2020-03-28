@@ -19,8 +19,7 @@ class PriorityChartButton extends StatelessWidget {
             Text(priority.name, style: TextStyle(fontSize: 20)),
             PriorityChart(priority: priority),
             Text('Balance: ' +
-                Format.dollarFormat(BudgetingApp.control
-                    .accountant
+                Format.dollarFormat(BudgetingApp.control.accountant
                     .getRemainingPriority(priority)))
           ]),
           onTap: () {

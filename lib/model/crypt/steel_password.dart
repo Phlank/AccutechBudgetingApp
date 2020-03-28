@@ -44,7 +44,7 @@ class SteelPassword implements Password {
   static KeyDerivator _generateKeyDerivator(String salt) {
     Uint8List saltBytes = Uint8List.fromList(salt.codeUnits);
     ScryptParameters params =
-    ScryptParameters(_scryptN, _scryptR, _scryptP, _keyLength, saltBytes);
+        ScryptParameters(_scryptN, _scryptR, _scryptP, _keyLength, saltBytes);
     KeyDerivator output = KeyDerivator(_algorithm);
     output.init(params);
     return output;
