@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget/allocation.dart';
 import 'package:budgetflow/model/budget/allocation_list.dart';
 import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_type.dart';
@@ -54,7 +55,8 @@ class PriorityBudgetFactory implements BudgetFactory {
       _spendingDiffs = AllocationList(),
       _newAllotmentRatios = AllocationList(),
       _allottedSpending = AllocationList.defaultCategories(),
-      _targetSpending = AllocationList();
+      _targetSpending = AllocationList(),
+      _deltas = AllocationList();
 
   PriorityBudgetFactory();
 
@@ -150,8 +152,6 @@ class PriorityBudgetFactory implements BudgetFactory {
   Budget newFromBudget(Budget old) {
     _oldBudget = old;
     _income = old.expectedIncome;
-    _oldAllotmentRatios = old.allotted.divide(_income);
-    _oldActualRatios = old.actual.divide(_income);
     _allottedSpending = AllocationList.withCategoriesOf(old.allotted);
     if (_userExceededBudget()) {
       // Return the same budget as last month
@@ -159,15 +159,16 @@ class PriorityBudgetFactory implements BudgetFactory {
     }
     // Look at spending, see what fields were over and what were under
     _findSpendingDiffs();
-    // Reorganize funds between over and under fields, put the rest into savings
+    // Decide how much each allocation will change
+    _calculateDeltas();
+    // Execute change in allocations
     _reallocate();
-    _setAllotmentsForNextMonth();
     return Budget(
       expectedIncome: old.expectedIncome,
       type: old.type,
       // TODO update target based on old budget
-      target: old.target,
       // This is wrong
+      target: old.target,
       allotted: _allottedSpending,
       actual: AllocationList.withCategoriesOf(old.allotted),
       transactions: TransactionList(),
@@ -184,57 +185,64 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   void _findSpendingDiffs() {
     _spendingDiffs = AllocationList.withCategoriesOf(_oldBudget.allotted);
-    _oldAllotmentRatios.forEach((allocation) {
-      double allotted = allocation.value.abs();
-      double spent = _oldAllotmentRatios
-          .getCategory(allocation.category)
-          .value
-          .abs();
-      if (_oldActualRatios.get(allocation).value != allocation.value) {
-        _spendingDiffs.getCategory(allocation.category).value =
-            spent.abs() - allotted.abs();
+    _oldBudget.allotted.forEach((allotment) {
+      if (allotment.category.isSpending) {
+        Allocation actual = _oldBudget.actual.getCategory(allotment.category);
+        _spendingDiffs
+            .getCategory(allotment.category)
+            .value =
+            allotment.value.abs() - actual.value.abs();
+      }
+    });
+  }
+
+  void _calculateDeltas() {
+    _deltas = AllocationList.withCategoriesOf(_allottedSpending);
+    double toMove = 0;
+    double overspending = 0;
+    // Calculate the change happening in underspending allocations
+    _deltas.forEach((allocation) {
+      if (!allocation.category.isSpending) return; // Exit inst if not right cat
+      // If not all money in category was spent
+      double diff = _spendingDiffs
+          .getWithSameCategory(allocation)
+          .value;
+      if (diff > 0) {
+        double move = diff / 2;
+        toMove += move;
+        allocation.value = -move; // Take money away from underspending
+      }
+      // If overspending occurred
+      else {
+        overspending += diff.abs();
+      }
+    });
+    // Currently, sum(deltas) = .5 * sum(_spendingDiffs | value > 0)
+    // Currently, overspending = sum(_spendingDiffs | value <= 0)
+    // Find the ratios of how much is being overspent in each category to the
+    // total amount in toMove, and multiply that fraction by toMove to get the
+    // dollar amount that the overspending categories should change by
+    _deltas.forEach((allocation) {
+      if (!allocation.category.isSpending) return;
+      double diff = _spendingDiffs
+          .getWithSameCategory(allocation)
+          .value;
+      if (diff < 0) {
+        double ratioOfOverspending = diff.abs() / overspending;
+        allocation.value = ratioOfOverspending * toMove;
       }
     });
   }
 
   void _reallocate() {
-    _newAllotmentRatios = AllocationList.withCategoriesOf(_oldBudget.allotted);
-    _spendingDiffs.forEach((allocation) {
-      if (allocation.category != Category.savings) {
-        if (allocation.value < 0.0) _underspending += allocation.value;
-        if (allocation.value > 0.0) _overspending += allocation.value;
-      }
-    });
-
-    _spendingDiffs.forEach((allocation) {
-      if (allocation.category != Category.savings) {
-        _reallocateCategory(allocation.category, allocation.value);
-      }
-    });
-    double leftover = -_underspending;
-    _newAllotmentRatios.getCategory(Category.savings).value =
-        _oldAllotmentRatios.getCategory(Category.savings).value + leftover;
-  }
-
-  void _reallocateCategory(Category c, double d) {
-    if (d < 0.0) {
-      _newAllotmentRatios.getCategory(c).value =
-          _oldAllotmentRatios.getCategory(c).value + d / _overspending;
-      _underspending -= d / _overspending;
-    }
-    if (d >= 0.0) {
-      _newAllotmentRatios.getCategory(c).value =
-          _oldActualRatios.getCategory(c).value;
-    }
-  }
-
-  void _setAllotmentsForNextMonth() {
-    _oldBudget.allotted.forEach((allocation) {
-      _allottedSpending.get(allocation).value =
-          _newAllotmentRatios
-              .get(allocation)
-              .value
-              .abs() * _income;
+    _allottedSpending.forEach((allocation) {
+      double oldValue = _oldBudget.allotted
+          .getWithSameCategory(allocation)
+          .value;
+      double delta = _deltas
+          .getWithSameCategory(allocation)
+          .value;
+      allocation.value = oldValue.abs() + delta;
     });
   }
 }

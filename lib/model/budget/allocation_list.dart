@@ -69,7 +69,7 @@ class AllocationList extends DelegatingList<Allocation>
     return serializer.serialize;
   }
 
-  Allocation get(Allocation allocation) {
+  Allocation getWithSameCategory(Allocation allocation) {
     return _list.firstWhere((element) {
       return element.category == allocation.category;
     });
@@ -83,9 +83,9 @@ class AllocationList extends DelegatingList<Allocation>
   }
 
   AllocationList divide(double n) {
-    AllocationList output = AllocationList.from(this);
-    output.forEach((allocation) {
-      allocation.value = this.getCategory(allocation.category).value / n;
+    AllocationList output = AllocationList();
+    forEach((allocation) {
+      output.add(Allocation(allocation.category, allocation.value / n));
     });
     return output;
   }
@@ -106,4 +106,10 @@ class AllocationList extends DelegatingList<Allocation>
   }
 
   int get hashCode => _list.hashCode;
+
+  void printOut() {
+    forEach((allocation) {
+      print(allocation.category.name + ': ' + allocation.value.toString());
+    });
+  }
 }
