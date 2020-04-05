@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:flutter/material.dart';
 
 import '../budgeting_app.dart';

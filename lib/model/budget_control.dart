@@ -1,32 +1,33 @@
 import 'dart:async';
 
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/crypter.dart';
+import 'package:budgetflow/model/abstract/password.dart';
 import 'package:budgetflow/model/account.dart';
-import 'package:budgetflow/model/budget/budget.dart';
 import 'package:budgetflow/model/budget/budget_accountant.dart';
-import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
-import 'package:budgetflow/model/budget/location/location.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
 import 'package:budgetflow/model/control.dart';
-import 'package:budgetflow/model/crypt/crypter.dart';
-import 'package:budgetflow/model/crypt/password.dart';
 import 'package:budgetflow/model/crypt/steel_crypter.dart';
+import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
+import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/file_io/dart_file_io.dart';
 import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/location/location.dart';
 import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'budget/category/category.dart';
-import 'crypt/encrypted.dart';
+import 'data_types/achievement.dart';
+import 'data_types/category.dart';
+import 'data_types/encrypted.dart';
 import 'history/month.dart';
 
 class BudgetControl implements Control {
@@ -181,7 +182,7 @@ class BudgetControl implements Control {
       ));
     }
     _history.save(_budget);
-    fileIO.writeFile(Password.path, _password.serialize);
+    fileIO.writeFile(passwordFilepath, _password.serialize);
     _savePaymentMethods();
   }
 
@@ -258,10 +259,6 @@ class BudgetControl implements Control {
         SetupAgent.kids,
         SetupAgent.pets));
     return true;
-  }
-
-  void changeAllotment(String category, double newAmt) {
-    _budget.setAllotment(Category.categoryFromString(category), newAmt);
   }
 
   double getCashFlow() {

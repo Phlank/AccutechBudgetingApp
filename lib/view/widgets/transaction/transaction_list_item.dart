@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';
 

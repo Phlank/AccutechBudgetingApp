@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/priority/priority_page.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';

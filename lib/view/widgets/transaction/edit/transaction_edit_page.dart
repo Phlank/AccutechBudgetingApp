@@ -1,6 +1,6 @@
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/location/location.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/data_types/category.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
+import 'package:budgetflow/model/location/location.dart';
 import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';

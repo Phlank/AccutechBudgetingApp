@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/serialize/unserializer.dart';

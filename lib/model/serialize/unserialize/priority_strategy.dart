@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/unserializer.dart';
 

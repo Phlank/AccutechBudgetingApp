@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/view/widgets/transaction/transaction_list_item_button.dart';
 import 'package:flutter/material.dart';
 

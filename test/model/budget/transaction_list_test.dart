@@ -1,6 +1,6 @@
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/data_types/category.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
+import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

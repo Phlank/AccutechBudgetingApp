@@ -1,6 +1,6 @@
-import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/category.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/util/dates.dart';
 import 'package:calendarro/date_utils.dart';
 

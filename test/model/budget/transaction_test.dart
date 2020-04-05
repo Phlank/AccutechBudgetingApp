@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/data_types/category.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/payment/payment_method.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';

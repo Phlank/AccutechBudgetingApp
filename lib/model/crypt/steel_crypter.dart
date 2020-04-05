@@ -1,6 +1,6 @@
-import 'package:budgetflow/model/crypt/crypter.dart';
-import 'package:budgetflow/model/crypt/encrypted.dart';
-import 'package:budgetflow/model/crypt/password.dart';
+import 'package:budgetflow/model/abstract/crypter.dart';
+import 'package:budgetflow/model/abstract/password.dart';
+import 'package:budgetflow/model/data_types/encrypted.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 
 class SteelCrypter implements Crypter {

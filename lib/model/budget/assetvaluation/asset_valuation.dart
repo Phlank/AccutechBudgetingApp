@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/location/location.dart';
+import 'package:budgetflow/model/location/location.dart';
 import 'package:geolocator/geolocator.dart';
 
 class AssetValuation {

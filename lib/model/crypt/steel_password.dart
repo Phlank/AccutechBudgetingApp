@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/password.dart';
 import 'package:budgetflow/model/budget_control.dart';
-import 'package:budgetflow/model/crypt/password.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:steel_crypt/PointyCastleN/api.dart';
 import 'package:steel_crypt/PointyCastleN/export.dart';
 
-import 'encrypted.dart';
+import '../data_types/encrypted.dart';
 
 class SteelPassword implements Password {
-  static const String _algorithm = "scrypt";
+  static const String _algorithm = 'scrypt';
   static const int _keyLength = 32;
   static const int _scryptN = 4096;
   static const int _scryptR = 16;
@@ -91,12 +92,12 @@ class SteelPassword implements Password {
   }
 
   static Future<Password> load() async {
-    String s = await BudgetControl.fileIO.readFile(Password.path);
+    String s = await BudgetControl.fileIO.readFile(passwordFilepath);
     return Serializer.unserialize(passwordKey, s);
   }
 
   @override
   void save() {
-    BudgetControl.fileIO.writeFile(Password.path, serialize);
+    BudgetControl.fileIO.writeFile(passwordFilepath, serialize);
   }
 }

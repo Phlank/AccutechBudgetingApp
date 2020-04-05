@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/budget.dart';
+import 'package:budgetflow/model/data_types/budget.dart';
 
 abstract class BudgetFactory {
   Budget newFromInfo(double income, double housing, bool depletion,

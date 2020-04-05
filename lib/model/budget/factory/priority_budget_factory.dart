@@ -1,10 +1,10 @@
-import 'package:budgetflow/model/budget/allocation.dart';
-import 'package:budgetflow/model/budget/allocation_list.dart';
-import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/factory/budget_factory.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/abstract/budget_factory.dart';
+import 'package:budgetflow/model/data_types/allocation.dart';
+import 'package:budgetflow/model/data_types/allocation_list.dart';
+import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/budget_type.dart';
+import 'package:budgetflow/model/data_types/category.dart';
+import 'package:budgetflow/model/data_types/transaction_list.dart';
 
 class _NSW {
   double needs, savings, wants;

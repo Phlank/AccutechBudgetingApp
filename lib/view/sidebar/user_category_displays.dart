@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/budget/budget_accountant.dart';
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/category/priority.dart';
 import 'package:budgetflow/model/budget_control.dart';
+import 'package:budgetflow/model/data_types/category.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,9 +10,9 @@ import 'package:flutter/widgets.dart';
 
 class GeneralCategory extends StatefulWidget {
   String section;
-  static final String NEEDS_ROUTE = '/' + Priority.needs.name;
-  static final String WANTS_ROUTE = '/' + Priority.wants.name;
-  static final String SAVINGS_ROUTE = '/' + Priority.savings.name;
+  static final String needsRoute = '/' + Priority.needs.name;
+  static final String wantsRoute = '/' + Priority.wants.name;
+  static final String savingsRoute = '/' + Priority.savings.name;
 
   GeneralCategory(String section) {
     this.section = section;
@@ -28,31 +28,31 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   BudgetControl userController;
   MockBudget playBudget;
   String section;
-  double allotedForCategory;
-  double allotedForSection;
-  double beginningAlotttments;
+  double allottedForCategory;
+  double allottedForSection;
+  double beginningAllotments;
 
   _GeneralCategoryState(String section) {
     this.userController = BudgetingApp.control;
     this.playBudget = new MockBudget(userController.getBudget());
     this.section = section;
-    this.beginningAlotttments = playBudget.getNewTotalAllotted(section);
+    this.beginningAllotments = playBudget.getNewTotalAllotted(section);
   }
 
   Card unbudgetedCard() {
-    allotedForSection = playBudget.getNewTotalAllotted(section);
+    allottedForSection = playBudget.getNewTotalAllotted(section);
     return Card(
       shape: BeveledRectangleBorder(),
       child: Text.rich(
         TextSpan(
           text: 'Total alloted \t' +
-              Format.dollarFormat(allotedForSection) +
+              Format.dollarFormat(allottedForSection) +
               '\n',
           children: <TextSpan>[
             TextSpan(
                 text: 'Unbudgeted in Section \t' +
                     Format.dollarFormat(
-                        allotedForSection - beginningAlotttments))
+                        allottedForSection - beginningAllotments))
           ],
           style: TextStyle(
             color: Colors.black,
@@ -67,14 +67,14 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   Slider sectionSlider(Category category) {
     return Slider(
       activeColor: Colors.lightGreen,
-      value: allotedForCategory,
+      value: allottedForCategory,
       onChanged: (value) {
         setState(() {
-          if (allotedForSection >
+          if (allottedForSection >
               accountant.getAllottedPriority(category.priority)) return;
-          allotedForCategory = value;
+          allottedForCategory = value;
         });
-        playBudget.setCategory(category, allotedForCategory);
+        playBudget.setCategory(category, allottedForCategory);
       },
       min: 0,
       max: accountant.getAllottedPriority(Priority.fromName(section)),
@@ -83,10 +83,13 @@ class _GeneralCategoryState extends State<GeneralCategory> {
   }
 
   ListTile categoryTile(Category category) {
-    allotedForCategory = playBudget.budget.allotted.getCategory(category).value;
+    allottedForCategory =
+        playBudget.budget.allotted
+            .getCategory(category)
+            .value;
     return ListTile(
       title:
-          Text(category.name + '\t' + Format.dollarFormat(allotedForCategory)),
+      Text(category.name + '\t' + Format.dollarFormat(allottedForCategory)),
       subtitle: sectionSlider(category),
     );
   }
@@ -132,12 +135,21 @@ class _GeneralCategoryState extends State<GeneralCategory> {
         RaisedButton(
           child: Text('submit'),
           onPressed: () {
-            for (String category in Category.categoryMap.keys.toList()) {
-              userController.changeAllotment(category,
-                  playBudget.getCategory(Category.categoryMap[category]));
+//            for (String category in Category.categoryMap.keys.toList()) {
+//              userController.changeAllotment(category,
+//                  playBudget.getCategory(Category.categoryMap[category]));
+//            }
+            // To anyone reads this in the near future, I'm sorry, I recognize that this type of chaining shouldn't need to exist, though I'm not sure what to do to fix it right now.
+            for (Category category in BudgetingApp.control.getBudget()
+                .getCategoriesOfPriority(Priority.fromName(section))) {
+              BudgetingApp.control
+                  .getBudget()
+                  .allotted
+                  .getCategory(category)
+                  .value = playBudget.getCategory(category);
             }
-            print(allotedForSection);
-            if (allotedForSection >= 0) {
+            print(allottedForSection);
+            if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');
               userController.save();
             }

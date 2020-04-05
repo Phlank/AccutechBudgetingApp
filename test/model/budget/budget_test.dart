@@ -1,6 +1,6 @@
-import 'package:budgetflow/model/budget/allocation_list.dart';
-import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_type.dart';
+import 'package:budgetflow/model/data_types/allocation_list.dart';
+import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/budget_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Budget budget;

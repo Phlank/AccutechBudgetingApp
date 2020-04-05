@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/category/priority.dart';
-import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
+import 'package:budgetflow/view/sidebar/user_category_displays.dart';
 import 'package:budgetflow/view/utils/routes.dart';
 import 'package:budgetflow/view/widgets/category/category_list_view.dart';
 import 'package:flutter/material.dart';

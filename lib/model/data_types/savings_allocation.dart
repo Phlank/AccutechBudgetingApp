@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/budget/allocation.dart';
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/data_types/allocation.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 
 class SavingsAllocation extends Allocation {
   double target;

@@ -1,22 +1,9 @@
-import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Category implements Serializable {
-  static Map<String, Category> categoryMap = {
-    'housing': Category.housing,
-    'utilities': Category.utilities,
-    'groceries': Category.groceries,
-    'savings': Category.savings,
-    'health': Category.health,
-    'transportation': Category.transportation,
-    'education': Category.education,
-    'entertainment': Category.entertainment,
-    'kids': Category.kids,
-    'pets': Category.pets,
-    'miscellaneous': Category.miscellaneous
-  };
   final String name;
   final Priority priority;
 
@@ -33,6 +20,22 @@ class Category implements Serializable {
       miscellaneous = Category("Miscellaneous", Priority.wants),
       income = Category("Income", Priority.income),
       uncategorized = Category("Uncategorized", Priority.other);
+
+  static const List<Category> defaultCategories = [
+    Category.housing,
+    Category.utilities,
+    Category.groceries,
+    Category.savings,
+    Category.health,
+    Category.transportation,
+    Category.education,
+    Category.entertainment,
+    Category.kids,
+    Category.pets,
+    Category.miscellaneous,
+    Category.income,
+    Category.uncategorized,
+  ];
 
   const Category(this.name, this.priority);
 
@@ -74,13 +77,5 @@ class Category implements Serializable {
     serializer.addPair(nameKey, name);
     serializer.addPair(priorityKey, priority);
     return serializer.serialize;
-  }
-
-  static void addCategory(Category c) {
-    categoryMap.putIfAbsent(c.name, () => c);
-  }
-
-  static Category categoryFromString(String catString) {
-    return categoryMap[catString];
   }
 }

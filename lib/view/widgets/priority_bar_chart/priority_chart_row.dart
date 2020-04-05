@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/view/widgets/priority_bar_chart/priority_chart_button.dart';
 import 'package:flutter/cupertino.dart';
 

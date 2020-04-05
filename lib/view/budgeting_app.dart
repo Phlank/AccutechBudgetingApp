@@ -5,7 +5,7 @@ import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/login_page.dart';
 import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:budgetflow/view/sidebar/account_display.dart';
-import 'package:budgetflow/view/sidebar/user_catagory_displays.dart';
+import 'package:budgetflow/view/sidebar/user_category_displays.dart';
 import 'package:flutter/material.dart';
 
 class BudgetingApp extends StatelessWidget {
@@ -37,11 +37,11 @@ class BudgetingApp extends StatelessWidget {
       routes: {
         LoginPage.ROUTE: (BuildContext context) => LoginPage(),
         UserPage.ROUTE: (BuildContext context) => UserPage(),
-        GeneralCategory.NEEDS_ROUTE: (BuildContext context) =>
+        GeneralCategory.needsRoute: (BuildContext context) =>
             GeneralCategory('needs'),
-        GeneralCategory.WANTS_ROUTE: (BuildContext context) =>
+        GeneralCategory.wantsRoute: (BuildContext context) =>
             GeneralCategory('wants'),
-        GeneralCategory.SAVINGS_ROUTE: (BuildContext context) =>
+        GeneralCategory.savingsRoute: (BuildContext context) =>
             GeneralCategory('savings'),
         FirstLoad.ROUTE: (BuildContext context) => FirstLoad(),
         AccountDisplay.ROUTE: (BuildContext context) => AccountDisplay(),

@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/crypt/encrypted.dart';
+import 'package:budgetflow/model/data_types/encrypted.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';

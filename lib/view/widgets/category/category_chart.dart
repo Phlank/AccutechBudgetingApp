@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/widgets/category/category_series.dart';
 import 'package:charts_flutter/flutter.dart' as charts;

@@ -1,7 +1,7 @@
-import 'package:budgetflow/model/budget/allocation_list.dart';
-import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/budget_type.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/data_types/allocation_list.dart';
+import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/budget_type.dart';
+import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/history/month_io.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/serialize/map_keys.dart';

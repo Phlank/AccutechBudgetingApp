@@ -5,7 +5,6 @@ import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 abstract class Password implements Serializable, Saveable {
-  static const String path = 'password';
 
   static Future<Password> fromSecret(String secret) async {
     return SteelPassword.fromSecret(secret);

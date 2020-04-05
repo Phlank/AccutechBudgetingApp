@@ -1,6 +1,5 @@
-import 'package:budgetflow/model/budget/allocation.dart';
-import 'package:budgetflow/model/budget/category/category.dart';
-import 'package:budgetflow/model/budget/category/category_list.dart';
+import 'package:budgetflow/model/data_types/allocation.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:quiver/collection.dart';
@@ -16,7 +15,7 @@ class AllocationList extends DelegatingList<Allocation>
   }
 
   AllocationList.defaultCategories() {
-    CategoryList.defaultCategories.forEach((category) {
+    Category.defaultCategories.forEach((category) {
       _list.add(Allocation(category, 0.0));
     });
   }
@@ -38,7 +37,7 @@ class AllocationList extends DelegatingList<Allocation>
   }
 
   AllocationList get spendingAllocations {
-    AllocationList spending = AllocationList([]);
+    AllocationList spending = AllocationList();
     _list.forEach((allocation) {
       if (allocation.category.isSpending) spending.add(allocation);
     });
@@ -46,7 +45,7 @@ class AllocationList extends DelegatingList<Allocation>
   }
 
   AllocationList get savingAllocations {
-    AllocationList saving = AllocationList([]);
+    AllocationList saving = AllocationList();
     _list.forEach((allocation) {
       if (allocation.category.isSaving) saving.add(allocation);
     });
@@ -54,7 +53,7 @@ class AllocationList extends DelegatingList<Allocation>
   }
 
   AllocationList get incomeAllocations {
-    AllocationList income = AllocationList([]);
+    AllocationList income = AllocationList();
     _list.forEach((allocation) {
       if (allocation.category.isIncome) income.add(allocation);
     });
