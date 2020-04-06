@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class BudgetType implements Serializable {

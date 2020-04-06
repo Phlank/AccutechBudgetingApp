@@ -1,6 +1,6 @@
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/data_types/category.dart';
-import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class Allocation implements Serializable {

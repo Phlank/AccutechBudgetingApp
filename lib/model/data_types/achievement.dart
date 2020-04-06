@@ -1,5 +1,5 @@
-import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +21,7 @@ class Achievement extends Serializable {
   String get serialize {
     Serializer serializer = new Serializer();
     serializer.addPair(nameKey, name);
-    serializer.addPair(achievementDescripKey, description);
+    serializer.addPair(achievementDescriptionKey, description);
     return serializer.serialize;
   }
 

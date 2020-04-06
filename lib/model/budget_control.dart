@@ -2,23 +2,22 @@ import 'dart:async';
 
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/crypter.dart';
+import 'package:budgetflow/model/abstract/file_io.dart';
 import 'package:budgetflow/model/abstract/password.dart';
 import 'package:budgetflow/model/account.dart';
 import 'package:budgetflow/model/budget/budget_accountant.dart';
-import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
 import 'package:budgetflow/model/control.dart';
-import 'package:budgetflow/model/crypt/steel_crypter.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/location.dart';
+import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/file_io/dart_file_io.dart';
-import 'package:budgetflow/model/file_io/file_io.dart';
 import 'package:budgetflow/model/history/history.dart';
 import 'package:budgetflow/model/history/month_time.dart';
-import 'package:budgetflow/model/location/location.dart';
-import 'package:budgetflow/model/payment/payment_method.dart';
-import 'package:budgetflow/model/serialize/map_keys.dart';
+import 'package:budgetflow/model/impl/dart_file_io.dart';
+import 'package:budgetflow/model/impl/priority_budget_factory.dart';
+import 'package:budgetflow/model/impl/steel_crypter.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
@@ -251,13 +250,7 @@ class BudgetControl implements Control {
 
   Future<bool> setup() async {
     await setPassword(SetupAgent.pin);
-    addNewBudget(PriorityBudgetFactory().newFromInfo(
-        SetupAgent.income,
-        SetupAgent.housing,
-        SetupAgent.depletion,
-        SetupAgent.savingsPull,
-        SetupAgent.kids,
-        SetupAgent.pets));
+    addNewBudget(PriorityBudgetFactory().newFromInfo(SetupAgent()));
     return true;
   }
 

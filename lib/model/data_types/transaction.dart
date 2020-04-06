@@ -1,8 +1,8 @@
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/data_types/category.dart';
-import 'package:budgetflow/model/location/location.dart';
-import 'package:budgetflow/model/payment/payment_method.dart';
-import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/data_types/location.dart';
+import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:flutter/widgets.dart';
 

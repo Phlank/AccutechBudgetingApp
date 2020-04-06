@@ -1,8 +1,8 @@
 import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/setup_agent.dart';
 
 abstract class BudgetFactory {
-  Budget newFromInfo(double income, double housing, bool depletion,
-      double savingsPull, bool kids, bool pets);
+  Budget newFromInfo(SetupAgent agent);
 
   Budget newFromBudget(Budget old);
 }

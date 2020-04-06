@@ -1,7 +1,7 @@
-import 'package:budgetflow/model/crypt/steel_password.dart';
-import 'package:budgetflow/model/file_io/saveable.dart';
-import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/saveable.dart';
+import 'package:budgetflow/model/abstract/serializable.dart';
+import 'package:budgetflow/model/impl/steel_password.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 abstract class Password implements Serializable, Saveable {

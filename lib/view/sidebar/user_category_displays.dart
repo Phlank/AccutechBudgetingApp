@@ -135,12 +135,11 @@ class _GeneralCategoryState extends State<GeneralCategory> {
         RaisedButton(
           child: Text('submit'),
           onPressed: () {
-//            for (String category in Category.categoryMap.keys.toList()) {
-//              userController.changeAllotment(category,
-//                  playBudget.getCategory(Category.categoryMap[category]));
-//            }
-            // To anyone reads this in the near future, I'm sorry, I recognize that this type of chaining shouldn't need to exist, though I'm not sure what to do to fix it right now.
-            for (Category category in BudgetingApp.control.getBudget()
+            // To anyone reads this in the near future, I'm sorry, I recognize
+            // that this type of chaining shouldn't need to exist, though I'm
+            // not sure what to do to fix it right now.
+            for (Category category in BudgetingApp.control
+                .getBudget()
                 .getCategoriesOfPriority(Priority.fromName(section))) {
               BudgetingApp.control
                   .getBudget()

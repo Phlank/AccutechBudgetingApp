@@ -1,5 +1,6 @@
+import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/budget_factory.dart';
-import 'package:budgetflow/model/budget/factory/priority_budget_factory.dart';
+import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/allocation_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
@@ -7,8 +8,7 @@ import 'package:budgetflow/model/data_types/encrypted.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
-import 'package:budgetflow/model/serialize/map_keys.dart';
-import 'package:budgetflow/model/serialize/serializable.dart';
+import 'package:budgetflow/model/impl/priority_budget_factory.dart';
 import 'package:budgetflow/model/serialize/serializer.dart';
 
 class History implements Serializable {
@@ -38,7 +38,7 @@ class History implements Serializable {
 
   Future<Budget> getLatestMonthBudget() async {
     currentMonth = _months.firstWhere(
-        (Month m) => _monthMatchesMonthTime(m, MonthTime.now()),
+            (Month m) => _monthMatchesMonthTime(m, MonthTime.now()),
         orElse: () => null);
     if (currentMonth != null) {
       return Budget.fromMonth(currentMonth);
