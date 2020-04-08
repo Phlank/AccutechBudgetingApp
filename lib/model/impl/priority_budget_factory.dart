@@ -149,7 +149,7 @@ class PriorityBudgetFactory implements BudgetFactory {
   }
 
   @override
-  Budget newFromBudget(Budget old) {
+  Budget newMonthBudget(Budget old) {
     _oldBudget = old;
     _income = old.expectedIncome;
     _allottedSpending = AllocationList.withCategoriesOf(old.allotted);

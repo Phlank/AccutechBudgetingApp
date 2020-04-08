@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
-import 'package:budgetflow/model/util/dates.dart';
+import 'package:budgetflow/model/utils/dates.dart';
 import 'package:calendarro/date_utils.dart';
 
 class BudgetAccountant {

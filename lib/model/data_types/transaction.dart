@@ -3,7 +3,7 @@ import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/location.dart';
 import 'package:budgetflow/model/data_types/payment_method.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter/widgets.dart';
 
 class Transaction implements Serializable {

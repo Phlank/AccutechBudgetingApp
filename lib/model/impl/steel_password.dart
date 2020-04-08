@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/password.dart';
 import 'package:budgetflow/model/budget_control.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:steel_crypt/PointyCastleN/api.dart';
 import 'package:steel_crypt/PointyCastleN/export.dart';
 

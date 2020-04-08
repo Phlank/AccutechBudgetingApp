@@ -1,7 +1,7 @@
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Category cHousing,

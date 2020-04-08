@@ -1,4 +1,5 @@
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/budget_period.dart';
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/data_types/allocation_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
@@ -6,10 +7,10 @@ import 'package:budgetflow/model/data_types/budget_type.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/history/month_io.dart';
 import 'package:budgetflow/model/history/month_time.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter/widgets.dart';
 
-class Month implements Serializable {
+class Month implements Serializable, BudgetPeriod {
   MonthIO io;
   AllocationList _allotted, _actual, _target;
   TransactionList _transactions;
@@ -26,10 +27,6 @@ class Month implements Serializable {
     AllocationList target,
     TransactionList transactions,
   }) {
-    if (allotted != null) _allotted = allotted;
-    if (actual != null) _actual = actual;
-    if (target != null) _target = target;
-    if (transactions != null) _transactions = transactions;
     io = MonthIO(this);
   }
 
@@ -51,24 +48,28 @@ class Month implements Serializable {
   }
 
   Future<AllocationList> get actual async {
-    if (_actual == null) {
+    if (actual == null) {
       _actual = await io.loadActual();
     }
     return _actual;
   }
 
   Future<AllocationList> get target async {
-    if (_target == null) {
+    if (target == null) {
       _target = await io.loadTarget();
     }
     return _target;
   }
 
   Future<TransactionList> get transactions async {
-    if (_transactions == null) {
+    if (transactions == null) {
       _transactions = await io.loadTransactions();
     }
     return _transactions;
+  }
+
+  bool timeIsInMonth(DateTime input) {
+    return input.year == monthTime.year && input.month == monthTime.month;
   }
 
   void updateMonthData(Budget budget) {
@@ -79,33 +80,33 @@ class Month implements Serializable {
   }
 
   Future save() async {
-    if (_allotted != null) await _saveAllottedSpending();
-    if (_actual != null) await _saveActualSpending();
-    if (_target != null) await _saveTargetSpending();
-    if (_transactions != null) await _saveTransactions();
+    if (allotted != null) await _saveAllottedSpending();
+    if (actual != null) await _saveActualSpending();
+    if (target != null) await _saveTargetSpending();
+    if (transactions != null) await _saveTransactions();
   }
 
   Future _saveAllottedSpending() async {
-    if (_allotted != null) {
-      io.saveAllotted(_allotted);
+    if (allotted != null) {
+      io.saveAllotted();
     }
   }
 
   Future _saveActualSpending() async {
-    if (_actual != null) {
-      io.saveActual(_actual);
+    if (actual != null) {
+      io.saveActual();
     }
   }
 
   Future _saveTargetSpending() async {
-    if (_target != null) {
-      io.saveTarget(_target);
+    if (target != null) {
+      io.saveTarget();
     }
   }
 
   Future _saveTransactions() async {
     if (_transactions != null) {
-      io.saveTransactions(_transactions);
+      io.saveTransactions();
     }
   }
 
@@ -128,17 +129,17 @@ class Month implements Serializable {
     return this.monthTime == other.monthTime &&
         this.income == other.income &&
         this.type == other.type &&
-        this._allotted == other._allotted &&
-        this._actual == other._actual &&
-        this._transactions == other._transactions;
+        this.allotted == other.allotted &&
+        this.actual == other.actual &&
+        this.transactions == other.transactions;
   }
 
   int get hashCode =>
       monthTime.hashCode ^
       income.hashCode ^
       type.hashCode ^
-      allotted.hashCode ^
-      actual.hashCode ^
+      _allotted.hashCode ^
+      _actual.hashCode ^
       transactions.hashCode;
 
   String toString() {

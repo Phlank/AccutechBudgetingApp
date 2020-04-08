@@ -4,5 +4,5 @@ import 'package:budgetflow/model/setup_agent.dart';
 abstract class BudgetFactory {
   Budget newFromInfo(SetupAgent agent);
 
-  Budget newFromBudget(Budget old);
+  Budget newMonthBudget(Budget old);
 }

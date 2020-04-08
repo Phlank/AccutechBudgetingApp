@@ -1,6 +1,6 @@
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/account.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:quiver/collection.dart';
 
 class AccountList extends DelegatingList<Account> implements Serializable {

@@ -18,8 +18,8 @@ import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/impl/dart_file_io.dart';
 import 'package:budgetflow/model/impl/priority_budget_factory.dart';
 import 'package:budgetflow/model/impl/steel_crypter.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
 import 'package:budgetflow/model/setup_agent.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -315,7 +315,7 @@ class BudgetControl implements Control {
   }
 
   void forceNextMonthTransition() {
-    _budget = PriorityBudgetFactory().newFromBudget(_budget);
+    _budget = PriorityBudgetFactory().newMonthBudget(_budget);
     _loadedTransactions = _budget.transactions;
     accountant = BudgetAccountant(_budget);
   }

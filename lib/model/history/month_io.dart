@@ -1,12 +1,15 @@
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/io.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/allocation_list.dart';
 import 'package:budgetflow/model/data_types/encrypted.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 
-class MonthIO {
+class MonthIO implements io {
+  MonthTime monthTime;
   Month _month;
   String _allottedFilepath,
       _actualFilepath,
@@ -14,11 +17,23 @@ class MonthIO {
       _transactionsFilepath;
 
   MonthIO(this._month) {
-    _allottedFilepath = _month.getMonthTime().getFilePathString() + "_allotted";
-    _actualFilepath = _month.getMonthTime().getFilePathString() + "_actual";
-    _targetFilepath = _month.getMonthTime().getFilePathString() + "_target";
+    monthTime = _month.getMonthTime();
+    initFileStrings();
+  }
+
+  MonthIO.ofTime(this.monthTime) {
+    initFileStrings();
+  }
+
+  void initFileStrings() {
+    _allottedFilepath = monthTime.getFilePathString() + "_allotted";
+    _actualFilepath = monthTime.getFilePathString() + "_actual";
+    _targetFilepath = monthTime.getFilePathString() + "_target";
     _transactionsFilepath =
-        _month.getMonthTime().getFilePathString() + "_transactions";
+        monthTime.getFilePathString() + "_transactions";
+  }
+
+  Future<Month> load() async {
   }
 
   Future<AllocationList> loadAllotted() async {
@@ -89,25 +104,36 @@ class MonthIO {
     }
   }
 
-  Future saveAllotted(AllocationList allotted) async {
+  Future<bool> save() async {
+    saveAllotted();
+    saveActual();
+    saveTarget();
+    saveTransactions();
+  }
+
+  Future saveAllotted() async {
+    AllocationList allotted = await _month.allotted;
     String content = allotted.serialize;
     Encrypted e = BudgetControl.crypter.encrypt(content);
     await BudgetControl.fileIO.writeFile(_allottedFilepath, e.serialize);
   }
 
-  Future saveActual(AllocationList actual) async {
+  Future saveActual() async {
+    AllocationList actual = await _month.actual;
     String content = actual.serialize;
     Encrypted e = BudgetControl.crypter.encrypt(content);
     await BudgetControl.fileIO.writeFile(_actualFilepath, e.serialize);
   }
 
-  Future saveTarget(AllocationList target) async {
+  Future saveTarget() async {
+    AllocationList target = await _month.target;
     String content = target.serialize;
     Encrypted e = BudgetControl.crypter.encrypt(content);
     await BudgetControl.fileIO.writeFile(_targetFilepath, e.serialize);
   }
 
-  Future saveTransactions(TransactionList transactions) async {
+  Future saveTransactions() async {
+    TransactionList transactions = await _month.transactions;
     String content = transactions.serialize;
     Encrypted e = BudgetControl.crypter.encrypt(content);
     await BudgetControl.fileIO.writeFile(_transactionsFilepath, e.serialize);

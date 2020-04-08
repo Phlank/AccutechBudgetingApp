@@ -9,7 +9,7 @@ import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/impl/priority_budget_factory.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 
 class History implements Serializable {
   static const String HISTORY_PATH = "history";
@@ -49,16 +49,12 @@ class History implements Serializable {
 
   Future<Budget> _createNewMonthBudget() async {
     Month lastMonth = _months[_months.length - 1];
-    currentMonth = _buildCurrentMonth();
     Budget lastBudget = await Budget.fromMonth(lastMonth);
     BudgetFactory factory = new PriorityBudgetFactory();
-    Budget currentBudget = factory.newFromBudget(lastBudget);
+    Budget currentBudget = factory.newMonthBudget(lastBudget);
+    currentMonth = Month.fromBudget(currentBudget);
     currentMonth.updateMonthData(currentBudget);
     return currentBudget;
-  }
-
-  Month _buildCurrentMonth() {
-    // TODO THIS
   }
 
   bool _monthMatchesMonthTime(Month m, MonthTime mt) {

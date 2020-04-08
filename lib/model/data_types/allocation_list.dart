@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/data_types/allocation.dart';
 import 'package:budgetflow/model/data_types/category.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:quiver/collection.dart';
 
 class AllocationList extends DelegatingList<Allocation>

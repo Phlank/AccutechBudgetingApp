@@ -1,7 +1,7 @@
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/unserializer.dart';
 import 'package:budgetflow/model/account.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 
 class AccountStrategy implements Unserializer {
   @override

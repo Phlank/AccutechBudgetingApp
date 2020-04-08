@@ -1,6 +1,6 @@
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/serializable.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 
 class PaymentMethod implements Serializable {
   static final String cashName = 'Cash';

@@ -1,6 +1,6 @@
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 
 class TransactionList implements Serializable {
   List<Transaction> _transactions;

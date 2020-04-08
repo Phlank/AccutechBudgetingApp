@@ -1,6 +1,6 @@
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/password.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const String _SECRET_1 = "password1";

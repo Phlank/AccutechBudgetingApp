@@ -1,6 +1,6 @@
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/serializable.dart';
-import 'package:budgetflow/model/serialize/serializer.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
