@@ -22,7 +22,7 @@ class AssetValuation {
   }
 
   Future<double> getTraveled(Location other) async {
-    Future <double> traveled = Geolocator()
+    Future<double> traveled = Geolocator()
         .distanceBetween(latitude, longitude, other.latitude, other.longitude);
     double d = traveled as double;
     setDistance(d);
@@ -42,8 +42,8 @@ class AssetValuation {
 
   void getNewValue() {
     newAssetValue = assetValue - assetDepreciation;
-
   }
+
   void getAssetDeprication() {
     assetDepreciation = mileage * distance;
   }
