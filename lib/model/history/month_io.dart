@@ -3,8 +3,8 @@ import 'package:budgetflow/model/abstract/io.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/allocation_list.dart';
 import 'package:budgetflow/model/data_types/encrypted.dart';
+import 'package:budgetflow/model/data_types/month.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/history/month.dart';
 import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 
@@ -34,6 +34,7 @@ class MonthIO implements io {
   }
 
   Future<Month> load() async {
+
   }
 
   Future<AllocationList> loadAllotted() async {

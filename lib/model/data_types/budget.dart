@@ -1,9 +1,9 @@
 import 'package:budgetflow/model/data_types/allocation_list.dart';
 import 'package:budgetflow/model/data_types/budget_type.dart';
 import 'package:budgetflow/model/data_types/category.dart';
+import 'package:budgetflow/model/data_types/month.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/history/month.dart';
 import 'package:flutter/widgets.dart';
 
 import 'priority.dart';

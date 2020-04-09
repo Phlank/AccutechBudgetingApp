@@ -28,6 +28,10 @@ class Month implements Serializable, BudgetPeriod {
     TransactionList transactions,
   }) {
     io = MonthIO(this);
+    if (allotted != null) _allotted = allotted;
+    if (actual != null) _actual = actual;
+    if (target != null) _target = target;
+    if (transactions != null) _transactions = transactions;
   }
 
   Month.fromBudget(Budget b) {

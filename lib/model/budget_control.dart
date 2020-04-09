@@ -27,7 +27,7 @@ import 'package:geolocator/geolocator.dart';
 import 'data_types/achievement.dart';
 import 'data_types/category.dart';
 import 'data_types/encrypted.dart';
-import 'history/month.dart';
+import 'data_types/month.dart';
 
 class BudgetControl implements Control {
   static FileIO fileIO = new DartFileIO();
