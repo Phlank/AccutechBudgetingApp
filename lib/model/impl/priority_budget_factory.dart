@@ -5,7 +5,7 @@ import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/budget_type.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/setup_agent.dart';
+import 'package:budgetflow/model/utils/setup_agent.dart';
 
 class _NSW {
   double needs, savings, wants;

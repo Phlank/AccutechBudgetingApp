@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/setup_agent.dart';
+import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/pages/setup/savings_depletion_info_page.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';

@@ -1,5 +1,5 @@
 import 'package:budgetflow/model/abstract/serializable.dart';
-import 'package:budgetflow/model/account.dart';
+import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:quiver/collection.dart';
 
