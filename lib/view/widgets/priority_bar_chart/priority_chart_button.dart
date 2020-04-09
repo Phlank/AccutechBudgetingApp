@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/priority.dart';
+import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/priority/priority_page.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
@@ -20,7 +20,7 @@ class PriorityChartButton extends StatelessWidget {
             PriorityChart(priority: priority),
             Text('Balance: ' +
                 Format.dollarFormat(BudgetingApp.control.accountant
-                    .getRemainingPriority(priority)))
+                    .getRemainingOfPriority(priority)))
           ]),
           onTap: () {
             Navigator.of(context).push(

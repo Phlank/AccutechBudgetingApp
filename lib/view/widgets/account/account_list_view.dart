@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/account.dart';
+import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/widgets/account/account_list_view_item.dart';
 import 'package:flutter/widgets.dart';

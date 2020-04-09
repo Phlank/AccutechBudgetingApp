@@ -1,5 +1,3 @@
-import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/utils/routes.dart';
@@ -101,11 +99,6 @@ class _KidsPetsInfoPageState extends State<KidsPetsInfoPage> {
             _formKey.currentState.save();
             Navigator.of(context)
                 .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
-            BudgetingApp.control.earnedAchievements.add(new Achievement(
-                name: 'Over Achiever',
-                description: 'You filled out additional information',
-                //todo change icons
-                icon: Icon(Icons.add)));
           }
         });
   }

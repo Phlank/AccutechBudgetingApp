@@ -1,7 +1,7 @@
-import 'package:budgetflow/model/account.dart';
-import 'package:budgetflow/model/budget/budget.dart';
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
-import 'package:budgetflow/model/budget/transaction/transaction_list.dart';
+import 'package:budgetflow/model/data_types/account.dart';
+import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
+import 'package:budgetflow/model/data_types/transaction_list.dart';
 
 abstract class Control {
   Future<bool> isReturningUser();

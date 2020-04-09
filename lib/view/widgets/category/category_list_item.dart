@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:budgetflow/view/widgets/category/category_chart.dart';
@@ -19,12 +19,12 @@ class CategoryListItem extends StatelessWidget {
 
   Widget _buildCategoryRemainingAmount(Category category) {
     double remaining =
-        BudgetingApp.control.accountant.getRemainingCategory(category);
+    BudgetingApp.control.accountant.getRemainingOfCategory(category);
     String formattedRemaining = 'Remaining: ' + Format.dollarFormat(remaining);
     String formattedAllotted = 'Allotted: ' + Format.dollarFormat(
-        BudgetingApp.control.accountant.getAllottedCategory(category));
+        BudgetingApp.control.accountant.getAllottedOfCategory(category));
     String formattedSpending = 'Spending: ' + Format.dollarFormat(
-        BudgetingApp.control.accountant.getActualCategory(category));
+        BudgetingApp.control.accountant.getActualOfCategory(category));
     Color color;
     if (remaining < 0)
       color = Colors.red;

@@ -209,4 +209,4 @@ fabric.properties
 .gitignore
 ./.idea/*
 ./android/*
-/lib/keys.dart
+./lib/global/api_keys.dart

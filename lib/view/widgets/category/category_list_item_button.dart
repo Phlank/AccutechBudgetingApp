@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/view/pages/priority/category_transaction_page.dart';
 import 'package:budgetflow/view/utils/routes.dart';
 import 'package:budgetflow/view/widgets/category/category_list_item.dart';

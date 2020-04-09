@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/transaction/transaction.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/accounts_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';

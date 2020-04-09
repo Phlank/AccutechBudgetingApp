@@ -1,4 +1,4 @@
-import 'package:budgetflow/model/budget/category/category.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 
 class InputValidator {
   static final Map<String, String> _regexMap = {
