@@ -4,8 +4,8 @@ import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/allocation_list.dart';
 import 'package:budgetflow/model/data_types/encrypted.dart';
 import 'package:budgetflow/model/data_types/month.dart';
+import 'package:budgetflow/model/data_types/month_time.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/history/month_time.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 
 class MonthIO implements io {
@@ -34,7 +34,11 @@ class MonthIO implements io {
   }
 
   Future<Month> load() async {
-
+    // TODO
+    // This doesn't really make sense to implement because of the way months are
+    // saved.
+    // A month's properties are split between the history file and the different
+    // files created by the save() function in this class
   }
 
   Future<AllocationList> loadAllotted() async {

@@ -1,10 +1,11 @@
+import 'package:budgetflow/model/abstract/accountant.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/utils/dates.dart';
 import 'package:calendarro/date_utils.dart';
 
-class BudgetAccountant {
+class BudgetAccountant implements Accountant {
   Budget _budget;
 
   BudgetAccountant(Budget budget) {
@@ -66,7 +67,7 @@ class BudgetAccountant {
     return weeklySpending;
   }
 
-  double getAllottedPriority(Priority priority) {
+  double getAllottedOfPriority(Priority priority) {
     double total = 0.0;
     _budget.allotted.forEach((allocation) {
       if (allocation.category.priority == priority) total += allocation.value;
@@ -74,7 +75,7 @@ class BudgetAccountant {
     return total;
   }
 
-  double getActualPriority(Priority priority) {
+  double getActualOfPriority(Priority priority) {
     double total = 0;
     _budget.actual.forEach((allocation) {
       if (allocation.category.priority == priority) total += allocation.value;
@@ -82,23 +83,25 @@ class BudgetAccountant {
     return total;
   }
 
-  double getRemainingPriority(Priority priority) {
-    return getAllottedPriority(priority) - getActualPriority(priority).abs();
+  double getRemainingOfPriority(Priority priority) {
+    return getAllottedOfPriority(priority) -
+        getActualOfPriority(priority).abs();
   }
 
-  double getAllottedCategory(Category category) {
+  double getAllottedOfCategory(Category category) {
     return _budget.allotted.firstWhere((element) {
       return element.category == category;
     }).value;
   }
 
-  double getActualCategory(Category category) {
+  double getActualOfCategory(Category category) {
     return _budget.actual.firstWhere((element) {
       return element.category == category;
     }).value;
   }
 
-  double getRemainingCategory(Category category) {
-    return getAllottedCategory(category) - getActualCategory(category).abs();
+  double getRemainingOfCategory(Category category) {
+    return getAllottedOfCategory(category) -
+        getActualOfCategory(category).abs();
   }
 }

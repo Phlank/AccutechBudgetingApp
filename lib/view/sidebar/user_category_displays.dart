@@ -1,7 +1,7 @@
-import 'package:budgetflow/model/budget/budget_accountant.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
+import 'package:budgetflow/model/impl/budget_accountant.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';
@@ -71,13 +71,13 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       onChanged: (value) {
         setState(() {
           if (allottedForSection >
-              accountant.getAllottedPriority(category.priority)) return;
+              accountant.getAllottedOfPriority(category.priority)) return;
           allottedForCategory = value;
         });
         playBudget.setCategory(category, allottedForCategory);
       },
       min: 0,
-      max: accountant.getAllottedPriority(Priority.fromName(section)),
+      max: accountant.getAllottedOfPriority(Priority.fromName(section)),
       label: category.name,
     );
   }

@@ -5,16 +5,16 @@ import 'package:budgetflow/model/abstract/crypter.dart';
 import 'package:budgetflow/model/abstract/file_io.dart';
 import 'package:budgetflow/model/abstract/password.dart';
 import 'package:budgetflow/model/account.dart';
-import 'package:budgetflow/model/budget/budget_accountant.dart';
 import 'package:budgetflow/model/control.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/location.dart';
+import 'package:budgetflow/model/data_types/month_time.dart';
 import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/history/history.dart';
-import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/impl/budget_accountant.dart';
 import 'package:budgetflow/model/impl/dart_file_io.dart';
 import 'package:budgetflow/model/impl/priority_budget_factory.dart';
 import 'package:budgetflow/model/impl/steel_crypter.dart';
@@ -69,9 +69,8 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> isReturningUser() async {
-    _oldUser = await fileIO
-        .fileExists(History.HISTORY_PATH)
-        .catchError((Object error) {
+    _oldUser =
+    await fileIO.fileExists(historyFilepath).catchError((Object error) {
       _oldUser = false;
       return false;
     });
@@ -173,8 +172,8 @@ class BudgetControl implements Control {
   }
 
   Future save() async {
-    if (_history.getMonth(MonthTime.now()) == null) {
-      _history.addMonth(Month(
+    if (_history.getMonthFromMonthTime(MonthTime.now()) == null) {
+      _history.add(Month(
         monthTime: MonthTime.now(),
         income: _budget.expectedIncome,
         type: _budget.type,
@@ -226,7 +225,9 @@ class BudgetControl implements Control {
   Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
     TransactionList transactions =
-        await _history.getTransactionsFromMonthTime(MonthTime.now());
+    await _history
+        .getMonthFromMonthTime(MonthTime.now())
+        .transactions;
     transactions.forEach((Transaction t) {
       _loadedTransactions.add(t);
     });
@@ -235,7 +236,7 @@ class BudgetControl implements Control {
   @override
   void addTransaction(Transaction t) {
     _budget.addTransaction(t);
-    _history.getMonth(MonthTime.now()).updateMonthData(_budget);
+    _history.getMonthFromMonthTime(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.add(t);
     _initLocationListener();
     save();
@@ -243,7 +244,7 @@ class BudgetControl implements Control {
 
   void removeTransaction(Transaction transaction) {
     _budget.removeTransaction(transaction);
-    _history.getMonth(MonthTime.now()).updateMonthData(_budget);
+    _history.getMonthFromMonthTime(MonthTime.now()).updateMonthData(_budget);
     _loadedTransactions.remove(transaction);
     save();
   }
@@ -272,7 +273,7 @@ class BudgetControl implements Control {
   void addNewBudget(Budget b) {
     _history = new History();
     Month m = Month.fromBudget(b);
-    _history.addMonth(m);
+    _history.add(m);
     _loadedTransactions = new TransactionList.copy(b.transactions);
     _budget = b;
     accountant = BudgetAccountant(_budget);

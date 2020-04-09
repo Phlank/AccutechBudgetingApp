@@ -1,7 +1,7 @@
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/unserializer.dart';
 import 'package:budgetflow/model/data_types/month.dart';
-import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/data_types/month_time.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 
 class MonthStrategy implements Unserializer {

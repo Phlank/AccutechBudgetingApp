@@ -2,25 +2,24 @@ import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/budget_factory.dart';
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/budget_control.dart';
-import 'package:budgetflow/model/data_types/allocation_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/encrypted.dart';
 import 'package:budgetflow/model/data_types/month.dart';
-import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/history/month_time.dart';
+import 'package:budgetflow/model/data_types/month_time.dart';
 import 'package:budgetflow/model/impl/priority_budget_factory.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
+import 'package:quiver/collection.dart';
 
-class History implements Serializable {
-  static const String HISTORY_PATH = "history";
-
+class History extends DelegatingList<Month> implements Serializable {
   List<Month> _months;
   Month currentMonth;
   Budget budget;
   bool newUser;
 
+  List<Month> get delegate => _months;
+
   History() {
-    _months = new List<Month>();
+    _months = [];
   }
 
   void save(Budget current) {
@@ -29,17 +28,15 @@ class History implements Serializable {
       _months[i].save();
     }
     Encrypted e = BudgetControl.crypter.encrypt(serialize);
-    BudgetControl.fileIO.writeFile(HISTORY_PATH, e.serialize);
+    BudgetControl.fileIO.writeFile(historyFilepath, e.serialize);
   }
 
   void _updateCurrentMonth(Budget budget) {
-    getMonth(MonthTime.now()).updateMonthData(budget);
+    getMonthFromMonthTime(MonthTime.now()).updateMonthData(budget);
   }
 
   Future<Budget> getLatestMonthBudget() async {
-    currentMonth = _months.firstWhere(
-            (Month m) => _monthMatchesMonthTime(m, MonthTime.now()),
-        orElse: () => null);
+    currentMonth = getMonthFromMonthTime(MonthTime.now());
     if (currentMonth != null) {
       return Budget.fromMonth(currentMonth);
     } else {
@@ -54,38 +51,18 @@ class History implements Serializable {
     Budget currentBudget = factory.newMonthBudget(lastBudget);
     currentMonth = Month.fromBudget(currentBudget);
     currentMonth.updateMonthData(currentBudget);
+    if (!_months.contains(currentMonth)) _months.add(currentMonth);
     return currentBudget;
   }
 
-  bool _monthMatchesMonthTime(Month m, MonthTime mt) {
-    return m.getMonthTime() == mt;
+  /// Returns the Month in History that matches the given MonthTime. If no match is found, returns null.
+  Month getMonthFromMonthTime(MonthTime mt) {
+    return _months.firstWhere((Month m) => m.monthTime == mt, orElse: null);
   }
 
-  Future<AllocationList> getAllottedSpendingFromMonthTime(MonthTime mt) async {
-    Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-    return await m.allotted;
-  }
-
-  Future<AllocationList> getActualSpendingFromMonthTime(MonthTime mt) async {
-    Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-    return await m.actual;
-  }
-
-  Future<TransactionList> getTransactionsFromMonthTime(MonthTime mt) async {
-    Month m = _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-    return await m.transactions;
-  }
-
-  int getNumberOfMonths() {
-    return _months.length;
-  }
-
-  Month getMonth(MonthTime mt) {
-    return _months.firstWhere((Month m) => _monthMatchesMonthTime(m, mt));
-  }
-
-  void addMonth(Month m) {
-    _months.add(m);
+  /// Returns the Month in History that matches the given DateTime. If no match is found, returns null.
+  Month getMonthFromDateTime(DateTime dt) {
+    return _months.firstWhere((Month m) => m.timeIsInMonth(dt), orElse: null);
   }
 
   @override
@@ -100,7 +77,7 @@ class History implements Serializable {
   }
 
   static Future<History> load() async {
-    String cipher = await BudgetControl.fileIO.readFile(HISTORY_PATH);
+    String cipher = await BudgetControl.fileIO.readFile(historyFilepath);
     Encrypted e = Serializer.unserialize(encryptedKey, cipher);
     String plaintext = BudgetControl.crypter.decrypt(e);
     History h = Serializer.unserialize(historyKey, plaintext);
