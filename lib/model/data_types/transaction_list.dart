@@ -31,6 +31,7 @@ class TransactionList implements Serializable {
     return _transactions[index];
   }
 
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     for (int i = 0; i < _transactions.length; i++) {

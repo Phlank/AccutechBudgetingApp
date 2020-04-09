@@ -69,6 +69,7 @@ class Account extends PaymentMethod {
     return t.time.isAfter(from) && t.time.isBefore(to);
   }
 
+  /// Returns the total of all Transactions with Categories of either income or savings.
   double getIncrease() {
     if (accountTransactions == null) return 0.0;
     double total = 0.0;
@@ -80,6 +81,7 @@ class Account extends PaymentMethod {
     return total;
   }
 
+  /// Returns the total of all Transactions with Categories of either income or savings between the given DateTimes.
   double getIncreaseInRange(DateTime from, DateTime to) {
     if (accountTransactions == null) return 0.0;
     double total = 0.0;
@@ -92,6 +94,7 @@ class Account extends PaymentMethod {
     return total;
   }
 
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     serializer.addPair(methodNameKey, methodName);

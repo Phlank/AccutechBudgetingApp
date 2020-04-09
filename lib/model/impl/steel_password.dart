@@ -83,6 +83,8 @@ class SteelPassword implements Password {
 
   String get salt => _salt;
 
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     serializer.addPair(saltKey, _salt);

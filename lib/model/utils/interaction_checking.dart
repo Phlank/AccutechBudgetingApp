@@ -38,6 +38,8 @@ class Interaction extends Serializable {
   }
 
   @override
+
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer seal = new Serializer();
     seal.addPair(interactionNameKey, name);

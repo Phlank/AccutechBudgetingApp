@@ -31,6 +31,7 @@ class Transaction implements Serializable {
     this.location = const Location(0.0, 0.0),
   });
 
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     serializer.addPair(timeKey, time.millisecondsSinceEpoch);

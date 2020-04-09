@@ -11,6 +11,7 @@ class PaymentMethod implements Serializable {
 
   PaymentMethod(this.methodName);
 
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     serializer.addPair(methodNameKey, methodName);

@@ -13,6 +13,8 @@ class BudgetType implements Serializable {
 
   const BudgetType._(this.name);
 
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
+  /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     serializer.addPair(nameKey, name);
