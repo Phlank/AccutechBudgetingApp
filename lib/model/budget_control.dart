@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/control.dart';
 import 'package:budgetflow/model/abstract/crypter.dart';
 import 'package:budgetflow/model/abstract/file_io.dart';
 import 'package:budgetflow/model/abstract/password.dart';
-import 'package:budgetflow/model/control.dart';
 import 'package:budgetflow/model/data_types/account.dart';
+import 'package:budgetflow/model/data_types/account_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/history.dart';
 import 'package:budgetflow/model/data_types/location.dart';
@@ -26,9 +27,9 @@ import 'package:geolocator/geolocator.dart';
 
 import 'data_types/achievement.dart';
 import 'data_types/category.dart';
-import 'data_types/encrypted.dart';
 import 'data_types/month.dart';
 
+/// Welcome to our favorite superclass
 class BudgetControl implements Control {
   static FileIO fileIO = new DartFileIO();
   static Password _password;
@@ -40,7 +41,7 @@ class BudgetControl implements Control {
   bool _oldUser;
   Color cashFlowColor;
   List<PaymentMethod> paymentMethods;
-  List<Account> accounts = List();
+  AccountList accounts;
   Map<Location, Category> locationMap = Map();
   StreamSubscription<Position> positionStream;
   BudgetAccountant accountant;
@@ -89,27 +90,8 @@ class BudgetControl implements Control {
     crypter = new SteelCrypter(_password);
     if (_oldUser) {
       await _load();
-      bool seconds = true;
-      for (Achievement a in earnedAchievements) {
-        if (a.name == 'returning for seconds') {
-          seconds = false;
-        }
-      }
-      if (seconds) {
-        earnedAchievements.add(new Achievement(
-            name: 'First Open',
-            description:
-                '\nWelcome to the app! We hope this is the start of a helpful relationship.',
-            icon: Icon(Icons.check)));
-      }
       return true;
     } else {
-      earnedAchievements.add(new Achievement(
-          name: 'First Time',
-          description:
-              'welcome to your new budgeting app, we hope to bring you' +
-                  ' finacial support for the duration of your use',
-          icon: Icon(null)));
       return false;
     }
   }
@@ -123,16 +105,19 @@ class BudgetControl implements Control {
     _budget = await _history.getLatestMonthBudget();
     accountant = BudgetAccountant(_budget);
     _loadedTransactions = TransactionList.copy(_budget.transactions);
-//    await _loadPaymentMethods();
+    _initVariables();
+    await _loadAccounts();
     _initLocationMap();
     _initLocationListener();
   }
 
-  Future _loadPaymentMethods() async {
-    String cipher = await fileIO.readFile(Account.accountsPath);
-    Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
-    String plaintext = crypter.decrypt(encrypted);
-    paymentMethods = Serializer.unserialize(methodListKey, plaintext);
+  void _initVariables() {}
+
+  Future _loadAccounts() async {
+    paymentMethods = Serializer.unserialize(
+      methodListKey,
+      await fileIO.readAndDecryptFile(accountsFilepath, crypter),
+    );
     paymentMethods.forEach((method) {
       if (method is Account) accounts.add(method);
     });
@@ -181,18 +166,14 @@ class BudgetControl implements Control {
     }
     _history.save(_budget);
     fileIO.writeFile(passwordFilepath, _password.serialize);
-    _savePaymentMethods();
+    _saveAccounts();
   }
 
-  void _savePaymentMethods() {
-    Serializer serializer = Serializer();
-    int i = 0;
-    paymentMethods.forEach((method) {
-      serializer.addPair(i, method);
-      i++;
-    });
-    String cipher = crypter.encrypt(serializer.serialize).serialize;
-    fileIO.writeFile(Account.accountsPath, cipher);
+  void _saveAccounts() {
+    String cipher = crypter
+        .encrypt(accounts.serialize)
+        .serialize;
+    fileIO.writeFile(accountsFilepath, cipher);
   }
 
   @override

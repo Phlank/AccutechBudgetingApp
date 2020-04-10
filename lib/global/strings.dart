@@ -1,6 +1,7 @@
 // Constant file locations
 final String passwordFilepath = 'password',
-    historyFilepath = 'history';
+    historyFilepath = 'history',
+    accountsFilepath = 'accounts';
 
 // Map keys for serialization
 const String categoryKey = 'category',

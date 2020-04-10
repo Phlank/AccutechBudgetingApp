@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/crypter.dart';
 import 'package:budgetflow/model/abstract/file_io.dart';
+import 'package:budgetflow/model/data_types/encrypted.dart';
+import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DartFileIO implements FileIO {
@@ -41,6 +45,14 @@ class DartFileIO implements FileIO {
     String path = await pathSuffixToPath(pathSuffix);
     File target = await _getTargetFile(path);
     return target.readAsString();
+  }
+
+  Future<String> readAndDecryptFile(String pathSuffix, Crypter crypter) async {
+    String path = await pathSuffixToPath(pathSuffix);
+    File target = await _getTargetFile(path);
+    String cipher = await target.readAsString();
+    Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
+    return crypter.decrypt(encrypted);
   }
 
   Future<bool> fileExists(String pathSuffix) async {
