@@ -63,9 +63,8 @@ class BudgetControl implements Control {
 
   BudgetControl() {
     fileIO = new DartFileIO();
-    _updateMonthTimes();
+    _initVariables();
     _loadedTransactions = new TransactionList();
-    paymentMethods = [PaymentMethod.cash];
   }
 
   @override
@@ -86,7 +85,7 @@ class BudgetControl implements Control {
 
   @override
   Future<bool> initialize() async {
-    _updateMonthTimes();
+    _initVariables();
     crypter = new SteelCrypter(_password);
     if (_oldUser) {
       await _load();
@@ -96,7 +95,8 @@ class BudgetControl implements Control {
     }
   }
 
-  void _updateMonthTimes() {
+  void _initVariables() {
+    paymentMethods = [PaymentMethod('Cash')];
     _transactionMonthTime = MonthTime.now();
   }
 
@@ -105,23 +105,19 @@ class BudgetControl implements Control {
     _budget = await _history.getLatestMonthBudget();
     accountant = BudgetAccountant(_budget);
     _loadedTransactions = TransactionList.copy(_budget.transactions);
-    _initVariables();
     await _loadAccounts();
     _initLocationMap();
     _initLocationListener();
   }
 
-  void _initVariables() {}
-
   Future _loadAccounts() async {
-    paymentMethods = Serializer.unserialize(
+    AccountList loadedAccounts = Serializer.unserialize(
       methodListKey,
       await fileIO.readAndDecryptFile(accountsFilepath, crypter),
     );
-    paymentMethods.forEach((method) {
-      if (method is Account) accounts.add(method);
-    });
-    return;
+    for (Account account in loadedAccounts) {
+      addAccount(account);
+    }
   }
 
   void _initLocationMap() {
@@ -166,14 +162,7 @@ class BudgetControl implements Control {
     }
     _history.save(_budget);
     fileIO.writeFile(passwordFilepath, _password.serialize);
-    _saveAccounts();
-  }
-
-  void _saveAccounts() {
-    String cipher = crypter
-        .encrypt(accounts.serialize)
-        .serialize;
-    fileIO.writeFile(accountsFilepath, cipher);
+    fileIO.encryptAndWriteFile(accountsFilepath, accounts.serialize, crypter);
   }
 
   @override
@@ -205,6 +194,7 @@ class BudgetControl implements Control {
   @override
   Future loadPreviousMonthTransactions() async {
     _transactionMonthTime = _transactionMonthTime.previous();
+    // TODO Bug here, if there isn't another previous month the app will crash due to a null value error
     TransactionList transactions =
     await _history
         .getMonthFromMonthTime(MonthTime.now())

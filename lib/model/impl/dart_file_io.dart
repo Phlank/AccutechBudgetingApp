@@ -33,6 +33,16 @@ class DartFileIO implements FileIO {
     print("File written: $path");
   }
 
+  Future encryptAndWriteFile(String pathSuffix,
+      String content,
+      Crypter crypter,) async {
+    String path = await pathSuffixToPath(pathSuffix);
+    File target = await _getTargetFile(path);
+    target.writeAsString(crypter
+        .encrypt(content)
+        .serialize);
+  }
+
   Future<String> pathSuffixToPath(String pathSuffix) async {
     return await _path + '/' + pathSuffix;
   }
