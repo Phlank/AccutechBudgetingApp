@@ -254,7 +254,7 @@ class BudgetControl implements Control {
   double expenseTotal() {
     double spent = 0.0;
     for (int i = 0; i < _loadedTransactions.length; i++) {
-      spent += _loadedTransactions.getAt(i).amount;
+      spent += _loadedTransactions[i].amount;
     }
     return spent;
   }
@@ -263,7 +263,7 @@ class BudgetControl implements Control {
     double spent = 0.0;
     for (Category cat in sectionMap[section]) {
       for (int i = 0; i < _loadedTransactions.length; i++) {
-        Category rel = _loadedTransactions.getAt(i).category;
+        Category rel = _loadedTransactions[i].category;
         if (rel == cat) {
           spent += _budget.allotted.getCategory(rel).value;
         }
