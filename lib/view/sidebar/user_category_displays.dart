@@ -1,7 +1,7 @@
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
-import 'package:budgetflow/model/impl/budget_accountant.dart';
+import 'package:budgetflow/model/implementations/budget_accountant.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';

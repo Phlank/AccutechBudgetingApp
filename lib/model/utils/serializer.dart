@@ -3,21 +3,21 @@ import 'dart:convert';
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/abstract/unserializer.dart';
-import 'package:budgetflow/model/impl/unserialize/account_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/allocation_list_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/allocation_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/budget_type_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/category_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/encrypted_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/history_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/location_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/method_list_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/method_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/month_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/password_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/priority_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/transaction_list_strategy.dart';
-import 'package:budgetflow/model/impl/unserialize/transaction_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/account_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/allocation_list_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/allocation_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/budget_type_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/category_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/encrypted_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/history_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/location_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/method_list_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/method_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/month_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/password_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/priority_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/transaction_list_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/transaction_strategy.dart';
 
 class Serializer implements Serializable {
   static Map<String, Unserializer> strategyMap = {

@@ -6,7 +6,7 @@ import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/encrypted.dart';
 import 'package:budgetflow/model/data_types/month.dart';
 import 'package:budgetflow/model/data_types/month_time.dart';
-import 'package:budgetflow/model/impl/priority_budget_factory.dart';
+import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:quiver/collection.dart';
 

@@ -6,7 +6,7 @@ import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/budget_type.dart';
 import 'package:budgetflow/model/data_types/month_time.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/impl/month_io.dart';
+import 'package:budgetflow/model/implementations/month_io.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter/widgets.dart';
 

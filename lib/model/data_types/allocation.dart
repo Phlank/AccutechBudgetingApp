@@ -20,7 +20,7 @@ class Allocation implements Serializable {
   bool operator ==(Object other) => other is Allocation && this._equals(other);
 
   bool _equals(Allocation other) {
-    return this.category == other.category;
+    return this.category == other.category && this.value == other.value;
   }
 
   int get hashCode => category.hashCode;

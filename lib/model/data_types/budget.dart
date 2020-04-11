@@ -35,8 +35,8 @@ class Budget {
   Budget.from(Budget old) {
     expectedIncome = old.expectedIncome;
     type = old.type;
-    allotted = AllocationList.from(old.allotted);
-    target = AllocationList.from(old.target);
+    allotted = AllocationList.withCategoriesOf(old.allotted);
+    target = AllocationList.withCategoriesOf(old.target);
     actual = AllocationList.withCategoriesOf(allotted);
     transactions = TransactionList();
   }

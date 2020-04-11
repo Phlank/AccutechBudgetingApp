@@ -14,7 +14,7 @@ class AllocationList extends DelegatingList<Allocation>
     if (allocations != null) _list = allocations;
   }
 
-  /// Constructs a new AllocationList with predetermined [Categories](Category).
+  /// Constructs a new AllocationList with predetermined [Category] objects.
   ///
   /// Used when creating a new budget from user-provided information.
   AllocationList.defaultCategories() {
@@ -23,16 +23,9 @@ class AllocationList extends DelegatingList<Allocation>
     });
   }
 
-  /// New list with the same objects as the specified list.
-  ///
-  /// Manipulating objects in the constructed list will also manipulate objects in the specified list.
-  AllocationList.from(AllocationList other) {
-    _list = List.from(other);
-  }
-
   /// Constructs a new AllocationList with the same categories as another specified AllocationList.
   ///
-  /// All values for the (Allocations)[ALlocation] in the constructed list will equal 0.
+  /// All values for the [ALlocation] objects in the constructed list will equal 0.
   AllocationList.withCategoriesOf(AllocationList other) {
     other.forEach((allocation) {
       _list.add(Allocation(allocation.category, 0.0));
@@ -55,7 +48,7 @@ class AllocationList extends DelegatingList<Allocation>
     return spending;
   }
 
-  /// Returns a sublist of Allocations with Categories of type Saving.
+  /// Returns a sublist of [Allocation] objects with Categories of type Saving.
   AllocationList get savingAllocations {
     AllocationList saving = AllocationList();
     _list.forEach((allocation) {
