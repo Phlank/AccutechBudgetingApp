@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:budgetflow/global/defined_achievements.dart';
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/crypter.dart';
 import 'package:budgetflow/model/abstract/file_io.dart';
@@ -89,27 +90,16 @@ class BudgetControl implements Control {
     crypter = new SteelCrypter(_password);
     if (_oldUser) {
       await _load();
-      bool seconds = true;
-      for (Achievement a in earnedAchievements) {
-        if (a.name == 'returning for seconds') {
-          seconds = false;
-        }
-      }
-      if (seconds) {
-        earnedAchievements.add(new Achievement(
-            name: 'First Open',
-            description:
-                '\nWelcome to the app! We hope this is the start of a helpful relationship.',
-            icon: Icon(Icons.check)));
+      if(checkAchievement(cameBack_NAME)){
+        allAchievements[cameBack_NAME].setEarned();
+        this.earnedAchievements.add(allAchievements[cameBack_NAME]);
       }
       return true;
     } else {
-      earnedAchievements.add(new Achievement(
-          name: 'First Time',
-          description:
-              'welcome to your new budgeting app, we hope to bring you' +
-                  ' finacial support for the duration of your use',
-          icon: Icon(null)));
+      if(checkAchievement(firstOpen_NAME)){
+        allAchievements[firstOpen_NAME].setEarned();
+        this.earnedAchievements.add(allAchievements[firstOpen_NAME]);
+      }
       return false;
     }
   }
@@ -240,6 +230,18 @@ class BudgetControl implements Control {
     _loadedTransactions.add(t);
     _initLocationListener();
     save();
+    if(_loadedTransactions.length > 0 ){
+      if(_loadedTransactions.length >= 5){
+        if(checkAchievement(addedFiveTransactions_NAME)){
+          allAchievements[addedFiveTransactions_NAME].setEarned();
+          this.earnedAchievements.add(allAchievements[addedFiveTransactions_NAME]);
+        }
+      }
+      if(checkAchievement(addedTransaction_NAME)){
+        allAchievements[addedTransaction_NAME].setEarned();
+        this.earnedAchievements.add(allAchievements[addedTransaction_NAME]);
+      }
+    }
   }
 
   void removeTransaction(Transaction transaction) {
@@ -319,6 +321,15 @@ class BudgetControl implements Control {
     _budget = PriorityBudgetFactory().newMonthBudget(_budget);
     _loadedTransactions = _budget.transactions;
     accountant = BudgetAccountant(_budget);
+  }
+
+  bool checkAchievement(String achievementName) {
+    for(Achievement achievement in this.earnedAchievements){
+      if(achievement.name == achievementName){
+        return false;
+      }
+    }
+    return true;
   }
 }
 
