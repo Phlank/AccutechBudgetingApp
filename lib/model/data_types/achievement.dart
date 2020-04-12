@@ -9,6 +9,7 @@ class Achievement extends Serializable {
   String name, title, description;
   Icon icon;
   Function action;
+  bool earned = false;
 
   Achievement({
     @required this.name,
@@ -37,4 +38,6 @@ class Achievement extends Serializable {
   bool _equals(Achievement other) => name == other.name;
 
   int get hashCode => name.hashCode;
+
+  void setEarned(){ earned = true;}
 }

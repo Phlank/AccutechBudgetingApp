@@ -26,15 +26,13 @@ class AchievementListCard extends StatelessWidget {
             styleColor: Colors.black,));
         }
       }
-    } else {//todo if time clean or find way to remove the nested loop
+    } else {
       Color color = Colors.grey;
       for(Achievement achievement in allAchievements.values.toList(growable: false)){
-        for(Achievement earnedAchievement in this.earnedAchievements){
-          if(achievement.name == earnedAchievement.name){
-            color = Colors.black;
-          }
-          showing.add(new AchievementListItem(achievement: achievement, styleColor: color));
+        if (achievement.earned){
+          color = Colors.black;
         }
+        showing.add(new AchievementListItem(achievement: achievement, styleColor: color));
       }
     }
 
