@@ -17,6 +17,6 @@ class _AchievementPageState extends State<AchievementsPage> {
         appBar: AppBar(),
         body: AchievementListCard(
                 earnedAchievements: BudgetingApp.control.earnedAchievements)
-            .getListViewVersion());
+    );
   }
 }
