@@ -2,6 +2,7 @@ import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class Achievement extends Serializable {
@@ -15,7 +16,11 @@ class Achievement extends Serializable {
     @required this.description,
     this.icon,
     this.action,
-  });
+  }){
+    if(this.icon == null){
+      this.icon = Icon(Icons.check);
+    }
+  }
 
   @override
 
