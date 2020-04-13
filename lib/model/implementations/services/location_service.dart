@@ -1,10 +1,14 @@
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/location.dart';
+import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService implements Service {
+  ServiceDispatcher _dispatcher;
   Geolocator _geolocator = Geolocator();
   GeolocationStatus _status;
+
+  LocationService(this._dispatcher);
 
   void start() {
     // TODO implement start

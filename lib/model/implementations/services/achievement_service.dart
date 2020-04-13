@@ -1,10 +1,20 @@
 import 'package:budgetflow/model/abstract/service.dart';
+import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 
 class AchievementService implements Service {
+  ServiceDispatcher _dispatcher;
+
+  AchievementService(this._dispatcher);
+
   void start() {
     // TODO: implement start
+    // see if files exist
     // load the list of possible achievements
     // load the list of earned achievements
+  }
+
+  Future<bool> _filesExist() async {
+
   }
 
   void stop() {

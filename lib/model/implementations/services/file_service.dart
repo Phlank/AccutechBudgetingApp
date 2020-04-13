@@ -3,18 +3,25 @@ import 'dart:io';
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/crypter.dart';
 import 'package:budgetflow/model/abstract/file_io.dart';
+import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/encrypted.dart';
+import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:path_provider/path_provider.dart';
 
-class DartFileIO implements FileIO {
-  static Future<String> _path;
+class FileService implements FileIO, Service {
+  ServiceDispatcher _dispatcher;
+  Future<String> _path;
 
-  DartFileIO() {
+  FileService(this._dispatcher);
+
+  void start() {
     _path = _getPath();
   }
 
-  static Future<String> _getPath() async {
+  void stop() {}
+
+  Future<String> _getPath() async {
     Directory appDocDir;
     String appPath;
     try {

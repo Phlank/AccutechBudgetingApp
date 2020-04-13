@@ -16,8 +16,11 @@ import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/implementations/budget_accountant.dart';
-import 'package:budgetflow/model/implementations/dart_file_io.dart';
 import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
+import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/file_service.dart';
+import 'package:budgetflow/model/implementations/services/location_service.dart';
+import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/implementations/steel_crypter.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:budgetflow/model/utils/setup_agent.dart';
@@ -31,7 +34,8 @@ import 'data_types/month.dart';
 
 /// Welcome to our favorite superclass
 class BudgetControl implements Control {
-  static FileIO fileIO = new DartFileIO();
+  ServiceDispatcher _dispatcher;
+  FileIO fileIO;
   static Password _password;
   static Crypter crypter;
   History _history;
@@ -62,7 +66,10 @@ class BudgetControl implements Control {
   };
 
   BudgetControl() {
-    fileIO = new DartFileIO();
+    _dispatcher = ServiceDispatcher();
+    _dispatcher.register(FileService(_dispatcher));
+    _dispatcher.register(LocationService(_dispatcher));
+    _dispatcher.register(AchievementService(_dispatcher));
     _initVariables();
     _loadedTransactions = new TransactionList();
   }

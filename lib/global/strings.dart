@@ -1,7 +1,9 @@
 // Constant file locations
 final String passwordFilepath = 'password',
     historyFilepath = 'history',
-    accountsFilepath = 'accounts';
+    accountsFilepath = 'accounts',
+    earnedAchievementsFilepath = 'earned_achievements',
+    possibleAchievementsFilepath = 'possible_achievements';
 
 // Map keys for serialization
 const String categoryKey = 'category',
