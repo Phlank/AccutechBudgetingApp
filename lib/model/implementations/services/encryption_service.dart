@@ -27,7 +27,9 @@ class EncryptionService implements Service {
     fileService.registerCrypter(_crypter);
   }
 
-  Future stop() {}
+  Future stop() {
+    return null;
+  }
 
   void registerPassword(String password) {
     _password = SteelPassword.fromSecret(password);
@@ -36,7 +38,7 @@ class EncryptionService implements Service {
   }
 
   bool passwordExists() {
-    return _password == null;
+    return _password != null;
   }
 
   Future<bool> validatePassword(String secret) {

@@ -45,10 +45,10 @@ class Budget {
   // Used to load a budget object from disk
   static Future<Budget> fromMonth(Month month) async {
     return Budget(
-      allotted: await month.allotted,
-      actual: await month.actual,
+      allotted: month.allotted,
+      actual: month.actual,
       target: AllocationList(),
-      transactions: await month.transactions,
+      transactions: month.transactions,
       expectedIncome: month.income,
       actualIncome: 0.0,
       type: month.type,

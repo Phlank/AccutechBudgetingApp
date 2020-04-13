@@ -9,15 +9,12 @@ import 'package:budgetflow/model/implementations/services/service_dispatcher.dar
 
 class HistoryService implements Service {
   ServiceDispatcher _dispatcher;
-  History _history;
+  History _history = History();
 
   HistoryService(this._dispatcher);
 
   Future start() async {
-    if (await historyFileExists()) {
-      HistoryIO io = HistoryIO(_dispatcher.getFileService());
-      _history = await io.load();
-    }
+    await load();
   }
 
   Future stop() {
@@ -28,6 +25,19 @@ class HistoryService implements Service {
     return _dispatcher.getFileService().fileExists(historyFilepath);
   }
 
+  Future load() async {
+    if (await historyFileExists()) {
+      HistoryIO io = HistoryIO(_dispatcher.getFileService());
+      _history = await io.load();
+    }
+  }
+
+  Future save() async {
+    HistoryIO io = HistoryIO.fromHistory(
+        _history, _dispatcher.getFileService());
+    io.save();
+  }
+
   Future<Budget> getLatestMonthBudget() async {
     var currentMonth = _history.getMonthFromDateTime(DateTime.now());
     if (currentMonth != null) {
@@ -36,6 +46,11 @@ class HistoryService implements Service {
       return _createNewMonthBudget();
     }
   }
+
+  Month get currentMonth =>
+      _history.firstWhere((month) {
+        return month.timeIsInMonth(DateTime.now());
+      }, orElse: null);
 
   Future<Budget> _createNewMonthBudget() async {
     Month lastMonth = _history.last;
@@ -52,5 +67,13 @@ class HistoryService implements Service {
 
   void _updateCurrentMonth(Budget budget) {
     _history.getMonthFromDateTime(DateTime.now()).updateMonthData(budget);
+  }
+
+  void add(Month month) {
+    _history.add(month);
+  }
+
+  void remove(Month month) {
+    _history.remove(month);
   }
 }

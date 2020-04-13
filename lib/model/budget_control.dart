@@ -1,13 +1,9 @@
 import 'dart:async';
 
 import 'package:budgetflow/global/strings.dart';
-import 'package:budgetflow/model/abstract/crypter.dart';
-import 'package:budgetflow/model/abstract/file_io.dart';
-import 'package:budgetflow/model/abstract/password.dart';
 import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/model/data_types/account_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
-import 'package:budgetflow/model/data_types/history.dart';
 import 'package:budgetflow/model/data_types/location.dart';
 import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
@@ -21,12 +17,10 @@ import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/location_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
-import 'package:budgetflow/model/implementations/steel_crypter.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 import 'data_types/achievement.dart';
 import 'data_types/category.dart';
@@ -69,8 +63,8 @@ class BudgetControl {
     paymentMethods = [PaymentMethod('Cash')];
   }
 
-  bool isReturningUser() {
-    return _dispatcher.getEncryptionService().passwordExists();
+  Future<bool> isReturningUser() async {
+    return await _dispatcher.getFileService().fileExists(passwordFilepath);
   }
 
   Future<bool> passwordIsValid(String secret) {
@@ -78,7 +72,7 @@ class BudgetControl {
   }
 
   Future<bool> initialize() async {
-    if (isReturningUser()) {
+    if (await isReturningUser()) {
       if (_isLoaded()) {
         return true;
       } else {
@@ -152,37 +146,28 @@ class BudgetControl {
 //  }
 
   Future save() async {
-    if (_history.getMonthFromMonthTime(MonthTime.now()) == null) {
-      _history.add(Month(
-        monthTime: MonthTime.now(),
-        income: _budget.expectedIncome,
-        type: _budget.type,
-      ));
+    var historyService = _dispatcher.getHistoryService();
+    if (historyService.currentMonth == null) {
+      historyService.add(Month.fromBudget(budget));
     }
-    _history.save(_budget);
-    fileIO.writeFile(passwordFilepath, _password.serialize);
-    fileIO.encryptAndWriteFile(accountsFilepath, accounts.serialize, crypter);
+    historyService.save();
   }
 
-  @override
   Future setPassword(String newSecret) async {
-    _password = await Password.fromSecret(newSecret);
-    crypter = new SteelCrypter(_password);
+    _dispatcher.getEncryptionService().registerPassword(newSecret);
   }
 
-  @override
   Budget getBudget() {
-    return _budget;
+    return budget;
   }
 
-  @override
   TransactionList getLoadedTransactions() {
-    return _loadedTransactions;
+    return budget.transactions;
   }
 
   TransactionList getTransactionsInCategory(Category category) {
     TransactionList transactions = TransactionList();
-    _loadedTransactions.forEach((transaction) {
+    budget.transactions.forEach((transaction) {
       if (transaction.category == category) {
         transactions.add(transaction);
       }
@@ -190,44 +175,30 @@ class BudgetControl {
     return transactions;
   }
 
-  @override
-  Future loadPreviousMonthTransactions() async {
-    _transactionMonthTime = _transactionMonthTime.previous();
-    // TODO Bug here, if there isn't another previous month the app will crash due to a null value error
-    TransactionList transactions =
-    await _history
-        .getMonthFromMonthTime(MonthTime.now())
-        .transactions;
-    transactions.forEach((Transaction t) {
-      _loadedTransactions.add(t);
-    });
-  }
-
-  @override
   void addTransaction(Transaction t) {
-    _budget.addTransaction(t);
-    _history.getMonthFromMonthTime(MonthTime.now()).updateMonthData(_budget);
-    _loadedTransactions.add(t);
-    _initLocationListener();
+    budget.addTransaction(t);
     save();
   }
 
   void removeTransaction(Transaction transaction) {
-    _budget.removeTransaction(transaction);
-    _history.getMonthFromMonthTime(MonthTime.now()).updateMonthData(_budget);
-    _loadedTransactions.remove(transaction);
+    budget.removeTransaction(transaction);
     save();
   }
 
   Future<bool> setup() async {
     await setPassword(SetupAgent.pin);
+    await _dispatcher.registerAndStart(HistoryService(_dispatcher));
+    await _dispatcher.registerAndStart(LocationService(_dispatcher));
+    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
     addNewBudget(PriorityBudgetFactory().newFromInfo(SetupAgent()));
     return true;
   }
 
   double getCashFlow() {
-    double amt = _budget.expectedIncome -
-        _budget.allotted.getCategory(Category.housing).value +
+    double amt = budget.expectedIncome -
+        budget.allotted
+            .getCategory(Category.housing)
+            .value +
         expenseTotal();
     if (amt > 0) {
       cashFlowColor = Colors.green;
@@ -239,21 +210,18 @@ class BudgetControl {
     return amt;
   }
 
-  @override
   void addNewBudget(Budget b) {
-    _history = new History();
     Month m = Month.fromBudget(b);
-    _history.add(m);
-    _loadedTransactions = new TransactionList.copy(b.transactions);
-    _budget = b;
-    accountant = BudgetAccountant(_budget);
+    _dispatcher.getHistoryService().add(m);
+    budget = b;
+    accountant = BudgetAccountant(budget);
     save();
   }
 
   double expenseTotal() {
     double spent = 0.0;
-    for (int i = 0; i < _loadedTransactions.length; i++) {
-      spent += _loadedTransactions[i].amount;
+    for (int i = 0; i < budget.transactions.length; i++) {
+      spent += budget.transactions[i].amount;
     }
     return spent;
   }
@@ -261,10 +229,12 @@ class BudgetControl {
   double expenseInSection(String section) {
     double spent = 0.0;
     for (Category cat in sectionMap[section]) {
-      for (int i = 0; i < _loadedTransactions.length; i++) {
-        Category rel = _loadedTransactions[i].category;
+      for (int i = 0; i < budget.transactions.length; i++) {
+        Category rel = budget.transactions[i].category;
         if (rel == cat) {
-          spent += _budget.allotted.getCategory(rel).value;
+          spent += budget.allotted
+              .getCategory(rel)
+              .value;
         }
       }
     }
@@ -272,7 +242,7 @@ class BudgetControl {
   }
 
   void removeTransactionIfPresent(Transaction tran) {
-    _budget.removeTransaction(tran);
+    budget.removeTransaction(tran);
   }
 
   void addAccount(Account account) {
@@ -286,9 +256,8 @@ class BudgetControl {
   }
 
   void forceNextMonthTransition() {
-    _budget = PriorityBudgetFactory().newMonthBudget(_budget);
-    _loadedTransactions = _budget.transactions;
-    accountant = BudgetAccountant(_budget);
+    budget = PriorityBudgetFactory().newMonthBudget(budget);
+    accountant = BudgetAccountant(budget);
   }
 }
 
