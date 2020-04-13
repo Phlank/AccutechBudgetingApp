@@ -11,32 +11,32 @@ import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:quiver/collection.dart';
 
 class History extends DelegatingList<Month> implements Serializable {
-  List<Month> _months;
+  List<Month> months;
   Month currentMonth;
   Budget budget;
   bool newUser;
 
-  List<Month> get delegate => _months;
+  List<Month> get delegate => months;
 
   History() {
-    _months = [];
+    months = [];
   }
 
   void save(Budget current) {
     _updateCurrentMonth(current);
-    for (int i = 0; i < _months.length; i++) {
-      _months[i].save();
+    for (int i = 0; i < months.length; i++) {
+      months[i].save();
     }
     Encrypted e = BudgetControl.crypter.encrypt(serialize);
     BudgetControl.fileIO.writeFile(historyFilepath, e.serialize);
   }
 
   void _updateCurrentMonth(Budget budget) {
-    getMonthFromMonthTime(MonthTime.now()).updateMonthData(budget);
+    getMonthFromDateTime(DateTime.now()).updateMonthData(budget);
   }
 
   Future<Budget> getLatestMonthBudget() async {
-    currentMonth = getMonthFromMonthTime(MonthTime.now());
+    currentMonth = getMonthFromDateTime(DateTime.now());
     if (currentMonth != null) {
       return Budget.fromMonth(currentMonth);
     } else {
@@ -45,34 +45,27 @@ class History extends DelegatingList<Month> implements Serializable {
   }
 
   Future<Budget> _createNewMonthBudget() async {
-    Month lastMonth = _months[_months.length - 1];
+    Month lastMonth = months[months.length - 1];
     Budget lastBudget = await Budget.fromMonth(lastMonth);
     BudgetFactory factory = new PriorityBudgetFactory();
     Budget currentBudget = factory.newMonthBudget(lastBudget);
     currentMonth = Month.fromBudget(currentBudget);
     currentMonth.updateMonthData(currentBudget);
-    if (!_months.contains(currentMonth)) _months.add(currentMonth);
+    if (!months.contains(currentMonth)) months.add(currentMonth);
     return currentBudget;
-  }
-
-  /// Returns the Month in History that matches the given MonthTime. If no match is found, returns null.
-  Month getMonthFromMonthTime(MonthTime mt) {
-    return _months.firstWhere((Month m) => m.monthTime == mt, orElse: null);
   }
 
   /// Returns the Month in History that matches the given DateTime. If no match is found, returns null.
   Month getMonthFromDateTime(DateTime dt) {
-    return _months.firstWhere((Month m) => m.timeIsInMonth(dt), orElse: null);
+    return months.firstWhere((Month m) => m.timeIsInMonth(dt), orElse: null);
   }
-
-  @override
 
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     int i = 0;
-    _months.forEach((Month m) {
-      serializer.addPair(i, m);
+    months.forEach((Month m) {
+      serializer.addPair(i, m.time.millisecondsSinceEpoch);
       i++;
     });
     return serializer.serialize;

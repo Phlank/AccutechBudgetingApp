@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 class FileService implements FileIO, Service {
   ServiceDispatcher _dispatcher;
   Future<String> _path;
+  Crypter _crypter;
 
   FileService(this._dispatcher);
 
@@ -33,6 +34,11 @@ class FileService implements FileIO, Service {
     return appPath;
   }
 
+  /// Must be called before using any encrypt or decrypt functions.
+  void registerCrypter(Crypter crypter) {
+    _crypter = crypter;
+  }
+
   Future writeFile(String pathSuffix, String content) async {
     String path = await pathSuffixToPath(pathSuffix);
     File target = await _getTargetFile(path);
@@ -40,12 +46,10 @@ class FileService implements FileIO, Service {
     print("File written: $path");
   }
 
-  Future encryptAndWriteFile(String pathSuffix,
-      String content,
-      Crypter crypter,) async {
+  Future encryptAndWriteFile(String pathSuffix, String content) async {
     String path = await pathSuffixToPath(pathSuffix);
     File target = await _getTargetFile(path);
-    target.writeAsString(crypter
+    target.writeAsString(_crypter
         .encrypt(content)
         .serialize);
   }
@@ -64,12 +68,12 @@ class FileService implements FileIO, Service {
     return target.readAsString();
   }
 
-  Future<String> readAndDecryptFile(String pathSuffix, Crypter crypter) async {
+  Future<String> readAndDecryptFile(String pathSuffix) async {
     String path = await pathSuffixToPath(pathSuffix);
     File target = await _getTargetFile(path);
     String cipher = await target.readAsString();
     Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
-    return crypter.decrypt(encrypted);
+    return _crypter.decrypt(encrypted);
   }
 
   Future<bool> fileExists(String pathSuffix) async {
