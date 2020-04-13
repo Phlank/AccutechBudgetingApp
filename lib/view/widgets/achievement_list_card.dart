@@ -1,3 +1,4 @@
+import 'package:budgetflow/global/defined_achievements.dart';
 import 'package:budgetflow/model/data_types/achievement.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,20 +9,33 @@ class AchievementListCard extends StatelessWidget {
   final int show;
 
   AchievementListCard({@required this.earnedAchievements,
-    this.show = 1000}); // arbitrary large number
-
-  getListViewVersion() {}
+    this.show});// arbitrary large number
 
   @override
   Widget build(BuildContext context) {
     List<AchievementListItem> showing;
-    int count = 0;
-    showing = [];
-    for (Achievement a in earnedAchievements.reversed) {
-      showing.add(new AchievementListItem(a));
-      count++;
-      if (count >= show) break;
+    if(show != null){
+      if(show > this.earnedAchievements.length){
+        for(Achievement achievement in this.earnedAchievements){
+          showing.add(new AchievementListItem(achievement: achievement,
+            styleColor: Colors.black,));
+        }
+      } else {
+        for(int i =0; i< show; i++){
+          showing.add(new AchievementListItem(achievement: this.earnedAchievements[i],
+            styleColor: Colors.black,));
+        }
+      }
+    } else {
+      Color color = Colors.grey;
+      for(Achievement achievement in allAchievements.values.toList(growable: false)){
+        if (achievement.earned){
+          color = Colors.black;
+        }
+        showing.add(new AchievementListItem(achievement: achievement, styleColor: color));
+      }
     }
+
     return Card(
         child: Column(children: <Widget>[
           Padding(
@@ -52,12 +66,13 @@ class AchievementListCard extends StatelessWidget {
 
 class AchievementListItem extends StatelessWidget {
   final Achievement achievement;
+  final Color styleColor;
 
-  AchievementListItem(this.achievement);
+  AchievementListItem({@required this.achievement, @required this.styleColor});
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style = TextStyle(fontSize: 20, color: Colors.black);
+    TextStyle style = TextStyle(fontSize: 20, color: this.styleColor);
 
     return Padding(
       child: Table(
