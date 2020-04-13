@@ -4,6 +4,8 @@ import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/abstract/unserializer.dart';
 import 'package:budgetflow/model/implementations/unserialize/account_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/achievement_list_strategy.dart';
+import 'package:budgetflow/model/implementations/unserialize/achievement_strategy.dart';
 import 'package:budgetflow/model/implementations/unserialize/allocation_list_strategy.dart';
 import 'package:budgetflow/model/implementations/unserialize/allocation_strategy.dart';
 import 'package:budgetflow/model/implementations/unserialize/budget_type_strategy.dart';
@@ -36,6 +38,9 @@ class Serializer implements Serializable {
     methodKey: MethodStrategy(),
     accountKey: AccountStrategy(),
     methodListKey: MethodListStrategy(),
+    accountListKey: AccountListStrategy(),
+    achievementKey: AchievementStrategy(),
+    achievementListKey: AchievementListStrategy(),
   };
 
   Map<dynamic, dynamic> pairs;

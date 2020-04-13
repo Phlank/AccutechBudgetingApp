@@ -6,7 +6,6 @@ import 'package:budgetflow/model/utils/serializer.dart';
 class AccountStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
-    // TODO: implement unserializeValue
     return Account(
       methodName: value[methodNameKey],
       accountName: value[accountNameKey],
@@ -16,6 +15,5 @@ class AccountStrategy implements Unserializer {
       beginning:
       DateTime.fromMillisecondsSinceEpoch(int.parse(value[beginningKey])),
     );
-    return null;
   }
 }
