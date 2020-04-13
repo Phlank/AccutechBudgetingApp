@@ -5,14 +5,15 @@ import 'package:geolocator/geolocator.dart';
 class LocationService implements Service {
   Geolocator _geolocator = Geolocator();
   GeolocationStatus _status;
-  Stream<Location> _locationStream = Stream.empty();
 
   void start() {
-    // TODO: implement start
+    // TODO implement start
+    // Load map of locations -> categories for notifications
   }
 
   void stop() {
-    // TODO: implement stop
+    // TODO implement stop
+    // Save any important information
   }
 
   Future<bool> isEnabled() {

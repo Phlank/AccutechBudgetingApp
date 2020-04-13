@@ -51,7 +51,8 @@ class Transaction implements Serializable {
         method == other.method &&
         amount == other.amount &&
         category == other.category &&
-        location == other.location;
+        (location == other.location ||
+            (location == null && other.location == null));
   }
 
   int get hashCode =>

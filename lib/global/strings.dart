@@ -40,4 +40,5 @@ const String categoryKey = 'category',
     accountNameKey = 'account_name',
     accountKey = 'account',
     beginningKey = 'beginning',
-    methodListKey = 'method_list';
+    methodListKey = 'method_list',
+    titleKey = 'title';
