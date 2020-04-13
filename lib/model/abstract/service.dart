@@ -1,7 +1,7 @@
 
 
 abstract class Service {
-  void start();
+  Future start();
 
-  void stop();
+  Future stop();
 }

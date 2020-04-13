@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:budgetflow/global/strings.dart';
-import 'package:budgetflow/model/abstract/control.dart';
 import 'package:budgetflow/model/abstract/crypter.dart';
 import 'package:budgetflow/model/abstract/file_io.dart';
 import 'package:budgetflow/model/abstract/password.dart';
@@ -10,7 +9,6 @@ import 'package:budgetflow/model/data_types/account_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/history.dart';
 import 'package:budgetflow/model/data_types/location.dart';
-import 'package:budgetflow/model/data_types/month_time.dart';
 import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
@@ -18,7 +16,9 @@ import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/implementations/budget_accountant.dart';
 import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/encryption_service.dart';
 import 'package:budgetflow/model/implementations/services/file_service.dart';
+import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/location_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/implementations/steel_crypter.dart';
@@ -33,21 +33,13 @@ import 'data_types/category.dart';
 import 'data_types/month.dart';
 
 /// Welcome to our favorite superclass
-class BudgetControl implements Control {
+class BudgetControl {
   ServiceDispatcher _dispatcher;
-  FileIO fileIO;
-  static Password _password;
-  static Crypter crypter;
-  History _history;
-  TransactionList _loadedTransactions;
-  MonthTime _transactionMonthTime;
-  Budget _budget;
-  bool _oldUser;
   Color cashFlowColor;
   List<PaymentMethod> paymentMethods;
   AccountList accounts;
   Map<Location, Category> locationMap = Map();
-  StreamSubscription<Position> positionStream;
+  Budget budget;
   BudgetAccountant accountant;
   List<Achievement> earnedAchievements = [];
 
@@ -68,59 +60,59 @@ class BudgetControl implements Control {
   BudgetControl() {
     _dispatcher = ServiceDispatcher();
     _dispatcher.register(FileService(_dispatcher));
-    _dispatcher.register(LocationService(_dispatcher));
-    _dispatcher.register(AchievementService(_dispatcher));
+    _dispatcher.register(EncryptionService(_dispatcher));
+    _dispatcher.startAll();
     _initVariables();
-    _loadedTransactions = new TransactionList();
   }
 
-  @override
-  Future<bool> isReturningUser() async {
-    _oldUser =
-    await fileIO.fileExists(historyFilepath).catchError((Object error) {
-      _oldUser = false;
-      return false;
-    });
-    return _oldUser;
+  void _initVariables() {
+    paymentMethods = [PaymentMethod('Cash')];
   }
 
-  @override
-  Future<bool> passwordIsValid(String secret) async {
-    _password = await Password.load();
-    return _password.verify(secret);
+  bool isReturningUser() {
+    return _dispatcher.getEncryptionService().passwordExists();
   }
 
-  @override
+  Future<bool> passwordIsValid(String secret) {
+    return _dispatcher.getEncryptionService().validatePassword(secret);
+  }
+
   Future<bool> initialize() async {
-    _initVariables();
-    crypter = new SteelCrypter(_password);
-    if (_oldUser) {
-      await _load();
-      return true;
+    if (isReturningUser()) {
+      if (_isLoaded()) {
+        return true;
+      } else {
+        await _load();
+        return true;
+      }
     } else {
       return false;
     }
   }
 
-  void _initVariables() {
-    paymentMethods = [PaymentMethod('Cash')];
-    _transactionMonthTime = MonthTime.now();
+  bool _isLoaded() {
+    return _dispatcher.getFileService() != null &&
+        _dispatcher.getEncryptionService() != null &&
+        _dispatcher.getHistoryService() != null &&
+        _dispatcher.getAchievementService() != null &&
+        _dispatcher.getLocationService() != null;
   }
 
   Future _load() async {
-    _history = await History.load();
-    _budget = await _history.getLatestMonthBudget();
-    accountant = BudgetAccountant(_budget);
-    _loadedTransactions = TransactionList.copy(_budget.transactions);
+    await _dispatcher.registerAndStart(HistoryService(_dispatcher));
+    await _dispatcher.registerAndStart(LocationService(_dispatcher));
+    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
+    budget = await _dispatcher.getHistoryService().getLatestMonthBudget();
+    accountant = BudgetAccountant(budget);
     await _loadAccounts();
     _initLocationMap();
-    _initLocationListener();
+//    _initLocationListener();
   }
 
   Future _loadAccounts() async {
     AccountList loadedAccounts = Serializer.unserialize(
       methodListKey,
-      await fileIO.readAndDecryptFile(accountsFilepath, crypter),
+      await _dispatcher.getFileService().readAndDecryptFile(accountsFilepath),
     );
     for (Account account in loadedAccounts) {
       addAccount(account);
@@ -129,7 +121,7 @@ class BudgetControl implements Control {
 
   void _initLocationMap() {
     locationMap = Map<Location, Category>();
-    _loadedTransactions.forEach((transaction) {
+    budget.transactions.forEach((transaction) {
       if (transaction.location != null &&
           !locationMap.containsKey(transaction.location)) {
         locationMap[transaction.location] = transaction.category;
@@ -137,27 +129,27 @@ class BudgetControl implements Control {
     });
   }
 
-  void _initLocationListener() {
-    positionStream = Geolocator()
-        .getPositionStream(LocationOptions(
-            accuracy: LocationAccuracy.high,
-            distanceFilter: 10,
-            timeInterval: 10))
-        .listen((position) {
-      Location streamLocation = Location.fromGeolocatorPosition(position);
-      locationMap.forEach((location, category) async {
-        if (await streamLocation.distanceTo(location) < 10) {
-          // TODO Trigger notification
-          print('In range of location ' +
-              location.latitude.toString() +
-              ', ' +
-              location.longitude.toString() +
-              ' for category ' +
-              category.name);
-        }
-      });
-    });
-  }
+//  void _initLocationListener() {
+//    positionStream = Geolocator()
+//        .getPositionStream(LocationOptions(
+//            accuracy: LocationAccuracy.high,
+//            distanceFilter: 10,
+//            timeInterval: 10))
+//        .listen((position) {
+//      Location streamLocation = Location.fromGeolocatorPosition(position);
+//      locationMap.forEach((location, category) async {
+//        if (await streamLocation.distanceTo(location) < 10) {
+//          // TODO Trigger notification
+//          print('In range of location ' +
+//              location.latitude.toString() +
+//              ', ' +
+//              location.longitude.toString() +
+//              ' for category ' +
+//              category.name);
+//        }
+//      });
+//    });
+//  }
 
   Future save() async {
     if (_history.getMonthFromMonthTime(MonthTime.now()) == null) {

@@ -1,6 +1,8 @@
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/encryption_service.dart';
 import 'package:budgetflow/model/implementations/services/file_service.dart';
+import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/location_service.dart';
 
 class ServiceDispatcher {
@@ -10,9 +12,14 @@ class ServiceDispatcher {
     _services.add(service);
   }
 
-  void startAll() {
+  Future registerAndStart(Service service) async {
+    _services.add(service);
+    await service.start();
+  }
+
+  Future startAll() async {
     for (var service in _services) {
-      service.start();
+      await service.start();
     }
   }
 
@@ -37,6 +44,18 @@ class ServiceDispatcher {
   LocationService getLocationService() {
     return _services.firstWhere((service) {
       return service is LocationService;
+    }, orElse: null);
+  }
+
+  EncryptionService getEncryptionService() {
+    return _services.firstWhere((service) {
+      return service is EncryptionService;
+    }, orElse: null);
+  }
+
+  HistoryService getHistoryService() {
+    return _services.firstWhere((service) {
+      return service is HistoryService;
     }, orElse: null);
   }
 }

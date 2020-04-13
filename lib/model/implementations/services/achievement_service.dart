@@ -6,7 +6,7 @@ class AchievementService implements Service {
 
   AchievementService(this._dispatcher);
 
-  void start() {
+  Future start() {
     // TODO: implement start
     // see if files exist
     // load the list of possible achievements
@@ -17,7 +17,7 @@ class AchievementService implements Service {
 
   }
 
-  void stop() {
+  Future stop() {
     // TODO: implement stop
     // save the list of possible achievements
     // save the list of earned achievements

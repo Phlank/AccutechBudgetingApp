@@ -11,16 +11,16 @@ import 'package:path_provider/path_provider.dart';
 
 class FileService implements FileIO, Service {
   ServiceDispatcher _dispatcher;
-  Future<String> _path;
+  String _path;
   Crypter _crypter;
 
   FileService(this._dispatcher);
 
-  void start() {
-    _path = _getPath();
+  Future start() async {
+    _path = await _getPath();
   }
 
-  void stop() {}
+  Future stop() {}
 
   Future<String> _getPath() async {
     Directory appDocDir;
@@ -54,31 +54,31 @@ class FileService implements FileIO, Service {
         .serialize);
   }
 
-  Future<String> pathSuffixToPath(String pathSuffix) async {
-    return await _path + '/' + pathSuffix;
+  String pathSuffixToPath(String pathSuffix) {
+    return _path + '/' + pathSuffix;
   }
 
-  Future<File> _getTargetFile(String path) async {
+  File _getTargetFile(String path) {
     return File('$path');
   }
 
-  Future<String> readFile(String pathSuffix) async {
-    String path = await pathSuffixToPath(pathSuffix);
-    File target = await _getTargetFile(path);
+  Future<String> readFile(String pathSuffix) {
+    String path = pathSuffixToPath(pathSuffix);
+    File target = _getTargetFile(path);
     return target.readAsString();
   }
 
   Future<String> readAndDecryptFile(String pathSuffix) async {
-    String path = await pathSuffixToPath(pathSuffix);
-    File target = await _getTargetFile(path);
+    String path = pathSuffixToPath(pathSuffix);
+    File target = _getTargetFile(path);
     String cipher = await target.readAsString();
     Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
     return _crypter.decrypt(encrypted);
   }
 
   Future<bool> fileExists(String pathSuffix) async {
-    String path = await pathSuffixToPath(pathSuffix);
-    File target = await _getTargetFile(path);
+    String path = pathSuffixToPath(pathSuffix);
+    File target = _getTargetFile(path);
     return target.exists();
   }
 }

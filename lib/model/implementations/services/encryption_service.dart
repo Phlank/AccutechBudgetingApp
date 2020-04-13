@@ -13,25 +13,33 @@ class EncryptionService implements Service {
 
   EncryptionService(this._dispatcher);
 
-  void start() async {
-    // if there is a saved password, load it
+  Future start() async {
     FileService fileService = _dispatcher.getFileService();
     if (await fileService.fileExists(passwordFilepath)) {
       _loadPassword(fileService);
     }
-    // otherwise do nothing
   }
 
   void _loadPassword(FileService fileService) async {
     String content = await fileService.readFile(passwordFilepath);
     _password = Serializer.unserialize(passwordKey, content);
     _crypter = SteelCrypter(_password);
+    fileService.registerCrypter(_crypter);
   }
 
-  void stop() {}
+  Future stop() {}
 
   void registerPassword(String password) {
     _password = SteelPassword.fromSecret(password);
     _crypter = SteelCrypter(_password);
+    _dispatcher.getFileService().registerCrypter(_crypter);
+  }
+
+  bool passwordExists() {
+    return _password == null;
+  }
+
+  Future<bool> validatePassword(String secret) {
+    return _password.verify(secret);
   }
 }

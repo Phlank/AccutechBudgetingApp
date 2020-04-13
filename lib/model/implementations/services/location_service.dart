@@ -10,12 +10,12 @@ class LocationService implements Service {
 
   LocationService(this._dispatcher);
 
-  void start() {
+  Future start() {
     // TODO implement start
     // Load map of locations -> categories for notifications
   }
 
-  void stop() {
+  Future stop() {
     // TODO implement stop
     // Save any important information
   }
