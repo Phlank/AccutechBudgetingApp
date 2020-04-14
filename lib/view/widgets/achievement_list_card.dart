@@ -40,6 +40,7 @@ class AchievementListCard extends StatelessWidget {
           padding: EdgeInsets.all(8.0),
         ),
         ListView(
+          shrinkWrap: true,
           children: showing,
         ),
       ];
