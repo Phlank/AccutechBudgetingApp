@@ -8,59 +8,77 @@ class AchievementListCard extends StatelessWidget {
   final List<Achievement> earnedAchievements;
   final int show;
 
-  AchievementListCard({@required this.earnedAchievements,
-    this.show});// arbitrary large number
+  AchievementListCard(
+      {@required this.earnedAchievements, this.show}); // arbitrary large number
 
   @override
   Widget build(BuildContext context) {
-    List<AchievementListItem> showing;
-    if(show != null){
-      if(show > this.earnedAchievements.length){
-        for(Achievement achievement in this.earnedAchievements){
-          showing.add(new AchievementListItem(achievement: achievement,
-            styleColor: Colors.black,));
+    List<Widget> children = new List();
+    List<AchievementListItem> showing = new List();
+    if (show != null) {
+      if (show > this.earnedAchievements.length) {
+        for (Achievement achievement in this.earnedAchievements) {
+          showing.add(new AchievementListItem(
+            achievement: achievement,
+            styleColor: Colors.black,
+          ));
         }
       } else {
-        for(int i =0; i< show; i++){
-          showing.add(new AchievementListItem(achievement: this.earnedAchievements[i],
-            styleColor: Colors.black,));
+        for (int i = 0; i < show; i++) {
+          showing.add(new AchievementListItem(
+            achievement: this.earnedAchievements[i],
+            styleColor: Colors.black,
+          ));
         }
       }
+      children = <Widget>[
+        Padding(
+          child: Text(
+            'Earned Achievements',
+            style: TextStyle(fontSize: 20),
+          ),
+          padding: EdgeInsets.all(8.0),
+        ),
+        ListView(
+          children: showing,
+        ),
+      ];
     } else {
       Color color = Colors.grey;
-      for(Achievement achievement in allAchievements.values.toList(growable: false)){
-        if (achievement.earned){
+      for (Achievement achievement
+          in allAchievements.values.toList(growable: false)) {
+        if (achievement.earned) {
           color = Colors.black;
         }
-        showing.add(new AchievementListItem(achievement: achievement, styleColor: color));
+        showing.add(new AchievementListItem(
+            achievement: achievement, styleColor: color));
       }
+      children = <Widget>[
+        Padding(
+          child: Text(
+            'Earned Achievements',
+            style: TextStyle(fontSize: 20),
+          ),
+          padding: EdgeInsets.all(8.0),
+        ),
+        ListView(
+          children: showing,
+        ),
+        ButtonBar(alignment: MainAxisAlignment.center, children: <Widget>[
+          FlatButton(
+            child: Text('View more'),
+            onPressed: (() {
+              Navigator.pushNamed(context, AchievementsPage.ROUTE);
+            }),
+            materialTapTargetSize: MaterialTapTargetSize.padded,
+          )
+        ])
+      ];
     }
 
     return Card(
-        child: Column(children: <Widget>[
-          Padding(
-            child: Text(
-              'Earned Achievements',
-              style: TextStyle(fontSize: 20),
-            ),
-            padding: EdgeInsets.all(8.0),
-          ),
-          Column(
-            children: showing,
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FlatButton(
-                child: Text('View more'),
-                onPressed: (() {
-                  Navigator.pushNamed(context, AchievementsPage.ROUTE);
-                }),
-                materialTapTargetSize: MaterialTapTargetSize.padded,
-              )
-            ],
-          ),
-        ]));
+      child: Column(children: children),
+    );
   }
 }
 
@@ -80,19 +98,19 @@ class AchievementListItem extends StatelessWidget {
           TableRow(children: <TableCell>[
             TableCell(
                 child: Text(
-                  achievement.name,
-                  style: style,
-                  textAlign: TextAlign.left,
-                )),
+              achievement.name,
+              style: style,
+              textAlign: TextAlign.left,
+            )),
             TableCell(child: achievement.icon)
           ]),
           TableRow(children: <TableCell>[
             TableCell(
                 child: Text(
-                  achievement.description,
-                  style: style,
-                  textAlign: TextAlign.left,
-                )),
+              achievement.description,
+              style: style,
+              textAlign: TextAlign.left,
+            )),
             TableCell(child: Text(''))
           ])
         ],
