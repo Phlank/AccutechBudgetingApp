@@ -149,10 +149,11 @@ class _GeneralCategoryState extends State<GeneralCategory> {
                   .getCategory(category)
                   .value = playBudget.getCategory(category);
             }
-            if (BudgetingApp.control.checkAchievement(changedAllotment_NAME)) {
-              allAchievements[changedAllotment_NAME].setEarned();
+            if (BudgetingApp.control.checkAchievement(
+                achChangedAllotmentName)) {
+              allAchievements[achChangedAllotmentName].setEarned();
               BudgetingApp.control.earnedAchievements.add(
-                  allAchievements[changedAllotment_NAME]);
+                  allAchievements[achChangedAllotmentName]);
             }
             if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');

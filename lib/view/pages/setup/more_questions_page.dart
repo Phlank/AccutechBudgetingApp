@@ -15,10 +15,10 @@ class MoreQuestionsPage extends StatelessWidget {
     return RaisedButton(
       child: Text('Take me to my budget!'),
       onPressed: () {
-        if (BudgetingApp.control.checkAchievement(rushingToTheBudget_NAME)) {
-          allAchievements[rushingToTheBudget_NAME].setEarned();
+        if (BudgetingApp.control.checkAchievement(achRushingName)) {
+          allAchievements[achRushingName].setEarned();
           BudgetingApp.control.earnedAchievements.add(
-              allAchievements[rushingToTheBudget_NAME]);
+              allAchievements[achRushingName]);
         }
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
