@@ -259,6 +259,15 @@ class BudgetControl {
     budget = PriorityBudgetFactory().newMonthBudget(budget);
     accountant = BudgetAccountant(budget);
   }
+
+  bool checkAchievement(String achievementName) {
+    for (Achievement achievement in this.earnedAchievements) {
+      if (achievement.name == achievementName) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 class MockBudget {

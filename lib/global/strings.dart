@@ -51,3 +51,27 @@ const String categoryKey = 'category',
     actualKey = 'actual',
     targetKey = 'target',
     transactionsKey = 'transactions';
+
+const firstOpen_NAME = 'First Open',
+    cameBack_NAME = 'Came Back',
+    rushingToTheBudget_NAME = 'Russian About',
+    detailingToTheBudget_NAME = 'Detailed Start',
+    addedTransaction_NAME = 'Added a Transaction',
+    addedFiveTransactions_NAME = 'Added 5 Transactions',
+    starvedYourYoung_NAME = 'please sir may I have another?',
+    dogDied_NAME = 'poor fiddo',
+    changedAllotment_NAME = 'Costum ized the budget',
+    addedGoal_NAME = 'Savings Goal',
+    completedGoal_NAME = 'GOAL !!!!!';
+
+const firstOpen_DESCRIP = 'Welcome! see if you like it',
+    cameBack_DESCRIP = 'Welcome back glad to see you again',
+    rushingToTheBudget_DESCRIP = 'Couldn\'t wait to get to teh budget',
+    detaillingToTheBudget_DESCRIP = 'answered all the questions to get teh most accurate budget',
+    addedTransaction_DESCRIP = 'you added your first transaction keep it up it helps the budget form to your life',
+    addedFiveTransactions_DESCRIP = 'You ahve helped the budget grow ',
+    starvedYourYoung_DESCRIP = 'set kids allotment to \$0',
+    dogDied_DESCRIP = 'Set Pet allotment to \$0',
+    changedAllotment_DESCRIP = 'customized the budget to reflect your life better',
+    addedGoal_DESCRIP = 'You added your goal',
+    completedGoal_DESCRIP = 'you completed you goal ';
