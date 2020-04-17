@@ -52,6 +52,7 @@ const String categoryKey = 'category',
     targetKey = 'target',
     transactionsKey = 'transactions';
 
+// TODO Proofread
 final String achFirstOpenName = 'First Open',
     achCameBackName = 'Came Back',
     achRushingName = 'Russian About',
@@ -65,9 +66,9 @@ final String achFirstOpenName = 'First Open',
     achOneCompletedGoalName = 'Achiever';
 
 final String achFirstOpenDesc = 'Welcome! see if you like it',
-    achCameBackDesc = 'Welcome back glad to see you again',
-    achRushingDesc = 'Couldn\'t wait to get to teh budget',
-    achDetailingDesc = 'answered all the questions to get teh most accurate budget',
+    achCameBackDesc = 'Glad to see you again',
+    achRushingDesc = 'Couldn\'t wait to get to the budget',
+    achDetailingDesc = 'Answered all questions to get an accurate budget',
     achOneTransactionDesc = 'you added your first transaction keep it up it helps the budget form to your life',
     achFiveTransactionsDesc = 'You ahve helped the budget grow ',
     achStarvedDesc = 'set kids allotment to \$0',
