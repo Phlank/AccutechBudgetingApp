@@ -16,14 +16,29 @@ class AchievementService implements Service {
 
   Future start() async {
     // TODO: implement start
-    // see if files exist
-    // load the list of possible achievements
-    // load the list of earned achievements
+    if (await _filesExist()) {
+      await _loadPossibleAchievements();
+      await _loadEarnedAchievements();
+    }
+    // else earned is empty list, possible is default list
   }
 
   Future<bool> _filesExist() async {
     return await _fileService.fileExists(earnedAchievementsFilepath) &&
         await _fileService.fileExists(possibleAchievementsFilepath);
+  }
+
+  Future _loadAchievements() async {
+    await _loadPossibleAchievements();
+    await _loadEarnedAchievements();
+  }
+
+  Future _loadPossibleAchievements() {
+
+  }
+
+  Future _loadEarnedAchievements() {
+
   }
 
   Future stop() {
