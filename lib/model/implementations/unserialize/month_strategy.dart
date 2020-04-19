@@ -9,7 +9,7 @@ class MonthStrategy implements Unserializer {
     return Month(
       type: Serializer.unserialize(typeKey, value[typeKey]),
       income: double.parse(value[incomeKey]),
-      time: DateTime.fromMillisecondsSinceEpoch(value[timeKey]),
+      time: DateTime.tryParse(value[timeKey]),
       allotted: Serializer.unserialize(allocationListKey, value[allottedKey]),
       actual: Serializer.unserialize(allocationListKey, value[actualKey]),
       target: Serializer.unserialize(allocationListKey, value[targetKey]),

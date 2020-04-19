@@ -16,13 +16,13 @@ class MonthIO implements IO {
   MonthIO.ofTime(this._time, this._fileService);
 
   Future<Month> load() async {
-    String filepath = _time.millisecondsSinceEpoch.toString();
+    String filepath = _time.toIso8601String().toString();
     String content = await _fileService.readAndDecryptFile(filepath);
     return Serializer.unserialize(monthKey, content);
   }
 
   Future save() async {
-    String filepath = _time.millisecondsSinceEpoch.toString();
+    String filepath = _time.toIso8601String().toString();
     String content = _month.serialize;
     _fileService.encryptAndWriteFile(filepath, content);
   }

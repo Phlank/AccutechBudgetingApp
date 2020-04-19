@@ -34,7 +34,7 @@ class Transaction implements Serializable {
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(timeKey, time.millisecondsSinceEpoch);
+    serializer.addPair(timeKey, time.toIso8601String());
     serializer.addPair(vendorKey, vendor);
     serializer.addPair(methodKey, method);
     serializer.addPair(amountKey, amount);

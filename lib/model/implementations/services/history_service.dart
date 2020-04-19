@@ -17,8 +17,8 @@ class HistoryService implements Service {
     await load();
   }
 
-  Future stop() {
-    // TODO: implement stop
+  Future stop() async {
+    await save();
   }
 
   Future<bool> historyFileExists() {

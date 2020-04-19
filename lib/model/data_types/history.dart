@@ -41,7 +41,7 @@ class History extends DelegatingList<Month> implements Serializable {
     Serializer serializer = Serializer();
     int i = 0;
     _monthTimes.forEach((DateTime dt) {
-      serializer.addPair(i, dt.millisecondsSinceEpoch);
+      serializer.addPair(i, dt.toIso8601String());
       i++;
     });
     return serializer.serialize;

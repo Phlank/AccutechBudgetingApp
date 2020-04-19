@@ -13,7 +13,7 @@ class AccountStrategy implements Unserializer {
       Serializer.unserialize(transactionListKey, value[transactionListKey]),
       amount: double.parse(value[amountKey]),
       beginning:
-      DateTime.fromMillisecondsSinceEpoch(int.parse(value[beginningKey])),
+      DateTime.tryParse(value[beginningKey]),
     );
   }
 }
