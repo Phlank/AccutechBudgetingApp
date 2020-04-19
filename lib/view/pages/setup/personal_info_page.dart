@@ -17,8 +17,6 @@ class PersonalInfoPage extends StatefulWidget {
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _name, _age;
-
   @override
   Widget build(BuildContext context) {
     var nameInput = TextFormField(

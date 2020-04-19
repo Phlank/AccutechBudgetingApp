@@ -1,4 +1,5 @@
 import 'package:budgetflow/model/abstract/service.dart';
+import 'package:budgetflow/model/implementations/services/account_service.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
 import 'package:budgetflow/model/implementations/services/encryption_service.dart';
 import 'package:budgetflow/model/implementations/services/file_service.dart';
@@ -29,6 +30,7 @@ class ServiceDispatcher {
     }
   }
 
+  // There is no way in Dart 2 as of 4/19/2020 to implement the DRY principle here. This is the best way I've found so far to do this.
   AchievementService getAchievementService() {
     return _services.firstWhere((service) {
       return service is AchievementService;
@@ -56,6 +58,12 @@ class ServiceDispatcher {
   HistoryService getHistoryService() {
     return _services.firstWhere((service) {
       return service is HistoryService;
+    }, orElse: null);
+  }
+
+  AccountService get accountService {
+    return _services.firstWhere((service) {
+      return service is AccountService;
     }, orElse: null);
   }
 }
