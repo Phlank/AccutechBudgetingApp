@@ -185,6 +185,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
           // Load google maps interface
           Location result =
               await LocationPicker.show(context, await Location.current);
+          location = result;
         },
       )
     ]);

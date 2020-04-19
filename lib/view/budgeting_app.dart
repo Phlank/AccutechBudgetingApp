@@ -11,8 +11,10 @@ import 'package:flutter/material.dart';
 class BudgetingApp extends StatelessWidget {
   static const NAME = 'Budgetflow';
   static BudgetControl control = new BudgetControl();
-  static int r = 0, g = 153, b = 0;
-  Map<int, Color> colors = {
+  static final int r = 0,
+      g = 153,
+      b = 0;
+  static final Map<int, Color> colors = {
     50: Color.fromRGBO(r, g, b, .1),
     100: Color.fromRGBO(r, g, b, .2),
     200: Color.fromRGBO(r, g, b, .3),
