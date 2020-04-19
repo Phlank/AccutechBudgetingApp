@@ -1,11 +1,8 @@
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
-import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
-TransactionList tl1 = new TransactionList();
 
 class MockTransaction extends Mock implements Transaction {}
 
@@ -33,12 +30,6 @@ void setUpTransactions() {
 
 void main() {
   group("TransactionList tests", () {
-    setUp(() {
-      setUpTransactions();
-    });
-    test("Added transactions are in TransactionList", () {
-      tl1.add(t1);
-      expect(tl1.contains(t1), true);
-    });
+    setUp(() {});
   });
 }
