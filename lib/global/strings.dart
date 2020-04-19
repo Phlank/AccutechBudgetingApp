@@ -50,7 +50,8 @@ const String categoryKey = 'category',
     allottedKey = 'allotted',
     actualKey = 'actual',
     targetKey = 'target',
-    transactionsKey = 'transactions';
+    transactionsKey = 'transactions',
+    valueKey = 'value';
 
 final String achFirstOpenName = 'First Open',
     achCameBackName = 'Came back',
