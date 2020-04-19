@@ -109,9 +109,7 @@ class _KidsPetsInfoPageState extends State<KidsPetsInfoPage> {
   @override
   Widget build(BuildContext context) {
     if (BudgetingApp.control.checkAchievement(achDetailingName)) {
-      allAchievements[achDetailingName].setEarned();
-      BudgetingApp.control.earnedAchievements.add(
-          allAchievements[achDetailingName]);
+      BudgetingApp.control.dispatcher.getAchievementService().earn()
     }
     return Scaffold(
       appBar: AppBar(title: Text('Setup')),

@@ -51,6 +51,8 @@ class BudgetControl {
     'Savings': [Category.savings]
   };
 
+  ServiceDispatcher get dispatcher => _dispatcher;
+
   BudgetControl() {
     _dispatcher = ServiceDispatcher();
     _dispatcher.register(FileService(_dispatcher));
@@ -258,15 +260,6 @@ class BudgetControl {
   void forceNextMonthTransition() {
     budget = PriorityBudgetFactory().newMonthBudget(budget);
     accountant = BudgetAccountant(budget);
-  }
-
-  bool checkAchievement(String achievementName) {
-    for (Achievement achievement in this.earnedAchievements) {
-      if (achievement.name == achievementName) {
-        return false;
-      }
-    }
-    return true;
   }
 }
 
