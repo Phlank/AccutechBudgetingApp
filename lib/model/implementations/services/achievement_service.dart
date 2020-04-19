@@ -56,9 +56,9 @@ class AchievementService implements Service {
     return null;
   }
 
-  Future save() {
-    _saveEarnedAchievements();
-    _savePossibleAchievements();
+  Future save() async {
+    await _saveEarnedAchievements();
+    await _savePossibleAchievements();
   }
 
   Future _saveEarnedAchievements() {

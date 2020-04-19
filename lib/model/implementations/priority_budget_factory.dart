@@ -45,18 +45,13 @@ class PriorityBudgetFactory implements BudgetFactory {
   static const _stage4Bound = 1.0;
 
   double _housingRatio = 0.0,
-      _income = 0.0,
-      _underspending = 0.0,
-      _overspending = 0.0;
-  _NSW _currentDistribution, _targetDistribution;
+      _income = 0.0;
+  _NSW _currentDistribution;
   double _wantsRatio, _needsRatio, _savingsRatio;
   Budget _oldBudget;
-  AllocationList _oldAllotmentRatios = AllocationList(),
-      _oldActualRatios = AllocationList(),
+  AllocationList _oldActualRatios = AllocationList(),
       _spendingDiffs = AllocationList(),
-      _newAllotmentRatios = AllocationList(),
       _allottedSpending = AllocationList.defaultCategories(),
-      _targetSpending = AllocationList(),
       _deltas = AllocationList();
 
   PriorityBudgetFactory();
@@ -69,7 +64,6 @@ class PriorityBudgetFactory implements BudgetFactory {
     else
       type = BudgetType.growth;
     _currentDistribution = new _NSW(0.0, 0.0, 0.0);
-    _targetDistribution = new _NSW(0.0, 0.0, 0.0);
     _housingRatio = SetupAgent.housing / SetupAgent.income;
     _income = SetupAgent.income;
     _decidePlan(type);
@@ -96,32 +90,24 @@ class PriorityBudgetFactory implements BudgetFactory {
   void _setBudgetDepletionRatios() {
     if (_housingRatio <= _stage1Bound) {
       _currentDistribution = _stage1Depletion;
-      _targetDistribution = _stage1Depletion;
     } else if (_housingRatio <= _stage2Bound) {
       _currentDistribution = _stage2Depletion;
-      _targetDistribution = _stage1Depletion;
     } else if (_housingRatio <= _stage3Bound) {
       _currentDistribution = _stage3Depletion;
-      _targetDistribution = _stage2Depletion;
     } else if (_housingRatio <= _stage4Bound) {
       _currentDistribution = _stage4Depletion;
-      _targetDistribution = _stage3Depletion;
     }
   }
 
   void _setBudgetGrowthRatios() {
     if (_housingRatio <= _stage1Bound) {
       _currentDistribution = _stage1Growth;
-      _targetDistribution = _stage1Growth;
     } else if (_housingRatio <= _stage2Bound) {
       _currentDistribution = _stage2Growth;
-      _targetDistribution = _stage1Growth;
     } else if (_housingRatio <= _stage3Bound) {
       _currentDistribution = _stage3Growth;
-      _targetDistribution = _stage2Growth;
     } else if (_housingRatio <= _stage4Bound) {
       _currentDistribution = _stage4Growth;
-      _targetDistribution = _stage3Growth;
     }
   }
 

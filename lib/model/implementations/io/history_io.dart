@@ -21,18 +21,18 @@ class HistoryIO implements IO {
     return _history;
   }
 
-  Future save() {
+  Future save() async {
     // History must be initialized. If it isn't, throw an error.
     if (_history == null) throw new _HistoryNotInitializedError();
-    _saveMonths();
+    await _saveMonths();
     String content = _history.serialize;
     _fileService.encryptAndWriteFile(historyFilepath, content);
   }
 
-  void _saveMonths() {
+  Future _saveMonths() async {
     for (Month month in _history) {
       var monthIO = MonthIO(month, _fileService);
-      monthIO.save();
+      await monthIO.save();
     }
   }
 }
