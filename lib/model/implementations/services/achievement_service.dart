@@ -13,6 +13,8 @@ class AchievementService implements Service {
   AchievementList _earned;
   AchievementList _possible;
 
+  AchievementList get earned => _earned;
+
   AchievementService(this._dispatcher) {
     _fileService = _dispatcher.getFileService();
   }
@@ -87,8 +89,4 @@ class AchievementService implements Service {
     }
     // TODO display popup
   }
-
-  int get numEarned => _earned.length;
-
-  AchievementList get earned => _earned;
 }

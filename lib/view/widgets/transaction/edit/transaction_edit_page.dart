@@ -5,7 +5,7 @@ import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/input_validator.dart';
 import 'package:budgetflow/view/utils/padding.dart';
-import 'package:budgetflow/view/widgets/datetime/date_form_field.dart';
+import 'package:budgetflow/view/view_presets.dart';
 import 'package:budgetflow/view/widgets/location_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +37,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   PaymentMethod method;
   double amount;
   Category category;
-  DateTime time;
+  DateTime date;
+  TimeOfDay time;
   Location location;
 
   final _formKey = GlobalKey<FormState>();
@@ -51,7 +52,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     method = initialTransaction.method;
     amount = initialTransaction.amount;
     category = initialTransaction.category;
-    time = initialTransaction.time;
+    date = initialTransaction.time;
+    time = TimeOfDay.fromDateTime(initialTransaction.time);
     location = initialTransaction.location;
     BudgetingApp.control.paymentMethods.forEach((method) {
       if (method != null) {
@@ -205,11 +207,50 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   }
 
   Widget _buildTimeRow() {
+    String formattedDate = defaultDateFormat.format(date);
+    String formattedTime = time.format(context);
     return Row(children: <Widget>[
       Text('Time', style: TextStyle(fontSize: 16)),
       Container(width: 24),
-      Expanded(child: BasicDateTimeField()),
+      Expanded(child: Text(formattedDate)),
+      _buildDateButton(),
+      Expanded(child: Text(formattedTime)),
+      _buildTimeButton(),
     ]);
+  }
+
+  Widget _buildDateButton() {
+    return IconButton(
+      onPressed: () {
+        showDatePicker(
+          context: context,
+          firstDate: DateTime.now().subtract(Duration(days: 365)),
+          initialDate: DateTime.now(),
+          lastDate: DateTime.now(),
+        ).then((date) {
+          setState(() {
+            this.date = date;
+          });
+        });
+      },
+      icon: Icon(Icons.calendar_today),
+    );
+  }
+
+  Widget _buildTimeButton() {
+    return IconButton(
+      onPressed: () {
+        showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        ).then((time) {
+          setState(() {
+            this.time = time;
+          });
+        });
+      },
+      icon: Icon(Icons.access_time),
+    );
   }
 
   Widget _buildButton() {
@@ -217,12 +258,19 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
+          DateTime outputDateTime = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            time.hour,
+            time.minute,
+          );
           BudgetingApp.control.removeTransactionIfPresent(initialTransaction);
           Transaction newTransaction = Transaction(
               amount: -amount,
               category: category,
               method: method,
-              time: time,
+              time: outputDateTime,
               vendor: vendor,
               location: location);
           BudgetingApp.control.addTransaction(newTransaction);

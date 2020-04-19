@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
+import 'package:budgetflow/view/view_presets.dart';
 import 'package:budgetflow/view/widgets/category/category_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -13,18 +14,20 @@ class CategoryListItem extends StatelessWidget {
     return Text(
       category.name,
       textAlign: TextAlign.left,
-      style: TextStyle(fontSize: 16),
+      style: listItemTextStyle,
     );
   }
 
   Widget _buildCategoryRemainingAmount(Category category) {
     double remaining =
     BudgetingApp.control.accountant.getRemainingOfCategory(category);
+    double allotted =
+    BudgetingApp.control.accountant.getAllottedOfCategory(category);
+    double actual =
+    BudgetingApp.control.accountant.getActualOfCategory(category);
     String formattedRemaining = 'Remaining: ' + Format.dollarFormat(remaining);
-    String formattedAllotted = 'Allotted: ' + Format.dollarFormat(
-        BudgetingApp.control.accountant.getAllottedOfCategory(category));
-    String formattedSpending = 'Spending: ' + Format.dollarFormat(
-        BudgetingApp.control.accountant.getActualOfCategory(category));
+    String formattedAllotted = 'Allotted: ' + Format.dollarFormat(allotted);
+    String formattedSpending = 'Spending: ' + Format.dollarFormat(actual);
     Color color;
     if (remaining < 0)
       color = Colors.red;

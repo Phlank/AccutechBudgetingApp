@@ -3,8 +3,8 @@ import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';
 
 class TransactionListItem extends StatelessWidget {
-  static const double TOP_ROW_FONT_SIZE = 20;
-  static const double BOTTOM_ROW_FONT_SIZE = 16;
+  static final double topRowFontSize = 20;
+  static final double bottomRowFontSize = 16;
 
   final Transaction transaction;
 
@@ -21,21 +21,21 @@ class TransactionListItem extends StatelessWidget {
           Text(
             transaction.vendor,
             textAlign: TextAlign.left,
-            style: TextStyle(fontSize: TOP_ROW_FONT_SIZE),
+            style: TextStyle(fontSize: topRowFontSize),
           ),
           Text(Format.dollarFormat(transaction.amount),
               textAlign: TextAlign.right,
               style: TextStyle(
-                  fontSize: TOP_ROW_FONT_SIZE,
+                  fontSize: topRowFontSize,
                   color: Format.deltaColor(transaction.amount)))
         ]),
         TableRow(children: [
           Text(Format.dateFormat(transaction.time),
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: BOTTOM_ROW_FONT_SIZE)),
+              style: TextStyle(fontSize: bottomRowFontSize)),
           Text(transaction.category.name,
               textAlign: TextAlign.right,
-              style: TextStyle(fontSize: BOTTOM_ROW_FONT_SIZE))
+              style: TextStyle(fontSize: bottomRowFontSize))
         ])
       ]),
       padding: EdgeInsets.all(8.0),

@@ -18,7 +18,7 @@ class AchievementListCard extends StatelessWidget {
     List<AchievementListItem> showing = new List();
     if (numAchievements != null) {
       // Either display the number of achievements chosen in the constructor or display all achievements if there are fewer.
-      if (numAchievements > achievementService.numEarned) {
+      if (numAchievements > achievementService.earned.length) {
         for (Achievement achievement in achievementService.earned) {
           showing.add(new AchievementListItem(
             achievement: achievement,
