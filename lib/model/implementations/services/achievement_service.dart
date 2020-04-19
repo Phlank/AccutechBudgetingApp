@@ -53,6 +53,7 @@ class AchievementService implements Service {
 
   Future stop() {
     save();
+    return null;
   }
 
   Future save() {
@@ -84,5 +85,10 @@ class AchievementService implements Service {
     if (!_earned.contains(achievement)) {
       _earned.add(achievement);
     }
+    // TODO display popup
   }
+
+  int get numEarned => _earned.length;
+
+  AchievementList get earned => _earned;
 }

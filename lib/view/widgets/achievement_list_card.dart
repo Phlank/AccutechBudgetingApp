@@ -1,32 +1,34 @@
-import 'package:budgetflow/global/defined_achievements.dart';
 import 'package:budgetflow/model/data_types/achievement.dart';
+import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AchievementListCard extends StatelessWidget {
-  final List<Achievement> earnedAchievements;
-  final int show;
+  final AchievementService achievementService =
+  BudgetingApp.control.dispatcher.getAchievementService();
+  final int numAchievements;
 
-  AchievementListCard(
-      {@required this.earnedAchievements, this.show}); // arbitrary large number
+  AchievementListCard({this.numAchievements}); // arbitrary large number
 
   @override
   Widget build(BuildContext context) {
     List<Widget> children = new List();
     List<AchievementListItem> showing = new List();
-    if (show != null) {
-      if (show > this.earnedAchievements.length) {
-        for (Achievement achievement in this.earnedAchievements) {
+    if (numAchievements != null) {
+      // Either display the number of achievements chosen in the constructor or display all achievements if there are fewer.
+      if (numAchievements > achievementService.numEarned) {
+        for (Achievement achievement in achievementService.earned) {
           showing.add(new AchievementListItem(
             achievement: achievement,
             styleColor: Colors.black,
           ));
         }
       } else {
-        for (int i = 0; i < show; i++) {
+        for (int i = 0; i < numAchievements; i++) {
           showing.add(new AchievementListItem(
-            achievement: this.earnedAchievements[i],
+            achievement: achievementService.earned[i],
             styleColor: Colors.black,
           ));
         }
@@ -46,8 +48,10 @@ class AchievementListCard extends StatelessWidget {
       ];
     } else {
       Color color = Colors.grey;
-      for (Achievement achievement
-      in allAchievements.values.toList(growable: false)) {
+      for (Achievement achievement in BudgetingApp.control.dispatcher
+          .getAchievementService()
+          .earned
+          .toList(growable: false)) {
         if (achievement.earned) {
           color = Colors.black;
         }

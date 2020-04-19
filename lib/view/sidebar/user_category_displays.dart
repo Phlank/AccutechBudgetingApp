@@ -1,5 +1,4 @@
-import 'package:budgetflow/global/defined_achievements.dart';
-import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/global/presets.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
@@ -149,12 +148,9 @@ class _GeneralCategoryState extends State<GeneralCategory> {
                   .getCategory(category)
                   .value = playBudget.getCategory(category);
             }
-            if (BudgetingApp.control.checkAchievement(
-                achChangedAllotmentName)) {
-              allAchievements[achChangedAllotmentName].setEarned();
-              BudgetingApp.control.earnedAchievements.add(
-                  allAchievements[achChangedAllotmentName]);
-            }
+            BudgetingApp.control.dispatcher
+                .getAchievementService()
+                .earn(achChangedAllotment);
             if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');
               userController.save();

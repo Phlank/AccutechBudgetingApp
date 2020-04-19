@@ -1,5 +1,4 @@
-import 'package:budgetflow/global/defined_achievements.dart';
-import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/global/presets.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/setup/kids_pets_info_page.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
@@ -15,11 +14,9 @@ class MoreQuestionsPage extends StatelessWidget {
     return RaisedButton(
       child: Text('Take me to my budget!'),
       onPressed: () {
-        if (BudgetingApp.control.checkAchievement(achRushingName)) {
-          allAchievements[achRushingName].setEarned();
-          BudgetingApp.control.earnedAchievements.add(
-              allAchievements[achRushingName]);
-        }
+        BudgetingApp.control.dispatcher
+            .getAchievementService()
+            .earn(achRushing);
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
       },

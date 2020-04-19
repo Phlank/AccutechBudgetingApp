@@ -65,6 +65,7 @@ final String achFirstOpenName = 'First Open',
     achAddedGoalName = 'Savings goal',
     achOneCompletedGoalName = 'Achiever';
 
+// TODO Proofread
 final String achFirstOpenDesc = 'Welcome! see if you like it',
     achCameBackDesc = 'Glad to see you again',
     achRushingDesc = 'Couldn\'t wait to get to the budget',
