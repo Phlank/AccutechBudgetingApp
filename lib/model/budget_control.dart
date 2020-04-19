@@ -192,7 +192,7 @@ class BudgetControl {
     await _dispatcher.registerAndStart(HistoryService(_dispatcher));
     await _dispatcher.registerAndStart(LocationService(_dispatcher));
     await _dispatcher.registerAndStart(AchievementService(_dispatcher));
-    addNewBudget(PriorityBudgetFactory().newFromInfo(SetupAgent()));
+    addNewBudget(PriorityBudgetFactory().newFromInfo());
     return true;
   }
 
