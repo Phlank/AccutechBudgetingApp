@@ -3,9 +3,11 @@ import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/history.dart';
 import 'package:budgetflow/model/data_types/month.dart';
+import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/implementations/io/history_io.dart';
 import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
+import 'package:budgetflow/model/utils/dates.dart';
 
 class HistoryService implements Service {
   ServiceDispatcher _dispatcher;
@@ -33,8 +35,8 @@ class HistoryService implements Service {
   }
 
   Future save() async {
-    HistoryIO io = HistoryIO.fromHistory(
-        _history, _dispatcher.getFileService());
+    HistoryIO io =
+    HistoryIO.fromHistory(_history, _dispatcher.getFileService());
     io.save();
   }
 
@@ -75,5 +77,17 @@ class HistoryService implements Service {
 
   void remove(Month month) {
     _history.remove(month);
+  }
+
+  TransactionList getLastNMonthsTransactions(int n) {
+    TransactionList output = TransactionList();
+    for (int i = 0; i < n; i++) {
+      Month target =
+      _history.getMonthFromDateTime(Dates.getNthPreviousMonthTime(i));
+      if (target != null) {
+        output.addAll(target.transactions);
+      }
+    }
+    return output;
   }
 }

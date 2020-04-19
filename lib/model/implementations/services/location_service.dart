@@ -1,4 +1,5 @@
 import 'package:budgetflow/model/abstract/service.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/location.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,12 +8,14 @@ class LocationService implements Service {
   ServiceDispatcher _dispatcher;
   Geolocator _geolocator = Geolocator();
   GeolocationStatus _status;
+  Map<Location, Category> _notificationMap;
 
   LocationService(this._dispatcher);
 
   Future start() {
     // TODO implement start
     // Load map of locations -> categories for notifications
+
   }
 
   Future stop() {

@@ -27,4 +27,17 @@ class Dates {
     if (weekEnd.isAfter(monthEnd)) return monthEnd;
     return weekEnd;
   }
+
+  static DateTime getNthPreviousMonthTime(int n) {
+    DateTime output = DateTime.now();
+    for (int i = 0; i < n; i++) {
+      output = _stepDateTimeBackOneMonth(output);
+    }
+    return output;
+  }
+
+  static DateTime _stepDateTimeBackOneMonth(DateTime dt) {
+    // Subtracts number of days + 1 from input time to give output time at last day
+    return dt.subtract(Duration(days: dt.day + 1));
+  }
 }

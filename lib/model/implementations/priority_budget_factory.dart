@@ -129,7 +129,6 @@ class PriorityBudgetFactory implements BudgetFactory {
     // Allocate housing before anything else
     _allottedSpending.getCategory(Category.housing).value = housing;
     // Get number of categories in needs and wants and split remaining among them
-    // TODO finish
     _needsRatio = _currentDistribution.needs - _housingRatio;
     _wantsRatio = _currentDistribution.wants;
     _savingsRatio = _currentDistribution.savings;
