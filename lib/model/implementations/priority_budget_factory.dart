@@ -62,7 +62,7 @@ class PriorityBudgetFactory implements BudgetFactory {
   PriorityBudgetFactory();
 
   @override
-  Budget newFromInfo(SetupAgent agent) {
+  Budget newFromInfo() {
     var type;
     if (SetupAgent.depletion)
       type = BudgetType.depletion;
@@ -128,21 +128,30 @@ class PriorityBudgetFactory implements BudgetFactory {
   void _setAllotments(double housing) {
     // Allocate housing before anything else
     _allottedSpending.getCategory(Category.housing).value = housing;
-    // Get number of categories in needs and wants
-    // TODO finish
+    // Get number of categories in needs and wants and split remaining among them
     _needsRatio = _currentDistribution.needs - _housingRatio;
     _wantsRatio = _currentDistribution.wants;
     _savingsRatio = _currentDistribution.savings;
+    double petFactor = (SetupAgent.pets) ? 1.0 : 0.0;
+    double kidFactor = (SetupAgent.kids) ? 1.0 : 0.0;
     double dNeedsRatio = _income * _needsRatio / 4.0;
-    double dWantsRatio = _income * _wantsRatio / 5.0;
+    double dWantsRatio = _income * _wantsRatio / (3.0 + petFactor + kidFactor);
     _allottedSpending.getCategory(Category.utilities).value = dNeedsRatio;
     _allottedSpending.getCategory(Category.groceries).value = dNeedsRatio;
     _allottedSpending.getCategory(Category.health).value = dNeedsRatio;
     _allottedSpending.getCategory(Category.transportation).value = dNeedsRatio;
     _allottedSpending.getCategory(Category.education).value = dWantsRatio;
     _allottedSpending.getCategory(Category.entertainment).value = dWantsRatio;
-    _allottedSpending.getCategory(Category.kids).value = dWantsRatio;
-    _allottedSpending.getCategory(Category.pets).value = dWantsRatio;
+    if (SetupAgent.kids) {
+      _allottedSpending
+          .getCategory(Category.kids)
+          .value = dWantsRatio;
+    }
+    if (SetupAgent.pets) {
+      _allottedSpending
+          .getCategory(Category.pets)
+          .value = dWantsRatio;
+    }
     _allottedSpending.getCategory(Category.miscellaneous).value = dWantsRatio;
     _allottedSpending.getCategory(Category.savings).value =
         _savingsRatio * _income;

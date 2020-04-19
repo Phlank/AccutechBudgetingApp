@@ -35,8 +35,8 @@ class Budget {
   Budget.from(Budget old) {
     expectedIncome = old.expectedIncome;
     type = old.type;
-    allotted = AllocationList.from(old.allotted);
-    target = AllocationList.from(old.target);
+    allotted = AllocationList.withCategoriesOf(old.allotted);
+    target = AllocationList.withCategoriesOf(old.target);
     actual = AllocationList.withCategoriesOf(allotted);
     transactions = TransactionList();
   }
@@ -45,10 +45,10 @@ class Budget {
   // Used to load a budget object from disk
   static Future<Budget> fromMonth(Month month) async {
     return Budget(
-      allotted: await month.allotted,
-      actual: await month.actual,
+      allotted: month.allotted,
+      actual: month.actual,
       target: AllocationList(),
-      transactions: await month.transactions,
+      transactions: month.transactions,
       expectedIncome: month.income,
       actualIncome: 0.0,
       type: month.type,

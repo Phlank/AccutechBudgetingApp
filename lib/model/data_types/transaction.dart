@@ -28,13 +28,13 @@ class Transaction implements Serializable {
     @required this.amount,
     @required this.category,
     @required this.time,
-    this.location = const Location(0.0, 0.0),
+    this.location,
   });
 
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
-    serializer.addPair(timeKey, time.millisecondsSinceEpoch);
+    serializer.addPair(timeKey, time.toIso8601String());
     serializer.addPair(vendorKey, vendor);
     serializer.addPair(methodKey, method);
     serializer.addPair(amountKey, amount);
@@ -50,7 +50,9 @@ class Transaction implements Serializable {
         vendor == other.vendor &&
         method == other.method &&
         amount == other.amount &&
-        category == other.category;
+        category == other.category &&
+        (location == other.location ||
+            (location == null && other.location == null));
   }
 
   int get hashCode =>
@@ -58,5 +60,6 @@ class Transaction implements Serializable {
       vendor.hashCode ^
       method.hashCode ^
       amount.hashCode ^
-      category.hashCode;
+      category.hashCode ^
+      location.hashCode;
 }

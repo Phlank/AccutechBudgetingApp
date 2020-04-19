@@ -100,7 +100,7 @@ class Account extends PaymentMethod {
     serializer.addPair(methodNameKey, methodName);
     serializer.addPair(accountNameKey, accountName);
     serializer.addPair(transactionListKey, accountTransactions);
-    serializer.addPair(beginningKey, beginning.millisecondsSinceEpoch);
+    serializer.addPair(beginningKey, beginning.toIso8601String());
     serializer.addPair(amountKey, amount);
     return serializer.serialize;
   }

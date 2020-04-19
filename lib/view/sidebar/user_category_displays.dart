@@ -1,9 +1,8 @@
-import 'package:budgetflow/global/defined_achievements.dart';
-import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/global/presets.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
-import 'package:budgetflow/model/impl/budget_accountant.dart';
+import 'package:budgetflow/model/implementations/budget_accountant.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +25,7 @@ class GeneralCategory extends StatefulWidget {
 
 class _GeneralCategoryState extends State<GeneralCategory> {
   BudgetAccountant accountant =
-      BudgetAccountant(BudgetingApp.control.getBudget());
+  BudgetAccountant(BudgetingApp.control.getBudget());
   BudgetControl userController;
   MockBudget playBudget;
   String section;
@@ -149,10 +148,9 @@ class _GeneralCategoryState extends State<GeneralCategory> {
                   .getCategory(category)
                   .value = playBudget.getCategory(category);
             }
-            if(BudgetingApp.control.checkAchievement(changedAllotment_NAME)){
-              allAchievements[changedAllotment_NAME].setEarned();
-              BudgetingApp.control.earnedAchievements.add(allAchievements[changedAllotment_NAME]);
-            }
+            BudgetingApp.control.dispatcher
+                .getAchievementService()
+                .earn(achChangedAllotment);
             if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');
               userController.save();

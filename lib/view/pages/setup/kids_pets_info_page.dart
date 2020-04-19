@@ -1,5 +1,4 @@
-import 'package:budgetflow/global/defined_achievements.dart';
-import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/global/presets.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
@@ -108,10 +107,7 @@ class _KidsPetsInfoPageState extends State<KidsPetsInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(BudgetingApp.control.checkAchievement(detailingToTheBudget_NAME)){
-      allAchievements[detailingToTheBudget_NAME].setEarned();
-      BudgetingApp.control.earnedAchievements.add(allAchievements[detailingToTheBudget_NAME]);
-    }
+    BudgetingApp.control.dispatcher.getAchievementService().earn(achDetailing);
     return Scaffold(
       appBar: AppBar(title: Text('Setup')),
       body: Padding24(

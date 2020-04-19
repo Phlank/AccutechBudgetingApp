@@ -17,18 +17,17 @@ class Achievement extends Serializable {
     @required this.description,
     this.icon,
     this.action,
-  }){
-    if(this.icon == null){
+  }) {
+    if (this.icon == null) {
       this.icon = Icon(Icons.check);
     }
   }
-
-  @override
 
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = new Serializer();
     serializer.addPair(nameKey, name);
+    serializer.addPair(titleKey, title);
     serializer.addPair(achievementDescriptionKey, description);
     return serializer.serialize;
   }
@@ -39,5 +38,7 @@ class Achievement extends Serializable {
 
   int get hashCode => name.hashCode;
 
-  void setEarned(){ earned = true;}
+  void setEarned() {
+    earned = true;
+  }
 }

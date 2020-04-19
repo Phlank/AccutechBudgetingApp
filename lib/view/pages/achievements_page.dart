@@ -1,4 +1,3 @@
-import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/widgets/achievement_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,10 +12,6 @@ class AchievementsPage extends StatefulWidget {
 class _AchievementPageState extends State<AchievementsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(),
-        body: AchievementListCard(
-                earnedAchievements: BudgetingApp.control.earnedAchievements)
-    );
+    return Scaffold(appBar: AppBar(), body: AchievementListCard());
   }
 }

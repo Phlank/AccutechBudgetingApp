@@ -26,6 +26,7 @@ class AssetValuation {
         .distanceBetween(latitude, longitude, other.latitude, other.longitude);
     double d = traveled as double;
     setDistance(d);
+    return d;
   }
 
   void setMileage(double m) {

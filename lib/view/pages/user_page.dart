@@ -65,8 +65,8 @@ class _UserPageState extends State<UserPage> {
             alignment: MainAxisAlignment.center,
           ),
           AchievementListCard(
-              show: 3,
-              earnedAchievements: BudgetingApp.control.earnedAchievements),
+            numAchievements: 3,
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

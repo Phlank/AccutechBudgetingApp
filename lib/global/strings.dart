@@ -1,6 +1,9 @@
 // Constant file locations
 final String passwordFilepath = 'password',
-    historyFilepath = 'history';
+    historyFilepath = 'history',
+    accountsFilepath = 'accounts',
+    earnedAchievementsFilepath = 'earned_achievements',
+    possibleAchievementsFilepath = 'possible_achievements';
 
 // Map keys for serialization
 const String categoryKey = 'category',
@@ -39,31 +42,37 @@ const String categoryKey = 'category',
     accountNameKey = 'account_name',
     accountKey = 'account',
     beginningKey = 'beginning',
-    methodListKey = 'method_list';
+    methodListKey = 'method_list',
+    titleKey = 'title',
+    achievementKey = 'achievement',
+    achievementListKey = 'achievement_list',
+    accountListKey = 'account_list',
+    allottedKey = 'allotted',
+    actualKey = 'actual',
+    targetKey = 'target',
+    transactionsKey = 'transactions',
+    valueKey = 'value';
 
+final String achFirstOpenName = 'First Open',
+    achCameBackName = 'Came back',
+    achRushingName = 'Russian about',
+    achDetailingName = 'Detailed start',
+    achOneTransactionName = 'Added a transaction',
+    achFiveTransactionsName = 'Added five transactions',
+    achStarvedName = 'Please sir may I have another?',
+    achDogDiedName = 'Poor Fido',
+    achChangedAllotmentName = 'Customized the budget',
+    achAddedGoalName = 'Seeking your potential',
+    achOneCompletedGoalName = 'Achiever';
 
-//Name of achievements
-const firstOpen_NAME = 'First Open',
-    cameBack_NAME = 'Came Back',
-    rushingToTheBudget_NAME = 'Russian About',
-    detailingToTheBudget_NAME = 'Detailed Start',
-    addedTransaction_NAME = 'Added a Transaction',
-    addedFiveTransactions_NAME = 'Added 5 Transactions',
-    starvedYourYoung_NAME = 'please sir may I have another?',
-    dogDied_NAME ='poor fiddo',
-    changedAllotment_NAME = 'Costum ized the budget',
-    addedGoal_NAME = 'Savings Goal',
-    completedGoal_NAME = 'GOAL !!!!!';
-
-//Description of the achievements
-const firstOpen_DESCRIP = 'Welcome! see if you like it',
-    cameBack_DESCRIP = 'Welcome back glad to see you again',
-    rushingToTheBudget_DESCRIP = 'Couldn\'t wait to get to teh budget',
-    detaillingToTheBudget_DESCRIP = 'answered all the questions to get teh most accurate budget',
-    addedTransaction_DESCRIP = 'you added your first transaction keep it up it helps the budget form to your life',
-    addedFiveTransactions_DESCRIP = 'You ahve helped the budget grow ',
-    starvedYourYoung_DESCRIP = 'set kids allotment to \$0',
-    dogDied_DESCRIP = 'Set Pet allotment to \$0',
-    changedAllotment_DESCRIP = 'customized the budget to reflect your life better',
-    addedGoal_DESCRIP = 'You added your goal',
-    completedGoal_DESCRIP = 'you completed you goal ';
+final String achFirstOpenDesc = 'Welcome to the app!',
+    achCameBackDesc = 'Good to see you again.',
+    achRushingDesc = 'Couldn\'t wait to get to the budget.',
+    achDetailingDesc = 'Answer all setup questions to get an accurate budget.',
+    achOneTransactionDesc = 'Add your first transaction.',
+    achFiveTransactionsDesc = 'Add five transactions.',
+    achStarvedDesc = 'Set kids allotment to \$0.',
+    achDogDiedDesc = 'Set pet allotment to \$0.',
+    achChangedAllotmentDesc = 'Change an allotment.',
+    achAddedGoalDesc = 'Add one goal to your budget.',
+    achOneCompletedGoalDesc = 'Complete one goal.';

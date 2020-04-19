@@ -6,7 +6,7 @@ import 'package:budgetflow/model/utils/serializer.dart';
 class TransactionStrategy implements Unserializer {
   @override
   unserializeValue(Map value) {
-    var time = DateTime.fromMillisecondsSinceEpoch(int.parse(value[timeKey]));
+    var time = DateTime.tryParse(value[timeKey]);
     var vendor = value[vendorKey];
     var method = Serializer.unserialize(methodKey, value[methodKey]);
     var amount = double.parse(value[amountKey]);

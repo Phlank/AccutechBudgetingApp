@@ -1,49 +1,39 @@
 import 'dart:async';
 
-import 'package:budgetflow/global/defined_achievements.dart';
 import 'package:budgetflow/global/strings.dart';
-import 'package:budgetflow/model/abstract/crypter.dart';
-import 'package:budgetflow/model/abstract/file_io.dart';
-import 'package:budgetflow/model/abstract/password.dart';
-import 'package:budgetflow/model/control.dart';
 import 'package:budgetflow/model/data_types/account.dart';
+import 'package:budgetflow/model/data_types/account_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
-import 'package:budgetflow/model/data_types/history.dart';
 import 'package:budgetflow/model/data_types/location.dart';
-import 'package:budgetflow/model/data_types/month_time.dart';
 import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
-import 'package:budgetflow/model/impl/budget_accountant.dart';
-import 'package:budgetflow/model/impl/dart_file_io.dart';
-import 'package:budgetflow/model/impl/priority_budget_factory.dart';
-import 'package:budgetflow/model/impl/steel_crypter.dart';
+import 'package:budgetflow/model/implementations/budget_accountant.dart';
+import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
+import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/encryption_service.dart';
+import 'package:budgetflow/model/implementations/services/file_service.dart';
+import 'package:budgetflow/model/implementations/services/history_service.dart';
+import 'package:budgetflow/model/implementations/services/location_service.dart';
+import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 import 'data_types/achievement.dart';
 import 'data_types/category.dart';
-import 'data_types/encrypted.dart';
 import 'data_types/month.dart';
 
-class BudgetControl implements Control {
-  static FileIO fileIO = new DartFileIO();
-  static Password _password;
-  static Crypter crypter;
-  History _history;
-  TransactionList _loadedTransactions;
-  MonthTime _transactionMonthTime;
-  Budget _budget;
-  bool _oldUser;
+/// Welcome to our favorite superclass
+class BudgetControl {
+  ServiceDispatcher _dispatcher;
   Color cashFlowColor;
   List<PaymentMethod> paymentMethods;
-  List<Account> accounts = List();
+  AccountList accounts;
   Map<Location, Category> locationMap = Map();
-  StreamSubscription<Position> positionStream;
+  Budget budget;
   BudgetAccountant accountant;
   List<Achievement> earnedAchievements = [];
 
@@ -61,77 +51,73 @@ class BudgetControl implements Control {
     'Savings': [Category.savings]
   };
 
+  ServiceDispatcher get dispatcher => _dispatcher;
+
   BudgetControl() {
-    fileIO = new DartFileIO();
-    _updateMonthTimes();
-    _loadedTransactions = new TransactionList();
-    paymentMethods = [PaymentMethod.cash];
+    _dispatcher = ServiceDispatcher();
+    _dispatcher.register(FileService(_dispatcher));
+    _dispatcher.register(EncryptionService(_dispatcher));
+    _dispatcher.startAll();
+    _initVariables();
   }
 
-  @override
+  void _initVariables() {
+    paymentMethods = [PaymentMethod('Cash')];
+  }
+
   Future<bool> isReturningUser() async {
-    _oldUser =
-    await fileIO.fileExists(historyFilepath).catchError((Object error) {
-      _oldUser = false;
-      return false;
-    });
-    return _oldUser;
+    return await _dispatcher.getFileService().fileExists(passwordFilepath);
   }
 
-  @override
-  Future<bool> passwordIsValid(String secret) async {
-    _password = await Password.load();
-    return _password.verify(secret);
+  Future<bool> passwordIsValid(String secret) {
+    return _dispatcher.getEncryptionService().validatePassword(secret);
   }
 
-  @override
   Future<bool> initialize() async {
-    _updateMonthTimes();
-    crypter = new SteelCrypter(_password);
-    if (_oldUser) {
-      await _load();
-      if(checkAchievement(cameBack_NAME)){
-        allAchievements[cameBack_NAME].setEarned();
-        this.earnedAchievements.add(allAchievements[cameBack_NAME]);
+    if (await isReturningUser()) {
+      if (_isLoaded()) {
+        return true;
+      } else {
+        await _load();
+        return true;
       }
-      return true;
     } else {
-      if(checkAchievement(firstOpen_NAME)){
-        allAchievements[firstOpen_NAME].setEarned();
-        this.earnedAchievements.add(allAchievements[firstOpen_NAME]);
-      }
       return false;
     }
   }
 
-  void _updateMonthTimes() {
-    _transactionMonthTime = MonthTime.now();
+  bool _isLoaded() {
+    return _dispatcher.getFileService() != null &&
+        _dispatcher.getEncryptionService() != null &&
+        _dispatcher.getHistoryService() != null &&
+        _dispatcher.getAchievementService() != null &&
+        _dispatcher.getLocationService() != null;
   }
 
   Future _load() async {
-    _history = await History.load();
-    _budget = await _history.getLatestMonthBudget();
-    accountant = BudgetAccountant(_budget);
-    _loadedTransactions = TransactionList.copy(_budget.transactions);
-//    await _loadPaymentMethods();
+    await _dispatcher.registerAndStart(HistoryService(_dispatcher));
+    await _dispatcher.registerAndStart(LocationService(_dispatcher));
+    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
+    budget = await _dispatcher.getHistoryService().getLatestMonthBudget();
+    accountant = BudgetAccountant(budget);
+    await _loadAccounts();
     _initLocationMap();
-    _initLocationListener();
+//    _initLocationListener();
   }
 
-  Future _loadPaymentMethods() async {
-    String cipher = await fileIO.readFile(Account.accountsPath);
-    Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
-    String plaintext = crypter.decrypt(encrypted);
-    paymentMethods = Serializer.unserialize(methodListKey, plaintext);
-    paymentMethods.forEach((method) {
-      if (method is Account) accounts.add(method);
-    });
-    return;
+  Future _loadAccounts() async {
+    AccountList loadedAccounts = Serializer.unserialize(
+      methodListKey,
+      await _dispatcher.getFileService().readAndDecryptFile(accountsFilepath),
+    );
+    for (Account account in loadedAccounts) {
+      addAccount(account);
+    }
   }
 
   void _initLocationMap() {
     locationMap = Map<Location, Category>();
-    _loadedTransactions.forEach((transaction) {
+    budget.transactions.forEach((transaction) {
       if (transaction.location != null &&
           !locationMap.containsKey(transaction.location)) {
         locationMap[transaction.location] = transaction.category;
@@ -139,71 +125,51 @@ class BudgetControl implements Control {
     });
   }
 
-  void _initLocationListener() {
-    positionStream = Geolocator()
-        .getPositionStream(LocationOptions(
-            accuracy: LocationAccuracy.high,
-            distanceFilter: 10,
-            timeInterval: 10))
-        .listen((position) {
-      Location streamLocation = Location.fromGeolocatorPosition(position);
-      locationMap.forEach((location, category) async {
-        if (await streamLocation.distanceTo(location) < 10) {
-          // TODO Trigger notification
-          print('In range of location ' +
-              location.latitude.toString() +
-              ', ' +
-              location.longitude.toString() +
-              ' for category ' +
-              category.name);
-        }
-      });
-    });
-  }
+//  void _initLocationListener() {
+//    positionStream = Geolocator()
+//        .getPositionStream(LocationOptions(
+//            accuracy: LocationAccuracy.high,
+//            distanceFilter: 10,
+//            timeInterval: 10))
+//        .listen((position) {
+//      Location streamLocation = Location.fromGeolocatorPosition(position);
+//      locationMap.forEach((location, category) async {
+//        if (await streamLocation.distanceTo(location) < 10) {
+//          // TODO Trigger notification
+//          print('In range of location ' +
+//              location.latitude.toString() +
+//              ', ' +
+//              location.longitude.toString() +
+//              ' for category ' +
+//              category.name);
+//        }
+//      });
+//    });
+//  }
 
   Future save() async {
-    if (_history.getMonthFromMonthTime(MonthTime.now()) == null) {
-      _history.add(Month(
-        monthTime: MonthTime.now(),
-        income: _budget.expectedIncome,
-        type: _budget.type,
-      ));
+    var historyService = _dispatcher.getHistoryService();
+    if (historyService.currentMonth == null) {
+      historyService.add(Month.fromBudget(budget));
     }
-    _history.save(_budget);
-    fileIO.writeFile(passwordFilepath, _password.serialize);
-    _savePaymentMethods();
+    historyService.save();
   }
 
-  void _savePaymentMethods() {
-    Serializer serializer = Serializer();
-    int i = 0;
-    paymentMethods.forEach((method) {
-      serializer.addPair(i, method);
-      i++;
-    });
-    String cipher = crypter.encrypt(serializer.serialize).serialize;
-    fileIO.writeFile(Account.accountsPath, cipher);
-  }
-
-  @override
   Future setPassword(String newSecret) async {
-    _password = await Password.fromSecret(newSecret);
-    crypter = new SteelCrypter(_password);
+    _dispatcher.getEncryptionService().registerPassword(newSecret);
   }
 
-  @override
   Budget getBudget() {
-    return _budget;
+    return budget;
   }
 
-  @override
   TransactionList getLoadedTransactions() {
-    return _loadedTransactions;
+    return budget.transactions;
   }
 
   TransactionList getTransactionsInCategory(Category category) {
     TransactionList transactions = TransactionList();
-    _loadedTransactions.forEach((transaction) {
+    budget.transactions.forEach((transaction) {
       if (transaction.category == category) {
         transactions.add(transaction);
       }
@@ -211,55 +177,30 @@ class BudgetControl implements Control {
     return transactions;
   }
 
-  @override
-  Future loadPreviousMonthTransactions() async {
-    _transactionMonthTime = _transactionMonthTime.previous();
-    TransactionList transactions =
-    await _history
-        .getMonthFromMonthTime(MonthTime.now())
-        .transactions;
-    transactions.forEach((Transaction t) {
-      _loadedTransactions.add(t);
-    });
-  }
-
-  @override
   void addTransaction(Transaction t) {
-    _budget.addTransaction(t);
-    _history.getMonthFromMonthTime(MonthTime.now()).updateMonthData(_budget);
-    _loadedTransactions.add(t);
-    _initLocationListener();
+    budget.addTransaction(t);
     save();
-    if(_loadedTransactions.length > 0 ){
-      if(_loadedTransactions.length >= 5){
-        if(checkAchievement(addedFiveTransactions_NAME)){
-          allAchievements[addedFiveTransactions_NAME].setEarned();
-          this.earnedAchievements.add(allAchievements[addedFiveTransactions_NAME]);
-        }
-      }
-      if(checkAchievement(addedTransaction_NAME)){
-        allAchievements[addedTransaction_NAME].setEarned();
-        this.earnedAchievements.add(allAchievements[addedTransaction_NAME]);
-      }
-    }
   }
 
   void removeTransaction(Transaction transaction) {
-    _budget.removeTransaction(transaction);
-    _history.getMonthFromMonthTime(MonthTime.now()).updateMonthData(_budget);
-    _loadedTransactions.remove(transaction);
+    budget.removeTransaction(transaction);
     save();
   }
 
   Future<bool> setup() async {
     await setPassword(SetupAgent.pin);
-    addNewBudget(PriorityBudgetFactory().newFromInfo(SetupAgent()));
+    await _dispatcher.registerAndStart(HistoryService(_dispatcher));
+    await _dispatcher.registerAndStart(LocationService(_dispatcher));
+    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
+    addNewBudget(PriorityBudgetFactory().newFromInfo());
     return true;
   }
 
   double getCashFlow() {
-    double amt = _budget.expectedIncome -
-        _budget.allotted.getCategory(Category.housing).value +
+    double amt = budget.expectedIncome -
+        budget.allotted
+            .getCategory(Category.housing)
+            .value +
         expenseTotal();
     if (amt > 0) {
       cashFlowColor = Colors.green;
@@ -271,21 +212,18 @@ class BudgetControl implements Control {
     return amt;
   }
 
-  @override
   void addNewBudget(Budget b) {
-    _history = new History();
     Month m = Month.fromBudget(b);
-    _history.add(m);
-    _loadedTransactions = new TransactionList.copy(b.transactions);
-    _budget = b;
-    accountant = BudgetAccountant(_budget);
+    _dispatcher.getHistoryService().add(m);
+    budget = b;
+    accountant = BudgetAccountant(budget);
     save();
   }
 
   double expenseTotal() {
     double spent = 0.0;
-    for (int i = 0; i < _loadedTransactions.length; i++) {
-      spent += _loadedTransactions.getAt(i).amount;
+    for (int i = 0; i < budget.transactions.length; i++) {
+      spent += budget.transactions[i].amount;
     }
     return spent;
   }
@@ -293,10 +231,12 @@ class BudgetControl implements Control {
   double expenseInSection(String section) {
     double spent = 0.0;
     for (Category cat in sectionMap[section]) {
-      for (int i = 0; i < _loadedTransactions.length; i++) {
-        Category rel = _loadedTransactions.getAt(i).category;
+      for (int i = 0; i < budget.transactions.length; i++) {
+        Category rel = budget.transactions[i].category;
         if (rel == cat) {
-          spent += _budget.allotted.getCategory(rel).value;
+          spent += budget.allotted
+              .getCategory(rel)
+              .value;
         }
       }
     }
@@ -304,7 +244,7 @@ class BudgetControl implements Control {
   }
 
   void removeTransactionIfPresent(Transaction tran) {
-    _budget.removeTransaction(tran);
+    budget.removeTransaction(tran);
   }
 
   void addAccount(Account account) {
@@ -318,18 +258,8 @@ class BudgetControl implements Control {
   }
 
   void forceNextMonthTransition() {
-    _budget = PriorityBudgetFactory().newMonthBudget(_budget);
-    _loadedTransactions = _budget.transactions;
-    accountant = BudgetAccountant(_budget);
-  }
-
-  bool checkAchievement(String achievementName) {
-    for(Achievement achievement in this.earnedAchievements){
-      if(achievement.name == achievementName){
-        return false;
-      }
-    }
-    return true;
+    budget = PriorityBudgetFactory().newMonthBudget(budget);
+    accountant = BudgetAccountant(budget);
   }
 }
 

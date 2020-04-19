@@ -11,33 +11,32 @@ class PriorityPage extends StatelessWidget {
   PriorityPage(this.priority);
 
   @override
-  Widget build(BuildContext context){
-
-  if(this.priority == Priority.savings){
-    this.actions =  [
-      IconButton(
-        icon: Icon(Icons.edit),
-        onPressed: () {
-          Navigator.of(context).push(RouteUtil.routeWithSlideTransition(
-          GeneralCategory(priority.name)));
-        }),
-      IconButton(
-        icon: Icon(Icons.plus_one),
-        onPressed: (){
-          print('plus');
-        },
-      ),
-    ];
-  } else{
-    this.actions =  [
-      IconButton(
-          icon: Icon(Icons.edit),
+  Widget build(BuildContext context) {
+    if (this.priority == Priority.savings) {
+      this.actions = [
+        IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.of(context).push(RouteUtil.routeWithSlideTransition(
+                  GeneralCategory(priority.name)));
+            }),
+        IconButton(
+          icon: Icon(Icons.plus_one),
           onPressed: () {
-            Navigator.of(context).push(RouteUtil.routeWithSlideTransition(
-                GeneralCategory(priority.name)));
-          }),
-    ];
-  }
+            print('plus');
+          },
+        ),
+      ];
+    } else {
+      this.actions = [
+        IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.of(context).push(RouteUtil.routeWithSlideTransition(
+                  GeneralCategory(priority.name)));
+            }),
+      ];
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text(priority.name),
