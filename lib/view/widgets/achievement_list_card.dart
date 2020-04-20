@@ -107,7 +107,6 @@ class AchievementListItem extends StatelessWidget {
                   style: style,
                   textAlign: TextAlign.left,
                 )),
-            TableCell(child: achievement.icon)
           ]),
           TableRow(children: <TableCell>[
             TableCell(

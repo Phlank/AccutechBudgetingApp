@@ -9,6 +9,8 @@ class AchievementStrategy implements Unserializer {
       name: value[nameKey],
       title: value[titleKey],
       description: value[achievementDescriptionKey],
+      currentProgress: int.parse(value[currentProgressKey]),
+      targetProgress: int.parse(value[targetProgressKey]),
     );
   }
 }
