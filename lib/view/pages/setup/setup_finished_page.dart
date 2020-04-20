@@ -1,5 +1,5 @@
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:budgetflow/view/pages/home_page.dart';
+import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             print('Snapshot has data');
-            return HomePage();
+            return FirstLoad();
           } else if (snapshot.hasError) {
             print('Snapshot has error');
             return WelcomePage();

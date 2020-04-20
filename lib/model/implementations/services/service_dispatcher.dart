@@ -11,12 +11,24 @@ class ServiceDispatcher {
   List<Service> _services = [];
 
   void register(Service service) {
-    _services.add(service);
+    if (!hasDuplicateService(service)) {
+      _services.add(service);
+    }
   }
 
   Future registerAndStart(Service service) async {
-    _services.add(service);
-    await service.start();
+    if (!hasDuplicateService(service)) {
+      _services.add(service);
+      await service.start();
+    }
+  }
+
+  bool hasDuplicateService(Service service) {
+    Type serviceType = service.runtimeType;
+    var match = _services.firstWhere((test) {
+      return test.runtimeType == serviceType;
+    }, orElse: null);
+    return match != null;
   }
 
   Future startAll() async {
@@ -31,7 +43,7 @@ class ServiceDispatcher {
     }
   }
 
-  Future save() async {
+  Future saveApplicable() async {
     for (Object service in _services) {
       if (service is Saveable) {
         await service.save();

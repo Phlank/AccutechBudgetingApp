@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
   static const ROUTE = '/welcomePage';
-  static const _TITLE_TEXT = 'Welcome to ' + BudgetingApp.NAME + '!';
-  static const _BODY_TEXT =
+  static final _titleText = 'Welcome to ' + BudgetingApp.NAME + '!';
+  static final _bodyText =
       'To get started, I need to know a few things about you so I can make your budget.';
 
   @override
@@ -19,11 +19,11 @@ class WelcomePage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              _TITLE_TEXT,
+              _titleText,
               style: TextStyle(fontSize: 24),
             ),
             Container(height: 24),
-            Text(_BODY_TEXT),
+            Text(_bodyText),
             Container(height: 24),
             RaisedButton(
               child: Text('Let\'s go!'),

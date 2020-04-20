@@ -1,8 +1,8 @@
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
-import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/login_page.dart';
+import 'package:budgetflow/view/pages/startup_page.dart';
 import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:budgetflow/view/sidebar/account_display.dart';
 import 'package:budgetflow/view/sidebar/user_category_displays.dart';
@@ -35,7 +35,7 @@ class BudgetingApp extends StatelessWidget {
         primarySwatch: MaterialColor(0xff009900, colors),
         backgroundColor: Colors.black,
       ),
-      home: HomePage(),
+      home: StartupPage(),
       routes: {
         LoginPage.ROUTE: (BuildContext context) => LoginPage(),
         UserPage.ROUTE: (BuildContext context) => UserPage(),
