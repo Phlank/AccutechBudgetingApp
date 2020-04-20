@@ -50,7 +50,7 @@ class AchievementService implements Service {
   }
 
   Future _loadAchievements() async {
-    String content = await _fileService.readAndDecryptFile(
+    String content = await _fileService.readFile(
         achievementsFilepath);
     _achievements = Serializer.unserialize(achievementListKey, content);
   }
@@ -60,9 +60,10 @@ class AchievementService implements Service {
     return null;
   }
 
+  /// Write achievements to disk.
   Future save() async {
     String content = _achievements.serialize;
-    return _fileService.encryptAndWriteFile(achievementsFilepath, content);
+    return _fileService.writeFile(achievementsFilepath, content);
   }
 
   /// Increments currentProgress of target by 1 and returns true if the [Achievement] is not earned prior to the method call.

@@ -22,7 +22,6 @@ import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
 
-import 'data_types/achievement.dart';
 import 'data_types/category.dart';
 import 'data_types/month.dart';
 
@@ -35,7 +34,6 @@ class BudgetControl {
   Map<Location, Category> locationMap = Map();
   Budget budget;
   BudgetAccountant accountant;
-  List<Achievement> earnedAchievements = [];
 
   final Map<String, List<Category>> sectionMap = {
     'Needs': [
@@ -57,6 +55,7 @@ class BudgetControl {
     _dispatcher = ServiceDispatcher();
     _dispatcher.register(FileService(_dispatcher));
     _dispatcher.register(EncryptionService(_dispatcher));
+    _dispatcher.register(AchievementService(_dispatcher));
     _dispatcher.startAll();
     _initVariables();
   }
@@ -97,7 +96,6 @@ class BudgetControl {
   Future _load() async {
     await _dispatcher.registerAndStart(HistoryService(_dispatcher));
     await _dispatcher.registerAndStart(LocationService(_dispatcher));
-    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
     budget = await _dispatcher.getHistoryService().getLatestMonthBudget();
     accountant = BudgetAccountant(budget);
     await _loadAccounts();
