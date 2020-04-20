@@ -2,8 +2,7 @@
 final String passwordFilepath = 'password',
     historyFilepath = 'history',
     accountsFilepath = 'accounts',
-    earnedAchievementsFilepath = 'earned_achievements',
-    possibleAchievementsFilepath = 'possible_achievements';
+    achievementsFilepath = 'achievements';
 
 // Map keys for serialization
 const String categoryKey = 'category',

@@ -10,10 +10,25 @@ import 'package:budgetflow/model/utils/serializer.dart';
 class AchievementService implements Service {
   ServiceDispatcher _dispatcher;
   FileService _fileService;
-  AchievementList _earned;
-  AchievementList _possible;
+  AchievementList _achievements;
 
-  AchievementList get earned => _earned;
+  AchievementList get all => _achievements;
+
+  AchievementList get earned {
+    AchievementList output = AchievementList();
+    for (Achievement achievement in _achievements) {
+      if (achievement.earned) output.add(achievement);
+    }
+    return output;
+  }
+
+  AchievementList get unearned {
+    AchievementList output = AchievementList();
+    for (Achievement achievement in _achievements) {
+      if (!achievement.earned) output.add(achievement);
+    }
+    return output;
+  }
 
   AchievementService(this._dispatcher) {
     _fileService = _dispatcher.getFileService();
@@ -23,34 +38,21 @@ class AchievementService implements Service {
     if (await _filesExist()) {
       await _loadAchievements();
     } else {
-      _earned = List();
-      _possible = List();
+      _achievements = AchievementList();
       for (var achievement in defaultAchievements) {
-        _possible.add(achievement);
+        _achievements.add(achievement);
       }
     }
   }
 
   Future<bool> _filesExist() async {
-    return await _fileService.fileExists(earnedAchievementsFilepath) &&
-        await _fileService.fileExists(possibleAchievementsFilepath);
+    return await _fileService.fileExists(achievementsFilepath);
   }
 
   Future _loadAchievements() async {
-    await _loadPossibleAchievements();
-    await _loadEarnedAchievements();
-  }
-
-  Future _loadEarnedAchievements() async {
-    String content =
-    await _fileService.readAndDecryptFile(earnedAchievementsFilepath);
-    _earned = Serializer.unserialize(achievementListKey, content);
-  }
-
-  Future _loadPossibleAchievements() async {
-    String content =
-    await _fileService.readAndDecryptFile(possibleAchievementsFilepath);
-    _earned = Serializer.unserialize(achievementListKey, content);
+    String content = await _fileService.readAndDecryptFile(
+        achievementsFilepath);
+    _achievements = Serializer.unserialize(achievementListKey, content);
   }
 
   Future stop() {
@@ -59,34 +61,18 @@ class AchievementService implements Service {
   }
 
   Future save() async {
-    await _saveEarnedAchievements();
-    await _savePossibleAchievements();
+    String content = _achievements.serialize;
+    return _fileService.encryptAndWriteFile(achievementsFilepath, content);
   }
 
-  Future _saveEarnedAchievements() {
-    String content = _earned.serialize;
-    return _fileService.encryptAndWriteFile(
-      earnedAchievementsFilepath,
-      content,
-    );
-  }
-
-  Future _savePossibleAchievements() {
-    String content = _possible.serialize;
-    return _fileService.encryptAndWriteFile(
-      possibleAchievementsFilepath,
-      content,
-    );
-  }
-
-  bool isEarned(Achievement achievement) {
-    return _earned.contains(achievement);
-  }
-
-  void earn(Achievement achievement) {
-    if (!_earned.contains(achievement)) {
-      _earned.add(achievement);
+  /// Increments currentProgress of target by 1 and returns true if the [Achievement] is not earned prior to the method call.
+  ///
+  /// If the [Achievement] was earned prior to calling this method, it will return false. However, if the achievement was not earned prior to calling this method, it will return true.
+  bool incrementProgress(Achievement target) {
+    if (target.currentProgress < target.targetProgress) {
+      target.currentProgress++;
+      return target.earned;
     }
-    // TODO display popup
+    return false;
   }
 }

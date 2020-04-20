@@ -39,17 +39,6 @@ class Achievement extends Serializable {
   /// Returns a double between 0.0 and 1.0 indicating the progress made towards completing this achievement.
   double get progress => currentProgress.toDouble() / targetProgress.toDouble();
 
-  /// Increments currentProgress by 1 and returns true if the achievement is not earned prior to the method call.
-  ///
-  /// If the achievement was earned prior to calling this method, it will return false. However, if the achievement was not earned prior to calling this method, it will return true.
-  bool incrementProgress() {
-    if (currentProgress < targetProgress) {
-      currentProgress++;
-      return earned;
-    }
-    return false;
-  }
-
   bool operator ==(Object other) => other is Achievement && _equals(other);
 
   bool _equals(Achievement other) => name == other.name;

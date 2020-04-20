@@ -107,7 +107,9 @@ class _KidsPetsInfoPageState extends State<KidsPetsInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    BudgetingApp.control.dispatcher.getAchievementService().earn(achDetailing);
+    BudgetingApp.control.dispatcher
+        .getAchievementService()
+        .incrementProgress(achDetailing);
     return Scaffold(
       appBar: AppBar(title: Text('Setup')),
       body: Padding24(
