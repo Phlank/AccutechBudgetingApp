@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/abstract/saveable.dart';
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/implementations/services/account_service.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
@@ -27,6 +28,14 @@ class ServiceDispatcher {
   void stopAll() {
     for (var service in _services) {
       service.stop();
+    }
+  }
+
+  Future save() async {
+    for (Object service in _services) {
+      if (service is Saveable) {
+        await service.save();
+      }
     }
   }
 

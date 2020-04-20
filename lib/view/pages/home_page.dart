@@ -14,21 +14,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: BudgetingApp.control.isReturningUser(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.hasData) {
-            bool user = snapshot.data;
-            if (user) {
-              return new LoginPage();
-            } else {
-              return WelcomePage();
-            }
-          } else if (snapshot.hasError) {
-            return ErrorPage();
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: BudgetingApp.control.isReturningUser(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          bool userIsReturning = snapshot.data;
+          if (userIsReturning) {
+            return new LoginPage();
           } else {
-            return new CircularProgressIndicator();
+            return WelcomePage();
           }
-        },
-      );
+        } else if (snapshot.hasError) {
+          return ErrorPage();
+        } else {
+          return new CircularProgressIndicator();
+        }
+      },
+    );
+  }
 }

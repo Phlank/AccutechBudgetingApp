@@ -31,6 +31,8 @@ class TransactionEditPage extends StatefulWidget {
 
 class _TransactionEditPageState extends State<TransactionEditPage> {
   final Transaction initialTransaction;
+  final List<PaymentMethod> paymentMethods =
+      BudgetingApp.control.dispatcher.accountService.paymentMethods;
 
   Transaction transactionResult;
   String vendor;
@@ -55,7 +57,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     date = initialTransaction.time;
     time = TimeOfDay.fromDateTime(initialTransaction.time);
     location = initialTransaction.location;
-    BudgetingApp.control.paymentMethods.forEach((method) {
+    paymentMethods.forEach((method) {
       if (method != null) {
         print('method: ' + method.methodName);
       } else {
@@ -76,7 +78,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
   }
 
   Widget _buildMethodField() {
-    List<PaymentMethod> items = BudgetingApp.control.paymentMethods;
+    List<PaymentMethod> items = paymentMethods;
     return DropdownButton<PaymentMethod>(
       value: method,
       icon: Icon(Icons.arrow_drop_down),

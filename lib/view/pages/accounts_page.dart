@@ -13,7 +13,7 @@ class AccountsPage extends StatelessWidget {
         IconButton(
           icon: Icon(Icons.add),
           onPressed: () async {
-            BudgetingApp.control.addAccount(
+            BudgetingApp.control.dispatcher.accountService.addAccount(
                 await AccountEditPage.show(Account.empty(), context));
             this.build(context);
           },

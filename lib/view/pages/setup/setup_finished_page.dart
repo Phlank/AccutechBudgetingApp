@@ -1,4 +1,3 @@
-import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
@@ -18,9 +17,6 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
   @override
   void initState() {
     super.initState();
-    if (!BudgetingApp.control.paymentMethods.contains(PaymentMethod.cash)) {
-      BudgetingApp.control.paymentMethods.add(PaymentMethod.cash);
-    }
     setup = BudgetingApp.control.setup();
   }
 
@@ -28,11 +24,16 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
     return Row(
       children: <Widget>[
         ConstrainedBox(
-            child: CircularProgressIndicator(
-              value: null,
-            ),
-            constraints: BoxConstraints(
-                minWidth: 100, minHeight: 100, maxHeight: 100, maxWidth: 100))
+          child: CircularProgressIndicator(
+            value: null,
+          ),
+          constraints: BoxConstraints(
+            minWidth: 100,
+            minHeight: 100,
+            maxHeight: 100,
+            maxWidth: 100,
+          ),
+        ),
       ],
       mainAxisAlignment: MainAxisAlignment.center,
     );

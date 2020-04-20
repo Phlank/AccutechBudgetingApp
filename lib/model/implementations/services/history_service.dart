@@ -1,4 +1,5 @@
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/saveable.dart';
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/history.dart';
@@ -9,7 +10,7 @@ import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/dates.dart';
 
-class HistoryService implements Service {
+class HistoryService implements Service, Saveable {
   ServiceDispatcher _dispatcher;
   History _history = History();
 

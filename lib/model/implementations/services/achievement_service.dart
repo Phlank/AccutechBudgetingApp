@@ -1,5 +1,6 @@
 import 'package:budgetflow/global/defaults.dart';
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/saveable.dart';
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/achievement.dart';
 import 'package:budgetflow/model/data_types/achievement_list.dart';
@@ -7,7 +8,7 @@ import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 
-class AchievementService implements Service {
+class AchievementService implements Service, Saveable {
   ServiceDispatcher _dispatcher;
   FileService _fileService;
   AchievementList _achievements;

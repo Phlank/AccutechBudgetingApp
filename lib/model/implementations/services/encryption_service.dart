@@ -33,6 +33,11 @@ class EncryptionService implements Service {
     return null;
   }
 
+  Future save() {
+    String content = _password.serialize;
+    return _dispatcher.getFileService().writeFile(passwordFilepath, content);
+  }
+
   /// Defines a new String 'secret' for encryption.
   void registerPassword(String password) {
     _password = SteelPassword.fromSecret(password);

@@ -1,4 +1,5 @@
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/saveable.dart';
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/model/data_types/account_list.dart';
@@ -6,7 +7,7 @@ import 'package:budgetflow/model/data_types/payment_method.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 
-class AccountService implements Service {
+class AccountService implements Service, Saveable {
   ServiceDispatcher _dispatcher;
   AccountList _accounts;
   List<PaymentMethod> _paymentMethods;

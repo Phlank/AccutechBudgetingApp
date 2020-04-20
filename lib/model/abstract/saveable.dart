@@ -1,3 +1,3 @@
 abstract class Saveable {
-  void save();
+  Future save();
 }

@@ -1,35 +1,31 @@
 import 'dart:async';
 
 import 'package:budgetflow/global/strings.dart';
-import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/model/data_types/account_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/location.dart';
-import 'package:budgetflow/model/data_types/payment_method.dart';
+import 'package:budgetflow/model/data_types/month.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/implementations/budget_accountant.dart';
 import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
+import 'package:budgetflow/model/implementations/services/account_service.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
 import 'package:budgetflow/model/implementations/services/encryption_service.dart';
 import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/location_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
-import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
-
-import 'data_types/category.dart';
-import 'data_types/month.dart';
 
 /// Welcome to our favorite superclass
 class BudgetControl {
   ServiceDispatcher _dispatcher;
   Color cashFlowColor;
-  List<PaymentMethod> paymentMethods;
   AccountList accounts;
   Map<Location, Category> locationMap = Map();
   Budget budget;
@@ -51,20 +47,12 @@ class BudgetControl {
 
   ServiceDispatcher get dispatcher => _dispatcher;
 
-  BudgetControl() {
-    _dispatcher = ServiceDispatcher();
-    _dispatcher.register(FileService(_dispatcher));
-    _dispatcher.register(EncryptionService(_dispatcher));
-    _dispatcher.register(AchievementService(_dispatcher));
-    _dispatcher.startAll();
-    _initVariables();
-  }
-
-  void _initVariables() {
-    paymentMethods = [PaymentMethod('Cash')];
-  }
+  BudgetControl();
 
   Future<bool> isReturningUser() async {
+    if (!isDispatcherStarted) {
+      await startDispatcher();
+    }
     return await _dispatcher.getFileService().fileExists(passwordFilepath);
   }
 
@@ -73,6 +61,9 @@ class BudgetControl {
   }
 
   Future<bool> initialize() async {
+    if (!isDispatcherStarted) {
+      await startDispatcher();
+    }
     if (await isReturningUser()) {
       if (_isLoaded()) {
         return true;
@@ -85,6 +76,15 @@ class BudgetControl {
     }
   }
 
+  bool get isDispatcherStarted => _dispatcher != null;
+
+  Future startDispatcher() async {
+    _dispatcher = ServiceDispatcher();
+    await _dispatcher.registerAndStart(FileService(_dispatcher));
+    await _dispatcher.registerAndStart(EncryptionService(_dispatcher));
+    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
+  }
+
   bool _isLoaded() {
     return _dispatcher.getFileService() != null &&
         _dispatcher.getEncryptionService() != null &&
@@ -94,23 +94,12 @@ class BudgetControl {
   }
 
   Future _load() async {
+    await _dispatcher.registerAndStart(AccountService(_dispatcher));
     await _dispatcher.registerAndStart(HistoryService(_dispatcher));
     await _dispatcher.registerAndStart(LocationService(_dispatcher));
     budget = await _dispatcher.getHistoryService().getLatestMonthBudget();
     accountant = BudgetAccountant(budget);
-    await _loadAccounts();
     _initLocationMap();
-//    _initLocationListener();
-  }
-
-  Future _loadAccounts() async {
-    AccountList loadedAccounts = Serializer.unserialize(
-      methodListKey,
-      await _dispatcher.getFileService().readAndDecryptFile(accountsFilepath),
-    );
-    for (Account account in loadedAccounts) {
-      addAccount(account);
-    }
   }
 
   void _initLocationMap() {
@@ -243,16 +232,6 @@ class BudgetControl {
 
   void removeTransactionIfPresent(Transaction tran) {
     budget.removeTransaction(tran);
-  }
-
-  void addAccount(Account account) {
-    accounts.add(account);
-    paymentMethods.add(account);
-  }
-
-  void removeAccount(Account account) {
-    accounts.remove(account);
-    paymentMethods.remove(account);
   }
 
   void forceNextMonthTransition() {
