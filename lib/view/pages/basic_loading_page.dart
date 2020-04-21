@@ -3,8 +3,9 @@ import 'package:flutter/widgets.dart';
 
 class BasicLoadingPage extends StatelessWidget {
   final String message;
+  final String title;
 
-  BasicLoadingPage({@required this.message});
+  BasicLoadingPage({@required this.title, @required this.message});
 
   Widget _buildConstrainedIndicator() {
     return Row(
@@ -28,7 +29,7 @@ class BasicLoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Setup')),
+        appBar: AppBar(title: Text(title)),
         body: Column(
           children: <Widget>[
             _buildConstrainedIndicator(),

@@ -19,15 +19,15 @@ class SetupFinishedPage extends StatefulWidget {
 }
 
 class _SetupFinishedPageState extends State<SetupFinishedPage> {
-  Future _setup;
+  Future _builderFuture;
 
   @override
   void initState() {
     super.initState();
-    _setup = _triggerSetup();
+    _builderFuture = _prepFuture();
   }
 
-  Future _triggerSetup() async {
+  Future _prepFuture() async {
     ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
     await dispatcher.registerAndStart(FileService(dispatcher));
     await dispatcher.registerAndStart(EncryptionService(dispatcher));
@@ -40,7 +40,7 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _setup,
+        future: _builderFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             print('Snapshot has data');

@@ -20,6 +20,7 @@ class ServiceDispatcher {
     if (!hasDuplicateService(service)) {
       _services.add(service);
       await service.start();
+      print('ServiceDispatcher: Started ' + service.runtimeType.toString());
     }
   }
 

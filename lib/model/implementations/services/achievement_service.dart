@@ -40,17 +40,22 @@ class AchievementService implements Service, Saveable {
 
   Future start() async {
     if (await _filesExist()) {
+      print('AchievementService: Files detected, loading...');
       await _loadAchievements();
+      print('AchievementService: Achievements initialized.');
     } else {
+      print(
+          'AchievementService: No files detected. Initializing list of achievements...');
       _achievements = AchievementList();
       for (var achievement in Achievements.defaults) {
         _achievements.add(achievement);
       }
+      print('AchievementService: Achievements initialized.');
     }
   }
 
-  Future<bool> _filesExist() async {
-    return await _fileService.fileExists(achievementsFilepath);
+  Future<bool> _filesExist() {
+    return _fileService.fileExists(achievementsFilepath);
   }
 
   Future _loadAchievements() async {

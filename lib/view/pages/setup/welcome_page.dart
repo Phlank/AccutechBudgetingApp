@@ -2,6 +2,8 @@ import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/basic_loading_page.dart';
+import 'package:budgetflow/view/pages/error_page.dart';
 import 'package:budgetflow/view/pages/setup/personal_info_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/utils/routes.dart';
@@ -23,6 +25,8 @@ class _WelcomePageState extends State<WelcomePage> {
   Future _builderPrep() async {
     ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
     await dispatcher.registerAndStart(AchievementService(dispatcher));
+    print('WelcomePage: Finished resolving future');
+    return true; // Needed or else the FutureBuilder will never resolve.
   }
 
   @override
@@ -31,8 +35,7 @@ class _WelcomePageState extends State<WelcomePage> {
     _builderFuture = _builderPrep();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildWelcomeScaffold() {
     return Scaffold(
       appBar: AppBar(title: Text('Welcome')),
       body: Padding24(
@@ -60,4 +63,24 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _builderFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          print('Snapshot has data');
+          return _buildWelcomeScaffold();
+        } else if (snapshot.hasError) {
+          print('Snapshot has error');
+          return ErrorPage();
+        } else {
+          return BasicLoadingPage(
+            message: 'Loading...',
+            title: 'Startup',
+          );
+        }
+      },
+    );
+  }
 }
