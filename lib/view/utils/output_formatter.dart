@@ -13,7 +13,7 @@ class Format {
       case String:
         return titleFormat(d);
       case Category:
-        return titleFormat(d.value());
+        return titleFormat(d.message());
       default:
         return 'Error';
     }

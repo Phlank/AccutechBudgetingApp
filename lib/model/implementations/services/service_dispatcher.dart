@@ -24,11 +24,17 @@ class ServiceDispatcher {
   }
 
   bool hasDuplicateService(Service service) {
-    Type serviceType = service.runtimeType;
-    var match = _services.firstWhere((test) {
-      return test.runtimeType == serviceType;
-    }, orElse: null);
-    return match != null;
+    if (_services.isEmpty) {
+      return false;
+    }
+    for (Service element in _services) {
+      print('Testing runtime types: input=' + service.runtimeType.toString() +
+          ' vs element=' + element.runtimeType.toString());
+      if (service.runtimeType == element.runtimeType) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Future startAll() async {

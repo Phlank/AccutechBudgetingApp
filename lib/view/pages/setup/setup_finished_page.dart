@@ -5,6 +5,7 @@ import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
+import 'package:budgetflow/view/pages/basic_loading_page.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,44 +37,6 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
     await BudgetingApp.control.setup();
   }
 
-  Widget _buildConstrainedIndicator() {
-    return Row(
-      children: <Widget>[
-        ConstrainedBox(
-          child: CircularProgressIndicator(
-            value: null,
-          ),
-          constraints: BoxConstraints(
-            minWidth: 100,
-            minHeight: 100,
-            maxHeight: 100,
-            maxWidth: 100,
-          ),
-        ),
-      ],
-      mainAxisAlignment: MainAxisAlignment.center,
-    );
-  }
-
-  Widget _loadingBudgetPage() {
-    return Scaffold(
-        appBar: AppBar(title: Text('Setup')),
-        body: Column(
-          children: <Widget>[
-            _buildConstrainedIndicator(),
-            Container(
-              height: 24,
-            ),
-            Text(
-              'Loading your budget...',
-              textAlign: TextAlign.center,
-            )
-          ],
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -86,7 +49,7 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
             print('Snapshot has error');
             return WelcomePage();
           } else {
-            return _loadingBudgetPage();
+            return BasicLoadingPage(message: 'Loading your budget...');
           }
         });
   }

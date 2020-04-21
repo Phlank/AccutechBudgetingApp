@@ -1,15 +1,35 @@
 import 'package:budgetflow/model/budget_control.dart';
+import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/setup/personal_info_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
 import 'package:budgetflow/view/utils/routes.dart';
 import 'package:flutter/material.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
   static const ROUTE = '/welcomePage';
+
+  @override
+  State<StatefulWidget> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  Future _builderFuture;
   static final _titleText = 'Welcome to ' + BudgetingApp.NAME + '!';
   static final _bodyText =
       'To get started, I need to know a few things about you so I can make your budget.';
+
+  Future _builderPrep() async {
+    ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
+    await dispatcher.registerAndStart(AchievementService(dispatcher));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _builderFuture = _builderPrep();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,4 +59,5 @@ class WelcomePage extends StatelessWidget {
       ),
     );
   }
+
 }

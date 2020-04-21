@@ -1,4 +1,9 @@
 import 'package:budgetflow/model/data_types/transaction.dart';
+import 'package:budgetflow/model/implementations/services/account_service.dart';
+import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/history_service.dart';
+import 'package:budgetflow/model/implementations/services/location_service.dart';
+import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/accounts_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
@@ -20,6 +25,22 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  Future _servicesPreparation;
+
+  Future _prepareServices() async {
+    ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
+    await dispatcher.registerAndStart(AchievementService(dispatcher));
+    await dispatcher.registerAndStart(AccountService(dispatcher));
+    await dispatcher.registerAndStart(HistoryService(dispatcher));
+    await dispatcher.registerAndStart(LocationService(dispatcher));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _servicesPreparation = _prepareServices();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

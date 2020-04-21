@@ -15,6 +15,8 @@ class StartupPage extends StatefulWidget {
 }
 
 class _StartupPageState extends State<StartupPage> {
+  Future<bool> _builderFuture;
+
   Future<bool> _builderPrep() async {
     await _registerServices();
     return _isReturningUser();
@@ -32,9 +34,15 @@ class _StartupPageState extends State<StartupPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _builderFuture = _builderPrep();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _builderPrep(),
+      future: _builderFuture,
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
           bool userIsReturning = snapshot.data;
