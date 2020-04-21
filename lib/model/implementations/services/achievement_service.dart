@@ -35,7 +35,7 @@ class AchievementService implements Service, Saveable {
   }
 
   AchievementService(this._dispatcher) {
-    _fileService = _dispatcher.getFileService();
+    _fileService = _dispatcher.fileService;
   }
 
   Future start() async {

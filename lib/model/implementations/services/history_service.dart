@@ -25,19 +25,19 @@ class HistoryService implements Service, Saveable {
   }
 
   Future<bool> historyFileExists() {
-    return _dispatcher.getFileService().fileExists(historyFilepath);
+    return _dispatcher.fileService.fileExists(historyFilepath);
   }
 
   Future load() async {
     if (await historyFileExists()) {
-      HistoryIO io = HistoryIO(_dispatcher.getFileService());
+      HistoryIO io = HistoryIO(_dispatcher.fileService);
       _history = await io.load();
     }
   }
 
   Future save() async {
     HistoryIO io =
-    HistoryIO.fromHistory(_history, _dispatcher.getFileService());
+    HistoryIO.fromHistory(_history, _dispatcher.fileService);
     io.save();
   }
 

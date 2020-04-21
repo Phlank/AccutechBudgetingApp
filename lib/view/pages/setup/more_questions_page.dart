@@ -15,7 +15,7 @@ class MoreQuestionsPage extends StatelessWidget {
       child: Text('Take me to my budget!'),
       onPressed: () {
         BudgetingApp.control.dispatcher
-            .getAchievementService()
+            .achievementService
             .incrementProgress(Achievements.achRushing);
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));

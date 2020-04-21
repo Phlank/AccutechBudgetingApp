@@ -147,7 +147,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
                   .value = playBudget.getCategory(category);
             }
             BudgetingApp.control.dispatcher
-                .getAchievementService()
+                .achievementService
                 .incrementProgress(Achievements.achChangedAllotment);
             if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');

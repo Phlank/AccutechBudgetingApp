@@ -28,7 +28,7 @@ class _StartupPageState extends State<StartupPage> {
 
   bool _isReturningUser() {
     var dispatcher = BudgetingApp.control.dispatcher;
-    return dispatcher.getEncryptionService().passwordExists();
+    return dispatcher.encryptionService.passwordExists();
   }
 
   @override

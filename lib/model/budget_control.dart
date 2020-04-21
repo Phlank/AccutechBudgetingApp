@@ -53,11 +53,11 @@ class BudgetControl {
     if (!isDispatcherStarted) {
       await startDispatcher();
     }
-    return await _dispatcher.getFileService().fileExists(passwordFilepath);
+    return await _dispatcher.fileService.fileExists(passwordFilepath);
   }
 
   Future<bool> passwordIsValid(String secret) {
-    return _dispatcher.getEncryptionService().validatePassword(secret);
+    return _dispatcher.encryptionService.validatePassword(secret);
   }
 
   Future<bool> initialize() async {
@@ -86,18 +86,18 @@ class BudgetControl {
   }
 
   bool _isLoaded() {
-    return _dispatcher.getFileService() != null &&
-        _dispatcher.getEncryptionService() != null &&
-        _dispatcher.getHistoryService() != null &&
-        _dispatcher.getAchievementService() != null &&
-        _dispatcher.getLocationService() != null;
+    return _dispatcher.fileService != null &&
+        _dispatcher.encryptionService != null &&
+        _dispatcher.historyService != null &&
+        _dispatcher.achievementService != null &&
+        _dispatcher.locationService != null;
   }
 
   Future _load() async {
     await _dispatcher.registerAndStart(AccountService(_dispatcher));
     await _dispatcher.registerAndStart(HistoryService(_dispatcher));
     await _dispatcher.registerAndStart(LocationService(_dispatcher));
-    budget = await _dispatcher.getHistoryService().getLatestMonthBudget();
+    budget = await _dispatcher.historyService.getLatestMonthBudget();
     accountant = BudgetAccountant(budget);
     _initLocationMap();
   }
@@ -135,7 +135,7 @@ class BudgetControl {
 //  }
 
   Future save() async {
-    var historyService = _dispatcher.getHistoryService();
+    var historyService = _dispatcher.historyService;
     if (historyService.currentMonth == null) {
       historyService.add(Month.fromBudget(budget));
     }
@@ -143,7 +143,7 @@ class BudgetControl {
   }
 
   Future setPassword(String newSecret) async {
-    _dispatcher.getEncryptionService().registerPassword(newSecret);
+    _dispatcher.encryptionService.registerPassword(newSecret);
   }
 
   Budget getBudget() {
@@ -201,7 +201,7 @@ class BudgetControl {
 
   void addNewBudget(Budget b) {
     Month m = Month.fromBudget(b);
-    _dispatcher.getHistoryService().add(m);
+    _dispatcher.historyService.add(m);
     budget = b;
     accountant = BudgetAccountant(budget);
     save();

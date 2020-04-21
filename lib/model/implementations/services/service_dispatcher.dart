@@ -52,31 +52,31 @@ class ServiceDispatcher {
   }
 
   // There is no way in Dart 2 as of 4/19/2020 to implement the DRY principle here. This is the best way I've found so far to do this.
-  AchievementService getAchievementService() {
+  AchievementService get achievementService {
     return _services.firstWhere((service) {
       return service is AchievementService;
     }, orElse: null);
   }
 
-  FileService getFileService() {
+  FileService get fileService {
     return _services.firstWhere((service) {
       return service is FileService;
     }, orElse: null);
   }
 
-  LocationService getLocationService() {
+  LocationService get locationService {
     return _services.firstWhere((service) {
       return service is LocationService;
     }, orElse: null);
   }
 
-  EncryptionService getEncryptionService() {
+  EncryptionService get encryptionService {
     return _services.firstWhere((service) {
       return service is EncryptionService;
     }, orElse: null);
   }
 
-  HistoryService getHistoryService() {
+  HistoryService get historyService {
     return _services.firstWhere((service) {
       return service is HistoryService;
     }, orElse: null);

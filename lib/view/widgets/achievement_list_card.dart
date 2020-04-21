@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class AchievementListCard extends StatelessWidget {
   final AchievementService achievementService =
-  BudgetingApp.control.dispatcher.getAchievementService();
+      BudgetingApp.control.dispatcher.achievementService;
   final int numAchievements;
 
   AchievementListCard({this.numAchievements}); // arbitrary large number
@@ -49,7 +49,7 @@ class AchievementListCard extends StatelessWidget {
     } else {
       Color color = Colors.grey;
       for (Achievement achievement in BudgetingApp.control.dispatcher
-          .getAchievementService()
+          .achievementService
           .earned
           .toList(growable: false)) {
         if (achievement.earned) {

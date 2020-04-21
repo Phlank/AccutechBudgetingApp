@@ -21,7 +21,7 @@ class AccountService implements Service, Saveable {
   Future start() async {
     if (await _filesExist()) {
       String content = await _dispatcher
-          .getFileService()
+          .fileService
           .readAndDecryptFile(accountsFilepath);
       _accounts = (Serializer.unserialize(accountListKey, content));
     } else {
@@ -31,7 +31,7 @@ class AccountService implements Service, Saveable {
   }
 
   Future<bool> _filesExist() {
-    return _dispatcher.getFileService().fileExists(accountsFilepath);
+    return _dispatcher.fileService.fileExists(accountsFilepath);
   }
 
   void _initializePaymentMethods() {
@@ -48,7 +48,7 @@ class AccountService implements Service, Saveable {
   Future save() async {
     String content = _accounts.serialize;
     await _dispatcher
-        .getFileService()
+        .fileService
         .encryptAndWriteFile(accountsFilepath, content);
   }
 

@@ -15,7 +15,7 @@ class EncryptionService implements Service {
 
   /// Start this service. Must be called before any other method after construction.
   Future start() async {
-    FileService fileService = _dispatcher.getFileService();
+    FileService fileService = _dispatcher.fileService;
     if (await fileService.fileExists(passwordFilepath)) {
       _loadPassword(fileService);
     }
@@ -35,7 +35,7 @@ class EncryptionService implements Service {
 
   Future save() {
     String content = _password.serialize;
-    return _dispatcher.getFileService().writeFile(passwordFilepath, content);
+    return _dispatcher.fileService.writeFile(passwordFilepath, content);
   }
 
   /// Defines a new String 'secret' for encryption.
@@ -45,7 +45,7 @@ class EncryptionService implements Service {
     // If you don't update the crypter in the file service, it will encrypt all
     // files with the old password's AES scheme. That is why the below line
     // exists.
-    _dispatcher.getFileService().registerCrypter(_crypter);
+    _dispatcher.fileService.registerCrypter(_crypter);
   }
 
   /// Returns true if the password has been initialized.
