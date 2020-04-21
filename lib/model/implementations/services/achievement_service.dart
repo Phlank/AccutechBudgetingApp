@@ -1,4 +1,4 @@
-import 'package:budgetflow/global/defaults.dart';
+import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/abstract/saveable.dart';
 import 'package:budgetflow/model/abstract/service.dart';
@@ -12,6 +12,9 @@ class AchievementService implements Service, Saveable {
   ServiceDispatcher _dispatcher;
   FileService _fileService;
   AchievementList _achievements;
+
+  static final _achievementsNotLoadedMessage =
+      'Achievements have not been loaded for this service. Has this service finished starting?';
 
   AchievementList get all => _achievements;
 
@@ -40,7 +43,7 @@ class AchievementService implements Service, Saveable {
       await _loadAchievements();
     } else {
       _achievements = AchievementList();
-      for (var achievement in defaultAchievements) {
+      for (var achievement in Achievements.defaults) {
         _achievements.add(achievement);
       }
     }
@@ -51,8 +54,7 @@ class AchievementService implements Service, Saveable {
   }
 
   Future _loadAchievements() async {
-    String content = await _fileService.readFile(
-        achievementsFilepath);
+    String content = await _fileService.readFile(achievementsFilepath);
     _achievements = Serializer.unserialize(achievementListKey, content);
   }
 
@@ -71,10 +73,18 @@ class AchievementService implements Service, Saveable {
   ///
   /// If the [Achievement] was earned prior to calling this method, it will return false. However, if the achievement was not earned prior to calling this method, it will return true.
   bool incrementProgress(Achievement target) {
+    Achievement achievementInMemory = _achievements.firstWhere((element) {
+      return _achievementsMatch(target, element);
+    });
+    assert(achievementInMemory != null, _achievementsNotLoadedMessage);
     if (target.currentProgress < target.targetProgress) {
       target.currentProgress++;
       return target.earned;
     }
     return false;
+  }
+
+  bool _achievementsMatch(Achievement ach1, Achievement ach2) {
+    return ach1.name == ach2.name;
   }
 }

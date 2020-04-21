@@ -1,4 +1,4 @@
-import 'package:budgetflow/global/presets.dart';
+import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
@@ -148,7 +148,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
             }
             BudgetingApp.control.dispatcher
                 .getAchievementService()
-                .incrementProgress(achChangedAllotment);
+                .incrementProgress(Achievements.achChangedAllotment);
             if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');
               userController.save();

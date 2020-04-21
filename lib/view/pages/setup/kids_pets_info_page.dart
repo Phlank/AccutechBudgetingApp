@@ -1,4 +1,4 @@
-import 'package:budgetflow/global/presets.dart';
+import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
 import 'package:budgetflow/view/utils/padding.dart';
@@ -109,7 +109,7 @@ class _KidsPetsInfoPageState extends State<KidsPetsInfoPage> {
   Widget build(BuildContext context) {
     BudgetingApp.control.dispatcher
         .getAchievementService()
-        .incrementProgress(achDetailing);
+        .incrementProgress(Achievements.achDetailing);
     return Scaffold(
       appBar: AppBar(title: Text('Setup')),
       body: Padding24(

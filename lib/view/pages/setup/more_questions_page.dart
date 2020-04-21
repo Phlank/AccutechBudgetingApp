@@ -1,4 +1,4 @@
-import 'package:budgetflow/global/presets.dart';
+import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/setup/kids_pets_info_page.dart';
 import 'package:budgetflow/view/pages/setup/setup_finished_page.dart';
@@ -16,7 +16,7 @@ class MoreQuestionsPage extends StatelessWidget {
       onPressed: () {
         BudgetingApp.control.dispatcher
             .getAchievementService()
-            .incrementProgress(achRushing);
+            .incrementProgress(Achievements.achRushing);
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
       },
