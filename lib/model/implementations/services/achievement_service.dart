@@ -55,6 +55,7 @@ class AchievementService implements Service, Saveable {
   }
 
   Future<bool> _filesExist() {
+    assert(_fileService != null);
     return _fileService.fileExists(achievementsFilepath);
   }
 
@@ -78,15 +79,22 @@ class AchievementService implements Service, Saveable {
   ///
   /// If the [Achievement] was earned prior to calling this method, it will return false. However, if the achievement was not earned prior to calling this method, it will return true.
   bool incrementProgress(Achievement target) {
-    Achievement achievementInMemory = _achievements.firstWhere((element) {
-      return _achievementsMatch(target, element);
-    });
-    assert(achievementInMemory != null, _achievementsNotLoadedMessage);
-    if (target.currentProgress < target.targetProgress) {
-      target.currentProgress++;
-      return target.earned;
+    Achievement achievementInMem = _correspondingAchievement(target);
+    assert(achievementInMem != null, _achievementsNotLoadedMessage);
+    if (achievementInMem.currentProgress < achievementInMem.targetProgress) {
+      achievementInMem.currentProgress++;
+      return achievementInMem.earned;
     }
     return false;
+  }
+
+  Achievement _correspondingAchievement(Achievement target) {
+    for (Achievement achievement in _achievements) {
+      if (achievement.name == target.name) {
+        return achievement;
+      }
+    }
+    return null;
   }
 
   bool _achievementsMatch(Achievement ach1, Achievement ach2) {

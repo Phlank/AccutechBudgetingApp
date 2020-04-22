@@ -11,26 +11,28 @@ class ServiceDispatcher {
   List<Service> _services = [];
 
   void register(Service service) {
-    if (!hasDuplicateService(service)) {
+    if (!_hasDuplicateService(service)) {
       _services.add(service);
     }
   }
 
   Future registerAndStart(Service service) async {
-    if (!hasDuplicateService(service)) {
+    if (!_hasDuplicateService(service)) {
       _services.add(service);
       await service.start();
       print('ServiceDispatcher: Started ' + service.runtimeType.toString());
     }
   }
 
-  bool hasDuplicateService(Service service) {
+  bool _hasDuplicateService(Service service) {
     if (_services.isEmpty) {
       return false;
     }
     for (Service element in _services) {
-      print('Testing runtime types: input=' + service.runtimeType.toString() +
-          ' vs element=' + element.runtimeType.toString());
+      print('Testing runtime types: input=' +
+          service.runtimeType.toString() +
+          ' vs element=' +
+          element.runtimeType.toString());
       if (service.runtimeType == element.runtimeType) {
         return true;
       }
@@ -59,39 +61,26 @@ class ServiceDispatcher {
   }
 
   // There is no way in Dart 2 as of 4/19/2020 to implement the DRY principle here. This is the best way I've found so far to do this.
-  AchievementService get achievementService {
-    return _services.firstWhere((service) {
-      return service is AchievementService;
-    }, orElse: null);
-  }
+  AchievementService get achievementService =>
+      _getRequestedService(AchievementService);
 
-  FileService get fileService {
-    return _services.firstWhere((service) {
-      return service is FileService;
-    }, orElse: null);
-  }
+  FileService get fileService => _getRequestedService(FileService);
 
-  LocationService get locationService {
-    return _services.firstWhere((service) {
-      return service is LocationService;
-    }, orElse: null);
-  }
+  LocationService get locationService => _getRequestedService(LocationService);
 
-  EncryptionService get encryptionService {
-    return _services.firstWhere((service) {
-      return service is EncryptionService;
-    }, orElse: null);
-  }
+  EncryptionService get encryptionService =>
+      _getRequestedService(EncryptionService);
 
-  HistoryService get historyService {
-    return _services.firstWhere((service) {
-      return service is HistoryService;
-    }, orElse: null);
-  }
+  HistoryService get historyService => _getRequestedService(HistoryService);
 
-  AccountService get accountService {
-    return _services.firstWhere((service) {
-      return service is AccountService;
-    }, orElse: null);
+  AccountService get accountService => _getRequestedService(AccountService);
+
+  Service _getRequestedService(Type ofType) {
+    for (Service service in _services) {
+      if (service.runtimeType == ofType) {
+        return service;
+      }
+    }
+    return null;
   }
 }

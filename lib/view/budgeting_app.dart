@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class BudgetingApp extends StatelessWidget {
   static const NAME = 'Budgetflow';
-  static BudgetControl control = new BudgetControl();
+  static BudgetControl control;
   static final int r = 0,
       g = 153,
       b = 0;

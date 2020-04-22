@@ -1,3 +1,4 @@
+import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/implementations/services/encryption_service.dart';
 import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
@@ -18,6 +19,7 @@ class _StartupPageState extends State<StartupPage> {
   Future<bool> _builderFuture;
 
   Future<bool> _builderPrep() async {
+    BudgetingApp.control = BudgetControl();
     await _registerServices();
     return _isReturningUser();
   }
