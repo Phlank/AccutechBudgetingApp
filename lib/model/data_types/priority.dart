@@ -34,6 +34,8 @@ class Priority implements Serializable {
         return savings;
       case _otherName:
         return other;
+      case _incomeName:
+        return income;
       default:
         return other;
     }

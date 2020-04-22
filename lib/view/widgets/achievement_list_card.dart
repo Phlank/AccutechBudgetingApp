@@ -2,6 +2,7 @@ import 'package:budgetflow/model/data_types/achievement.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
+import 'package:budgetflow/view/view_presets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -103,15 +104,15 @@ class AchievementListItem extends StatelessWidget {
             TableCell(
                 child: Text(
                   achievement.name,
-                  style: style,
-                  textAlign: TextAlign.left,
+                  style: achievementTopRowTextStyle,
+                  textAlign: TextAlign.center,
                 )),
           ]),
           TableRow(children: <TableCell>[
             TableCell(
                 child: Text(
                   achievement.description,
-                  style: style,
+                  style: achievementBottomRowTextStyle,
                   textAlign: TextAlign.left,
                 )),
           ])

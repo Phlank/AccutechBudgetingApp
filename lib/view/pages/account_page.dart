@@ -1,5 +1,8 @@
 import 'package:budgetflow/model/data_types/account.dart';
+import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:budgetflow/view/utils/padding.dart';
+import 'package:budgetflow/view/view_presets.dart';
+import 'package:budgetflow/view/widgets/transaction/transaction_list_view.dart';
 import 'package:flutter/material.dart';
 
 class AccountPage extends StatelessWidget {
@@ -25,9 +28,17 @@ class AccountPage extends StatelessWidget {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text(account.accountName),
+                Text(
+                  account.accountName,
+                  style: listItemTextStyle,
+                ),
               ],
             ),
+            Text(
+              'Balance: ' + Format.dollarFormat(account.amount),
+              style: listItemTextStyle,
+            ),
+            TransactionListView(account.accountTransactions),
           ],
         ),
       ),

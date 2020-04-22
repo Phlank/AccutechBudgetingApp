@@ -165,7 +165,7 @@ class BudgetControl {
   }
 
   Future<bool> setup() async {
-    await setPassword(SetupAgent.pin);
+    await BudgetingApp.control.setPassword(SetupAgent.pin);
     print('BudgetControl: Password set.');
     addNewBudget(PriorityBudgetFactory().newFromInfo());
     print('BudgetControl: Budget added.');

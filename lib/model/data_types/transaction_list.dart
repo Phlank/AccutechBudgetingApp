@@ -21,6 +21,16 @@ class TransactionList extends DelegatingList<Transaction>
     }
   }
 
+  TransactionList get spending {
+    TransactionList output = TransactionList();
+    for (Transaction transaction in _list) {
+      if (transaction.category.isSpending) {
+        output.add(transaction);
+      }
+    }
+    return output;
+  }
+
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();

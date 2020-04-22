@@ -261,7 +261,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
     );
   }
 
-  Widget _buildButton() {
+  Widget _buildSubmitButton() {
     return RaisedButton(
       onPressed: () {
         if (_formKey.currentState.validate()) {
@@ -274,19 +274,45 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
             time.minute,
           );
           BudgetingApp.control.removeTransactionIfPresent(initialTransaction);
-          Transaction newTransaction = Transaction(
-              amount: -amount,
-              category: category,
-              method: method,
-              time: outputDateTime,
-              vendor: vendor,
-              location: location);
+          Transaction newTransaction;
+          if (category == Category.income) {
+            newTransaction = Transaction(
+                amount: amount,
+                category: category,
+                method: method,
+                time: outputDateTime,
+                vendor: vendor,
+                location: location);
+          } else {
+            newTransaction = Transaction(
+                amount: -amount,
+                category: category,
+                method: method,
+                time: outputDateTime,
+                vendor: vendor,
+                location: location);
+          }
           BudgetingApp.control.addTransaction(newTransaction);
           BudgetingApp.control.save();
           Navigator.of(context).pop(newTransaction);
         }
       },
       child: Text('Submit'),
+      textTheme: ButtonTextTheme.primary,
+    );
+  }
+
+  Widget _buildDeleteButton() {
+    return RaisedButton(
+      onPressed: () {
+        if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
+          BudgetingApp.control.removeTransactionIfPresent(initialTransaction);
+          BudgetingApp.control.save();
+          Navigator.of(context).pop();
+        }
+      },
+      child: Text('Delete'),
       textTheme: ButtonTextTheme.primary,
     );
   }
@@ -308,7 +334,8 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
                 _buildCategoryRow(),
                 _buildTimeRow(),
                 _buildLocationRow(),
-                _buildButton()
+                _buildSubmitButton(),
+                _buildDeleteButton(),
               ],
               shrinkWrap: true,
             ),

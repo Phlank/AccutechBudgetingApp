@@ -11,6 +11,14 @@ TextStyle transactionBottomRowTextStyle = TextStyle(
   fontSize: 16,
   fontStyle: FontStyle.normal,
 );
+TextStyle achievementTopRowTextStyle = TextStyle(
+  fontSize: 20,
+  fontStyle: FontStyle.normal,
+);
+TextStyle achievementBottomRowTextStyle = TextStyle(
+  fontSize: 16,
+  fontStyle: FontStyle.normal,
+);
 
 // EdgeInsets presets
 EdgeInsets smallEdgeInsets = EdgeInsets.all(8);
