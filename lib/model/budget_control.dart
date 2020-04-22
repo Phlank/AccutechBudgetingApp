@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/model/data_types/account_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/category.dart';
@@ -168,6 +169,12 @@ class BudgetControl {
     print('BudgetControl: Password set.');
     addNewBudget(PriorityBudgetFactory().newFromInfo());
     print('BudgetControl: Budget added.');
+    if (SetupAgent.savings != 0) {
+      dispatcher.accountService.addAccount(Account(
+        methodName: 'Savings',
+        accountName: 'Savings',
+      ));
+    }
     await save();
     print('BudgetControl: Saved successfully.');
     return true;

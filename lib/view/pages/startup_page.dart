@@ -31,7 +31,10 @@ class _StartupPageState extends State<StartupPage> {
   }
 
   bool _isReturningUser() {
+    print('StartupPage: Checking for returning user...');
     var dispatcher = BudgetingApp.control.dispatcher;
+    print('StartupPage: Returning user: ' +
+        dispatcher.encryptionService.passwordExists().toString());
     return dispatcher.encryptionService.passwordExists();
   }
 
@@ -49,6 +52,7 @@ class _StartupPageState extends State<StartupPage> {
         if (snapshot.hasData) {
           bool userIsReturning = snapshot.data;
           if (userIsReturning) {
+            print('StartupPage: Returning user.');
             return new LoginPage();
           } else {
             return WelcomePage();

@@ -187,9 +187,14 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
         child: Text('Select location'),
         onPressed: () async {
           // Load google maps interface
-          Location result =
-              await LocationPicker.show(context, await Location.current);
-          location = result;
+          Location current = await Location.current;
+          Location result;
+          if (current != null) {
+            result = await LocationPicker.show(context, current);
+          }
+          setState(() {
+            if (result != null) location = result;
+          });
         },
       )
     ]);
@@ -216,6 +221,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
       Container(width: 24),
       Expanded(child: Text(formattedDate)),
       _buildDateButton(),
+      Container(width: 24),
       Expanded(child: Text(formattedTime)),
       _buildTimeButton(),
     ]);
@@ -231,7 +237,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
           lastDate: DateTime.now(),
         ).then((date) {
           setState(() {
-            this.date = date;
+            if (date != null) this.date = date;
           });
         });
       },
@@ -247,7 +253,7 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
           initialTime: TimeOfDay.now(),
         ).then((time) {
           setState(() {
-            this.time = time;
+            if (time != null) this.time = time;
           });
         });
       },

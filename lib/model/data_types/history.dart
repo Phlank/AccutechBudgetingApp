@@ -41,10 +41,10 @@ class History extends DelegatingList<Month> implements Serializable {
   String get serialize {
     Serializer serializer = Serializer();
     int i = 0;
-    _monthTimes.forEach((DateTime dt) {
-      serializer.addPair(i, dt.toIso8601String());
+    for (Month month in _months) {
+      serializer.addPair(i, month);
       i++;
-    });
+    }
     return serializer.serialize;
   }
 }

@@ -64,16 +64,19 @@ class FileService implements FileIO, Service {
     return File('$path');
   }
 
-  Future<String> readFile(String pathSuffix) {
+  Future<String> readFile(String pathSuffix) async {
     String path = pathSuffixToPath(pathSuffix);
     File target = _getTargetFile(path);
-    return target.readAsString();
+    String content = await target.readAsString();
+    print('FileService: Contents of file:\n$content');
+    return content;
   }
 
   Future<String> readAndDecryptFile(String pathSuffix) async {
     String path = pathSuffixToPath(pathSuffix);
     File target = _getTargetFile(path);
     String cipher = await target.readAsString();
+    print('FileService: Contents of file:\n$cipher');
     Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
     return _crypter.decrypt(encrypted);
   }

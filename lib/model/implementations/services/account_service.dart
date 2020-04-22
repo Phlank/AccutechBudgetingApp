@@ -54,7 +54,10 @@ class AccountService implements Service, Saveable {
   }
 
   void addAccount(Account account) {
-    if (!_accounts.contains(account)) _accounts.add(account);
+    if (!_accounts.contains(account)) {
+      _accounts.add(account);
+      _paymentMethods.add(account);
+    }
   }
 
   bool removeAccount(Account account) {

@@ -84,26 +84,28 @@ class _AccountEditPageState extends State<AccountEditPage> {
   }
 
   Widget _buildButton() {
-    AccountService accountService = BudgetingApp.control.dispatcher
-        .accountService;
+    AccountService accountService =
+        BudgetingApp.control.dispatcher.accountService;
     return RaisedButton(
       child: Text('Submit'),
       onPressed: () {
-        if (_formKey.currentState.validate()) {
-          _formKey.currentState.save();
-          Account result = Account(
-            methodName: methodName,
-            accountName: accountName,
-          );
-          if (initialAccount != Account.empty()) {
-            accountService.removeAccount(initialAccount);
-            accountService.addAccount(result);
-          } else {
-            Navigator.of(context).pop(result);
+        setState(() {
+          if (_formKey.currentState.validate()) {
+            _formKey.currentState.save();
+            Account result = Account(
+              methodName: methodName,
+              accountName: accountName,
+            );
+            if (initialAccount != Account.empty()) {
+              accountService.removeAccount(initialAccount);
+              accountService.addAccount(result);
+            } else {
+              Navigator.of(context).pop(result);
+            }
+            BudgetingApp.control.save();
+            Navigator.of(context).pop();
           }
-          BudgetingApp.control.save();
-          Navigator.of(context).pop();
-        }
+        });
       },
     );
   }

@@ -17,15 +17,13 @@ class EncryptionService implements Service {
   Future start() async {
     FileService fileService = _dispatcher.fileService;
     if (await fileService.fileExists(passwordFilepath)) {
-      _loadPassword(fileService);
+      await _loadPassword(fileService);
     }
   }
 
-  void _loadPassword(FileService fileService) async {
+  Future _loadPassword(FileService fileService) async {
     String content = await fileService.readFile(passwordFilepath);
     _password = Serializer.unserialize(passwordKey, content);
-    _crypter = SteelCrypter(_password);
-    fileService.registerCrypter(_crypter);
   }
 
   /// Stops this service.
@@ -54,7 +52,12 @@ class EncryptionService implements Service {
   }
 
   /// Returns true if the input String matches the information held on disk.
-  Future<bool> validatePassword(String secret) {
-    return _password.verify(secret);
+  Future<bool> validatePassword(String secret) async {
+    bool result = await _password.verify(secret);
+    if (result) {
+      _crypter = SteelCrypter(_password);
+      _dispatcher.fileService.registerCrypter(_crypter);
+    }
+    return result;
   }
 }
