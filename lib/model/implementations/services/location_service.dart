@@ -1,6 +1,7 @@
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/location.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -13,9 +14,19 @@ class LocationService implements Service {
   LocationService(this._dispatcher);
 
   Future start() {
-    // TODO implement start
-    // Load map of locations -> categories for notifications
+    assert(_dispatcher.historyService != null);
+    _loadNotificationMap();
+  }
 
+  void _loadNotificationMap() {
+    for (Transaction transaction in _dispatcher.historyService
+        .allTransactions) {
+      if (transaction.location != null) {
+        if (!_notificationMap.containsKey(transaction.location)) {
+          _notificationMap[transaction.location] = transaction.category;
+        }
+      }
+    }
   }
 
   Future stop() {

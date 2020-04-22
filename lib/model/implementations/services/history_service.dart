@@ -4,6 +4,7 @@ import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/history.dart';
 import 'package:budgetflow/model/data_types/month.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/implementations/io/history_io.dart';
 import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
@@ -90,5 +91,15 @@ class HistoryService implements Service, Saveable {
       }
     }
     return output;
+  }
+
+  TransactionList get allTransactions {
+    TransactionList transactions = TransactionList();
+    for (Month month in _history) {
+      for (Transaction transaction in month.transactions) {
+        transactions.add(transaction);
+      }
+    }
+    return transactions;
   }
 }
