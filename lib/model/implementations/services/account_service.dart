@@ -35,6 +35,7 @@ class AccountService implements Service, Saveable {
   }
 
   void _initializePaymentMethods() {
+    _paymentMethods = List<PaymentMethod>();
     _paymentMethods.add(PaymentMethod.cash);
     for (Account account in _accounts) {
       _paymentMethods.add(account);

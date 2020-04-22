@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 
 /// Welcome to our favorite superclass
 class BudgetControl {
-  ServiceDispatcher _dispatcher;
+  ServiceDispatcher dispatcher;
   Color cashFlowColor;
   AccountList accounts;
   Map<Location, Category> locationMap = Map();
@@ -42,18 +42,16 @@ class BudgetControl {
     'Savings': [Category.savings]
   };
 
-  ServiceDispatcher get dispatcher => _dispatcher;
-
   BudgetControl() {
-    _dispatcher = ServiceDispatcher();
+    dispatcher = ServiceDispatcher();
   }
 
   Future<bool> isReturningUser() async {
-    return await _dispatcher.fileService.fileExists(passwordFilepath);
+    return await dispatcher.fileService.fileExists(passwordFilepath);
   }
 
   Future<bool> passwordIsValid(String secret) {
-    return _dispatcher.encryptionService.validatePassword(secret);
+    return dispatcher.encryptionService.validatePassword(secret);
   }
 
   Future<bool> initialize() async {
@@ -69,21 +67,21 @@ class BudgetControl {
     }
   }
 
-  bool get isDispatcherStarted => _dispatcher != null;
+  bool get isDispatcherStarted => dispatcher != null;
 
   bool _isLoaded() {
-    return _dispatcher.fileService != null &&
-        _dispatcher.encryptionService != null &&
-        _dispatcher.historyService != null &&
-        _dispatcher.achievementService != null &&
-        _dispatcher.locationService != null;
+    return dispatcher.fileService != null &&
+        dispatcher.encryptionService != null &&
+        dispatcher.historyService != null &&
+        dispatcher.achievementService != null &&
+        dispatcher.locationService != null;
   }
 
   Future _load() async {
-    await _dispatcher.registerAndStart(AccountService(_dispatcher));
-    await _dispatcher.registerAndStart(HistoryService(_dispatcher));
-    await _dispatcher.registerAndStart(LocationService(_dispatcher));
-    budget = await _dispatcher.historyService.getLatestMonthBudget();
+    await dispatcher.registerAndStart(AccountService(dispatcher));
+    await dispatcher.registerAndStart(HistoryService(dispatcher));
+    await dispatcher.registerAndStart(LocationService(dispatcher));
+    budget = await dispatcher.historyService.getLatestMonthBudget();
     accountant = BudgetAccountant(budget);
     _initLocationMap();
   }
@@ -121,14 +119,20 @@ class BudgetControl {
 //  }
 
   Future save() async {
-    await _dispatcher.encryptionService.save();
-    await _dispatcher.historyService.save();
-    await _dispatcher.achievementService.save();
-    await _dispatcher.accountService.save();
+    print('BudgetControl: Beginning save...');
+    await dispatcher.encryptionService.save();
+    print('BudgetControl: Saved EncryptionService.');
+    await dispatcher.historyService.save();
+    print('BudgetControl: Saved HistoryService.');
+    await dispatcher.achievementService.save();
+    print('BudgetControl: Saved AchievementService.');
+    await dispatcher.accountService.save();
+    print('BudgetControl: Saved AccountService.');
+    print('BudgetControl: Save complete.');
   }
 
   Future setPassword(String newSecret) async {
-    _dispatcher.encryptionService.registerPassword(newSecret);
+    dispatcher.encryptionService.registerPassword(newSecret);
   }
 
   Budget getBudget() {
@@ -161,16 +165,17 @@ class BudgetControl {
 
   Future<bool> setup() async {
     await setPassword(SetupAgent.pin);
+    print('BudgetControl: Password set.');
     addNewBudget(PriorityBudgetFactory().newFromInfo());
-    await _dispatcher.historyService.save();
-    await _dispatcher.encryptionService.save();
-    await _dispatcher.achievementService.save();
+    print('BudgetControl: Budget added.');
+    await save();
+    print('BudgetControl: Saved successfully.');
     return true;
   }
 
   void addNewBudget(Budget toAdd) {
     Month m = Month.fromBudget(toAdd);
-    _dispatcher.historyService.add(m);
+    dispatcher.historyService.add(m);
     budget = toAdd;
     accountant = BudgetAccountant(budget);
     save();

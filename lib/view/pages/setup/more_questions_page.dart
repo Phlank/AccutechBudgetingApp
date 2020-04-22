@@ -1,5 +1,7 @@
 import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/encryption_service.dart';
+import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/basic_loading_page.dart';
@@ -23,6 +25,8 @@ class _MoreQuestionsPageState extends State<MoreQuestionsPage> {
 
   Future _builderPrep() async {
     ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
+    await dispatcher.registerAndStart(FileService(dispatcher));
+    await dispatcher.registerAndStart(EncryptionService(dispatcher));
     await dispatcher.registerAndStart(AchievementService(dispatcher));
     print('MoreQuestionsPage: Finished resolving future');
     return true; // Needed or else the FutureBuilder will never resolve.

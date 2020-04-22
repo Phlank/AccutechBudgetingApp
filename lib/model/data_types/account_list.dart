@@ -8,13 +8,17 @@ class AccountList extends DelegatingList<Account> implements Serializable {
 
   List<Account> get delegate => _list;
 
+  AccountList() {
+    _list = List();
+  }
+
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
     for (int i = 0; i < length; i++) {
       serializer.addPair('$i', this[i]);
     }
-    return null;
+    return serializer.serialize;
   }
 
   bool operator ==(Object other) => other is AccountList && _equals(other);

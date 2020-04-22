@@ -6,8 +6,8 @@ import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/basic_loading_page.dart';
-import 'package:budgetflow/view/pages/first_load.dart';
-import 'package:budgetflow/view/pages/setup/welcome_page.dart';
+import 'package:budgetflow/view/pages/error_page.dart';
+import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,12 +29,16 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
 
   Future _prepFuture() async {
     ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
+    print('SetupFinishedPage: Registering services...');
     await dispatcher.registerAndStart(FileService(dispatcher));
     await dispatcher.registerAndStart(EncryptionService(dispatcher));
     await dispatcher.registerAndStart(AchievementService(dispatcher));
     await dispatcher.registerAndStart(AccountService(dispatcher));
     await dispatcher.registerAndStart(HistoryService(dispatcher));
+    print('SetupFinishedPage: Finished registering all services.');
     await BudgetingApp.control.setup();
+    print('SetupFinishedPage: Finished Future.');
+    return true;
   }
 
   @override
@@ -43,13 +47,17 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
         future: _builderFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print('Snapshot has data');
-            return FirstLoad();
+            print('SetupFinishedPage: Snapshot has data');
+            return UserPage();
           } else if (snapshot.hasError) {
-            print('Snapshot has error');
-            return WelcomePage();
+            print('SetupFinishedPage: Snapshot has error');
+            print('SetupFinishedPage: ' + snapshot.error.toString());
+            return ErrorPage();
           } else {
-            return BasicLoadingPage(message: 'Loading your budget...');
+            return BasicLoadingPage(
+              title: 'Loading',
+              message: 'Loading your budget...',
+            );
           }
         });
   }

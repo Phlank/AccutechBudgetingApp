@@ -58,6 +58,7 @@ class PriorityBudgetFactory implements BudgetFactory {
 
   @override
   Budget newFromInfo() {
+    print('BudgetFactory: Beginning newFromInfo().');
     var type;
     if (SetupAgent.depletion)
       type = BudgetType.depletion;
@@ -66,8 +67,11 @@ class PriorityBudgetFactory implements BudgetFactory {
     _currentDistribution = new _NSW(0.0, 0.0, 0.0);
     _housingRatio = SetupAgent.housing / SetupAgent.income;
     _income = SetupAgent.income;
+    print('BudgetFactory: Desiding plan.');
     _decidePlan(type);
+    print('BudgetFactory: Setting allotments.');
     _setAllotments(SetupAgent.housing);
+    print('BudgetFactory: Returning Budget');
     return Budget(
       expectedIncome: SetupAgent.income,
       type: type,

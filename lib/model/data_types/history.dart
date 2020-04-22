@@ -10,7 +10,8 @@ class History extends DelegatingList<Month> implements Serializable {
   List<Month> get delegate => _months;
 
   History() {
-    _months = [];
+    _months = List<Month>();
+    _monthTimes = List<DateTime>();
   }
 
   @override

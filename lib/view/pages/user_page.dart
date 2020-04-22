@@ -1,11 +1,15 @@
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/implementations/services/account_service.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
+import 'package:budgetflow/model/implementations/services/encryption_service.dart';
+import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/location_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/accounts_page.dart';
+import 'package:budgetflow/view/pages/basic_loading_page.dart';
+import 'package:budgetflow/view/pages/error_page.dart';
 import 'package:budgetflow/view/pages/setup/welcome_page.dart';
 import 'package:budgetflow/view/utils/routes.dart';
 import 'package:budgetflow/view/widgets/achievement_list_card.dart';
@@ -29,6 +33,8 @@ class _UserPageState extends State<UserPage> {
 
   Future _prepareServices() async {
     ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
+    await dispatcher.registerAndStart(FileService(dispatcher));
+    await dispatcher.registerAndStart(EncryptionService(dispatcher));
     await dispatcher.registerAndStart(AchievementService(dispatcher));
     await dispatcher.registerAndStart(AccountService(dispatcher));
     await dispatcher.registerAndStart(HistoryService(dispatcher));
@@ -41,8 +47,8 @@ class _UserPageState extends State<UserPage> {
     _servicesPreparation = _prepareServices();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildUserScaffold() {
+    // TODO break into smaller pieces
     return Scaffold(
       appBar: AppBar(
         title: Text('Summary'),
@@ -98,6 +104,25 @@ class _UserPageState extends State<UserPage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _servicesPreparation,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return _buildUserScaffold();
+        } else if (snapshot.hasError) {
+          return ErrorPage();
+        } else {
+          return BasicLoadingPage(
+            title: 'Loading',
+            message: 'Loading information...',
+          );
+        }
+      },
     );
   }
 }
