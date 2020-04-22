@@ -32,6 +32,7 @@ class _UserPageState extends State<UserPage> {
   Future _servicesPreparation;
 
   Future _prepareServices() async {
+    print('UserPage: Starting Future...');
     ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
     await dispatcher.registerAndStart(FileService(dispatcher));
     await dispatcher.registerAndStart(EncryptionService(dispatcher));
@@ -39,6 +40,8 @@ class _UserPageState extends State<UserPage> {
     await dispatcher.registerAndStart(AccountService(dispatcher));
     await dispatcher.registerAndStart(HistoryService(dispatcher));
     await dispatcher.registerAndStart(LocationService(dispatcher));
+    print('UserPage: Finished Future.');
+    return true;
   }
 
   @override

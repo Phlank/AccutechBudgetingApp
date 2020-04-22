@@ -10,12 +10,13 @@ class AccountListView extends StatelessWidget {
 
   Widget build(BuildContext context) {
     List<Widget> items = [];
-    BudgetingApp.control.accounts.forEach((account) {
+    var accounts = BudgetingApp.control.dispatcher.accountService.accounts;
+    for (Account account in accounts) {
       if (account != null) {
         print(account.toString());
         items.add(AccountListViewItem(account));
       }
-    });
+    }
     return ListView(
       children: items,
       shrinkWrap: true,

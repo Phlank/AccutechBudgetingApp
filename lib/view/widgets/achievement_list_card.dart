@@ -48,9 +48,8 @@ class AchievementListCard extends StatelessWidget {
       ];
     } else {
       Color color = Colors.grey;
-      for (Achievement achievement in BudgetingApp.control.dispatcher
-          .achievementService
-          .earned
+      for (Achievement achievement in BudgetingApp
+          .control.dispatcher.achievementService.earned
           .toList(growable: false)) {
         if (achievement.earned) {
           color = Colors.black;
@@ -115,7 +114,6 @@ class AchievementListItem extends StatelessWidget {
                   style: style,
                   textAlign: TextAlign.left,
                 )),
-            TableCell(child: Text(''))
           ])
         ],
       ),

@@ -23,11 +23,13 @@ class _SetupFinishedPageState extends State<SetupFinishedPage> {
 
   @override
   void initState() {
+    print('SetupFinishedPage: Init state.');
     super.initState();
     _builderFuture = _prepFuture();
   }
 
   Future _prepFuture() async {
+    print('SetupFinishedPage: Starting Future...');
     ServiceDispatcher dispatcher = BudgetingApp.control.dispatcher;
     print('SetupFinishedPage: Registering services...');
     await dispatcher.registerAndStart(FileService(dispatcher));
