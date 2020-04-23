@@ -6,8 +6,6 @@ import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:flutter/foundation.dart';
 
 class Account extends PaymentMethod {
-  static final String accountsPath = 'accounts';
-
   String accountName;
   TransactionList accountTransactions;
   DateTime beginning;
@@ -111,6 +109,7 @@ class Account extends PaymentMethod {
         beginning == other.beginning;
   }
 
+  /// The hash code for this object.
   int get hashCode =>
       accountName.hashCode ^ methodName.hashCode ^ beginning.hashCode;
 }

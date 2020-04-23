@@ -55,6 +55,7 @@ class Transaction implements Serializable {
             (location == null && other.location == null));
   }
 
+  /// The hash code for this object.
   int get hashCode =>
       time.hashCode ^
       vendor.hashCode ^

@@ -70,7 +70,7 @@ class Category implements Serializable {
     return this.name == other.name && this.priority == other.priority;
   }
 
-  int get hashCode => name.hashCode ^ priority.hashCode;
+  /// The hash code for this object. => name.hashCode ^ priority.hashCode;
 
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
