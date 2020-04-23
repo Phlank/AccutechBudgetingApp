@@ -14,7 +14,7 @@ class BudgetingApp extends StatelessWidget {
   static final int r = 0,
       g = 153,
       b = 0;
-  static final Map<int, Color> colors = {
+  static final Map<int, Color> themeColors = {
     50: Color.fromRGBO(r, g, b, .1),
     100: Color.fromRGBO(r, g, b, .2),
     200: Color.fromRGBO(r, g, b, .3),
@@ -32,7 +32,7 @@ class BudgetingApp extends StatelessWidget {
     return MaterialApp(
       title: NAME,
       theme: ThemeData(
-        primarySwatch: MaterialColor(0xff009900, colors),
+        primarySwatch: MaterialColor(0xff009900, themeColors),
         backgroundColor: Colors.black,
       ),
       home: StartupPage(),
