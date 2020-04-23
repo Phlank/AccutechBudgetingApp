@@ -6,8 +6,6 @@ import 'package:quiver/collection.dart';
 
 class AllocationList extends DelegatingList<Allocation>
     implements Serializable {
-  List<Allocation> _list = [];
-
   /// Creates a new AllocationList.
   ///
   /// If [allocations] is unspecified, [delegate] will initialize as an empty list.
@@ -18,12 +16,14 @@ class AllocationList extends DelegatingList<Allocation>
 
   /// Constructs a new AllocationList with predetermined [Category] objects.
   ///
-  /// Used when creating a new budget from user-provided information.
+  /// Used when creating a new budget from user-provided information during setup.
   AllocationList.defaultCategories() {
     Category.defaultCategories.forEach((category) {
       _list.add(Allocation(category, 0.0));
     });
   }
+
+  List<Allocation> _list = [];
 
   /// The delegate list of the superclass.
   List<Allocation> get delegate => _list;
@@ -80,6 +80,7 @@ class AllocationList extends DelegatingList<Allocation>
     return serializer.serialize;
   }
 
+  /// Returns the element in this list that has the same Category as [allocation].
   Allocation getWithSameCategory(Allocation allocation) {
     for (Allocation element in _list) {
       if (allocation.category == element.category) return element;
@@ -87,6 +88,7 @@ class AllocationList extends DelegatingList<Allocation>
     return null;
   }
 
+  /// Returns the element in this list with [category].
   Allocation getCategory(Category category) {
     for (Allocation element in _list) {
       if (element.category == category) return element;
@@ -94,6 +96,7 @@ class AllocationList extends DelegatingList<Allocation>
     return null;
   }
 
+  /// Returns a new AllocationList with all values divided by [n].
   AllocationList divide(double n) {
     AllocationList output = AllocationList();
     for (Allocation element in _list) {
@@ -119,5 +122,4 @@ class AllocationList extends DelegatingList<Allocation>
 
   /// The hash code for this object.
   int get hashCode => _list.hashCode;
-
 }
