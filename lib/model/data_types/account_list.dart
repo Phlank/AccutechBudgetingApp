@@ -8,10 +8,13 @@ class AccountList extends DelegatingList<Account> implements Serializable {
 
   List<Account> get delegate => _list;
 
+  /// An extended list object which adds serialization.
   AccountList() {
     _list = List();
   }
 
+  /// The serialized form of this object.
+  ///
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
@@ -21,19 +24,23 @@ class AccountList extends DelegatingList<Account> implements Serializable {
     return serializer.serialize;
   }
 
+  /// Equality operator.
+  ///
+  /// Returns [true] if [other] is an instance of [AccountList] and contains the same [Account] objects as this [AccountList].
   bool operator ==(Object other) => other is AccountList && _equals(other);
 
   bool _equals(AccountList other) {
-    bool output = true;
-    if (length != other.length) return false;
-    _list.forEach((account) {
-      if (other.contains(account)) {
-        output = false;
-        return; // Exit the local forEach function
+    if (length != other.length) {
+      return false;
+    }
+    for (Account account in _list) {
+      if (!other.contains(account)) {
+        return false;
       }
-    });
-    return output;
+    }
+    return true;
   }
 
+  /// The hash code for this object.
   int get hashCode => _list.hashCode;
 }
