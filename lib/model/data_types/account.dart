@@ -16,8 +16,8 @@ class Account extends PaymentMethod {
   Account({
     @required String methodName,
     @required this.accountName,
+            @required this.beginning,
     this.accountTransactions,
-    this.beginning,
     this.amount,
   }) : super(methodName) {
     this.methodName = methodName;
@@ -99,9 +99,18 @@ class Account extends PaymentMethod {
     Serializer serializer = Serializer();
     serializer.addPair(methodNameKey, methodName);
     serializer.addPair(accountNameKey, accountName);
-    serializer.addPair(transactionListKey, accountTransactions);
     serializer.addPair(beginningKey, beginning.toIso8601String());
-    serializer.addPair(amountKey, amount);
     return serializer.serialize;
   }
+
+  bool operator ==(Object other) => other is Account && this._equals(other);
+
+  bool _equals(Account other) {
+    return accountName == other.accountName &&
+        methodName == other.methodName &&
+        beginning == other.beginning;
+  }
+
+  int get hashCode =>
+      accountName.hashCode ^ methodName.hashCode ^ beginning.hashCode;
 }
