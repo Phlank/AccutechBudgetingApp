@@ -23,10 +23,14 @@ class Month implements Serializable {
     this.target,
     this.transactions,
   }) {
-    if (allotted != null) allotted = allotted;
-    if (actual != null) actual = actual;
-    if (target != null) target = target;
-    if (transactions != null) transactions = transactions;
+    _initUnusedParameters();
+  }
+
+  void _initUnusedParameters() {
+    if (allotted == null) allotted = AllocationList();
+    if (actual == null) actual = AllocationList();
+    if (target == null) target = AllocationList();
+    if (transactions == null) transactions = TransactionList();
   }
 
   Month.fromBudget(Budget b) {

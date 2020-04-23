@@ -32,9 +32,12 @@ class History extends DelegatingList<Month> implements Serializable {
     return false;
   }
 
-  /// Returns the Month in History that matches the given DateTime. If no match is found, returns null.
-  Month getMonthFromDateTime(DateTime dt) {
-    return _months.firstWhere((Month m) => m.timeIsInMonth(dt), orElse: null);
+  /// Returns the Month in History that matches the given [datetime]. If no match is found, returns `null`.
+  Month getMonthFromDateTime(DateTime datetime) {
+    return _months.firstWhere(
+          (Month m) => m.timeIsInMonth(datetime),
+      orElse: null,
+          );
   }
 
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
@@ -47,4 +50,20 @@ class History extends DelegatingList<Month> implements Serializable {
     }
     return serializer.serialize;
   }
+
+  bool operator ==(Object other) => other is History && _equals(other);
+
+  bool _equals(History other) {
+    if (length != other.length) {
+      return false;
+    }
+    for (Month month in _months) {
+      if (!other.contains(month)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  int get hashCode => _months.hashCode;
 }
