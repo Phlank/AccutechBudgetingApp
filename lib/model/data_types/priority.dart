@@ -54,5 +54,6 @@ class Priority implements Serializable {
 
   bool operator ==(Object o) => o is Priority && name == o.name;
 
-/// The hash code for this object. => name.hashCode ^ value.hashCode;
+  /// The hash code for this object.
+  int get hashCode => name.hashCode ^ value.hashCode;
 }

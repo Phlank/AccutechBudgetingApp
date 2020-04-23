@@ -29,20 +29,6 @@ class BudgetControl {
   Budget budget;
   BudgetAccountant accountant;
 
-  final Map<String, List<Category>> sectionMap = {
-    'Needs': [
-      Category.housing,
-      Category.utilities,
-      Category.groceries,
-      Category.health,
-      Category.transportation,
-      Category.education,
-      Category.kids
-    ],
-    'Wants': [Category.entertainment, Category.pets, Category.miscellaneous],
-    'Savings': [Category.savings]
-  };
-
   BudgetControl() {
     dispatcher = ServiceDispatcher();
   }
@@ -186,45 +172,6 @@ class BudgetControl {
     budget = toAdd;
     accountant = BudgetAccountant(budget);
     save();
-  }
-
-  double getCashFlow() {
-    double amt = budget.expectedIncome -
-        budget.allotted
-            .getCategory(Category.housing)
-            .value +
-        expenseTotal();
-    if (amt > 0) {
-      cashFlowColor = Colors.green;
-    } else if (amt < 0) {
-      cashFlowColor = Colors.red;
-    } else {
-      cashFlowColor = Colors.black;
-    }
-    return amt;
-  }
-
-  double expenseTotal() {
-    double spent = 0.0;
-    for (int i = 0; i < budget.transactions.length; i++) {
-      spent += budget.transactions[i].amount;
-    }
-    return spent;
-  }
-
-  double expenseInSection(String section) {
-    double spent = 0.0;
-    for (Category cat in sectionMap[section]) {
-      for (int i = 0; i < budget.transactions.length; i++) {
-        Category rel = budget.transactions[i].category;
-        if (rel == cat) {
-          spent += budget.allotted
-              .getCategory(rel)
-              .value;
-        }
-      }
-    }
-    return spent;
   }
 
   void removeTransactionIfPresent(Transaction tran) {
