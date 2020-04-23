@@ -3,18 +3,19 @@ import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:quiver/collection.dart';
 
+/// An extended List class which adds some use-case functionality to the base Dart List.
 class AccountList extends DelegatingList<Account> implements Serializable {
-  List<Account> _list;
+  List<Account> _list = [];
 
   List<Account> get delegate => _list;
 
-  /// An extended list object which adds serialization.
-  AccountList() {
-    _list = List();
+  /// Creates an AccountList.
+  ///
+  /// If [accounts] is specified, [delegate] is initialized as [accounts].
+  AccountList([List<Account> accounts]) {
+    if (accounts != null) _list = accounts;
   }
 
-  ///
-  ///
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
@@ -26,7 +27,7 @@ class AccountList extends DelegatingList<Account> implements Serializable {
 
   /// Equality operator.
   ///
-  /// Returns [true] if [other] is an instance of [AccountList] and contains the same [Account] objects as this [AccountList].
+  /// Returns `true` if [other] is an instance of [AccountList] and contains the same [Account] objects as this [AccountList].
   bool operator ==(Object other) => other is AccountList && _equals(other);
 
   bool _equals(AccountList other) {
