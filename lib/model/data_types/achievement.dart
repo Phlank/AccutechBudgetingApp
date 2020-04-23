@@ -10,22 +10,48 @@ import 'package:flutter/widgets.dart';
 /// Used for one-event achievements or achievements that require repeated
 /// actions taking place.
 class Achievement extends Serializable {
-  String name, title, description;
-  int currentProgress, targetProgress;
-
+  /// Creates an Achievement.
   ///
+  /// Though [name] and [title] can be equal, it isn't necessary. The displayed
+  /// parts of the achievement to the user are [title] and [description], while
+  /// [name] is used to compare Achievements to determine equality.
+  /// [currentProgress] should start at `0` if the Achievement isn't being
+  /// created through loading.
+  ///
+  /// [currentProgress] must be less than or equal to [targetProgress].
+  /// [currentProgress] must be greater than or equal to `0`, while
+  /// [targetProgress] must be greater than or equal to `1`.
   Achievement({
     @required this.name,
     @required this.title,
     @required this.description,
     this.currentProgress = 0,
     this.targetProgress = 1,
-  }) : assert(currentProgress <= targetProgress);
+              })
+      : assert(currentProgress <= targetProgress),
+        assert(targetProgress > 0),
+        assert(currentProgress >= 0);
+
+  /// The unique identifier of the achievement.
+  String name;
+
+  /// The displayed title of the achievement.
+  String title;
+
+  /// The displayed description of the achievement.
+  String description;
+
+  /// An `int` of the number of times the achievement has been triggered.
+  int currentProgress;
+
+  /// An `int` of the number of triggers required to earn this achievement.
+  int targetProgress;
+
 
   /// Returns the value side of a key-value pair as a JSON object.
   ///
   /// Serializes the [name], [title], [description], [currentProgress], and
-  /// [targetProgress]. Unserializes with [achievementKey].
+  /// [targetProgress].
   String get serialize {
     Serializer serializer = new Serializer();
     serializer.addPair(nameKey, name);
