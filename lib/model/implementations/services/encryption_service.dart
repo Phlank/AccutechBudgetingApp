@@ -13,35 +13,51 @@ class EncryptionService implements Service {
 
   EncryptionService(this._dispatcher);
 
+  /// Start this service. Must be called before any other method after construction.
   Future start() async {
-    FileService fileService = _dispatcher.getFileService();
+    FileService fileService = _dispatcher.fileService;
     if (await fileService.fileExists(passwordFilepath)) {
-      _loadPassword(fileService);
+      await _loadPassword(fileService);
     }
   }
 
-  void _loadPassword(FileService fileService) async {
+  Future _loadPassword(FileService fileService) async {
     String content = await fileService.readFile(passwordFilepath);
     _password = Serializer.unserialize(passwordKey, content);
-    _crypter = SteelCrypter(_password);
-    fileService.registerCrypter(_crypter);
   }
 
+  /// Stops this service.
   Future stop() {
     return null;
   }
 
+  Future save() {
+    String content = _password.serialize;
+    return _dispatcher.fileService.writeFile(passwordFilepath, content);
+  }
+
+  /// Defines a new String 'secret' for encryption.
   void registerPassword(String password) {
     _password = SteelPassword.fromSecret(password);
     _crypter = SteelCrypter(_password);
-    _dispatcher.getFileService().registerCrypter(_crypter);
+    // If you don't update the crypter in the file service, it will encrypt all
+    // files with the old password's AES scheme. That is why the below line
+    // exists.
+    _dispatcher.fileService.registerCrypter(_crypter);
   }
 
+  /// Returns true if the password has been initialized.
   bool passwordExists() {
     return _password != null;
   }
 
-  Future<bool> validatePassword(String secret) {
-    return _password.verify(secret);
+  /// Returns true if the input String matches the information held on disk.
+  Future<bool> validatePassword(String secret) async {
+    bool result = await _password.verify(secret);
+    if (result) {
+      _crypter = SteelCrypter(_password);
+      _dispatcher.fileService.registerCrypter(_crypter);
+    }
+    return result;
   }
 }

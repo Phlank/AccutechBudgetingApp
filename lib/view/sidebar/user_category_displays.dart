@@ -1,4 +1,4 @@
-import 'package:budgetflow/global/presets.dart';
+import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
@@ -10,14 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class GeneralCategory extends StatefulWidget {
-  String section;
+  final String section;
   static final String needsRoute = '/' + Priority.needs.name;
   static final String wantsRoute = '/' + Priority.wants.name;
   static final String savingsRoute = '/' + Priority.savings.name;
 
-  GeneralCategory(String section) {
-    this.section = section;
-  }
+  GeneralCategory(this.section);
 
   @override
   State<StatefulWidget> createState() => _GeneralCategoryState(section);
@@ -149,8 +147,8 @@ class _GeneralCategoryState extends State<GeneralCategory> {
                   .value = playBudget.getCategory(category);
             }
             BudgetingApp.control.dispatcher
-                .getAchievementService()
-                .earn(achChangedAllotment);
+                .achievementService
+                .incrementProgress(Achievements.achChangedAllotment);
             if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');
               userController.save();

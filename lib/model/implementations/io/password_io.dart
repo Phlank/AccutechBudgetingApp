@@ -20,7 +20,7 @@ class PasswordIO implements IO {
   }
 
   @override
-  Future save() {
-    _fileService.writeFile(passwordFilepath, _password.serialize);
+  Future save() async {
+    await _fileService.writeFile(passwordFilepath, _password.serialize);
   }
 }

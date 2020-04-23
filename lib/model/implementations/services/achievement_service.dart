@@ -1,5 +1,6 @@
-import 'package:budgetflow/global/defaults.dart';
+import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/saveable.dart';
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/achievement.dart';
 import 'package:budgetflow/model/data_types/achievement_list.dart';
@@ -7,48 +8,60 @@ import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 
-class AchievementService implements Service {
+class AchievementService implements Service, Saveable {
   ServiceDispatcher _dispatcher;
   FileService _fileService;
-  AchievementList _earned;
-  AchievementList _possible;
+  AchievementList _achievements;
+
+  static final _achievementsNotLoadedMessage =
+      'Achievements have not been loaded for this service. Has this service finished starting?';
+
+  AchievementList get all => _achievements;
+
+  AchievementList get earned {
+    AchievementList output = AchievementList();
+    for (Achievement achievement in _achievements) {
+      if (achievement.earned) output.add(achievement);
+    }
+    return output;
+  }
+
+  AchievementList get unearned {
+    AchievementList output = AchievementList();
+    for (Achievement achievement in _achievements) {
+      if (!achievement.earned) output.add(achievement);
+    }
+    return output;
+  }
 
   AchievementService(this._dispatcher) {
-    _fileService = _dispatcher.getFileService();
+    _fileService = _dispatcher.fileService;
   }
 
   Future start() async {
     if (await _filesExist()) {
+      print('AchievementService: Files detected, loading...');
       await _loadAchievements();
+      print('AchievementService: Achievements initialized.');
     } else {
-      _earned = List();
-      _possible = List();
-      for (var achievement in defaultAchievements) {
-        _possible.add(achievement);
+      print(
+          'AchievementService: No files detected. Initializing list of achievements...');
+      _achievements = AchievementList();
+      for (var achievement in Achievements.defaults) {
+        _achievements.add(achievement);
       }
+      print('AchievementService: Achievements initialized.');
     }
   }
 
-  Future<bool> _filesExist() async {
-    return await _fileService.fileExists(earnedAchievementsFilepath) &&
-        await _fileService.fileExists(possibleAchievementsFilepath);
+  Future<bool> _filesExist() {
+    assert(_fileService != null);
+    return _fileService.fileExists(achievementsFilepath);
   }
 
   Future _loadAchievements() async {
-    await _loadPossibleAchievements();
-    await _loadEarnedAchievements();
-  }
-
-  Future _loadEarnedAchievements() async {
-    String content =
-    await _fileService.readAndDecryptFile(earnedAchievementsFilepath);
-    _earned = Serializer.unserialize(achievementListKey, content);
-  }
-
-  Future _loadPossibleAchievements() async {
-    String content =
-    await _fileService.readAndDecryptFile(possibleAchievementsFilepath);
-    _earned = Serializer.unserialize(achievementListKey, content);
+    String content = await _fileService.readFile(achievementsFilepath);
+    _achievements = Serializer.unserialize(achievementListKey, content);
   }
 
   Future stop() {
@@ -56,39 +69,35 @@ class AchievementService implements Service {
     return null;
   }
 
-  Future save() {
-    _saveEarnedAchievements();
-    _savePossibleAchievements();
+  /// Write achievements to disk.
+  Future save() async {
+    String content = _achievements.serialize;
+    return _fileService.writeFile(achievementsFilepath, content);
   }
 
-  Future _saveEarnedAchievements() {
-    String content = _earned.serialize;
-    return _fileService.encryptAndWriteFile(
-      earnedAchievementsFilepath,
-      content,
-    );
-  }
-
-  Future _savePossibleAchievements() {
-    String content = _possible.serialize;
-    return _fileService.encryptAndWriteFile(
-      possibleAchievementsFilepath,
-      content,
-    );
-  }
-
-  bool isEarned(Achievement achievement) {
-    return _earned.contains(achievement);
-  }
-
-  void earn(Achievement achievement) {
-    if (!_earned.contains(achievement)) {
-      _earned.add(achievement);
+  /// Increments currentProgress of target by 1 and returns true if the [Achievement] is not earned prior to the method call.
+  ///
+  /// If the [Achievement] was earned prior to calling this method, it will return false. However, if the achievement was not earned prior to calling this method, it will return true.
+  bool incrementProgress(Achievement target) {
+    Achievement achievementInMem = _correspondingAchievement(target);
+    assert(achievementInMem != null, _achievementsNotLoadedMessage);
+    if (achievementInMem.currentProgress < achievementInMem.targetProgress) {
+      achievementInMem.currentProgress++;
+      return achievementInMem.earned;
     }
-    // TODO display popup
+    return false;
   }
 
-  int get numEarned => _earned.length;
+  Achievement _correspondingAchievement(Achievement target) {
+    for (Achievement achievement in _achievements) {
+      if (achievement.name == target.name) {
+        return achievement;
+      }
+    }
+    return null;
+  }
 
-  AchievementList get earned => _earned;
+  bool _achievementsMatch(Achievement ach1, Achievement ach2) {
+    return ach1.name == ach2.name;
+  }
 }

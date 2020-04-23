@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 
 class PriorityPage extends StatelessWidget {
   final Priority priority;
-  List <IconButton> actions = [];
 
   PriorityPage(this.priority);
 
   @override
   Widget build(BuildContext context) {
+    List<IconButton> actions;
     if (this.priority == Priority.savings) {
-      this.actions = [
+      actions = [
         IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
@@ -28,7 +28,7 @@ class PriorityPage extends StatelessWidget {
         ),
       ];
     } else {
-      this.actions = [
+      actions = [
         IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
@@ -40,7 +40,7 @@ class PriorityPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(priority.name),
-          actions: this.actions,
+          actions: actions,
         ),
         body: CategoryListView(priority));
   }

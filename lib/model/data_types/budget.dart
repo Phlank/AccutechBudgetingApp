@@ -28,7 +28,9 @@ class Budget {
 
   void _resolveOptionalParameters() {
     if (actual == null) actual = AllocationList.withCategoriesOf(allotted);
+    print('Budget: Resolved AllocationList actual.');
     if (transactions == null) transactions = TransactionList();
+    print('Budget: Resolved TransactionList transactions.');
   }
 
   // Makes a new budget based on the allocations of an old budget

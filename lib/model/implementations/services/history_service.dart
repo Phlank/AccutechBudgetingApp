@@ -1,15 +1,17 @@
 import 'package:budgetflow/global/strings.dart';
+import 'package:budgetflow/model/abstract/saveable.dart';
 import 'package:budgetflow/model/abstract/service.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/history.dart';
 import 'package:budgetflow/model/data_types/month.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/implementations/io/history_io.dart';
 import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/dates.dart';
 
-class HistoryService implements Service {
+class HistoryService implements Service, Saveable {
   ServiceDispatcher _dispatcher;
   History _history = History();
 
@@ -24,19 +26,19 @@ class HistoryService implements Service {
   }
 
   Future<bool> historyFileExists() {
-    return _dispatcher.getFileService().fileExists(historyFilepath);
+    return _dispatcher.fileService.fileExists(historyFilepath);
   }
 
   Future load() async {
     if (await historyFileExists()) {
-      HistoryIO io = HistoryIO(_dispatcher.getFileService());
+      HistoryIO io = HistoryIO(_dispatcher.fileService);
       _history = await io.load();
     }
   }
 
   Future save() async {
     HistoryIO io =
-    HistoryIO.fromHistory(_history, _dispatcher.getFileService());
+    HistoryIO.fromHistory(_history, _dispatcher.fileService);
     io.save();
   }
 
@@ -89,5 +91,15 @@ class HistoryService implements Service {
       }
     }
     return output;
+  }
+
+  TransactionList get allTransactions {
+    TransactionList transactions = TransactionList();
+    for (Month month in _history) {
+      for (Transaction transaction in month.transactions) {
+        transactions.add(transaction);
+      }
+    }
+    return transactions;
   }
 }

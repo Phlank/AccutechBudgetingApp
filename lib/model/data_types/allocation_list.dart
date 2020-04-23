@@ -6,26 +6,31 @@ import 'package:quiver/collection.dart';
 
 class AllocationList extends DelegatingList<Allocation>
     implements Serializable {
-  List<Allocation> _list = [];
-
-  List<Allocation> get delegate => _list;
-
+  /// Creates a new AllocationList.
+  ///
+  /// If [allocations] is unspecified, [delegate] will initialize as an empty list.
+  /// Otherwise, [delegate] will initialize as [allocations].
   AllocationList([List<Allocation> allocations]) {
     if (allocations != null) _list = allocations;
   }
 
   /// Constructs a new AllocationList with predetermined [Category] objects.
   ///
-  /// Used when creating a new budget from user-provided information.
+  /// Used when creating a new budget from user-provided information during setup.
   AllocationList.defaultCategories() {
     Category.defaultCategories.forEach((category) {
       _list.add(Allocation(category, 0.0));
     });
   }
 
-  /// Constructs a new AllocationList with the same categories as another specified AllocationList.
+  List<Allocation> _list = [];
+
+  /// The delegate list of the superclass.
+  List<Allocation> get delegate => _list;
+
+  /// Constructs a new AllocationList with the same categories as [other].
   ///
-  /// All values for the [ALlocation] objects in the constructed list will equal 0.
+  /// All values of the Allocation objects in the constructed list will equal `0`.
   AllocationList.withCategoriesOf(AllocationList other) {
     other.forEach((allocation) {
       _list.add(Allocation(allocation.category, 0.0));
@@ -75,24 +80,28 @@ class AllocationList extends DelegatingList<Allocation>
     return serializer.serialize;
   }
 
+  /// Returns the element in this list that has the same Category as [allocation].
   Allocation getWithSameCategory(Allocation allocation) {
-    return _list.firstWhere((element) {
-      return element.category == allocation.category;
-    });
+    for (Allocation element in _list) {
+      if (allocation.category == element.category) return element;
+    }
+    return null;
   }
 
+  /// Returns the element in this list with [category].
   Allocation getCategory(Category category) {
-    Allocation output = _list.firstWhere((element) {
-      return element.category == category;
-    });
-    return output;
+    for (Allocation element in _list) {
+      if (element.category == category) return element;
+    }
+    return null;
   }
 
+  /// Returns a new AllocationList with all values divided by [n].
   AllocationList divide(double n) {
     AllocationList output = AllocationList();
-    forEach((allocation) {
-      output.add(Allocation(allocation.category, allocation.value / n));
-    });
+    for (Allocation element in _list) {
+      output.add(Allocation(element.category, element.value / 4));
+    }
     return output;
   }
 
@@ -100,22 +109,17 @@ class AllocationList extends DelegatingList<Allocation>
       other is AllocationList && this._equals(other);
 
   bool _equals(AllocationList other) {
-    bool output = true;
-    if (this.length == other.length) {
-      this.forEach((allocation) {
-        if (other.contains(allocation)) output = false;
-      });
-    } else {
-      output = false;
+    if (length != other.length) {
+      return false;
     }
-    return output;
+    for (Allocation allocation in _list) {
+      if (!other.contains(allocation)) {
+        return false;
+      }
+    }
+    return true;
   }
 
+  /// The hash code for this object.
   int get hashCode => _list.hashCode;
-
-  void printOut() {
-    forEach((allocation) {
-      print(allocation.category.name + ': ' + allocation.value.toString());
-    });
-  }
 }

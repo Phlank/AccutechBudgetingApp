@@ -1,7 +1,9 @@
 import 'package:budgetflow/model/abstract/accountant.dart';
+import 'package:budgetflow/model/data_types/allocation.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
+import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/utils/dates.dart';
 import 'package:calendarro/date_utils.dart';
 
@@ -14,9 +16,10 @@ class BudgetAccountant implements Accountant {
 
   double get spent {
     double spent = 0.0;
-    _budget.actual.spendingAllocations.forEach((allocation) {
-      spent += allocation.value.abs();
-    });
+    for (Allocation allocation in _budget.actual.spendingAllocations) {
+      if (allocation.category != Category.income)
+        spent += allocation.value.abs();
+    }
     return spent;
   }
 
@@ -56,14 +59,12 @@ class BudgetAccountant implements Accountant {
 
   double _getWeeklySpending() {
     double weeklySpending = 0.0;
-    _budget.transactions.forEach((transaction) {
+    for (Transaction transaction in _budget.transactions.spending) {
       if (transaction.time.isBefore(Dates.getEndOfWeek()) &&
           transaction.time.isAfter(Dates.getStartOfWeek())) {
-        if (transaction.category != Category.income) {
-          weeklySpending += transaction.amount;
-        }
+        weeklySpending += transaction.amount;
       }
-    });
+    }
     return weeklySpending;
   }
 

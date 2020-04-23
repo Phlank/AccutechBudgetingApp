@@ -1,8 +1,8 @@
 import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
 import 'package:budgetflow/view/pages/first_load.dart';
-import 'package:budgetflow/view/pages/home_page.dart';
 import 'package:budgetflow/view/pages/login_page.dart';
+import 'package:budgetflow/view/pages/startup_page.dart';
 import 'package:budgetflow/view/pages/user_page.dart';
 import 'package:budgetflow/view/sidebar/account_display.dart';
 import 'package:budgetflow/view/sidebar/user_category_displays.dart';
@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 
 class BudgetingApp extends StatelessWidget {
   static const NAME = 'Budgetflow';
-  static BudgetControl control = new BudgetControl();
-  static int r = 0, g = 153, b = 0;
-  Map<int, Color> colors = {
+  static BudgetControl control;
+  static final int r = 0,
+      g = 153,
+      b = 0;
+  static final Map<int, Color> themeColors = {
     50: Color.fromRGBO(r, g, b, .1),
     100: Color.fromRGBO(r, g, b, .2),
     200: Color.fromRGBO(r, g, b, .3),
@@ -30,10 +32,10 @@ class BudgetingApp extends StatelessWidget {
     return MaterialApp(
       title: NAME,
       theme: ThemeData(
-        primarySwatch: MaterialColor(0xff009900, colors),
+        primarySwatch: MaterialColor(0xff009900, themeColors),
         backgroundColor: Colors.black,
       ),
-      home: HomePage(),
+      home: StartupPage(),
       routes: {
         LoginPage.ROUTE: (BuildContext context) => LoginPage(),
         UserPage.ROUTE: (BuildContext context) => UserPage(),

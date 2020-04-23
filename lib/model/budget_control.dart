@@ -4,38 +4,30 @@ import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/data_types/account.dart';
 import 'package:budgetflow/model/data_types/account_list.dart';
 import 'package:budgetflow/model/data_types/budget.dart';
+import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/location.dart';
-import 'package:budgetflow/model/data_types/payment_method.dart';
+import 'package:budgetflow/model/data_types/month.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/data_types/transaction_list.dart';
 import 'package:budgetflow/model/implementations/budget_accountant.dart';
 import 'package:budgetflow/model/implementations/priority_budget_factory.dart';
-import 'package:budgetflow/model/implementations/services/achievement_service.dart';
-import 'package:budgetflow/model/implementations/services/encryption_service.dart';
-import 'package:budgetflow/model/implementations/services/file_service.dart';
+import 'package:budgetflow/model/implementations/services/account_service.dart';
 import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/location_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
-import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:flutter/material.dart';
 
-import 'data_types/achievement.dart';
-import 'data_types/category.dart';
-import 'data_types/month.dart';
-
 /// Welcome to our favorite superclass
 class BudgetControl {
-  ServiceDispatcher _dispatcher;
+  ServiceDispatcher dispatcher;
   Color cashFlowColor;
-  List<PaymentMethod> paymentMethods;
   AccountList accounts;
   Map<Location, Category> locationMap = Map();
   Budget budget;
   BudgetAccountant accountant;
-  List<Achievement> earnedAchievements = [];
 
   final Map<String, List<Category>> sectionMap = {
     'Needs': [
@@ -51,26 +43,16 @@ class BudgetControl {
     'Savings': [Category.savings]
   };
 
-  ServiceDispatcher get dispatcher => _dispatcher;
-
   BudgetControl() {
-    _dispatcher = ServiceDispatcher();
-    _dispatcher.register(FileService(_dispatcher));
-    _dispatcher.register(EncryptionService(_dispatcher));
-    _dispatcher.startAll();
-    _initVariables();
-  }
-
-  void _initVariables() {
-    paymentMethods = [PaymentMethod('Cash')];
+    dispatcher = ServiceDispatcher();
   }
 
   Future<bool> isReturningUser() async {
-    return await _dispatcher.getFileService().fileExists(passwordFilepath);
+    return await dispatcher.fileService.fileExists(passwordFilepath);
   }
 
   Future<bool> passwordIsValid(String secret) {
-    return _dispatcher.getEncryptionService().validatePassword(secret);
+    return dispatcher.encryptionService.validatePassword(secret);
   }
 
   Future<bool> initialize() async {
@@ -86,33 +68,23 @@ class BudgetControl {
     }
   }
 
+  bool get isDispatcherStarted => dispatcher != null;
+
   bool _isLoaded() {
-    return _dispatcher.getFileService() != null &&
-        _dispatcher.getEncryptionService() != null &&
-        _dispatcher.getHistoryService() != null &&
-        _dispatcher.getAchievementService() != null &&
-        _dispatcher.getLocationService() != null;
+    return dispatcher.fileService != null &&
+        dispatcher.encryptionService != null &&
+        dispatcher.historyService != null &&
+        dispatcher.achievementService != null &&
+        dispatcher.locationService != null;
   }
 
   Future _load() async {
-    await _dispatcher.registerAndStart(HistoryService(_dispatcher));
-    await _dispatcher.registerAndStart(LocationService(_dispatcher));
-    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
-    budget = await _dispatcher.getHistoryService().getLatestMonthBudget();
+    await dispatcher.registerAndStart(AccountService(dispatcher));
+    await dispatcher.registerAndStart(HistoryService(dispatcher));
+    await dispatcher.registerAndStart(LocationService(dispatcher));
+    budget = await dispatcher.historyService.getLatestMonthBudget();
     accountant = BudgetAccountant(budget);
-    await _loadAccounts();
     _initLocationMap();
-//    _initLocationListener();
-  }
-
-  Future _loadAccounts() async {
-    AccountList loadedAccounts = Serializer.unserialize(
-      methodListKey,
-      await _dispatcher.getFileService().readAndDecryptFile(accountsFilepath),
-    );
-    for (Account account in loadedAccounts) {
-      addAccount(account);
-    }
   }
 
   void _initLocationMap() {
@@ -148,15 +120,20 @@ class BudgetControl {
 //  }
 
   Future save() async {
-    var historyService = _dispatcher.getHistoryService();
-    if (historyService.currentMonth == null) {
-      historyService.add(Month.fromBudget(budget));
-    }
-    historyService.save();
+    print('BudgetControl: Beginning save...');
+    await dispatcher.encryptionService.save();
+    print('BudgetControl: Saved EncryptionService.');
+    await dispatcher.historyService.save();
+    print('BudgetControl: Saved HistoryService.');
+    await dispatcher.achievementService.save();
+    print('BudgetControl: Saved AchievementService.');
+    await dispatcher.accountService.save();
+    print('BudgetControl: Saved AccountService.');
+    print('BudgetControl: Save complete.');
   }
 
   Future setPassword(String newSecret) async {
-    _dispatcher.getEncryptionService().registerPassword(newSecret);
+    dispatcher.encryptionService.registerPassword(newSecret);
   }
 
   Budget getBudget() {
@@ -188,12 +165,27 @@ class BudgetControl {
   }
 
   Future<bool> setup() async {
-    await setPassword(SetupAgent.pin);
-    await _dispatcher.registerAndStart(HistoryService(_dispatcher));
-    await _dispatcher.registerAndStart(LocationService(_dispatcher));
-    await _dispatcher.registerAndStart(AchievementService(_dispatcher));
+    await BudgetingApp.control.setPassword(SetupAgent.pin);
+    print('BudgetControl: Password set.');
     addNewBudget(PriorityBudgetFactory().newFromInfo());
+    print('BudgetControl: Budget added.');
+    if (SetupAgent.savings != 0) {
+      dispatcher.accountService.addAccount(Account(
+        methodName: 'Savings',
+        accountName: 'Savings',
+      ));
+    }
+    await save();
+    print('BudgetControl: Saved successfully.');
     return true;
+  }
+
+  void addNewBudget(Budget toAdd) {
+    Month m = Month.fromBudget(toAdd);
+    dispatcher.historyService.add(m);
+    budget = toAdd;
+    accountant = BudgetAccountant(budget);
+    save();
   }
 
   double getCashFlow() {
@@ -210,14 +202,6 @@ class BudgetControl {
       cashFlowColor = Colors.black;
     }
     return amt;
-  }
-
-  void addNewBudget(Budget b) {
-    Month m = Month.fromBudget(b);
-    _dispatcher.getHistoryService().add(m);
-    budget = b;
-    accountant = BudgetAccountant(budget);
-    save();
   }
 
   double expenseTotal() {
@@ -245,16 +229,6 @@ class BudgetControl {
 
   void removeTransactionIfPresent(Transaction tran) {
     budget.removeTransaction(tran);
-  }
-
-  void addAccount(Account account) {
-    accounts.add(account);
-    paymentMethods.add(account);
-  }
-
-  void removeAccount(Account account) {
-    accounts.remove(account);
-    paymentMethods.remove(account);
   }
 
   void forceNextMonthTransition() {

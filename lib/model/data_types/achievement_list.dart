@@ -9,6 +9,10 @@ class AchievementList extends DelegatingList<Achievement>
 
   List<Achievement> get delegate => _list;
 
+  AchievementList() {
+    _list = List<Achievement>();
+  }
+
   /// Returns the value side of a key-value pair used in storing this object as a JSON object.
   String get serialize {
     Serializer serializer = Serializer();
@@ -17,4 +21,20 @@ class AchievementList extends DelegatingList<Achievement>
     }
     return serializer.serialize;
   }
+
+  bool operator ==(Object other) => other is AchievementList && _equals(other);
+
+  bool _equals(AchievementList other) {
+    if (length != other.length) {
+      return false;
+    }
+    for (Achievement achievement in _list) {
+      if (!other.contains(achievement)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  int get hashCode => _list.hashCode;
 }

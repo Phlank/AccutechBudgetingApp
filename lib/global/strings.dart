@@ -2,8 +2,7 @@
 final String passwordFilepath = 'password',
     historyFilepath = 'history',
     accountsFilepath = 'accounts',
-    earnedAchievementsFilepath = 'earned_achievements',
-    possibleAchievementsFilepath = 'possible_achievements';
+    achievementsFilepath = 'achievements';
 
 // Map keys for serialization
 const String categoryKey = 'category',
@@ -51,7 +50,9 @@ const String categoryKey = 'category',
     actualKey = 'actual',
     targetKey = 'target',
     transactionsKey = 'transactions',
-    valueKey = 'value';
+    valueKey = 'value',
+    currentProgressKey = 'currentProgress',
+    targetProgressKey = 'targetProgress';
 
 final String achFirstOpenName = 'First Open',
     achCameBackName = 'Came back',

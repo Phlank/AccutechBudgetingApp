@@ -20,7 +20,9 @@ class FileService implements FileIO, Service {
     _path = await _getPath();
   }
 
-  Future stop() {}
+  Future stop() {
+    return null;
+  }
 
   Future<String> _getPath() async {
     Directory appDocDir;
@@ -40,15 +42,15 @@ class FileService implements FileIO, Service {
   }
 
   Future writeFile(String pathSuffix, String content) async {
-    String path = await pathSuffixToPath(pathSuffix);
-    File target = await _getTargetFile(path);
+    String path = pathSuffixToPath(pathSuffix);
+    File target = _getTargetFile(path);
     target.writeAsString(content);
     print("File written: $path");
   }
 
   Future encryptAndWriteFile(String pathSuffix, String content) async {
-    String path = await pathSuffixToPath(pathSuffix);
-    File target = await _getTargetFile(path);
+    String path = pathSuffixToPath(pathSuffix);
+    File target = _getTargetFile(path);
     target.writeAsString(_crypter
         .encrypt(content)
         .serialize);
@@ -62,16 +64,19 @@ class FileService implements FileIO, Service {
     return File('$path');
   }
 
-  Future<String> readFile(String pathSuffix) {
+  Future<String> readFile(String pathSuffix) async {
     String path = pathSuffixToPath(pathSuffix);
     File target = _getTargetFile(path);
-    return target.readAsString();
+    String content = await target.readAsString();
+    print('FileService: Contents of file:\n$content');
+    return content;
   }
 
   Future<String> readAndDecryptFile(String pathSuffix) async {
     String path = pathSuffixToPath(pathSuffix);
     File target = _getTargetFile(path);
     String cipher = await target.readAsString();
+    print('FileService: Contents of file:\n$cipher');
     Encrypted encrypted = Serializer.unserialize(encryptedKey, cipher);
     return _crypter.decrypt(encrypted);
   }

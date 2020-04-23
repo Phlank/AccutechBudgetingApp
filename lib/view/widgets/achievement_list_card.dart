@@ -2,12 +2,13 @@ import 'package:budgetflow/model/data_types/achievement.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/achievements_page.dart';
+import 'package:budgetflow/view/view_presets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AchievementListCard extends StatelessWidget {
   final AchievementService achievementService =
-  BudgetingApp.control.dispatcher.getAchievementService();
+      BudgetingApp.control.dispatcher.achievementService;
   final int numAchievements;
 
   AchievementListCard({this.numAchievements}); // arbitrary large number
@@ -18,7 +19,7 @@ class AchievementListCard extends StatelessWidget {
     List<AchievementListItem> showing = new List();
     if (numAchievements != null) {
       // Either display the number of achievements chosen in the constructor or display all achievements if there are fewer.
-      if (numAchievements > achievementService.numEarned) {
+      if (numAchievements > achievementService.earned.length) {
         for (Achievement achievement in achievementService.earned) {
           showing.add(new AchievementListItem(
             achievement: achievement,
@@ -48,9 +49,8 @@ class AchievementListCard extends StatelessWidget {
       ];
     } else {
       Color color = Colors.grey;
-      for (Achievement achievement in BudgetingApp.control.dispatcher
-          .getAchievementService()
-          .earned
+      for (Achievement achievement in BudgetingApp
+          .control.dispatcher.achievementService.earned
           .toList(growable: false)) {
         if (achievement.earned) {
           color = Colors.black;
@@ -104,19 +104,17 @@ class AchievementListItem extends StatelessWidget {
             TableCell(
                 child: Text(
                   achievement.name,
-                  style: style,
-                  textAlign: TextAlign.left,
+                  style: achievementTopRowTextStyle,
+                  textAlign: TextAlign.center,
                 )),
-            TableCell(child: achievement.icon)
           ]),
           TableRow(children: <TableCell>[
             TableCell(
                 child: Text(
                   achievement.description,
-                  style: style,
+                  style: achievementBottomRowTextStyle,
                   textAlign: TextAlign.left,
                 )),
-            TableCell(child: Text(''))
           ])
         ],
       ),
