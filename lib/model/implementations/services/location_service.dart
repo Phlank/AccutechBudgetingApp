@@ -9,7 +9,7 @@ class LocationService implements Service {
   ServiceDispatcher _dispatcher;
   Geolocator _geolocator = Geolocator();
   GeolocationStatus _status;
-  Map<Location, Category> _notificationMap;
+  Map<Location, Category> _notificationMap = {};
 
   /// Controls the required distance needed to be within a certain location to trigger a notification.
   final int _metersThreshold = 10;

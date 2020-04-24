@@ -3,6 +3,7 @@ import 'package:budgetflow/model/budget_control.dart';
 import 'package:budgetflow/model/data_types/category.dart';
 import 'package:budgetflow/model/data_types/priority.dart';
 import 'package:budgetflow/model/implementations/budget_accountant.dart';
+import 'package:budgetflow/view/achievement_responder.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/utils/output_formatter.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,8 @@ class GeneralCategory extends StatefulWidget {
 }
 
 class _GeneralCategoryState extends State<GeneralCategory> {
+  final double sliderInterval = 5.0;
+
   BudgetAccountant accountant =
   BudgetAccountant(BudgetingApp.control.getBudget());
   BudgetControl userController;
@@ -45,22 +48,22 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       child: Text.rich(
         TextSpan(
           text: 'Total alloted \t' +
-              Format.dollarFormat(allottedForSection) +
-              '\n',
+                Format.dollarFormat(allottedForSection) +
+                '\n',
           children: <TextSpan>[
             TextSpan(
                 text: 'Unbudgeted in Section \t' +
-                    Format.dollarFormat(
-                        allottedForSection - beginningAllotments))
+                      Format.dollarFormat(
+                          allottedForSection - beginningAllotments))
           ],
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Slider sectionSlider(Category category) {
@@ -77,8 +80,13 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       },
       min: 0,
       max: accountant.getAllottedOfPriority(Priority.fromName(section)),
+      divisions: (accountant.getAllottedOfPriority(
+        Priority.fromName(section),
+        ) ~/
+                  sliderInterval)
+          .toInt(),
       label: category.name,
-    );
+      );
   }
 
   ListTile categoryTile(Category category) {
@@ -90,7 +98,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
       title:
       Text(category.name + '\t' + Format.dollarFormat(allottedForCategory)),
       subtitle: sectionSlider(category),
-    );
+      );
   }
 
   Card changeCard() {
@@ -106,11 +114,11 @@ class _GeneralCategoryState extends State<GeneralCategory> {
             .length,
         itemBuilder: (context, int index) {
           return categoryTile(userController
-              .getBudget()
-              .getCategoriesOfPriority(Priority.fromName(section))[index]);
+                                  .getBudget()
+                                  .getCategoriesOfPriority(Priority.fromName(section))[index]);
         },
-      ),
-    );
+        ),
+      );
   }
 
   Scaffold generalDisplay() {
@@ -119,7 +127,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Change ' + section + ' alotments'),
-      ),
+        ),
       body: Column(
         verticalDirection: VerticalDirection.down,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -129,7 +137,7 @@ class _GeneralCategoryState extends State<GeneralCategory> {
           unbudgetedCard(),
           changeCard(),
         ],
-      ),
+        ),
       persistentFooterButtons: <RaisedButton>[
         RaisedButton(
           child: Text('submit'),
@@ -146,23 +154,24 @@ class _GeneralCategoryState extends State<GeneralCategory> {
                   .getCategory(category)
                   .value = playBudget.getCategory(category);
             }
-            BudgetingApp.control.dispatcher
-                .achievementService
-                .incrementProgress(Achievements.achChangedAllotment);
+            AchievementResponder.respondTo(
+              Achievements.achChangedAllotment,
+              context,
+              );
             if (allottedForSection >= 0) {
               Navigator.pushNamed(context, '/knownUser');
               userController.save();
             }
           },
-        ),
+          ),
         RaisedButton(
           child: Text('cancel'),
           onPressed: () {
             Navigator.pushNamed(context, '/knownUser');
           },
-        ),
+          ),
       ],
-    );
+      );
   }
 
   @override

@@ -43,7 +43,7 @@ class _MoreQuestionsPageState extends State<MoreQuestionsPage> {
     return RaisedButton(
       child: Text('Take me to my budget!'),
       onPressed: () {
-        AchievementResponder.respondTo(Achievements.achDetailing, context);
+        AchievementResponder.respondTo(Achievements.achRushing, context);
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
       },
@@ -54,6 +54,7 @@ class _MoreQuestionsPageState extends State<MoreQuestionsPage> {
     return RaisedButton(
       child: Text('Answer more questions'),
       onPressed: () {
+        AchievementResponder.respondTo(Achievements.achDetailing, context);
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(KidsPetsInfoPage()));
       },

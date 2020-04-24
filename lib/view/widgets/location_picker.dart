@@ -20,6 +20,8 @@ class LocationPicker {
         ),
       ),
     );
-    return Location(result.latLng.latitude, result.latLng.longitude);
+    if (result != null)
+      return Location(result.latLng.latitude, result.latLng.longitude);
+    return null;
   }
 }

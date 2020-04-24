@@ -118,6 +118,8 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    AchievementResponder.respondTo(Achievements.achFirstOpen, context);
+    AchievementResponder.respondTo(Achievements.achCameBack, context);
     return FutureBuilder(
       future: _servicesPreparation,
       builder: (context, snapshot) {

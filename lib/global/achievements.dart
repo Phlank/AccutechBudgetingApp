@@ -1,6 +1,7 @@
 import 'package:budgetflow/global/strings.dart';
 import 'package:budgetflow/model/data_types/achievement.dart';
 
+/// Class that holds all defined achievements in their initial state.
 abstract class Achievements {
   static Achievement achFirstOpen = Achievement(
     name: achFirstOpenName,
