@@ -1,3 +1,4 @@
+import 'package:budgetflow/global/achievements.dart';
 import 'package:budgetflow/model/data_types/transaction.dart';
 import 'package:budgetflow/model/implementations/services/account_service.dart';
 import 'package:budgetflow/model/implementations/services/achievement_service.dart';
@@ -6,6 +7,7 @@ import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/history_service.dart';
 import 'package:budgetflow/model/implementations/services/location_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
+import 'package:budgetflow/view/achievement_responder.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/accounts_page.dart';
 import 'package:budgetflow/view/pages/basic_loading_page.dart';
@@ -64,15 +66,15 @@ class _UserPageState extends State<UserPage> {
               Navigator.of(context)
                   .push(RouteUtil.routeWithSlideTransition(WelcomePage()));
             },
-          ),
+            ),
           IconButton(
             icon: Icon(Icons.calendar_today),
             onPressed: () {
               BudgetingApp.control.forceNextMonthTransition();
             },
-          ),
+            ),
         ],
-      ),
+        ),
 //      drawer: SideMenu().sideMenu(BudgetingApp.userController),
       body: ListView(
         padding: EdgeInsets.all(8),
@@ -90,24 +92,28 @@ class _UserPageState extends State<UserPage> {
                       .push(RouteUtil.routeWithSlideTransition(AccountsPage()));
                 },
                 child: Text('Accounts'),
-              ),
+                ),
             ],
             alignment: MainAxisAlignment.center,
-          ),
+            ),
           AchievementListCard(
             numAchievements: 3,
-          ),
+            ),
         ],
-      ),
+        ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add transaction',
         child: Icon(Icons.add),
         onPressed: () async {
           await TransactionEditPage.show(Transaction.empty, context);
+          AchievementResponder.respondTo(
+              Achievements.achOneTransaction, context);
+          AchievementResponder.respondTo(
+              Achievements.achFiveTransactions, context);
         },
-      ),
+        ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
+      );
   }
 
   @override
@@ -123,10 +129,10 @@ class _UserPageState extends State<UserPage> {
           return BasicLoadingPage(
             title: 'Loading',
             message: 'Loading information...',
-          );
+            );
         }
       },
-    );
+      );
   }
 }
 

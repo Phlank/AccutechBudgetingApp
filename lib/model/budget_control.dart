@@ -18,12 +18,10 @@ import 'package:budgetflow/model/implementations/services/location_service.dart'
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:flutter/material.dart';
 
 /// Welcome to our favorite superclass
 class BudgetControl {
   ServiceDispatcher dispatcher;
-  Color cashFlowColor;
   AccountList accounts;
   Map<Location, Category> locationMap = Map();
   Budget budget;
@@ -156,10 +154,18 @@ class BudgetControl {
     addNewBudget(PriorityBudgetFactory().newFromInfo());
     print('BudgetControl: Budget added.');
     if (SetupAgent.savings != 0) {
-      dispatcher.accountService.addAccount(Account(
+      Account savingsAccount = Account(
         methodName: 'Savings',
         accountName: 'Savings',
-      ));
+        );
+      dispatcher.accountService.addAccount(savingsAccount);
+      addTransaction(Transaction(
+        vendor: 'Initial Amount',
+        method: savingsAccount,
+        amount: SetupAgent.savings,
+        category: Category.savings,
+        time: DateTime.now(),
+        ));
     }
     await save();
     print('BudgetControl: Saved successfully.');

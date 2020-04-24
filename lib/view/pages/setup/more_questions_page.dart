@@ -3,6 +3,7 @@ import 'package:budgetflow/model/implementations/services/achievement_service.da
 import 'package:budgetflow/model/implementations/services/encryption_service.dart';
 import 'package:budgetflow/model/implementations/services/file_service.dart';
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
+import 'package:budgetflow/view/achievement_responder.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
 import 'package:budgetflow/view/pages/basic_loading_page.dart';
 import 'package:budgetflow/view/pages/error_page.dart';
@@ -42,8 +43,7 @@ class _MoreQuestionsPageState extends State<MoreQuestionsPage> {
     return RaisedButton(
       child: Text('Take me to my budget!'),
       onPressed: () {
-        BudgetingApp.control.dispatcher.achievementService
-            .incrementProgress(Achievements.achRushing);
+        AchievementResponder.respondTo(Achievements.achDetailing, context);
         Navigator.of(context)
             .push(RouteUtil.routeWithSlideTransition(SetupFinishedPage()));
       },

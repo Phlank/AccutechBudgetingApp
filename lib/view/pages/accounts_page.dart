@@ -20,8 +20,9 @@ class AccountsPage extends StatelessWidget {
         )
       ]),
       body: Padding24(
-        child: AccountListView(BudgetingApp.control.accounts),
-      ),
+        child: AccountListView(
+            BudgetingApp.control.dispatcher.accountService.accounts),
+        ),
     );
   }
 }

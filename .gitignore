@@ -4,7 +4,7 @@
 
 ### Dart ###
 # See https://www.dartlang.org/guides/libraries/private-files
-
+api_keys.dart
 # Files and directories created by pub
 .dart_tool/
 .packages
@@ -202,11 +202,12 @@ crashlytics-build.properties
 fabric.properties
 
 ### AndroidStudio Patch ###
-
+api_keys.dart
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.gitignore.io/api/dart,flutter,androidstudio
 .gitignore
 ./.idea/*
 ./android/*
-./lib/global/api_keys.dart
+api_keys.dart
+lib/global/api_keys.dart
