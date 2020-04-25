@@ -22,7 +22,31 @@ import 'package:budgetflow/model/implementations/unserialize/priority_strategy.d
 import 'package:budgetflow/model/implementations/unserialize/transaction_list_strategy.dart';
 import 'package:budgetflow/model/implementations/unserialize/transaction_strategy.dart';
 
+/// The serializer class has helper methods to aid in serializing and a universal unserialize method.
+///
+/// JSON serialization is built into Dart, but it makes use of the Reflections
+/// library. Unfortunately, the Reflections library is not supported in Flutter
+/// due to the massive growth in app size that would result in using it.
+/// There were other options for implementing serialization into the codebase
+/// via automatic code generation, but they didn't quite fit our needs.
+///
+/// JSON strings are output from this class with [serialize], and prior to this,
+/// JSON pairs can be added through [addPair]. The output strings appear as
+/// follows, without the whitespace formatting:
+/// ```
+/// {
+///   "key1":"reflected value 1",
+///   "key2":"reflected value 2",
+///   "key3":{
+///             "subKey1":"sub reflected value 1",
+///          },
+///   ...
+/// }
+/// ```
+/// For each type of object that needs to be unserialized, there is an
+/// unserializer strategy. Each of these can be found in the [strategyMap].
 class Serializer implements Serializable {
+  /// Map of keys to the objects they indicate need unserialized. Used by [unserialize].
   static Map<String, Unserializer> strategyMap = {
     passwordKey: PasswordStrategy(),
     encryptedKey: EncryptedStrategy(),
@@ -50,6 +74,18 @@ class Serializer implements Serializable {
     pairs = new Map();
   }
 
+  /// Adds a pair for serialization of an object.
+  ///
+  /// [key] options are defined in lib/global/strings. If [value] is a [String],
+  /// the raw string is reflected in the output serialization. If [value] is a
+  /// [Serializable], then the result of [value.serialize] is reflected in the
+  /// output serialization. If [value] is neither of these things,
+  /// [value.toString] is reflected in the output serialization.
+  ///
+  /// Output raw text from [serialize] will look like:
+  /// ```
+  /// "[key]":"[reflected value]"
+  /// ```
   void addPair(dynamic key, dynamic value) {
     pairs[key] = value;
   }
@@ -90,6 +126,11 @@ class Serializer implements Serializable {
     return "null";
   }
 
+  /// Returns an object from its serialization.
+  ///
+  /// The given [value] based on the type of object required, denoted by [key].
+  /// [value] must be a [Map], [String], or `null`, otherwise an [InvalidSerializedValueError] will be thrown.
+  /// [key] must be a key in [strategyMap], otherwise an [UnknownMapKeyError] will be thrown.
   static dynamic unserialize(String key, dynamic value) {
     _validate(key, value);
     if (value is String) value = jsonDecode(value);

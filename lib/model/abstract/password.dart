@@ -3,6 +3,7 @@ import 'package:budgetflow/model/abstract/serializable.dart';
 import 'package:budgetflow/model/implementations/steel_password.dart';
 import 'package:budgetflow/model/utils/serializer.dart';
 
+/// Interface for passwords.
 abstract class Password implements Serializable {
   static Future<Password> fromSecret(String secret) async {
     return SteelPassword.fromSecret(secret);
@@ -22,9 +23,12 @@ abstract class Password implements Serializable {
 
   Future<bool> verify(String secret);
 
+  /// The hash value of the password.
   String get hash;
 
+  /// The plaintext password.
   String get secret;
 
+  /// The salt value of the password.
   String get salt;
 }

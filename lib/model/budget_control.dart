@@ -18,30 +18,14 @@ import 'package:budgetflow/model/implementations/services/location_service.dart'
 import 'package:budgetflow/model/implementations/services/service_dispatcher.dart';
 import 'package:budgetflow/model/utils/setup_agent.dart';
 import 'package:budgetflow/view/budgeting_app.dart';
-import 'package:flutter/material.dart';
 
 /// Welcome to our favorite superclass
 class BudgetControl {
   ServiceDispatcher dispatcher;
-  Color cashFlowColor;
   AccountList accounts;
   Map<Location, Category> locationMap = Map();
   Budget budget;
   BudgetAccountant accountant;
-
-  final Map<String, List<Category>> sectionMap = {
-    'Needs': [
-      Category.housing,
-      Category.utilities,
-      Category.groceries,
-      Category.health,
-      Category.transportation,
-      Category.education,
-      Category.kids
-    ],
-    'Wants': [Category.entertainment, Category.pets, Category.miscellaneous],
-    'Savings': [Category.savings]
-  };
 
   BudgetControl() {
     dispatcher = ServiceDispatcher();
@@ -97,28 +81,6 @@ class BudgetControl {
     });
   }
 
-//  void _initLocationListener() {
-//    positionStream = Geolocator()
-//        .getPositionStream(LocationOptions(
-//            accuracy: LocationAccuracy.high,
-//            distanceFilter: 10,
-//            timeInterval: 10))
-//        .listen((position) {
-//      Location streamLocation = Location.fromGeolocatorPosition(position);
-//      locationMap.forEach((location, category) async {
-//        if (await streamLocation.distanceTo(location) < 10) {
-//          // TODO Trigger notification
-//          print('In range of location ' +
-//              location.latitude.toString() +
-//              ', ' +
-//              location.longitude.toString() +
-//              ' for category ' +
-//              category.name);
-//        }
-//      });
-//    });
-//  }
-
   Future save() async {
     print('BudgetControl: Beginning save...');
     await dispatcher.encryptionService.save();
@@ -170,10 +132,18 @@ class BudgetControl {
     addNewBudget(PriorityBudgetFactory().newFromInfo());
     print('BudgetControl: Budget added.');
     if (SetupAgent.savings != 0) {
-      dispatcher.accountService.addAccount(Account(
+      Account savingsAccount = Account(
         methodName: 'Savings',
         accountName: 'Savings',
-      ));
+        );
+      dispatcher.accountService.addAccount(savingsAccount);
+      addTransaction(Transaction(
+        vendor: 'Initial Amount',
+        method: savingsAccount,
+        amount: SetupAgent.savings,
+        category: Category.savings,
+        time: DateTime.now(),
+        ));
     }
     await save();
     print('BudgetControl: Saved successfully.');
@@ -186,45 +156,6 @@ class BudgetControl {
     budget = toAdd;
     accountant = BudgetAccountant(budget);
     save();
-  }
-
-  double getCashFlow() {
-    double amt = budget.expectedIncome -
-        budget.allotted
-            .getCategory(Category.housing)
-            .value +
-        expenseTotal();
-    if (amt > 0) {
-      cashFlowColor = Colors.green;
-    } else if (amt < 0) {
-      cashFlowColor = Colors.red;
-    } else {
-      cashFlowColor = Colors.black;
-    }
-    return amt;
-  }
-
-  double expenseTotal() {
-    double spent = 0.0;
-    for (int i = 0; i < budget.transactions.length; i++) {
-      spent += budget.transactions[i].amount;
-    }
-    return spent;
-  }
-
-  double expenseInSection(String section) {
-    double spent = 0.0;
-    for (Category cat in sectionMap[section]) {
-      for (int i = 0; i < budget.transactions.length; i++) {
-        Category rel = budget.transactions[i].category;
-        if (rel == cat) {
-          spent += budget.allotted
-              .getCategory(rel)
-              .value;
-        }
-      }
-    }
-    return spent;
   }
 
   void removeTransactionIfPresent(Transaction tran) {

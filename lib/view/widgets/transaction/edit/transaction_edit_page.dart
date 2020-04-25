@@ -186,15 +186,16 @@ class _TransactionEditPageState extends State<TransactionEditPage> {
       RaisedButton(
         child: Text('Select location'),
         onPressed: () async {
-          // Load google maps interface
+          print('Location button pressed');
           Location current = await Location.current;
+          print('Current location: ' + current.toString());
           Location result;
-          if (current != null) {
+          if (await Location.permissionEnabled) {
             result = await LocationPicker.show(context, current);
-          }
-          setState(() {
             if (result != null) location = result;
-          });
+          }
+          // Load google maps interface
+          setState(() {});
         },
       )
     ]);

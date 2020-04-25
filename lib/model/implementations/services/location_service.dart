@@ -9,13 +9,18 @@ class LocationService implements Service {
   ServiceDispatcher _dispatcher;
   Geolocator _geolocator = Geolocator();
   GeolocationStatus _status;
-  Map<Location, Category> _notificationMap;
+  Map<Location, Category> _notificationMap = {};
+
+  /// Controls the required distance needed to be within a certain location to trigger a notification.
+  final int _metersThreshold = 10;
 
   LocationService(this._dispatcher);
 
   Future start() {
     assert(_dispatcher.historyService != null);
     _loadNotificationMap();
+    _startLocationNotificationStream();
+    return null;
   }
 
   void _loadNotificationMap() {
@@ -25,6 +30,18 @@ class LocationService implements Service {
         if (!_notificationMap.containsKey(transaction.location)) {
           _notificationMap[transaction.location] = transaction.category;
         }
+      }
+    }
+  }
+
+  void _startLocationNotificationStream() {
+    getLocationStream().listen(_respondToLocations);
+  }
+
+  Future<void> _respondToLocations(Location location) async {
+    for (Location nLocation in _notificationMap.keys) {
+      if (await nLocation.distanceTo(location) < 10) {
+        // TODO trigger notification
       }
     }
   }
@@ -47,11 +64,9 @@ class LocationService implements Service {
     bool enabled = await isEnabled();
     bool allowed = await isAllowed();
     if (!enabled) {
-      // TODO respond if location not enabled
       return false;
     }
     if (!allowed) {
-      // TODO respond if location not allowed
       return false;
     }
     return true;

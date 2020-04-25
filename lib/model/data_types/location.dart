@@ -7,13 +7,13 @@ import 'package:budgetflow/model/utils/serializer.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Location implements Serializable {
-  static bool permissionsEnabled;
   final double latitude, longitude;
 
   const Location(this.latitude, this.longitude);
 
   static Future<bool> get permissionEnabled async {
     var status = await Geolocator().checkGeolocationPermissionStatus();
+    print('Location status: ' + status.toString());
     if (status == GeolocationStatus.disabled ||
         status == GeolocationStatus.denied) {
       return false;
