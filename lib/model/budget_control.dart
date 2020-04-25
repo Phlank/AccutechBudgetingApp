@@ -81,28 +81,6 @@ class BudgetControl {
     });
   }
 
-//  void _initLocationListener() {
-//    positionStream = Geolocator()
-//        .getPositionStream(LocationOptions(
-//            accuracy: LocationAccuracy.high,
-//            distanceFilter: 10,
-//            timeInterval: 10))
-//        .listen((position) {
-//      Location streamLocation = Location.fromGeolocatorPosition(position);
-//      locationMap.forEach((location, category) async {
-//        if (await streamLocation.distanceTo(location) < 10) {
-//          // TODO Trigger notification
-//          print('In range of location ' +
-//              location.latitude.toString() +
-//              ', ' +
-//              location.longitude.toString() +
-//              ' for category ' +
-//              category.name);
-//        }
-//      });
-//    });
-//  }
-
   Future save() async {
     print('BudgetControl: Beginning save...');
     await dispatcher.encryptionService.save();
