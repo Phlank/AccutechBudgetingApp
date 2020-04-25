@@ -40,8 +40,8 @@ class PriorityBudgetFactory implements BudgetFactory {
   static _NSW _stage3Growth = new _NSW(.85, .05, .1);
   static _NSW _stage4Growth = new _NSW(.94, .01, .05);
   static const _stage1Bound = .3;
-  static const _stage2Bound = .5;
-  static const _stage3Bound = .8;
+  static const _stage2Bound = .45;
+  static const _stage3Bound = .7;
   static const _stage4Bound = 1.0;
 
   double _housingRatio = 0.0,
